@@ -1,0 +1,195 @@
+<div
+  class="min-h-screen lg:min-h-screen
+         bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900
+         flex items-center justify-center
+         p-4 relative overflow-hidden">
+
+  <!-- Effets de fond animés -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+  </div>
+
+  <!-- Conteneur principal -->
+  <div
+    class="w-full max-w-5xl
+           bg-white/95 backdrop-blur-xl
+           rounded-3xl shadow-2xl
+           overflow-hidden border border-white/20
+           relative z-10
+           flex flex-col lg:flex-row
+           lg:min-h-[600px]">
+
+    <!-- ================= SIDEBAR GAUCHE ================= -->
+    <!-- 👇 MASQUÉ EN MOBILE -->
+    <div class="hidden lg:flex lg:w-80
+                bg-gradient-to-b from-slate-50 to-gray-100
+                border-r border-gray-200
+                p-8 flex-col">
+
+      <!-- CONTENU IDENTIQUE (inchangé) -->
+      <!-- LOGO -->
+      <div class="mb-10 text-center lg:text-left">
+        <div class="w-16 h-16 mb-4 mx-auto lg:mx-0
+            bg-gradient-to-br from-red-600 to-rose-600
+            rounded-2xl shadow-lg
+            flex items-center justify-center
+            transform hover:scale-110 transition-all duration-500
+            overflow-hidden">
+
+          <img
+            src="assets/LOGO.png"
+            alt="Logo TeamAsdam"
+            class="w-15 h-15 object-contain"
+          />
+        </div>
+
+        <h2 class="text-2xl font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+          MYASDAM
+        </h2>
+        <p class="text-xs text-gray-500 mt-1 font-medium">Votre espace Asdam</p>
+      </div>
+
+      <!-- ÉTAPES -->
+      <div class="flex-1 space-y-6">
+
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold
+          border-4 shadow-lg transition-all duration-300"
+               [class]="currentStep === 1
+               ? 'bg-red-600 text-white border-red-200 scale-110 ring-4 ring-red-200'
+               : 'bg-gray-200 text-gray-400 border-gray-100'">
+            1
+          </div>
+
+          <div>
+            <h4 class="font-bold text-sm"
+                [class]="currentStep === 1 ? 'text-red-600' : 'text-gray-400'">
+              Connexion
+            </h4>
+            <p class="text-xs text-gray-500">Accédez à votre compte</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-6 border-t border-gray-200">
+        <div class="bg-red-50 border border-red-100 rounded-xl p-4 text-xs text-red-700">
+          Connectez-vous pour gérer vos équipes et accéder à votre espace personnel.
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= FORMULAIRE ================= -->
+    <div class="flex-1
+                px-6 py-6
+                lg:p-12
+                flex flex-col justify-center">
+
+      <!-- 👇 LOGO MOBILE UNIQUEMENT -->
+      <div class="lg:hidden text-center mb-4">
+        <img src="assets/LOGO.png"
+             class="w-14 h-14 mx-auto mb-2 object-contain" />
+        <h2 class="text-lg font-bold text-red-600">MYASDAM</h2>
+      </div>
+
+      <!-- Header -->
+      <div class="mb-6 text-center lg:text-left">
+        <h3 class="text-xl lg:text-2xl font-bold text-gray-800 mb-1">
+          Connexion
+        </h3>
+        <p class="text-gray-500 text-xs lg:text-sm">
+          Entrez vos identifiants pour accéder à votre compte
+        </p>
+      </div>
+
+      <form
+        [formGroup]="loginForm"
+        (ngSubmit)="onSubmit()"
+        class="space-y-4 lg:space-y-6
+               max-w-md mx-auto lg:mx-0 w-full">
+
+        <!-- EMAIL -->
+        <div class="group relative">
+          <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+              <!-- icon inchangée -->
+              <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207">
+                </path>
+              </svg>
+            </div>
+            Email
+          </label>
+
+          <input type="email"
+            formControlName="email"
+            placeholder="jean.dupont@example.com"
+            class="w-full bg-gray-50 border-2 border-gray-200
+                   rounded-xl px-4 py-2.5 lg:py-3.5
+                   text-sm lg:text-base
+                   focus:outline-none focus:border-blue-500
+                   focus:bg-white focus:ring-4 focus:ring-blue-500/10
+                   transition-all duration-300" />
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="group relative">
+          <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center">
+              <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            Mot de passe
+          </label>
+
+          <div class="relative">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="••••••••"
+              class="w-full bg-gray-50 border-2 border-gray-200
+                     rounded-xl px-4 py-2.5 lg:py-3.5 pr-12
+                     text-sm lg:text-base
+                     focus:outline-none focus:border-blue-500
+                     focus:bg-white focus:ring-4 focus:ring-blue-500/10
+                     transition-all duration-300"
+            />
+
+            <button
+              type="button"
+              (click)="togglePassword()"
+              class="absolute inset-y-0 right-4 flex items-center text-gray-400 hover:text-blue-600 transition">
+              <!-- icons inchangées -->
+            </button>
+          </div>
+        </div>
+
+        <!-- BUTTON -->
+        <button type="submit"
+          [disabled]="loginForm.invalid"
+          class="w-full bg-gradient-to-r from-rose-600 to-red-600
+                 text-white font-bold
+                 py-3 lg:py-4
+                 rounded-xl shadow-lg
+                 transition-all duration-300">
+          Se connecter
+        </button>
+
+      </form>
+
+      <!-- Lien inscription -->
+      <p class="text-center mt-6 lg:mt-8 text-gray-500 text-xs lg:text-sm font-medium">
+        Pas encore de compte ?
+        <a routerLink="/inscription"
+          class="text-red-600 hover:text-blue-800 font-bold hover:underline ml-1">
+          Inscrivez-vous
+        </a>
+      </p>
+
+    </div>
+  </div>
+</div>

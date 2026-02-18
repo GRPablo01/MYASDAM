@@ -1,0 +1,20 @@
+<app-icon></app-icon>
+
+<!-- 🎧 Icône Support -->
+<div class="relative flex items-center justify-center">
+
+  <button
+    class="flex items-center justify-center px-3 py-2 rounded-xl transition-all duration-300 ease-in-out"
+    [ngStyle]="{
+      'background-color': hoverSupport ? Header2 : 'transparent',
+      'color': Texte,
+      'box-shadow': hoverSupport ? '0 4px 15px rgba(0,0,0,0.25)' : 'none'
+    }"
+    (mouseenter)="hoverSupport = true"
+    (mouseleave)="hoverSupport = false"
+    aria-label="Support"
+  >
+    <i class="fa-solid fa-headset text-xl sm:text-2xl"></i>
+  </button>
+
+</div>

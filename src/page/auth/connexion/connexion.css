@@ -1,0 +1,47 @@
+/* Empêche tout scroll global */
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+  /* Conteneur principal : fixe sur tout l'écran */
+  :host {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* toute la hauteur écran */
+  }
+  
+  /* Header : hauteur fixe */
+  app-header {
+    flex: 0 0 auto; /* ne prend pas de scroll */
+  }
+  
+  /* Zone Actus : seule partie scrollable */
+  .actus-container {
+    flex: 1 1 auto;             /* prend tout l’espace restant */
+    overflow-y: auto;           /* garde la barre de scroll */
+    overscroll-behavior: none;  /* pas de rebond haut/bas */
+    -webkit-overflow-scrolling: auto; /* désactive l’inertie iOS */
+  }
+  
+  
+  /* Scrollbar globale */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--scroll-track);
+    border-radius: 8px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--scroll-thumb);
+    border-radius: 8px;
+    border: 3px solid var(--scroll-track);
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--scroll-thumb-hover);
+  }
+  

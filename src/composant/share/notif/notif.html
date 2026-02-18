@@ -1,0 +1,89 @@
+<app-icon></app-icon>
+
+<div class="notif-container relative flex items-center justify-center">
+
+  <!-- BOUTON NOTIF -->
+  <button
+    class="flex items-center justify-center px-4 py-2 rounded-full transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none"
+    [ngStyle]="{
+      'background-color': hoverNotif ? Header2 : 'transparent',
+      'color': Texte,
+      'box-shadow': hoverNotif ? '0 4px 20px rgba(0,0,0,0.25)' : 'none'
+    }"
+    (mouseenter)="hoverNotif = true"
+    (mouseleave)="hoverNotif = false"
+    (click)="toggleNotif()"
+    aria-label="Notifications"
+  >
+    <i class="fa-solid fa-bell text-2xl"></i>
+    <span *ngIf="unreadCount > 0" class="ml-2 px-2 py-0.5 text-xs font-bold rounded-full text-white"
+          style="background-color: #DC2626;">
+      {{ unreadCount }}
+    </span>
+  </button>
+
+  <!-- PANNEAU NOTIFICATIONS -->
+  <div *ngIf="showMessages"
+       class="fixed top-0 right-0 h-full w-80 shadow-2xl flex flex-col z-50 rounded-l-xl overflow-hidden animate-slide-in-from-right"
+       [ngStyle]="{'background-color': BleuBG, 'color': Texte, 'border-left': '3px solid ' + Bleu2}">
+
+    <!-- HEADER -->
+    <div class="flex items-center justify-between px-4 py-3 bg-white shadow-sm"
+         [ngStyle]="{'border-color': Bleu2}">
+      <!-- CROIX à gauche -->
+      <button (click)="showMessages=false" aria-label="Fermer"
+              class="hover:opacity-80 focus:outline-none mr-2">
+        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <h3 class="text-lg font-semibold flex-1 text-center">Notifications</h3>
+      <div class="w-6"></div> <!-- espace pour équilibrer le header -->
+    </div>
+
+    <!-- LISTE DES NOTIFICATIONS -->
+    <ul class="flex-1 overflow-y-auto">
+      <li *ngFor="let n of notifications; let last = last"
+          class="px-4 py-3 flex items-start gap-3 hover:bg-gray-50 transition-colors rounded-md relative cursor-pointer">
+
+        <!-- BULLET UNREAD -->
+        <span *ngIf="n.unread" class="mt-1 w-2 h-2 rounded-full"
+              style="background-color: #F43F5E;"></span>
+
+        <div class="flex-1">
+          <p class="text-sm font-medium">{{ n.message }}</p>
+          <time class="text-xs opacity-60">{{ n.date | date:'short' }}</time>
+        </div>
+
+        <!-- BOUTON SUPPRIMER -->
+        <button (click)="deleteNotification(n); $event.stopPropagation()"
+                class="p-1 rounded-full hover:bg-red-600 transition"
+                [ngStyle]="{'background-color': rouge, 'color': '#fff'}"
+                aria-label="Supprimer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4h6v3m-9 0h12" />
+          </svg>
+        </button>
+
+        <div *ngIf="!last" class="w-full h-px mt-3" [ngStyle]="{'background-color': Bleu2}"></div>
+      </li>
+
+      <li *ngIf="notifications.length === 0"
+          class="px-4 py-6 text-center text-gray-500 opacity-60">
+        Aucune notification
+      </li>
+    </ul>
+
+    <!-- FOOTER -->
+    <div class="px-4 py-3 border-t flex justify-center"
+         [ngStyle]="{'border-color': Bleu2}">
+      <button *ngIf="unreadCount > 0" (click)="markAllRead()"
+              class="w-full py-2 rounded-lg font-semibold transition-all hover:brightness-90 focus:outline-none"
+              [ngStyle]="{'background-color': Bleu1, 'color': Texte, 'border': '1px solid ' + Bleu2}">
+        Tout marquer comme lu
+      </button>
+    </div>
+  </div>
+</div>

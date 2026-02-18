@@ -1,0 +1,130 @@
+<section class="relative flex items-center justify-end px-2 py-1 sm:px-4 sm:py-2">
+
+    <!-- ======================= -->
+    <!-- BOUTON UTILISATEUR -->
+    <!-- ======================= -->
+    <button id="userButton" type="button" [attr.aria-expanded]="dropdownOpen" aria-haspopup="true"
+        (click)="toggleDropdown()" [ngStyle]="{'background': Background, 'color': Text}"
+        class="group flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-1.5 sm:py-2 rounded-full backdrop-blur-sm transition-all duration-300 active:scale-95 focus:outline-none">
+
+        <!-- Avatar -->
+        <div class="relative">
+            <div [ngStyle]="{'background': Background1, 'color':'#FFF'}"
+                class="w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm shadow-inner transition-transform duration-300">
+
+                <span *ngIf="nom && prenom; else defaultIcon">
+                    {{ initials }}
+                </span>
+
+                <ng-template #defaultIcon>
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
+                    </svg>
+                </ng-template>
+            </div>
+        </div>
+
+        <!-- Infos utilisateur - TOUJOURS VISIBLE -->
+        <div class="flex flex-col items-start mr-1" [ngStyle]="{'color': '#FFF'}">
+            <span class="text-xs sm:text-sm font-semibold leading-tight truncate max-w-[100px] sm:max-w-[120px]">
+                {{ nom && prenom ? (nom + ' ' + prenom) : 'Invité' }}
+            </span>
+            <span class="text-[10px] sm:text-xs leading-tight opacity-70">
+                {{ role ? (role | titlecase) : 'Invité' }}
+            </span>
+        </div>
+
+        <!-- Flèche -->
+        <svg class="w-3 h-3 sm:w-4 sm:h-4 text-white transition-transform duration-300"
+            [class.rotate-180]="dropdownOpen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+
+    </button>
+
+    <!-- ======================= -->
+    <!-- MENU DROPDOWN -->
+    <!-- ======================= -->
+    <div id="dropdownMenu" role="menu" aria-orientation="vertical"
+        [ngStyle]="{'background': Background3, 'color': Text}"
+        class="fixed sm:absolute right-2 sm:right-4 top-14 sm:top-full mt-1 w-[calc(100vw-1rem)] sm:w-64 max-w-[280px] backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-2xl z-50 overflow-hidden transform transition-all duration-300 ease-out origin-top-right"
+        [class.opacity-0]="!dropdownOpen" [class.scale-95]="!dropdownOpen" [class.pointer-events-none]="!dropdownOpen"
+        [class.opacity-100]="dropdownOpen" [class.scale-100]="dropdownOpen">
+
+        <!-- Header -->
+        <div class="px-3 sm:px-4 py-2 sm:py-3" [ngStyle]="{'background': Background2, 'color': '#FFF'}">
+            <p class="text-sm font-bold truncate">
+                {{ nom && prenom ? (nom + ' ' + prenom) : 'Invité' }}
+            </p>
+            <p class="text-xs truncate opacity-70">
+                {{ email || 'Aucun email' }}
+            </p>
+        </div> 
+
+        <!-- Options -->
+        <div class="py-1" [ngStyle]="{'background': Background3}">
+
+            <!-- PROFIL -->
+            <a href="#" role="menuitem"
+                class="group flex items-center px-3 sm:px-4 py-2 sm:py-2.5 text-sm transition-all duration-200 active:scale-[0.98]">
+
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center mr-2 sm:mr-3 shrink-0"
+                    [ngStyle]="{'background': Background4, 'color': '#FFF'}">
+                    <i class="fa-solid fa-user text-sm"></i>
+                </div>
+
+                <div class="flex-1 min-w-0">
+                    <span class="font-medium text-sm">Profil</span>
+                    <span class="block text-xs opacity-60 truncate">
+                        Gérer votre compte
+                    </span>
+                </div>
+            </a>
+
+            <!-- PARAMÈTRES -->
+            <a href="#" role="menuitem"
+                class="group flex items-center px-3 sm:px-4 py-2 sm:py-2.5 text-sm transition-all duration-200 active:scale-[0.98]">
+
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center mr-2 sm:mr-3 shrink-0"
+                    [ngStyle]="{'background': Background4, 'color': '#FFF'}">
+                    <i class="fa-solid fa-gear text-sm"></i>
+                </div>
+
+                <div class="flex-1 min-w-0">
+                    <span class="font-medium text-sm">Paramètres</span>
+                    <span class="block text-xs opacity-60 truncate">
+                        Préférences et accessibilité
+                    </span>
+                </div>
+            </a>
+
+            <!-- Séparateur dynamique -->
+            <div class="my-1" [ngStyle]="{'border-top': '1px solid ' + borderligne}">
+            </div>
+
+            <!-- DÉCONNEXION -->
+            <a (click)="deconnecter()" role="menuitem" [ngStyle]="{'color': TextRouge}"
+                class="group flex items-center px-3 sm:px-4 py-2 sm:py-2.5 text-sm transition-all duration-200 active:scale-[0.98]">
+
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center mr-2 sm:mr-3 shrink-0"
+                    [ngStyle]="{'background': '#fee2e2', 'color': TextRouge}">
+                    <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                </div>
+
+                <span class="font-medium text-sm">
+                    Se déconnecter
+                </span>
+            </a>
+
+        </div>
+    </div>
+
+
+    <!-- Overlay -->
+    <div *ngIf="dropdownOpen"
+        class="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm sm:bg-transparent sm:backdrop-blur-none"
+        (click)="toggleDropdown()">
+    </div>
+
+</section>

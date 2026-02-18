@@ -1,0 +1,89 @@
+<app-icon></app-icon>
+
+<!-- NAVIGATION DESKTOP -->
+<nav class="hidden custom-md:block">
+  <ul class="flex space-x-6">
+    <li *ngFor="let link of navLinks">
+      <a
+        #rla="routerLinkActive"
+        [routerLink]="link.path"
+        routerLinkActive="font-bold"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [ngStyle]="{
+          'color': rla.isActive ? 'white' : Text,
+          'background': rla.isActive ? Background1 : 'transparent'
+        }"
+        class="px-3 py-2 transition rounded-lg"
+      >
+        {{ link.label }}
+      </a>
+    </li>
+  </ul>
+</nav>
+
+
+<!-- NAVIGATION MOBILE -->
+<nav class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-sm custom-md:hidden">
+  <div
+    class="backdrop-blur-xl rounded-full shadow-2xl px-2 py-2"
+    [ngStyle]="{
+      'background': !isLoggedIn
+        ? Background
+        : theme === 'sombre'
+          ? 'rgba(30,41,59,0.9)'
+          : 'rgba(255,255,255,0.9)',
+      'border': borderligne
+    }"
+  >
+    <ul class="flex items-center justify-between">
+      <li class="flex-1" *ngFor="let link of navLinks">
+        <a
+          #rla="routerLinkActive"
+          [routerLink]="link.path"
+          [routerLinkActiveOptions]="{ exact: true }"
+          [ngStyle]="{
+            'background': rla.isActive ? Background1 : 'transparent',
+            'color': rla.isActive
+              ? Text1
+              : (!isLoggedIn
+                  ? Text
+                  : theme === 'sombre'
+                    ? '#FFFFFF'
+                    : '#000000')
+          }"
+          routerLinkActive="shadow-lg scale-110"
+          class="group flex flex-col items-center justify-center gap-1 px-2 py-2 rounded-full transition-all duration-300 ease-out w-full relative"
+        >
+          <div
+            class="w-6 h-6 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
+          >
+            <i [class]="link.icon" class="text-lg"></i>
+          </div>
+
+          <span
+            class="text-[10px] font-semibold leading-none transition-all duration-300 max-[380px]:opacity-0 max-[380px]:h-0"
+            [class.scale-90]="!rla.isActive"
+          >
+            {{ link.label }}
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+
+<!-- Spacer mobile -->
+<div class="h-20 md:hidden"></div>
+
+<style>
+@media (min-width: 908px) {
+  .custom-md\:block {
+    display: block !important;
+  }
+  .custom-md\:hidden {
+    display: none !important;
+  }
+}
+</style>
