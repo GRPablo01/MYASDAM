@@ -54,8 +54,8 @@ const userSchema = new mongoose.Schema({
 
   status: { 
     type: String, 
-    enum: ['présent', 'blessé', 'absent'], 
-    default: 'présent' 
+    enum: ['En ligne', 'Ne pas deranger', 'Absent'], 
+    default: 'En ligne' 
   },
 
   compte: { 
@@ -73,8 +73,8 @@ const userSchema = new mongoose.Schema({
 
   cookie: {
     type: String,
-    enum: ['accepter', 'refuser', ' '],
-    default: ' '
+    enum: ['accepter', 'refuser'],
+    default: 'refuser'
   },
 
   poste: { 
