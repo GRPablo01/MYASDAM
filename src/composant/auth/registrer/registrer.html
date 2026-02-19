@@ -265,8 +265,8 @@
               </div>
               Email
             </label>
-            <input type="email" formControlName="email" placeholder="jean.dupont@example.com"
-              class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-sm lg:text-base text-gray-700 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 hover:border-gray-300" />
+            <input type="email" formControlName="email" placeholder="Votre Email"
+              class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-sm lg:text-base text-gray-400 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 hover:border-gray-300" />
             <div class="absolute right-3 top-[46px] opacity-0 transition-opacity duration-300"
               [class.opacity-100]="registerForm.get('email')?.valid && registerForm.get('email')?.touched">
               <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -289,8 +289,8 @@
               Mot de passe
             </label>
             <div class="relative">
-              <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="••••••••"
-                class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-sm lg:text-base text-gray-700 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 pr-12" />
+              <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Votre PASSWORD"
+                class="w-full bg-gray-50 text-gray-400 border-2 border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-sm lg:text-base placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 pr-12" />
               <button type="button" (click)="togglePassword()" tabindex="-1"
                 class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors p-1 rounded-lg hover:bg-gray-100">
                 <svg *ngIf="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -401,6 +401,7 @@
 
           <!-- Code d'accès à taper (joueur, entraineur, admin) -->
           <div class="group animate-fade-in-up" *ngIf="registerForm.get('role')?.value !== 'invité'">
+
             <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
               <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
                 <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -412,9 +413,23 @@
               Code d'accès
               <span class="text-xs text-gray-500 ml-2 hidden sm:inline">Tapez le code exact pour votre rôle</span>
             </label>
-            <input type="text" formControlName="codeAcces" placeholder="Tapez le code"
-              class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-sm lg:text-base text-gray-700 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 font-medium">
+
+            <!-- Input visible pour que l'utilisateur tape lui-même son code -->
+            <input
+              type="text"
+              formControlName="codeAcces"
+              placeholder="Tapez le code correspondant à votre rôle"
+              class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-sm lg:text-base text-gray-700 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 font-medium"
+            >
+
+            <!-- Message d'erreur si code incorrect -->
+            <p *ngIf="registerForm.get('codeAcces')?.touched && !isCodeValid()"
+              class="text-red-500 text-xs mt-1">
+              Code d’accès incorrect pour le rôle sélectionné
+            </p>
+
           </div>
+
 
           <div class="flex gap-3 lg:gap-4 pt-2 lg:pt-4">
             <button type="button" (click)="prevStep()"

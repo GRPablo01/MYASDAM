@@ -1,11 +1,11 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { Welcome } from "../../../composant/share/welcome/welcome";
 import { HttpClientModule,HttpClient } from '@angular/common/http';
 import { Header } from "../../../composant/public/header/header";
 import { FormsModule } from '@angular/forms';
 import { Footer } from "../../../composant/share/footer/footer";
+import { Welcome } from '../../../composant/share/welcome/welcome';
 
 @Component({
   selector: 'app-acceuil',

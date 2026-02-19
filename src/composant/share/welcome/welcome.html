@@ -2,319 +2,291 @@
 <app-icon></app-icon>
 
 <!-- ============================================
-     SECTION HERO - VERSION RESPONSIVE 2026
+     SECTION HERO - VERSION FULL WIDTH DESKTOP / CENTERED MOBILE
      ============================================ -->
-<section [ngStyle]="{'background':Background,'color':Text}"
-  class="w-full min-h-screen py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 xl:px-12 relative overflow-hidden flex items-center">
+<section [ngStyle]="{'background': Background, 'color': Text}"
+  class="w-full h-150vh py-8 sm:py-12 px-4 sm:px-6 lg:px-8 xl:px-12 relative overflow-hidden flex items-center"
+  role="banner" aria-label="Bienvenue sur Myasdam">
 
-  <!-- Background Elements décoratifs -->
-  <div class="absolute inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-3xl animate-pulse-slow"></div>
-    <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-white/5 to-transparent rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-transparent via-white/3 to-transparent rounded-full blur-3xl"></div>
+  <!-- Background Elements Premium -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div class="absolute -bottom-40 -left-20 w-[500px] h-[500px] bg-gradient-to-tr from-white/10 via-white/5 to-transparent rounded-full blur-3xl animate-float-slow-reverse"></div>
+    <div class="absolute top-1/3 right-1/4 w-72 h-72 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-full blur-3xl animate-pulse-gentle"></div>
+    <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]"></div>
   </div>
 
-  <div class="max-w-7xl mx-auto relative z-10 w-full">
+  <!-- CONTAINER FULL WIDTH -->
+  <div class="w-full relative z-10 h-full flex items-center">
     
-    <!-- Layout : Ligne sur desktop/tablette, Colonne sur mobile -->
-    <div class="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12 xl:gap-16">
+    <!-- Layout Grid - Responsive: centered on mobile, full width on desktop -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 items-center w-full">
 
       <!-- ============================================
-           TEXT SECTION - Responsive width
+           TEXT SECTION - Centered on mobile, left-aligned on desktop
            ============================================ -->
-      <div class="flex flex-col items-center lg:items-start text-center lg:text-left w-full lg:w-1/2 xl:w-5/12 space-y-6 sm:space-y-8">
+      <div class="flex flex-col items-center lg:items-start text-center lg:text-left space-y-4 sm:space-y-6 order-2 lg:order-1 w-full px-0 lg:pl-8 xl:pl-12">
 
-        <!-- Season Badge -->
-        <div class="inline-flex animate-fade-in-up">
-          <div [ngStyle]="{'background':Background1,'border':BorderHeader}"
-            class="group relative overflow-hidden backdrop-blur-xl border rounded-full shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105">
-            <div
-              class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out">
-            </div>
-            <span
-              class="relative text-white text-[10px] sm:text-xs font-bold px-5 sm:px-6 py-2.5 sm:py-3 rounded-full tracking-widest uppercase flex items-center gap-2">
+        <!-- Badge Saison -->
+        <div class="inline-flex animate-slide-in-left" role="status" aria-label="Saison en cours">
+          <div [ngStyle]="{'background': Background1, 'border': BorderHeader}"
+            class="group relative overflow-hidden backdrop-blur-2xl border rounded-full shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 cursor-default">
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+            <span class="relative text-white text-[10px] sm:text-xs font-bold px-4 py-2 rounded-full tracking-widest uppercase flex items-center gap-2">
               <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-white"></span>
-                <span class="relative inline-flex rounded-full h-full w-full bg-white"></span>
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-emerald-400"></span>
+                <span class="relative inline-flex rounded-full h-full w-full bg-emerald-400"></span>
               </span>
-              <i class="fa-solid fa-calendar-days text-xs sm:text-sm group-hover:rotate-12 transition-transform duration-300"></i>
-              Saison 2025 - 2026
+              <i class="fa-solid fa-calendar-days text-xs group-hover:rotate-12 transition-transform duration-300"></i>
+              <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">Saison 2025 - 2026</span>
             </span>
           </div>
         </div>
 
-        <!-- Title avec effet de profondeur -->
-        <div class="space-y-2 sm:space-y-3 relative">
-          <h1
-            class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tighter uppercase leading-[0.9] animate-fade-in-up drop-shadow-2xl"
-            style="animation-delay: 0.1s;">
-            Welcome to
+        <!-- Titre -->
+        <div class="space-y-1 relative animate-slide-in-up w-full" style="animation-delay: 0.1s;">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight uppercase leading-[0.9] drop-shadow-2xl">
+            <span class="block text-white/90">Welcome to</span>
           </h1>
-          <div class="relative inline-block animate-fade-in-up" style="animation-delay: 0.2s;">
-            <h2 [ngStyle]="{'color':Text1}"
-              class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tighter uppercase leading-[0.9] relative z-10">
+          <div class="relative inline-block group cursor-default">
+            <h2 [ngStyle]="{'color': Text1}"
+              class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight uppercase leading-[0.9] relative z-10 transition-all duration-300 group-hover:tracking-wider">
               Myasdam
             </h2>
-            <!-- Effet de glow derrière le texte -->
-            <div class="absolute inset-0 blur-3xl opacity-40 scale-110" [ngStyle]="{'background': Text1}"></div>
+            <div class="absolute -inset-4 blur-3xl opacity-30 scale-90 group-hover:scale-110 group-hover:opacity-50 transition-all duration-700" 
+                 [ngStyle]="{'background': 'radial-gradient(circle, ' + Text1 + ' 0%, transparent 70%)'}"></div>
+            <div class="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-current to-transparent opacity-50 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-center"></div>
           </div>
         </div>
 
-        <!-- Description -->
-        <div class="relative group animate-fade-in-up w-full max-w-lg lg:max-w-none" style="animation-delay: 0.3s;">
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl sm:rounded-3xl transform -skew-y-1 group-hover:skew-y-0 transition-all duration-500 group-hover:scale-[1.02]">
-          </div>
-          <p [ngStyle]="{'background':Background3}"
-            class="relative text-base sm:text-lg lg:text-xl leading-relaxed font-medium p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl border border-white/20 shadow-xl group-hover:shadow-2xl transition-all duration-500">
-            Rejoignez une communauté passionnée. Suivez vos entraînements, consultez les résultats en temps réel
-            et vivez le sport autrement avec une plateforme pensée pour les joueurs, éducateurs et familles.
+        <!-- Description - Centered on mobile, left on desktop -->
+        <div class="relative group animate-slide-in-up w-full max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto lg:mx-0" style="animation-delay: 0.2s;">
+          <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl transform -rotate-1 group-hover:rotate-0 transition-all duration-700 group-hover:scale-[1.02] shadow-xl"></div>
+          <p [ngStyle]="{'background': Background3}"
+            class="relative text-base sm:text-lg leading-relaxed font-medium p-5 sm:p-6 rounded-2xl border border-white/20 shadow-lg group-hover:shadow-xl transition-all duration-500 backdrop-blur-sm">
+            Rejoignez une communauté passionnée. Suivez vos entraînements, consultez les résultats en temps réel et vivez le sport autrement.
           </p>
         </div>
 
-        <!-- Buttons -->
-        <div
-          class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 animate-fade-in-up justify-center lg:justify-start w-full sm:w-auto"
-          style="animation-delay: 0.4s;">
-
-          <!-- Primary Button -->
-          <button [ngStyle]="{'background':Background4,'color':'#FFFFFF'}"
-            class="group relative overflow-hidden font-bold px-6 sm:px-8 lg:px-10 py-3.5 sm:py-4 lg:py-5 rounded-2xl sm:rounded-3xl shadow-2xl hover:shadow-3xl hover:-translate-y-2 hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base lg:text-lg min-w-[180px] sm:min-w-[200px]">
-            <span
-              class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-            <span class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-            <span class="relative flex items-center gap-2 sm:gap-3">
-              <i class="fa-solid fa-futbol text-base sm:text-lg lg:text-xl group-hover:animate-bounce"></i>
+        <!-- CTA Buttons - Centered on mobile, left on desktop -->
+        <div class="flex flex-col sm:flex-row gap-3 pt-2 animate-slide-in-up w-full sm:w-auto justify-center lg:justify-start" style="animation-delay: 0.3s;">
+          <button [ngStyle]="{'background': Background4, 'color': '#FFFFFF'}"
+            class="group relative overflow-hidden font-bold px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 text-base min-w-[200px] ring-2 ring-transparent focus:ring-white/50 focus:outline-none"
+            aria-label="Voir les matchs à venir">
+            <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+            <span class="relative flex items-center gap-2">
+              <i class="fa-solid fa-futbol text-lg group-hover:animate-bounce-slow"></i>
               <span>Voir les Matchs</span>
-              <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-2"></i>
+              <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
             </span>
           </button>
 
-          <!-- Secondary Button -->
-          <button [ngStyle]="{'background':Background5,'color':'#FFF','border':BorderHeader1}"
-            class="group relative overflow-hidden backdrop-blur-xl border-2 font-bold px-6 sm:px-8 lg:px-10 py-3.5 sm:py-4 lg:py-5 rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base lg:text-lg min-w-[180px] sm:min-w-[200px]">
-            <span
-              class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-            <span class="relative flex items-center gap-2 sm:gap-3">
-              <i class="fa-regular fa-calendar-check text-base sm:text-lg lg:text-xl group-hover:scale-110 transition-transform duration-300"></i>
+          <button [ngStyle]="{'background': Background5, 'color': '#FFF', 'border': BorderHeader1}"
+            class="group relative overflow-hidden backdrop-blur-xl border-2 font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 text-base min-w-[200px] focus:outline-none focus:ring-2 focus:ring-white/30"
+            aria-label="Consulter le planning">
+            <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+            <span class="relative flex items-center gap-2">
+              <i class="fa-regular fa-calendar-check text-lg group-hover:scale-110 transition-transform duration-300"></i>
               <span>Planning</span>
-              <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-2"></i>
+              <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
             </span>
           </button>
         </div>
 
-        <!-- Trust indicators / Stats -->
-        <div class="flex items-center justify-center lg:justify-start gap-6 sm:gap-8 lg:gap-10 pt-4 animate-fade-in-up flex-wrap" style="animation-delay: 0.5s;">
-          <div class="flex items-center gap-2 sm:gap-3 group cursor-default">
-            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/20 group-hover:scale-110 transition-transform duration-300"
-                 [ngStyle]="{'background': 'rgba(255,255,255,0.1)'}">
-              <i class="fa-solid fa-users text-lg sm:text-xl" [ngStyle]="{'color': Text1}"></i>
-            </div>
-            <div class="text-left">
-              <div class="text-xl sm:text-2xl font-black leading-none">500+</div>
-              <div class="text-[10px] sm:text-xs uppercase tracking-wider opacity-70">Membres</div>
-            </div>
-          </div>
-          <div class="w-px h-10 bg-white/20 hidden sm:block"></div>
-          <div class="flex items-center gap-2 sm:gap-3 group cursor-default">
-            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/20 group-hover:scale-110 transition-transform duration-300"
-                 [ngStyle]="{'background': 'rgba(255,255,255,0.1)'}">
-              <i class="fa-solid fa-trophy text-lg sm:text-xl" [ngStyle]="{'color': Text1}"></i>
-            </div>
-            <div class="text-left">
-              <div class="text-xl sm:text-2xl font-black leading-none">50+</div>
-              <div class="text-[10px] sm:text-xs uppercase tracking-wider opacity-70">Équipes</div>
-            </div>
-          </div>
-          <div class="w-px h-10 bg-white/20 hidden lg:block"></div>
-          <div class="flex items-center gap-2 sm:gap-3 group cursor-default hidden sm:flex">
-            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/20 group-hover:scale-110 transition-transform duration-300"
-                 [ngStyle]="{'background': 'rgba(255,255,255,0.1)'}">
-              <i class="fa-solid fa-star text-lg sm:text-xl" [ngStyle]="{'color': Text1}"></i>
-            </div>
-            <div class="text-left">
-              <div class="text-xl sm:text-2xl font-black leading-none">4.9</div>
-              <div class="text-[10px] sm:text-xs uppercase tracking-wider opacity-70">Note</div>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- ============================================
-           CAROUSEL SECTION - Responsive width
+           CAROUSEL SECTION - Centered on mobile, right-aligned on desktop
            ============================================ -->
-      <div class="w-full lg:w-1/2 xl:w-5/12 animate-fade-in-up flex items-center justify-center" style="animation-delay: 0.6s;">
-        <div [ngStyle]="{'background':Background}"
-          class="w-full backdrop-blur-2xl rounded-3xl border border-white/20 shadow-2xl overflow-hidden transition-all duration-500 hover:shadow-3xl hover:scale-[1.01]">
-
+      <div class="w-full animate-slide-in-right order-1 lg:order-2 flex items-center justify-center lg:justify-end px-0 lg:pr-8 xl:pr-12" style="animation-delay: 0.3s;">
+        <div [ngStyle]="{'background': 'rgba(255,255,255,0.03)'}"
+          class="w-full max-w-md lg:max-w-lg xl:max-w-xl backdrop-blur-3xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden transition-all duration-500 hover:shadow-3xl hover:border-white/20 group/card">
+          
           <!-- Carousel Header -->
-          <div class="flex items-center justify-between px-4 sm:px-5 lg:px-6 py-3 sm:py-4 border-b border-white/10"
+          <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-gradient-to-r from-white/5 to-transparent"
             [style.border-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.3)' : 'rgba(244, 63, 94, 0.2)'">
-            <div class="flex items-center gap-2 sm:gap-3">
-              <div class="w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg"
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transform group-hover/card:scale-105 transition-transform duration-300"
                 [style.background]="theme === 'sombre' ? 'linear-gradient(135deg, #6978b8, #818fd5)' : 'linear-gradient(135deg, #F43F5E, #BE123C)'">
-                <i class="fa-solid fa-calendar-day text-white text-xs sm:text-sm"></i>
+                <i class="fa-solid fa-calendar-day text-white text-sm"></i>
               </div>
-              <span class="text-sm sm:text-base font-bold uppercase tracking-wider" [style.color]="Text">
-                Prochains Matchs
-              </span>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider block" [style.color]="Text">
+                  Prochains Matchs
+                </span>
+                <span class="text-[10px] opacity-60" [style.color]="Text">
+                  {{ matchs.length > 0 ? matchs.length + ' matchs' : 'Aucun match' }}
+                </span>
+              </div>
             </div>
-            <div class="flex items-center gap-1.5 sm:gap-2">
-              <button (click)="prevMatch()"
-                class="w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 backdrop-blur-sm border border-white/10"
+            <div class="flex items-center gap-1">
+              <button (click)="prevMatch()" [disabled]="matchs.length <= 1"
+                class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 backdrop-blur-sm border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed hover:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/30"
                 [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.2)' : 'rgba(244, 63, 94, 0.1)'"
-                [style.color]="theme === 'sombre' ? '#6978b8' : '#F43F5E'" aria-label="Match précédent">
-                <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
+                [style.color]="theme === 'sombre' ? '#6978b8' : '#F43F5E'" 
+                aria-label="Match précédent">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
               </button>
-              <button (click)="nextMatch()"
-                class="w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 backdrop-blur-sm border border-white/10"
+              <button (click)="nextMatch()" [disabled]="matchs.length <= 1"
+                class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 backdrop-blur-sm border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed hover:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/30"
                 [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.2)' : 'rgba(244, 63, 94, 0.1)'"
-                [style.color]="theme === 'sombre' ? '#6978b8' : '#F43F5E'" aria-label="Match suivant">
-                <i class="fa-solid fa-chevron-right text-xs sm:text-sm"></i>
+                [style.color]="theme === 'sombre' ? '#6978b8' : '#F43F5E'" 
+                aria-label="Match suivant">
+                <i class="fa-solid fa-chevron-right text-xs"></i>
               </button>
             </div>
           </div>
 
           <!-- Carousel Content -->
-          <div class="relative overflow-hidden">
-            <div class="flex transition-transform duration-700 ease-out"
+          <div class="relative overflow-hidden bg-gradient-to-b from-transparent to-black/5">
+            <div class="flex transition-transform duration-500 ease-out"
               [style.transform]="'translateX(-' + currentMatch * 100 + '%)'">
 
               <!-- Match Card -->
-              <div *ngFor="let match of matchs; let i = index" class="w-full flex-shrink-0 p-4 sm:p-5 lg:p-6">
-
+              <div *ngFor="let match of matchs; let i = index" class="w-full flex-shrink-0 p-5" role="tabpanel" [attr.aria-label]="'Match ' + (i + 1)">
+                
                 <!-- Date & Location -->
-                <div class="flex items-center justify-between mb-3 sm:mb-4">
+                <div class="flex items-center justify-between mb-4">
                   <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg"
+                    <div class="w-12 h-12 rounded-xl flex flex-col items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300"
                       [style.background]="theme === 'sombre' ? 'linear-gradient(135deg, #6978b8, #818fd5)' : 'linear-gradient(135deg, #F43F5E, #BE123C)'">
-                      <span class="text-white font-black text-lg sm:text-xl">{{ match.date | date:'dd' }}</span>
+                      <span class="text-white font-black text-lg leading-none">{{ match.date | date:'dd' }}</span>
+                      <span class="text-white/90 text-[10px] font-bold uppercase">{{ match.date | date:'MMM' }}</span>
                     </div>
                     <div>
-                      <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider"
+                      <p class="text-[10px] font-bold uppercase tracking-wider opacity-60 mb-0.5"
                         [style.color]="theme === 'sombre' ? '#94a3b8' : '#6b7280'">
-                        {{ match.date | date:'MMMM yyyy' }}
+                        {{ match.date | date:'yyyy' }}
                       </p>
-                      <p class="text-lg sm:text-xl font-black" [style.color]="Text">
+                      <p class="text-base font-black" [style.color]="Text">
                         {{ match.date | date:'EEEE' }}
                       </p>
                     </div>
                   </div>
 
-                  <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-lg"
-                    [class.bg-emerald-500]="match.localisationMatch === 'Domicile'"
-                    [class.bg-orange-500]="match.localisationMatch !== 'Domicile'"
-                    class="text-white">
-                    <span class="relative flex h-1.5 w-1.5">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-white"></span>
-                      <span class="relative inline-flex rounded-full h-full w-full bg-white"></span>
+                  <div class="flex flex-col items-end gap-1">
+                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-md"
+                      [class.bg-emerald-500]="match.localisationMatch === 'Domicile'"
+                      [class.bg-orange-500]="match.localisationMatch !== 'Domicile'"
+                      class="text-white">
+                      <span class="relative flex h-1.5 w-1.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-white"></span>
+                        <span class="relative inline-flex rounded-full h-full w-full bg-white"></span>
+                      </span>
+                      <span>{{ match.localisationMatch }}</span>
+                    </div>
+                    <span class="text-[10px] font-medium opacity-70" [style.color]="Text">
+                      {{ match.heure || '--:--' }}
                     </span>
-                    <span>{{ match.localisationMatch }}</span>
                   </div>
                 </div>
 
-                <!-- Teams & Score - Design amélioré -->
-                <div class="relative p-3 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl border border-white/10 backdrop-blur-sm"
-                  [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.15)' : 'rgba(244, 63, 94, 0.05)'">
-
+                <!-- Score Board -->
+                <div class="relative p-4 rounded-xl border border-white/10 backdrop-blur-md shadow-inner"
+                  [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.1)' : 'rgba(244, 63, 94, 0.03)'">
+                  
                   <!-- Home Team -->
-                  <div class="flex items-center justify-between mb-3 sm:mb-4">
-                    <div class="flex items-center gap-2 sm:gap-3 flex-1">
-                      <div class="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl flex items-center justify-center overflow-hidden shadow-lg"
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-3 flex-1 min-w-0">
+                      <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden shadow-md ring-2 ring-white/10"
                         [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.3)' : '#e0e7ff'">
-                        <img *ngIf="match.logoDom" [src]="match.logoDom" [alt]="match.equipeDom"
+                        <img *ngIf="match.logoDom" [src]="match.logoDom" [alt]="'Logo ' + match.equipeDom"
                           class="w-full h-full object-cover">
-                        <i *ngIf="!match.logoDom" class="fa-solid fa-shield-halved text-lg sm:text-xl"
+                        <i *ngIf="!match.logoDom" class="fa-solid fa-shield-halved text-lg"
                           [style.color]="theme === 'sombre' ? '#6978b8' : '#4f46e5'"></i>
                       </div>
                       <div class="flex flex-col min-w-0">
-                        <span class="font-bold text-sm sm:text-base truncate" [style.color]="Text">
+                        <span class="font-bold text-sm truncate" [style.color]="Text">
                           {{ match.equipeDom }}
                         </span>
-                        <span class="text-[10px] sm:text-xs opacity-70">Domicile</span>
+                        <span class="text-[10px] opacity-60 font-medium">Domicile</span>
                       </div>
                     </div>
-                    <span class="text-2xl sm:text-3xl font-black ml-2" [style.color]="Text1">{{ match.scoreDom }}</span>
+                    <span class="text-2xl font-black ml-2 tabular-nums" [style.color]="Text1">{{ match.scoreDom !== null ? match.scoreDom : '-' }}</span>
                   </div>
 
                   <!-- VS Divider -->
-                  <div class="flex items-center justify-center gap-3 my-2 sm:my-3">
-                    <div class="flex-1 h-px bg-white/20"></div>
-                    <div class="flex flex-col items-center px-2 sm:px-3">
-                      <span class="text-[10px] sm:text-xs font-bold opacity-50 uppercase tracking-widest">VS</span>
-                      <span class="text-xs sm:text-sm font-bold mt-0.5" 
+                  <div class="flex items-center justify-center gap-2 my-2 relative">
+                    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                    <div class="flex flex-col items-center px-2 py-1 rounded-full border border-white/10 backdrop-blur-sm"
+                      [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.2)' : 'rgba(244, 63, 94, 0.1)'">
+                      <span class="text-[10px] font-bold opacity-50 uppercase tracking-widest">VS</span>
+                      <span class="text-[10px] font-bold" 
                         [class.text-emerald-400]="match.lieu === 'domicile'"
                         [class.text-orange-400]="match.lieu !== 'domicile'">
-                        {{ match.heure || '--:--' }}
-                      </span>
-                      <span class="text-[9px] sm:text-[10px] font-bold mt-0.5 px-1.5 py-0.5 rounded-full" [ngClass]="{
-                        'bg-emerald-200 text-emerald-800': match.statut === 'En cours',
-                        'bg-gray-200 text-gray-600': match.statut === 'A venir',
-                        'bg-red-200 text-red-800': match.statut === 'Terminé'
-                      }">
-                        {{ match.statut }}
+                        {{ match.categorie || 'Match' }}
                       </span>
                     </div>
-                    <div class="flex-1 h-px bg-white/20"></div>
+                    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
                   </div>
 
                   <!-- Away Team -->
-                  <div class="flex items-center justify-between mt-3 sm:mt-4">
-                    <span class="text-2xl sm:text-3xl font-black mr-2" [style.color]="Text1">{{ match.scoreExt }}</span>
-                    <div class="flex items-center gap-2 sm:gap-3 flex-1 justify-end">
+                  <div class="flex items-center justify-between mt-3">
+                    <span class="text-2xl font-black mr-2 tabular-nums" [style.color]="Text1">{{ match.scoreExt !== null ? match.scoreExt : '-' }}</span>
+                    <div class="flex items-center gap-3 flex-1 justify-end min-w-0">
                       <div class="flex flex-col items-end min-w-0">
-                        <span class="font-bold text-sm sm:text-base text-right truncate" [style.color]="Text">
+                        <span class="font-bold text-sm text-right truncate" [style.color]="Text">
                           {{ match.equipeExt }}
                         </span>
-                        <span class="text-[10px] sm:text-xs opacity-70">Extérieur</span>
+                        <span class="text-[10px] opacity-60 font-medium">Extérieur</span>
                       </div>
-                      <div class="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl flex items-center justify-center overflow-hidden shadow-lg"
+                      <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden shadow-md ring-2 ring-white/10"
                         [style.background-color]="theme === 'sombre' ? 'rgba(244, 63, 94, 0.3)' : '#ffe4e6'">
-                        <img *ngIf="match.logoExt" [src]="match.logoExt" [alt]="match.equipeExt"
+                        <img *ngIf="match.logoExt" [src]="match.logoExt" [alt]="'Logo ' + match.equipeExt"
                           class="w-full h-full object-cover">
-                        <i *ngIf="!match.logoExt" class="fa-solid fa-shield text-lg sm:text-xl"
+                        <i *ngIf="!match.logoExt" class="fa-solid fa-shield text-lg"
                           [style.color]="theme === 'sombre' ? '#F43F5E' : '#e11d48'"></i>
                       </div>
                     </div>
                   </div>
+
+                  <!-- Status Badge -->
+                  <div class="absolute top-2 right-2">
+                    <span class="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full border" [ngClass]="{
+                      'bg-emerald-500/20 text-emerald-300 border-emerald-500/30': match.statut === 'En cours',
+                      'bg-blue-500/20 text-blue-300 border-blue-500/30': match.statut === 'A venir',
+                      'bg-gray-500/20 text-gray-300 border-gray-500/30': match.statut === 'Terminé'
+                    }">
+                      {{ match.statut }}
+                    </span>
+                  </div>
                 </div>
 
-                <!-- Additional Info -->
-                <div class="flex items-center justify-center gap-3 mt-3 sm:mt-4 text-xs sm:text-sm font-medium"
+                <!-- Footer Info -->
+                <div class="flex items-center justify-between mt-4 text-xs font-medium"
                   [style.color]="theme === 'sombre' ? '#94a3b8' : '#6b7280'">
                   <div class="flex items-center gap-1.5">
-                    <i class="fa-solid fa-location-dot text-sm" [style.color]="Text1"></i>
-                    <span class="truncate">{{ match.lieu || 'Stade à confirmer' }}</span>
+                    <i class="fa-solid fa-location-dot text-xs" [style.color]="Text1"></i>
+                    <span class="truncate max-w-[140px]">{{ match.lieu || 'Stade à confirmer' }}</span>
                   </div>
-                  <span class="w-1 h-1 rounded-full bg-current opacity-50"></span>
-                  <span class="truncate font-bold" [style.color]="Text">{{ match.categorie || match.typeMatch || 'Compétition' }}</span>
+                  <div class="flex items-center gap-1.5 text-[10px] opacity-70">
+                    <i class="fa-solid fa-clock text-xs"></i>
+                    <span>{{ match.heure || 'Horaire à définir' }}</span>
+                  </div>
                 </div>
               </div>
 
               <!-- Empty State -->
-              <div *ngIf="matchs.length === 0" class="w-full flex-shrink-0 p-8 sm:p-10 text-center">
-                <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-full flex items-center justify-center"
+              <div *ngIf="matchs.length === 0" class="w-full flex-shrink-0 p-6 text-center">
+                <div class="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center animate-pulse-gentle"
                   [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.2)' : '#f3f4f6'">
-                  <i class="fa-solid fa-calendar-xmark text-2xl sm:text-3xl"
+                  <i class="fa-solid fa-calendar-xmark text-2xl"
                     [style.color]="theme === 'sombre' ? '#6978b8' : '#9ca3af'"></i>
                 </div>
-                <p class="text-sm sm:text-base font-medium opacity-70">
-                  Aucun match programmé pour le moment
-                </p>
+                <p class="text-sm font-medium opacity-70 mb-1">Aucun match programmé</p>
+                <p class="text-xs opacity-50">Revenez bientôt</p>
               </div>
             </div>
           </div>
 
-          <!-- Pagination améliorée -->
-          <div class="flex items-center justify-center gap-2 sm:gap-3 py-3 sm:py-4 border-t border-white/10"
-            [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.1)' : 'rgba(244, 63, 94, 0.05)'"
+          <!-- Pagination dots -->
+          <div class="flex items-center justify-center gap-2 py-3 border-t border-white/10 bg-gradient-to-r from-transparent via-white/5 to-transparent"
             [style.border-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.3)' : 'rgba(244, 63, 94, 0.2)'">
             <button *ngFor="let match of matchs; let i = index" (click)="goToMatch(i)"
-              class="h-2 sm:h-2.5 rounded-full transition-all duration-500 hover:scale-125" 
-              [class.w-6]="i === currentMatch" [class.w-2]="i !== currentMatch"
-              [class.sm:w-8]="i === currentMatch" [class.sm:w-2.5]="i !== currentMatch"
-              [style.background-color]="i === currentMatch ? (theme === 'sombre' ? '#6978b8' : '#F43F5E') : (theme === 'sombre' ? '#475569' : '#d1d5db')"
-              [attr.aria-label]="'Aller au match ' + (i + 1)" [attr.aria-current]="i === currentMatch ? 'true' : 'false'">
+              class="h-1.5 rounded-full transition-all duration-500 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-white/30" 
+              [class.w-6]="i === currentMatch" [class.w-1.5]="i !== currentMatch"
+              [style.background-color]="i === currentMatch ? (theme === 'sombre' ? '#6978b8' : '#F43F5E') : (theme === 'sombre' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)')"
+              [attr.aria-label]="'Aller au match ' + (i + 1)" 
+              [attr.aria-current]="i === currentMatch ? 'true' : 'false'">
             </button>
           </div>
         </div>
@@ -325,86 +297,123 @@
 </section>
 
 <style>
-  @keyframes fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  /* ============================================
+     ANIMATIONS & UTILITAIRES
+     ============================================ */
+  
+  @keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
   }
 
-  @keyframes scale-x {
-    from {
-      transform: scaleX(0);
-    }
-
-    to {
-      transform: scaleX(1);
-    }
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
   }
 
-  @keyframes pulse-slow {
-    0%, 100% {
-      opacity: 0.3;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.5;
-      transform: scale(1.1);
-    }
+  @keyframes slide-in-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  .animate-fade-in-up {
-    animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  @keyframes float-slow {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(20px, -20px) scale(1.05); }
+    66% { transform: translate(-10px, 10px) scale(0.95); }
+  }
+
+  @keyframes float-slow-reverse {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-20px, 20px) scale(1.05); }
+    66% { transform: translate(10px, -10px) scale(0.95); }
+  }
+
+  @keyframes pulse-gentle {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+  }
+
+  @keyframes bounce-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+
+  .animate-slide-in-left {
+    animation: slide-in-left 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     opacity: 0;
   }
 
-  .animate-scale-x {
-    animation: scale-x 0.5s ease-out forwards;
+  .animate-slide-in-right {
+    animation: slide-in-right 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
   }
 
-  .animate-pulse-slow {
-    animation: pulse-slow 4s ease-in-out infinite;
+  .animate-slide-in-up {
+    animation: slide-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
   }
 
-  /* Reduced motion */
+  .animate-float-slow {
+    animation: float-slow 20s ease-in-out infinite;
+  }
+
+  .animate-float-slow-reverse {
+    animation: float-slow-reverse 25s ease-in-out infinite;
+  }
+
+  .animate-pulse-gentle {
+    animation: pulse-gentle 6s ease-in-out infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce-slow 2s ease-in-out infinite;
+  }
+
+  .hover\:shadow-3xl:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Hauteur fixe utilitaires */
+  .h-\[150vh\] {
+    height: 150vh;
+  }
+
+  /* Accessibilité */
   @media (prefers-reduced-motion: reduce) {
-
     *,
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
+      transition-duration: 0.2s !important;
     }
-
-    .animate-fade-in-up {
+    
+    .animate-slide-in-left,
+    .animate-slide-in-right,
+    .animate-slide-in-up {
       opacity: 1;
+      transform: none;
     }
   }
 
-  /* Focus styles for accessibility */
-  button:focus-visible {
+  button:focus-visible,
+  a:focus-visible {
     outline: 2px solid currentColor;
-    outline-offset: 3px;
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 
-  /* Smooth scroll behavior */
-  html {
-    scroll-behavior: smooth;
+  button:focus,
+  a:focus {
+    outline: none;
   }
 
-  /* Hover effects améliorés */
-  .hover\:shadow-3xl:hover {
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  }
-
-  /* Glassmorphism enhancement */
-  .backdrop-blur-3xl {
-    backdrop-filter: blur(64px);
+  ::selection {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: inherit;
   }
 </style>

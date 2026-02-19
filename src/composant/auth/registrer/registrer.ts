@@ -30,12 +30,18 @@ export class Registrer {
     'U13','U13F','U18','U23','SeniorA','SeniorB','SeniorD'
   ];
 
+  // Codes d'accès fixes par rôle
+  codeParRole: { [role: string]: string } = {
+    joueur: 'Joueur2026',
+    entraineur: 'Coach2026',
+    admin: 'Admin2026'
+  };
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router
   ){
-
     this.registerForm = this.fb.group({
       nom:['',Validators.required],
       prenom:['',Validators.required],
@@ -46,12 +52,11 @@ export class Registrer {
       numeroMaillot:[''],
       club:[''],
       equipe:[''],
-      codeAcces:[''],  // 🔑 ajouté
+      codeAcces:[''],  // 🔑 code à taper par l'utilisateur
       key:[''],
       theme:['clair'],
       status:['présent']
     });
-
   }
 
   /* 🔄 étapes */
@@ -64,56 +69,44 @@ export class Registrer {
     this.showPassword=!this.showPassword;
   }
 
-  /* ✅ validation */
+  /* ✅ validation des étapes */
   isStep1Valid():boolean{
-    return !!(
-      this.registerForm.get('nom')?.valid &&
-      this.registerForm.get('prenom')?.valid
-    );
+    return !!(this.registerForm.get('nom')?.valid && this.registerForm.get('prenom')?.valid);
   }
-
   isStep2Valid():boolean{
-    return !!(
-      this.registerForm.get('email')?.valid &&
-      this.registerForm.get('password')?.valid
-    );
+    return !!(this.registerForm.get('email')?.valid && this.registerForm.get('password')?.valid);
   }
-
   isStep3Valid():boolean{
     return !!this.registerForm.get('role')?.valid;
   }
-
   isStep4Valid():boolean{
-    return !!(
-      this.registerForm.get('club')?.value &&
-      this.registerForm.get('theme')?.value
-    );
+    return !!(this.registerForm.get('club')?.value && this.registerForm.get('theme')?.value);
   }
 
-
-  /* 🎭 role change */
+  /* 🎭 rôle changé */
   onRoleChange(): void {
     const role = this.registerForm.get('role')?.value;
-
-    // Définir des codes fixes pour chaque rôle
-    const codeParRole: { [key: string]: string } = {
-      'joueur': 'Joueur2026',
-      'entraineur': 'Coach2026',
-      'admin': 'Admin2026'
-    };
-
-    if (role === 'invité') {
+    if(role==='invité'){
       this.registerForm.get('equipe')?.setValue('');
       this.registerForm.get('codeAcces')?.setValue('');
-    } else if (role === 'admin') {
+    } else if(role==='admin'){
       this.registerForm.get('equipe')?.setValue('ALL');
-      this.registerForm.get('codeAcces')?.setValue(codeParRole[role]);
-    } else { // joueur ou entraineur
-      this.registerForm.get('codeAcces')?.setValue(codeParRole[role]);
+      this.registerForm.get('codeAcces')?.setValue('');
+    } else {
+      this.registerForm.get('codeAcces')?.setValue('');
+      this.registerForm.get('equipe')?.setValue('');
     }
   }
 
-  /* 🚀 submit */
+  /* 🔑 validation code d'accès selon rôle */
+  isCodeValid(): boolean {
+    const role = this.registerForm.get('role')?.value;
+    const code = this.registerForm.get('codeAcces')?.value;
+    if(!role || !code) return true; // ne pas afficher erreur tant que vide
+    return this.codeParRole[role] === code;
+  }
+
+  /* 🚀 soumission */
   onSubmit():void{
 
     this.message=null;
@@ -125,7 +118,6 @@ export class Registrer {
       return;
     }
 
-    // Validation rôle + codeAcces + équipe
     const role = this.registerForm.get('role')?.value;
     const codeAcces = this.registerForm.get('codeAcces')?.value;
     const equipe = this.registerForm.get('equipe')?.value;
@@ -134,6 +126,11 @@ export class Registrer {
       if(!codeAcces){
         this.messageType='error';
         this.message='Le code d’accès est obligatoire pour ce rôle';
+        return;
+      }
+      if(!this.isCodeValid()){
+        this.messageType='error';
+        this.message='Code d’accès incorrect pour le rôle sélectionné';
         return;
       }
       if(!equipe){
@@ -149,6 +146,11 @@ export class Registrer {
         this.message='Le code d’accès est obligatoire pour l’admin';
         return;
       }
+      if(!this.isCodeValid()){
+        this.messageType='error';
+        this.message='Code d’accès incorrect pour l’admin';
+        return;
+      }
       this.registerForm.get('equipe')?.setValue('ALL');
     }
 
@@ -160,27 +162,22 @@ export class Registrer {
     this.isSubmitting=true;
 
     const formData={...this.registerForm.value};
-
     ['poste','numeroMaillot','club','equipe','key','codeAcces']
-    .forEach(field=>{
-      if(!formData[field]) delete formData[field];
-    });
+      .forEach(field=>{
+        if(!formData[field]) delete formData[field];
+      });
 
     this.http.post<any>('http://localhost:3000/api/auth/register',formData)
     .subscribe({
-
       next:(res)=>{
         this.isSubmitting = false;
-      
         if(!res?.user){
           this.messageType = 'error';
           this.message = 'Erreur inattendue : utilisateur non retourné';
           return;
         }
-      
         this.messageType='success';
         this.message='Inscription réussie 🎉';
-      
         const utilisateur={
           nom:res.user.nom,
           prenom:res.user.prenom,
@@ -197,46 +194,33 @@ export class Registrer {
           compteDesactiveTime:res.user.compteDesactiveTime,
           poste:res.user.poste,
         };
-      
         localStorage.setItem('utilisateur',JSON.stringify(utilisateur));
-      
         this.registerForm.reset({
           role:'joueur',
           theme:'clair',
-          status:'présent'
+          status:'En ligne'
         });
-      
         this.currentStep=1;
-      
-        console.log('Redirection vers accueil...');
         setTimeout(()=>{
           this.router.navigate(['/connexion']);
         },1000);
       },
-      
-
       error:(err)=>{
-
         this.isSubmitting=false;
         this.messageType='error';
-
         if(err.status===409){
           this.message='Email déjà utilisé';
-        }
-        else if(err.status===0){
+        } else if(err.status===0){
           this.message='Impossible de contacter le serveur';
-        }
-        else{
+        } else {
           this.message=err.error?.message||'Erreur lors de l’inscription';
         }
-
       }
-
     });
 
   }
 
-  /* 🔐 Génération codeAcces aléatoire */
+  /* 🔐 génération aléatoire de code */
   generateCodeAcces(length: number = 6): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
@@ -246,7 +230,7 @@ export class Registrer {
     return result;
   }
 
-  /* 🔐 password strength */
+  /* 🔐 force mot de passe */
   getPasswordStrength():number{
     const pwd=this.registerForm.get('password')?.value||'';
     let score=0;
