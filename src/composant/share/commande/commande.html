@@ -1,0 +1,86 @@
+<!-- ============================= -->
+<!-- 🖥 MODE FIXE (écran > 1600px) -->
+<!-- ============================= -->
+<div class="desktop-only justify-center gap-6 flex-wrap">
+    <app-ajouter-equipe></app-ajouter-equipe>
+    <app-creer-match></app-creer-match>
+    <app-creer-event></app-creer-event>
+    <app-convocations></app-convocations>
+    <app-creer-actus></app-creer-actus>
+  </div>
+  
+  <!-- ============================= -->
+  <!-- 📱💻 CARROUSEL (< 1600px) -->
+  <!-- ============================= -->
+  <div class="carousel-mode w-full">
+  
+    <div
+      class="flex gap-6 overflow-x-auto px-4 pb-4
+             scroll-smooth snap-x snap-mandatory
+             no-scrollbar"
+    >
+  
+      <div class="snap-start shrink-0">
+        <app-ajouter-equipe></app-ajouter-equipe>
+      </div>
+  
+      <div class="snap-start shrink-0">
+        <app-creer-match></app-creer-match>
+      </div>
+  
+      <div class="snap-start shrink-0">
+        <app-creer-event></app-creer-event>
+      </div>
+  
+      <div class="snap-start shrink-0">
+        <app-convocations></app-convocations>
+      </div>
+  
+      <div class="snap-start shrink-0">
+        <app-creer-actus></app-creer-actus>
+      </div>
+  
+    </div>
+  
+  </div>
+  
+  <style>
+  /* ============================= */
+  /* Scrollbar cachée */
+  /* ============================= */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  /* ============================= */
+  /* Par défaut → Carrousel actif */
+  /* ============================= */
+  .desktop-only {
+    display: none;
+  }
+  
+  .carousel-mode {
+    display: block;
+  }
+  
+  /* ============================= */
+  /* Si écran > 1600px */
+  /* ============================= */
+  @media (min-width: 1600px) {
+  
+    .desktop-only {
+      display: flex;
+    }
+  
+    .carousel-mode {
+      display: none;
+    }
+  
+  }
+  </style>
+  

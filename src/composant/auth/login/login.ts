@@ -80,10 +80,10 @@ export class Login {
             status: res.user.status,
             compte: res.user.compte,
             compteDesactiveTime: res.user.compteDesactiveTime,
-            suivis: res.user.suivis || [],
-            abonnements: res.user.abonnements || [],
-            poste: res.user.poste,
+            // 🔥 AJOUT IMPORTANT
+            cookie: res.user.cookie
           };
+          
 
           console.log('💾 Sauvegarde utilisateur', utilisateur);
           localStorage.setItem('utilisateur', JSON.stringify(utilisateur));

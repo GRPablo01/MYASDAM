@@ -1,0 +1,62 @@
+<section [ngStyle]="{'background': Background, 'color': Text}" class="h-150vh flex flex-col">
+
+    
+
+    <!-- NAVIGATION -->
+    <nav class="w-full flex justify-center py-6 border-b" [ngStyle]="{'border-color': BorderHeader}">
+
+        <!-- Conteneur centralisé et responsive -->
+        <div class="flex flex-wrap justify-center gap-4 max-w-[1200px] w-full">
+
+            <button *ngFor="let item of currentNavItems" 
+                    (click)="setView(item.id)"
+                    (mouseenter)="hoveredItem = item.id" 
+                    (mouseleave)="hoveredItem = null"
+                    class="px-5 py-2 rounded-xl transition-all duration-300 flex items-center gap-2"
+                    [ngStyle]="{
+                        'background': isActive(item.id) 
+                                        ? Background1 
+                                        : (hoveredItem === item.id ? Background1 : Background),
+                        'color': isActive(item.id) 
+                                        ? '#ffffff' 
+                                        : (hoveredItem === item.id ? '#ffffff' : Text)
+                    }">
+                <i [class]="item.icon"></i>
+                {{ item.label }}
+            </button>
+
+        </div>
+    </nav>
+
+  
+    
+    <!-- CONTENU -->
+    <div class="flex-1 p-8">
+
+        <div *ngIf="currentView === 'Centre de Commande'">
+            <app-commande></app-commande>
+        </div>
+
+        <div *ngIf="currentView === 'planning'">
+            <h2 class="text-3xl font-bold mb-6">Planning</h2>
+        </div>
+        
+        <div *ngIf="currentView === 'match'">
+            <h2 class="text-3xl font-bold mb-6">Matchs</h2>
+        </div>
+
+        <div *ngIf="currentView === 'equipe'">
+            <h2 class="text-3xl font-bold mb-6">Équipe</h2>
+        </div>
+
+        <div *ngIf="currentView === 'convocations'">
+            <h2 class="text-3xl font-bold mb-6">Convocation</h2>
+        </div>
+
+        <div *ngIf="currentView === 'profil'">
+            <h2 class="text-3xl font-bold mb-6">Profil</h2>
+        </div>
+
+    </div>
+
+</section>

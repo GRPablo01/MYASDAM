@@ -4,6 +4,7 @@ import { Connexion } from '../page/auth/connexion/connexion';
 import { Inscription } from '../page/auth/inscription/inscription';
 import { Acceuil } from '../page/public/acceuil/acceuil';
 import { Actualite } from '../page/public/actualite/actualite';
+import { Dashboard } from '../page/public/dashboard/dashboard';
 
 
 
@@ -18,6 +19,7 @@ export const routes: Routes = [
     { path: 'inscription', component: Inscription },
     { path: 'accueil', component: Acceuil },
     { path: 'actualite', component: Actualite },
+    { path: 'dashboard', component: Dashboard },
     
 
 ];

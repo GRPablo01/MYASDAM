@@ -54,10 +54,17 @@ const userSchema = new mongoose.Schema({
 
   status: { 
     type: String, 
-    enum: ['En ligne', 'Ne pas deranger', 'Absent'], 
+    enum: ['En ligne', 'Ne pas deranger', 'Absent', 'ne pas deranger'], 
     default: 'En ligne' 
   },
-
+  
+  cookie: {
+    type: String,
+    enum: ['accepter', 'refuser'],
+    default: ''
+  },
+  
+  
   compte: { 
     type: String, 
     enum: ['actif', 'désactivé', 'supprimé'], 
@@ -71,16 +78,6 @@ const userSchema = new mongoose.Schema({
     default: []
   },
 
-  cookie: {
-    type: String,
-    enum: ['accepter', 'refuser'],
-    default: 'refuser'
-  },
-
-  poste: { 
-    type: String, 
-    enum: ['gardien', 'defenseur', 'milieu', 'attaquant'] 
-  }
 
 });
 

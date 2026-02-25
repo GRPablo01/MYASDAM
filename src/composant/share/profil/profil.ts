@@ -9,6 +9,7 @@ interface Utilisateur {
   theme?: 'clair' | 'sombre';
   role?: string;
   email?: string;
+  statut?: 'en ligne' | 'ne pas déranger' | 'absent'; // ← ajouté
 }
 
 @Component({
@@ -31,6 +32,7 @@ export class Profil implements OnInit {
   role = '';
   email = '';
   initials = '';
+  statut: 'en ligne' | 'ne pas déranger' | 'absent' = 'en ligne'; // ← ajouté
 
   // 🎨 Couleurs dynamiques utilisées dans ton HTML
   Text = '';
@@ -41,6 +43,7 @@ export class Profil implements OnInit {
   Background4 = '';
   TextRouge = '';
   borderligne = '';
+  StatutColor = ''; // couleur pour afficher le statut
 
   constructor(private router: Router) {}
 
@@ -51,12 +54,12 @@ export class Profil implements OnInit {
 
   /** Chargement utilisateur */
   private loadUser(): void {
-
     const userStr = localStorage.getItem('utilisateur');
 
     // 🔴 NON CONNECTÉ
     if (!userStr) {
       this.utilisateur = null;
+      this.setStatutColor();
       return;
     }
 
@@ -69,16 +72,19 @@ export class Profil implements OnInit {
       this.prenom = user.prenom || '';
       this.role = user.role || '';
       this.email = user.email || '';
+      this.statut = user.statut || 'en ligne'; // ← récupère le statut
 
       if (user.theme === 'clair' || user.theme === 'sombre') {
         this.theme = user.theme;
       }
 
       this.generateInitials();
+      this.setStatutColor();
 
     } catch (error) {
       console.error('Erreur parsing utilisateur', error);
       this.utilisateur = null;
+      this.setStatutColor();
     }
   }
 
@@ -105,7 +111,6 @@ export class Profil implements OnInit {
 
   /** Changement thème */
   changeTheme(nouveauTheme: 'clair' | 'sombre'): void {
-
     this.theme = nouveauTheme;
 
     if (this.utilisateur) {
@@ -116,12 +121,40 @@ export class Profil implements OnInit {
     this.setThemeColors();
   }
 
-  /** 🎨 Gestion des 3 thèmes */
+  /** Changer statut */
+  changeStatut(nouveauStatut: 'en ligne' | 'ne pas déranger' | 'absent'): void {
+    this.statut = nouveauStatut;
+
+    if (this.utilisateur) {
+      this.utilisateur.statut = nouveauStatut;
+      localStorage.setItem('utilisateur', JSON.stringify(this.utilisateur));
+    }
+
+    this.setStatutColor();
+  }
+
+  /** Définir couleur du statut pour affichage */
+  private setStatutColor(): void {
+    switch (this.statut) {
+      case 'en ligne':
+        this.StatutColor = '#22C55E'; // vert
+        break;
+      case 'ne pas déranger':
+        this.StatutColor = '#F87171'; // rouge
+        break;
+      case 'absent':
+        this.StatutColor = '#FBBF24'; // jaune/orange
+        break;
+      default:
+        this.StatutColor = '#94A3B8'; // gris neutre
+    }
+  }
+
+  /** 🎨 Gestion des thèmes */
   private setThemeColors(): void {
 
     // 🔴 1️⃣ NON CONNECTÉ
     if (!this.utilisateur) {
-
       this.Background  = '#475569';
       this.Background1 = '#334155';
       this.Background2 = '#475569';
@@ -130,21 +163,16 @@ export class Profil implements OnInit {
       this.Text = '#FFFFFF';
       this.TextRouge = '#F87171';
       this.borderligne = '#94A3B8';
-
       return;
     }
 
     // 🌙 2️⃣ CONNECTÉ + SOMBRE
     if (this.theme === 'sombre') {
-
-      // Background
       this.Background  = '#0F172A';
       this.Background1 = '#6978b8';
       this.Background2 = '#0F172A';
       this.Background3 = '#334155';
       this.Background4 = '#6978b8';
-      
-      
 
       this.Text = '#FFFFFF';
       this.TextRouge = '#F87171';
@@ -153,7 +181,6 @@ export class Profil implements OnInit {
 
     // ☀️ 3️⃣ CONNECTÉ + CLAIR
     else {
-
       this.Background  = '#DC2626';
       this.Background1 = '#a80303';
       this.Background2 = '#DC2626';

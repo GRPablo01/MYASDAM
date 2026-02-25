@@ -3,17 +3,16 @@
 <!-- NAVIGATION DESKTOP -->
 <nav class="hidden custom-md:block">
   <ul class="flex space-x-6">
-    <li *ngFor="let link of navLinks">
+    <li *ngFor="let link of navLinks; let i = index">
       <a
         #rla="routerLinkActive"
         [routerLink]="link.path"
         routerLinkActive="font-bold"
         [routerLinkActiveOptions]="{ exact: true }"
-        [ngStyle]="{
-          'color': rla.isActive ? 'white' : Text,
-          'background': rla.isActive ? Background1 : 'transparent'
-        }"
-        class="px-3 py-2 transition rounded-lg"
+        class="px-3 py-2 rounded-lg transition-colors duration-300"
+        [ngStyle]="getLinkStyle(rla.isActive, i)"
+        (mouseenter)="hoverIndex = i"
+        (mouseleave)="hoverIndex = -1"
       >
         {{ link.label }}
       </a>

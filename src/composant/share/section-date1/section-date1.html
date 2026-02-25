@@ -1,0 +1,547 @@
+<app-icon></app-icon>
+
+<!-- ============================================
+     SECTION PLANNING - VERSION PREMIUM 2026
+     ============================================ -->
+<section class="relative overflow-hidden shadow-2xl backdrop-blur-xl min-h-[500px]"
+         [style.background]="Background"
+         [style.color]="Text">
+
+  <!-- ( Section 0 ) Background Elements Premium -->
+  <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <!-- Grid Pattern -->
+    <div class="absolute inset-0 bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)] opacity-30"
+      [ngStyle]="{
+        'background-image': 'linear-gradient(' + Background4 + '40 1px, transparent 1px), linear-gradient(90deg, ' + Background4 + '20 1px, transparent 1px)'
+      }">
+    </div>
+    
+    <!-- Gradient Orbs -->
+    <div class="absolute top-0 right-0 w-64 sm:w-96 h-64 sm:h-96 rounded-full blur-3xl opacity-20 animate-float-slow"
+         [ngStyle]="{'background': 'radial-gradient(circle, ' + BackgroundOrb + ' 0%, transparent 70%)'}"></div>
+    <div class="absolute bottom-0 left-0 w-80 sm:w-[500px] h-80 sm:h-[500px] rounded-full blur-3xl opacity-10 animate-float-slow-reverse"
+         [ngStyle]="{'background': 'radial-gradient(circle, ' + BackgroundOrb2 + ' 0%, transparent 70%)'}"></div>
+  </div>
+
+  <div class="relative z-10 px-4 sm:px-6 lg:px-8 xl:px-12 py-8 sm:py-12">
+    <div class="max-w-7xl mx-auto">
+
+      <!-- Header Section -->
+      <header class="mb-8 sm:mb-12 animate-slide-in-left">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+          
+          <!-- ( Section 2 ) Icon Container -->
+          <div class="relative group self-start sm:self-auto">
+            <div [ngStyle]="{'background':Background2,'border':BorderHeader}" 
+                 class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shadow-2xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 relative overflow-hidden border">
+              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+              <i class="fa-solid fa-calendar-days text-white text-xl sm:text-2xl relative z-10 group-hover:animate-bounce-slow"></i>
+            </div>
+            <!-- Live indicator -->
+            <div class="absolute -bottom-1 -right-1 flex items-center justify-center">
+              <span class="absolute inline-flex h-4 w-4 sm:h-5 sm:w-5 animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-emerald-400 border-2 border-white shadow-lg items-center justify-center">
+                <span class="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-white"></span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Title & Meta -->
+          <div class="flex-1 animate-slide-in-up" style="animation-delay: 0.1s;">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
+              <div class="relative inline-block group cursor-default">
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight transition-all duration-300 group-hover:tracking-wider">Mon Planning</h2>
+                <div class="absolute -inset-4 blur-3xl opacity-30 scale-90 group-hover:scale-110 group-hover:opacity-50 transition-all duration-700"
+                     [ngStyle]="{'background': BackgroundGlow}"></div>
+              </div>
+              
+              <!-- ( Section 4 ) Badge Compteur -->
+              <div class="inline-flex animate-slide-in-up" style="animation-delay: 0.2s;">
+                <div [ngStyle]="{'background':Background6,'border':BorderHeader,'color':Text}" 
+                     class="group relative overflow-hidden backdrop-blur-2xl border rounded-full shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 cursor-default">
+                  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+                  <span class="relative text-[10px] sm:text-xs font-bold px-4 py-2 rounded-full tracking-widest uppercase flex items-center gap-2">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-emerald-400"></span>
+                      <span class="relative inline-flex rounded-full h-full w-full bg-emerald-400"></span>
+                    </span>
+                    <i class="fa-solid fa-list-check text-xs group-hover:rotate-12 transition-transform duration-300"></i>
+                    <span>{{ aujourdHuiEvents.length + demainEvents.length + matchs.length }} événements</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+
+        <!-- TODAY COLUMN -->
+        <article class="space-y-4 sm:space-y-6 animate-slide-in-left" style="animation-delay: 0.2s;">
+          <!-- Column Header -->
+          <div class="flex items-center gap-2 sm:gap-3">
+            <div [ngStyle]="{'background': Background1}" class="w-1.5 sm:w-2 h-10 sm:h-12 rounded-full shadow-lg relative overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent"></div>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-bold tracking-wide">Aujourd'hui</h3>
+            
+            <!-- Badge LIVE Premium -->
+            <div class="inline-flex animate-slide-in-up" style="animation-delay: 0.3s;">
+              <div [ngStyle]="{'background': Background2, 'border': BorderHeader}"
+                class="group relative overflow-hidden backdrop-blur-2xl border rounded-full shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 cursor-default">
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+                <span class="relative text-white text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full tracking-widest uppercase flex items-center gap-2">
+                  <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-emerald-400"></span>
+                    <span class="relative inline-flex rounded-full h-full w-full bg-emerald-400"></span>
+                  </span>
+                  <i class="fa-solid fa-bolt text-xs group-hover:rotate-12 transition-transform duration-300"></i>
+                  <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">LIVE</span>
+                </span>
+              </div>
+            </div>
+            
+            <div class="flex-1 h-px bg-gradient-to-r from-white/30 to-transparent ml-2 sm:ml-4"></div>
+          </div>
+
+          <!-- Events List -->
+          <div class="space-y-3 sm:space-y-4">
+            
+            <!-- Regular Events -->
+            <div *ngFor="let event of aujourdHuiEvents; let i = index"
+                 [ngStyle]="{'border':BorderHeader, 'background': CardBackground}"
+                 class="group relative flex items-center gap-3 sm:gap-5 p-3 sm:p-5 rounded-xl sm:rounded-2xl backdrop-blur-md border
+                        transition-all duration-500 ease-out cursor-pointer overflow-hidden
+                        hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] sm:hover:scale-[1.02] animate-slide-in-up"
+                 [style.animation-delay]="(0.3 + (i * 0.1)) + 's'">
+              
+              <!-- Hover Effects Premium -->
+              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
+              <div class="absolute left-0 top-0 bottom-0 w-1 sm:w-1.5 rounded-l-xl sm:rounded-l-2xl transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"
+                   [ngStyle]="{'background': Background1}"></div>
+
+              <!-- Time Block -->
+              <div class="relative shrink-0">
+                <div [ngStyle]="{'background': Background1}" 
+                     class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center shadow-xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 relative overflow-hidden border border-white/10">
+                  <div class="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent"></div>
+                  <span class="text-white font-bold text-base sm:text-lg relative z-10 leading-none">{{ event.heure.split(':')[0] }}</span>
+                  <span class="text-white/80 text-[10px] sm:text-xs font-medium relative z-10">{{ event.heure.split(':')[1] || '00' }}</span>
+                </div>
+                <!-- Live dot -->
+                <div class="absolute -top-1 -right-1 flex items-center justify-center">
+                  <span class="absolute inline-flex h-3 w-3 animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex h-3 w-3 rounded-full bg-emerald-400 border-2 border-white shadow-lg"></span>
+                </div>
+              </div>
+
+              <!-- Content -->
+              <div class="flex-1 min-w-0 relative z-10">
+                <h4 class="font-bold text-base sm:text-lg transition-all duration-300 truncate group-hover:translate-x-1"
+                    [ngStyle]="{'color': Text}">
+                  {{ event.titre }}
+                </h4>
+                <div class="flex flex-wrap items-center gap-2 mt-1.5 sm:mt-2">
+                  <span [ngStyle]="{'background':Background3,'color':'#FFFFFF', 'border': BorderHeader}" 
+                        class="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-md sm:rounded-lg border capitalize font-bold flex items-center gap-1.5 shadow-md group-hover:scale-105 transition-all duration-300 backdrop-blur-sm">
+                    <i class="fa-solid fa-tag text-[8px] sm:text-[10px]"></i>
+                    {{ event.type }}
+                  </span>
+                  <span class="flex items-center gap-1 text-[10px] sm:text-xs font-medium"
+                        [ngStyle]="{'color': TextMuted}">
+                    <i class="fa-regular fa-clock text-[8px] sm:text-[10px]"></i>
+                    {{ event.duree || '1h' }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Arrow Premium -->
+              <div class="opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-2 group-hover:translate-x-0 shrink-0 hidden sm:block">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center backdrop-blur-md border transition-all duration-300 group-hover:scale-110 shadow-lg relative overflow-hidden"
+                     [ngStyle]="{
+                       'background-color': ArrowBackground,
+                       'border-color': ArrowBorder
+                     }">
+                  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  <i [ngStyle]="{'color':Text1}" class="fa-solid fa-chevron-right text-lg sm:text-xl group-hover:translate-x-0.5 transition-transform duration-300 relative z-10"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Match Cards - Compact Version -->
+            <div *ngFor="let match of matchs; let i = index" 
+                 [ngStyle]="{'border':BorderHeader, 'background': CardBackground}"
+                 class="group relative flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl backdrop-blur-md border
+                        transition-all duration-500 ease-out cursor-pointer overflow-hidden
+                        hover:shadow-2xl hover:-translate-y-0.5 sm:hover:-translate-y-1 hover:scale-[1.01] animate-slide-in-up"
+                 [style.animation-delay]="(0.3 + ((aujourdHuiEvents.length + i) * 0.1)) + 's'">
+              
+              
+              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
+              <div class="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl sm:rounded-l-2xl transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"
+                   [ngStyle]="{'background': Background1}"></div>
+
+              <!-- Mobile: Horizontal scroll container -->
+              <div class="flex items-center gap-2 sm:gap-3 w-full overflow-x-auto pb-1 sm:pb-0 scrollbar-hide">
+                
+                <!-- Home Team -->
+                <div class="flex items-center gap-2 shrink-0">
+                  <div class="relative group/dom">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg border overflow-hidden group-hover/dom:scale-110 transition-transform duration-300"
+                         [ngStyle]="{'background': TeamBackground, 'border-color': BorderHeader}">
+                      <img *ngIf="match.logoDom" [src]="match.logoDom" class="w-full h-full object-contain p-1 sm:p-1.5" alt="{{ match.equipeDom }}">
+                      <i *ngIf="!match.logoDom" class="fa-solid fa-shield-halved text-base sm:text-xl" [ngStyle]="{'color': TextMuted}"></i>
+                    </div>
+                    <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 sm:w-4 sm:h-4 rounded-full flex items-center justify-center text-[6px] sm:text-[8px] font-bold text-white border border-white/50 shadow-sm"
+                         [ngStyle]="{'background': Background1}">D</div>
+                  </div>
+                  <span class="font-bold text-xs sm:text-sm truncate max-w-[60px] sm:max-w-[80px]" [ngStyle]="{'color': Text}">{{ match.equipeDom }}</span>
+                </div>
+
+                <!-- Score -->
+                <div class="shrink-0 flex flex-col items-center px-1 sm:px-2">
+                  <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shadow-md border relative overflow-hidden"
+                       [ngStyle]="{'background': Background1, 'border-color': BorderHeader}">
+                    <div class="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent"></div>
+                    <span class="text-white font-black text-xs sm:text-sm italic relative z-10">{{ match.scoreDom }}-{{ match.scoreExt }}</span>
+                  </div>
+                  <span class="text-[8px] sm:text-[9px] uppercase tracking-wider font-bold mt-0.5" [ngStyle]="{'color': TextMuted}">VS</span>
+                </div>
+
+                <!-- Away Team -->
+                <div class="flex items-center gap-2 shrink-0">
+                  <span class="font-bold text-xs sm:text-sm truncate max-w-[60px] sm:max-w-[80px] text-right" [ngStyle]="{'color': Text}">{{ match.equipeExt }}</span>
+                  <div class="relative group/ext">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg border overflow-hidden group-hover/ext:scale-110 transition-transform duration-300"
+                         [ngStyle]="{'background': TeamBackground, 'border-color': BorderHeader}">
+                      <img *ngIf="match.logoExt" [src]="match.logoExt" class="w-full h-full object-contain p-1 sm:p-1.5" alt="{{ match.equipeExt }}">
+                      <i *ngIf="!match.logoExt" class="fa-solid fa-shield text-base sm:text-xl" [ngStyle]="{'color': TextMuted}"></i>
+                    </div>
+                    <div class="absolute -bottom-0.5 -left-0.5 w-3 h-3 sm:w-4 sm:h-4 rounded-full flex items-center justify-center text-[6px] sm:text-[8px] font-bold text-white border border-white/50 shadow-sm"
+                         [ngStyle]="{'background': Background2}">E</div>
+                  </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="hidden sm:block w-px h-8 mx-1" [ngStyle]="{'background': DividerColor}"></div>
+
+                <!-- Match Info -->
+                <div class="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                  <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                    <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-md sm:rounded-lg flex items-center justify-center shadow-sm"
+                         [ngStyle]="{'background': IconBackground}">
+                      <i class="fa-regular fa-clock text-[10px] sm:text-xs" [ngStyle]="{'color': Text}"></i>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-[10px] sm:text-xs font-bold" [ngStyle]="{'color': Text}">{{ match.heure }}</span>
+                      <span class="text-[8px] sm:text-[10px] truncate max-w-[80px] sm:max-w-[100px]" [ngStyle]="{'color': TextMuted}">{{ match.lieu }}</span>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+                    <span [ngStyle]="{'background': Background2}" class="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
+                      {{ match.typeMatch }}
+                    </span>
+                    <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider border"
+                          [ngStyle]="{'border-color': BorderLight, 'background-color': TagBackground, 'color': Text}">
+                      {{ match.categorie }}
+                    </span>
+                  </div>
+
+                  <!-- Status -->
+                  <div class="shrink-0">
+                    <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-[8px] sm:text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 border shadow-sm"
+                          [ngClass]="{
+                            'bg-emerald-500/20 border-emerald-500/30 text-emerald-400': match.statut === 'En cours',
+                            'bg-gray-500/20 border-gray-500/30 text-gray-400': match.statut === 'Terminé',
+                            'bg-blue-500/20 border-blue-500/30 text-blue-400': match.statut === 'A venir'
+                          }">
+                      <i class="fa-solid text-[8px] sm:text-[10px]" [ngClass]="{
+                        'fa-play': match.statut === 'En cours',
+                        'fa-check': match.statut === 'Terminé',
+                        'fa-hourglass-half': match.statut === 'A venir'
+                      }"></i>
+                      <span class="hidden sm:inline">{{ match.statut }}</span>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Action Arrow Premium -->
+                <div class="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 shrink-0 hidden sm:flex">
+                  <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center backdrop-blur-sm border relative overflow-hidden"
+                       [ngStyle]="{'background-color': ArrowBackground, 'border-color': ArrowBorder}">
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <i [ngStyle]="{'color':Text1}" class="fa-solid fa-chevron-right text-xs sm:text-sm relative z-10"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Match ID -->
+              <div class="absolute top-1 right-1 sm:top-2 sm:right-2 text-[6px] sm:text-[8px] font-mono opacity-0 group-hover:opacity-100 transition-opacity"
+                   [ngStyle]="{'color': TextMuted}">
+                {{ match.key }}
+              </div>
+            </div>
+
+            <!-- Empty State Premium -->
+            <div *ngIf="aujourdHuiEvents.length === 0 && matchs.length === 0" 
+                 class="flex flex-col items-center justify-center py-12 sm:py-16 px-4 sm:px-6 rounded-2xl sm:rounded-3xl border border-dashed backdrop-blur-sm group transition-all duration-500 relative overflow-hidden animate-slide-in-up" 
+                 [ngStyle]="{'border-color': BorderHeader, 'background': EmptyStateBackground}"
+                 style="animation-delay: 0.4s;">
+              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+              
+              <div class="relative mb-4 sm:mb-6">
+                <div class="absolute inset-0 rounded-full blur-2xl animate-pulse-gentle" [ngStyle]="{'background': BackgroundGlow}"></div>
+                <div class="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full flex items-center justify-center border shadow-2xl group-hover:scale-110 transition-transform duration-500"
+                     [ngStyle]="{'background': EmptyStateIconBackground, 'border-color': BorderHeader}">
+                  <i class="fa-solid fa-umbrella-beach text-3xl sm:text-5xl group-hover:rotate-12 transition-transform duration-500 group-hover:animate-bounce-slow" [ngStyle]="{'color': TextMuted}"></i>
+                </div>
+              </div>
+              <p class="text-base sm:text-lg font-bold mb-1 sm:mb-2" [ngStyle]="{'color': Text}">Aucun événement aujourd'hui</p>
+              <p class="text-xs sm:text-sm flex items-center gap-2 font-medium" [ngStyle]="{'color': TextMuted}">
+                <i class="fa-solid fa-mug-hot"></i> Profitez de votre journée !
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- TOMORROW COLUMN -->
+        <article class="space-y-4 sm:space-y-6 animate-slide-in-right" style="animation-delay: 0.3s;">
+          <!-- Column Header -->
+          <div class="flex items-center gap-2 sm:gap-3">
+            <div [ngStyle]="{'background': Background1}" class="w-1.5 sm:w-2 h-10 sm:h-12 rounded-full shadow-lg relative overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent"></div>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-bold tracking-wide">Demain</h3>
+            
+            <!-- Badge À VENIR Premium -->
+            <div class="inline-flex animate-slide-in-up" style="animation-delay: 0.4s;">
+              <div class="group relative overflow-hidden backdrop-blur-2xl border rounded-full shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 cursor-default"
+                   [ngStyle]="{
+                     'background-color': BadgeBackground,
+                     'border-color': BorderHeader
+                   }">
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+                <span class="relative  text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full tracking-widest uppercase flex items-center gap-2">
+                  <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform duration-300"></i>
+                  <span>À VENIR</span>
+                </span>
+              </div>
+            </div>
+            
+            <div class="flex-1 h-px bg-gradient-to-r from-white/30 to-transparent ml-2 sm:ml-4"></div>
+          </div>
+
+          <!-- Events List -->
+          <div class="space-y-3 sm:space-y-4">
+            <div *ngFor="let event of demainEvents; let i = index"
+                 [ngStyle]="{'border':BorderHeader, 'background': CardBackground}"
+                 class="group relative flex items-center gap-3 sm:gap-5 p-3 sm:p-5 rounded-xl sm:rounded-2xl backdrop-blur-md border
+                        transition-all duration-500 ease-out cursor-pointer overflow-hidden
+                        hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] sm:hover:scale-[1.02] animate-slide-in-up"
+                 [style.animation-delay]="(0.4 + (i * 0.1)) + 's'">
+              
+              <!-- Effects Premium -->
+              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
+              <div class="absolute left-0 top-0 bottom-0 w-1 sm:w-1.5 rounded-l-xl sm:rounded-l-2xl transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"
+                   [ngStyle]="{'background': Background1}"></div>
+
+              <!-- Time Block -->
+              <div class="relative shrink-0">
+                <div [ngStyle]="{'background': Background1}" 
+                     class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center shadow-xl group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500 relative overflow-hidden border border-white/10">
+                  <div class="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent"></div>
+                  <span class="text-white font-bold text-base sm:text-lg relative z-10 leading-none">{{ event.heure.split(':')[0] }}</span>
+                  <span class="text-white/80 text-[10px] sm:text-xs font-medium relative z-10">{{ event.heure.split(':')[1] || '00' }}</span>
+                </div>
+                <div class="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-bold text-white border-2 border-white shadow-lg backdrop-blur-sm"
+                     [ngStyle]="{'background': Background2}">
+                  <i class="fa-solid fa-arrow-right group-hover:translate-x-0.5 transition-transform duration-300"></i>
+                </div>
+              </div>
+
+              <!-- Content -->
+              <div class="flex-1 min-w-0 relative z-10">
+                <h4 class="font-bold text-base sm:text-lg transition-all duration-300 truncate group-hover:translate-x-1"
+                    [ngStyle]="{'color': Text}">
+                  {{ event.titre }}
+                </h4>
+                <div class="flex flex-wrap items-center gap-2 mt-1.5 sm:mt-2">
+                  <span [ngStyle]="{'background': Background1, 'border': BorderHeader}" 
+                        class="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-md sm:rounded-lg text-white capitalize font-bold flex items-center gap-1.5 shadow-md group-hover:scale-105 transition-all duration-300 backdrop-blur-sm">
+                    <i class="fa-solid fa-tag text-[8px] sm:text-[10px]"></i> {{ event.type }}
+                  </span>
+                  <span class="flex items-center gap-1 text-[10px] sm:text-xs font-medium"
+                        [ngStyle]="{'color': TextMuted}">
+                    <i class="fa-regular fa-clock text-[8px] sm:text-[10px]"></i> {{ event.duree || '1h' }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Arrow Premium -->
+              <div class="opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-2 group-hover:translate-x-0 shrink-0 hidden sm:block">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center backdrop-blur-md border transition-all duration-300 group-hover:scale-110 shadow-lg relative overflow-hidden"
+                     [ngStyle]="{
+                       'background-color': ArrowBackground,
+                       'border-color': ArrowBorder
+                     }">
+                  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  <i [ngStyle]="{'color':Text1}" class="fa-solid fa-chevron-right text-lg sm:text-xl group-hover:translate-x-0.5 transition-transform duration-300 relative z-10"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Empty State Premium -->
+            <div *ngIf="demainEvents.length === 0" 
+                 class="flex flex-col items-center justify-center py-12 sm:py-16 px-4 sm:px-6 rounded-2xl sm:rounded-3xl border border-dashed backdrop-blur-sm group transition-all duration-500 relative overflow-hidden animate-slide-in-up" 
+                 [ngStyle]="{'border-color': BorderHeader, 'background': EmptyStateBackground}"
+                 style="animation-delay: 0.5s;">
+              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+              
+              <div class="relative mb-4 sm:mb-6">
+                <div class="absolute inset-0 rounded-full blur-2xl animate-pulse-gentle delay-700" [ngStyle]="{'background': BackgroundGlow}"></div>
+                <div class="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full flex items-center justify-center border shadow-2xl group-hover:scale-110 transition-transform duration-500"
+                     [ngStyle]="{'background': EmptyStateIconBackground, 'border-color': BorderHeader}">
+                  <i class="fa-solid fa-coffee text-3xl sm:text-5xl group-hover:rotate-12 transition-transform duration-500 group-hover:animate-bounce-slow" [ngStyle]="{'color': TextMuted}"></i>
+                </div>
+              </div>
+              <p class="text-base sm:text-lg font-bold mb-1 sm:mb-2" [ngStyle]="{'color': Text}">Aucun événement demain</p>
+              <p class="text-xs sm:text-sm flex items-center gap-2 font-medium" [ngStyle]="{'color': TextMuted}">
+                <i class="fa-solid fa-bed"></i> Journée libre !
+              </p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     ANIMATIONS & UTILITAIRES
+     ============================================ -->
+<style>
+  @keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slide-in-up {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes float-slow {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(20px, -20px) scale(1.05); }
+    66% { transform: translate(-10px, 10px) scale(0.95); }
+  }
+
+  @keyframes float-slow-reverse {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-20px, 20px) scale(1.05); }
+    66% { transform: translate(10px, -10px) scale(0.95); }
+  }
+
+  @keyframes pulse-gentle {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  @keyframes bounce-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+
+  .animate-slide-in-left {
+    animation: slide-in-left 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  .animate-slide-in-up {
+    animation: slide-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  .animate-float-slow {
+    animation: float-slow 20s ease-in-out infinite;
+  }
+
+  .animate-float-slow-reverse {
+    animation: float-slow-reverse 25s ease-in-out infinite;
+  }
+
+  .animate-pulse-gentle {
+    animation: pulse-gentle 6s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce-slow 2s ease-in-out infinite;
+  }
+
+  /* Hide scrollbar for mobile horizontal scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Accessibilité */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.2s !important;
+    }
+    
+    .animate-slide-in-left,
+    .animate-slide-in-right,
+    .animate-slide-in-up {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  button:focus,
+  a:focus {
+    outline: none;
+  }
+
+  ::selection {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: inherit;
+  }
+</style>

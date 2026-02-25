@@ -2,7 +2,6 @@
 html, body {
   height: 100%;
   margin: 0;
-  overflow: hidden; /* bloque le scroll global mais pas dans les zones scrollables */
 }
 
 /* Conteneur principal : fixe sur tout l'écran */
@@ -20,38 +19,27 @@ app-header {
 /* Zone Actus : seule partie scrollable */
 .actus-container {
   flex: 1 1 auto;             /* prend tout l’espace restant */
-  overflow-y: auto;           /* scroll uniquement ici */
-  overscroll-behavior: contain; /* évite le rebond global */
-  -webkit-overflow-scrolling: touch; /* inertie douce sur iOS */
-  pointer-events: auto; /* permet de détecter hover et clic */
+  overflow-y: auto;           /* garde la barre de scroll */
+  overscroll-behavior: none;  /* pas de rebond haut/bas */
+  -webkit-overflow-scrolling: auto; /* désactive l’inertie iOS */
 }
 
-/* Scrollbar personnalisée */
-.actus-container::-webkit-scrollbar {
+
+/* Scrollbar globale */
+::-webkit-scrollbar {
   width: 12px;
 }
 
-.actus-container::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: var(--scroll-track);
-  border-radius: 8px;
 }
 
-.actus-container::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: var(--scroll-thumb);
   border-radius: 8px;
-  border: 3px solid var(--scroll-track);
+  border: 4px solid var(--scroll-track);
 }
 
-.actus-container::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: var(--scroll-thumb-hover);
-}
-
-/* Exemple hover bouton */
-.actus-container .btn-hover {
-  transition: transform 0.2s, background-color 0.2s;
-}
-
-.actus-container .btn-hover:hover {
-  transform: scale(1.05);
-  background-color: var(--btn-hover-bg);
 }

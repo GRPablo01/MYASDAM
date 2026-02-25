@@ -67,22 +67,22 @@ mongoose.connect(MONGO_URI)
 // ==============================
 const authRoutes = require('./Backend/Routes/auth.Routes');
 const matchRoutes = require('./Backend/Routes/match.Routes');
-// const equipeRoutes = require('./Backend/Routes/equipe.Routes'); // <-- décommenter si besoin
-// const eventRoutes = require('./Backend/Routes/event.Routes');
-// const actusRoutes = require('./Backend/Routes/actus.Routes');
-// const userRoutes = require('./Backend/Routes/user.Routes'); // nouvelle route /users
-// const convocationRoutes = require('./Backend/Routes/convocation.routes');
+const equipeRoutes = require('./Backend/Routes/equipe.Routes'); // <-- décommenter si besoin
+const eventRoutes = require('./Backend/Routes/event.Routes');
+const actusRoutes = require('./Backend/Routes/actus.Routes');
+const userRoutes = require('./Backend/Routes/auth.Routes'); // nouvelle route /users
+const convocationRoutes = require('./Backend/Routes/convocation.routes');
 
 // ==============================
 // 🧭 Routes API
 // ==============================
 app.use('/api/auth', authRoutes);
 app.use('/api/matchs', matchRoutes);
-// app.use('/api/equipes', equipeRoutes); // <-- route équipe complète
-// app.use('/api/events', eventRoutes);
-// app.use('/api/actus', actusRoutes);
-// app.use('/api', userRoutes);   // /api/users
-// app.use('/api/convocation', convocationRoutes);
+app.use('/api/equipes', equipeRoutes); // <-- route équipe complète
+app.use('/api/events', eventRoutes);
+app.use('/api/actus', actusRoutes);
+app.use('/api/user', userRoutes);   // /api/users
+app.use('/api/convocation', convocationRoutes);
 
 // ==============================
 // 🏠 Routes de test

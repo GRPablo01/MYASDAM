@@ -150,12 +150,35 @@ export class Nav implements OnInit {
 
     // ☀️ 3️⃣ CONNECTÉ + CLAIR
     else {
-      this.Background  = '#F43F5E';
-      this.Background1 = '#FCA5A5';
+      this.Background  = '#DC2626';
+      this.Background1 = '#DC2626';
       this.Text = '#000000';
       this.Text1 = '#FFFFFF';
       this.borderligne = '1px solid #E5E7EB';
       this.Logo = 'assets/IconBlack.svg';
     }
   }
+
+
+
+  hoverIndex: number = -1;
+
+getLinkStyle(isActive: boolean, index: number) {
+  if (isActive) {
+    return {
+      color: 'white',
+      background: this.Background1
+    };
+  } else if (this.hoverIndex === index) {
+    return {
+      color: 'white',
+      background: this.Background1
+    };
+  } else {
+    return {
+      color: this.Text,
+      background: 'transparent'
+    };
+  }
+}
 }

@@ -43,8 +43,17 @@ export class Welcome implements OnInit {
   Background3 = '';
   Background4 = '';
   Background5 = '';
+  Background6 = '';
+  Background7 = '';
+  Background8 = '';
+  Background9 = '';
+  Background10 = '';
+  Background11 = '';
+  Background12 = '';
   BorderHeader = '';
   BorderHeader1 = '';
+  BorderHeader2 = '';
+  BorderHeader3 = '';
   Text = '';
   Text1 = '';
   Text2 = '';
@@ -129,11 +138,6 @@ export class Welcome implements OnInit {
       this.BorderHeader1 = '2px solid #6978b8';
 
 
-      // this.Background1 = '#334155';
-      // this.Background2 = '#475569';
-      // this.Background3 = '#64748B';
-      // this.Background4 = '#334155';
-      // this.BorderHeader = '#334155';
       
 
       return;
@@ -142,16 +146,59 @@ export class Welcome implements OnInit {
     // 🌙 2️⃣ CONNECTÉ + SOMBRE
     if (this.theme === 'sombre') {
 
+      //---------- Section 0 ----------//
       this.Background  = '#1E293B';
       this.Text = '#FFFFFF';
+
+      //---------- Section 1 ----------//
       this.Background1 = '#6978b8';
-      this.BorderHeader = '#64748B';
-      this.Text1 = '#6978b8';
-      this.Background3 = '#334155';
+      this.Background2 = '#6978b8';
+      this.Background3 = '#6978b8';
       this.Background4 = '#6978b8';
-      this.Text2 = '#6978b8';
-      this.Background5 = '#64748B';
+
+      //---------- Section 2 ----------//
+      this.Background5 = '#6978b8';
+      this.BorderHeader = '2px solid #64748B';
+
+      //---------- Section 3 ----------//
+      this.Text1 = '#6978b8';
+
+      //---------- Section 4 ----------//
+      this.Background6 = '#334155';
+
+      //---------- Section 5 ----------//
+      // Bouton 1
+      this.Background7 = '#6978b8';
+      // Bouton 2
+      this.Background8 = '#334155';
       this.BorderHeader1 = '2px solid #6978b8';
+
+      //---------- Section 6 ----------//
+      this.Background9 = '#334155';
+      this.BorderHeader2 = '2px solid #6978b8';
+
+      //---------- Section 7 ----------//
+      this.BorderHeader3 = '2px solid #6978b8';
+      this.Background10 = '#6978b8';
+      this.Background11 = '#64748B';
+
+      //---------- Section 8 ----------//
+      this.Background12 = '#6978b8';
+
+
+
+
+
+
+      
+      // this.Background1 = '#6978b8';
+      // this.BorderHeader = '#64748B';
+      // this.Text1 = '#6978b8';
+      // this.Background3 = '#334155';
+      // this.Background4 = '#6978b8';
+      // this.Text2 = '#6978b8';
+      // this.Background5 = '#64748B';
+      // this.BorderHeader1 = '2px solid #6978b8';
 
 
       // this.Background1 = '#6978b8';
@@ -164,22 +211,45 @@ export class Welcome implements OnInit {
     }
 
     // ☀️ 3️⃣ CONNECTÉ + CLAIR
+
+    //---------- Section 0 ----------//
     this.Background  = '#FFFFFF';
     this.Text = '#000000';
-    this.Background1 = '#a80303';
-    this.BorderHeader = '#64748B';
-    this.Text1 = '#DC2626';
-    this.Text2 = '#DC2626';
-    this.Background3 = '#FFFFFF';
+
+    //---------- Section 1 ----------//
+    this.Background1 = '#DC2626';
+    this.Background2 = '#DC2626';
+    this.Background3 = '#DC2626';
     this.Background4 = '#DC2626';
 
-    this.Background5 = '#334155';
-      this.BorderHeader1 = '2px solid #DC2626';
+    //---------- Section 2 ----------//
+    this.Background5 = '#DC2626';
+    this.BorderHeader = '2px solid #a80303';
 
-    // this.Background1 = '#a80303';
-    // this.Background2 = '#DC2626';
-    // this.Background3 = '#FFFFFF';
-    // this.Background4 = '#DC2626';
+    //---------- Section 3 ----------//
+    this.Text1 = '#DC2626';
+
+    //---------- Section 4 ----------//
+    this.Background6 = '#e9e6e6';
+
+    //---------- Section 5 ----------//
+    // Bouton 1
+    this.Background7 = '#DC2626';
+    // Bouton 2
+    this.Background8 = '#e9e6e6';
+    this.BorderHeader1 = '2px solid #DC2626';
+
+    //---------- Section 6 ----------//
+    this.Background9 = '#e9e6e6';
+    this.BorderHeader2 = '2px solid #DC2626';
+
+    //---------- Section 7 ----------//
+    this.BorderHeader3 = '2px solid #DC2626';
+    this.Background10 = '#DC2626';
+    this.Background11 = '#a3464680';
+
+    //---------- Section 8 ----------//
+    this.Background12 = '#DC2626';
     
   }
 

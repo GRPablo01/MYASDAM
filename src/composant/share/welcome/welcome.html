@@ -4,15 +4,25 @@
 <!-- ============================================
      SECTION HERO - VERSION FULL WIDTH DESKTOP / CENTERED MOBILE
      ============================================ -->
+<!-- ( Section 0 ) -->
 <section [ngStyle]="{'background': Background, 'color': Text}"
   class="w-full h-150vh py-8 sm:py-12 px-4 sm:px-6 lg:px-8 xl:px-12 relative overflow-hidden flex items-center"
   role="banner" aria-label="Bienvenue sur Myasdam">
 
-  <!-- Background Elements Premium -->
+  <!-- ( Section 1 ) Background Elements Premium -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-    <div class="absolute -bottom-40 -left-20 w-[500px] h-[500px] bg-gradient-to-tr from-white/10 via-white/5 to-transparent rounded-full blur-3xl animate-float-slow-reverse"></div>
-    <div class="absolute top-1/3 right-1/4 w-72 h-72 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-full blur-3xl animate-pulse-gentle"></div>
-    <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]"></div>
+    
+    
+    
+    
+    
+    <!-- Grid Pattern -->
+    <div class="absolute inset-0 bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]"
+      [ngStyle]="{
+        'background-image': 'linear-gradient(' + Background4 + '2D 1px, transparent 1px), linear-gradient(90deg, ' + Background4 + '0D 1px, transparent 1px)'
+      }">
+    </div>
+        
   </div>
 
   <!-- CONTAINER FULL WIDTH -->
@@ -26,7 +36,7 @@
            ============================================ -->
       <div class="flex flex-col items-center lg:items-start text-center lg:text-left space-y-4 sm:space-y-6 order-2 lg:order-1 w-full px-0 lg:pl-8 xl:pl-12">
 
-        <!-- Badge Saison -->
+        <!-- ( Section 2 ) Badge Saison -->
         <div class="inline-flex animate-slide-in-left" role="status" aria-label="Saison en cours">
           <div [ngStyle]="{'background': Background1, 'border': BorderHeader}"
             class="group relative overflow-hidden backdrop-blur-2xl border rounded-full shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 cursor-default">
@@ -42,10 +52,10 @@
           </div>
         </div>
 
-        <!-- Titre -->
+        <!-- ( Section 3 ) Titre -->
         <div class="space-y-1 relative animate-slide-in-up w-full" style="animation-delay: 0.1s;">
           <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight uppercase leading-[0.9] drop-shadow-2xl">
-            <span class="block text-white/90">Welcome to</span>
+            <span class="block">Welcome to</span>
           </h1>
           <div class="relative inline-block group cursor-default">
             <h2 [ngStyle]="{'color': Text1}"
@@ -58,18 +68,17 @@
           </div>
         </div>
 
-        <!-- Description - Centered on mobile, left on desktop -->
-        <div class="relative group animate-slide-in-up w-full max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto lg:mx-0" style="animation-delay: 0.2s;">
-          <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl transform -rotate-1 group-hover:rotate-0 transition-all duration-700 group-hover:scale-[1.02] shadow-xl"></div>
-          <p [ngStyle]="{'background': Background3}"
-            class="relative text-base sm:text-lg leading-relaxed font-medium p-5 sm:p-6 rounded-2xl border border-white/20 shadow-lg group-hover:shadow-xl transition-all duration-500 backdrop-blur-sm">
+        <!-- ( Section 4 ) Description - Centered on mobile, left on desktop -->
+        <div class=" relative group animate-slide-in-up w-full max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto lg:mx-0" style="animation-delay: 0.2s;">
+          <div [ngStyle]="{'background':Background6}" class="absolute inset-0 backdrop-blur-xl rounded-2xl transform -rotate-1 group-hover:rotate-0 transition-all duration-700 group-hover:scale-[1.02] shadow-xl"></div>
+          <p class="relative text-base sm:text-lg leading-relaxed font-medium p-5 sm:p-6 rounded-2xl border border-white/20 shadow-lg group-hover:shadow-xl transition-all duration-500 backdrop-blur-sm ">
             Rejoignez une communauté passionnée. Suivez vos entraînements, consultez les résultats en temps réel et vivez le sport autrement.
           </p>
         </div>
 
-        <!-- CTA Buttons - Centered on mobile, left on desktop -->
+        <!-- ( Section 5 ) CTA Buttons - Centered on mobile, left on desktop -->
         <div class="flex flex-col sm:flex-row gap-3 pt-2 animate-slide-in-up w-full sm:w-auto justify-center lg:justify-start" style="animation-delay: 0.3s;">
-          <button [ngStyle]="{'background': Background4, 'color': '#FFFFFF'}"
+          <button [ngStyle]="{'background': Background7, 'color': '#FFFFFF'}"
             class="group relative overflow-hidden font-bold px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 text-base min-w-[200px] ring-2 ring-transparent focus:ring-white/50 focus:outline-none"
             aria-label="Voir les matchs à venir">
             <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
@@ -80,7 +89,7 @@
             </span>
           </button>
 
-          <button [ngStyle]="{'background': Background5, 'color': '#FFF', 'border': BorderHeader1}"
+          <button [ngStyle]="{'background': Background8, 'border': BorderHeader1}"
             class="group relative overflow-hidden backdrop-blur-xl border-2 font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 text-base min-w-[200px] focus:outline-none focus:ring-2 focus:ring-white/30"
             aria-label="Consulter le planning">
             <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
@@ -97,47 +106,46 @@
       <!-- ============================================
            CAROUSEL SECTION - Centered on mobile, right-aligned on desktop
            ============================================ -->
+      <!-- ( Section 6 ) -->
       <div class="w-full animate-slide-in-right order-1 lg:order-2 flex items-center justify-center lg:justify-end px-0 lg:pr-8 xl:pr-12" style="animation-delay: 0.3s;">
-        <div [ngStyle]="{'background': 'rgba(255,255,255,0.03)'}"
-          class="w-full max-w-md lg:max-w-lg xl:max-w-xl backdrop-blur-3xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden transition-all duration-500 hover:shadow-3xl hover:border-white/20 group/card">
+        <div [ngStyle]="{'background':Background9,'border':BorderHeader2}"
+          class="w-full max-w-md lg:max-w-lg xl:max-w-xl backdrop-blur-3xl rounded-2xl border shadow-2xl overflow-hidden transition-all duration-500 hover:shadow-3xl hover:border-white/20 group/card">
           
-          <!-- Carousel Header -->
-          <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-gradient-to-r from-white/5 to-transparent"
-            [style.border-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.3)' : 'rgba(244, 63, 94, 0.2)'">
+          <!-- ( Section 7 ) Carousel Header -->
+          <div [ngStyle]="{'border-bottom': BorderHeader3,'border-top': 'none','border-left': 'none','border-right': 'none'}" class="flex items-center justify-between px-5 py-4 border-b">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transform group-hover/card:scale-105 transition-transform duration-300"
-                [style.background]="theme === 'sombre' ? 'linear-gradient(135deg, #6978b8, #818fd5)' : 'linear-gradient(135deg, #F43F5E, #BE123C)'">
+              <div [ngStyle]="{'background':Background10}" class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transform group-hover/card:scale-105 transition-transform duration-300">
                 <i class="fa-solid fa-calendar-day text-white text-sm"></i>
               </div>
               <div>
-                <span class="text-xs font-bold uppercase tracking-wider block" [style.color]="Text">
+                <span class="text-xs font-bold uppercase tracking-wider block">
                   Prochains Matchs
                 </span>
-                <span class="text-[10px] opacity-60" [style.color]="Text">
+                <span class="text-[10px] opacity-60">
                   {{ matchs.length > 0 ? matchs.length + ' matchs' : 'Aucun match' }}
                 </span>
               </div>
             </div>
+
             <div class="flex items-center gap-1">
               <button (click)="prevMatch()" [disabled]="matchs.length <= 1"
-                class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 backdrop-blur-sm border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed hover:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/30"
-                [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.2)' : 'rgba(244, 63, 94, 0.1)'"
-                [style.color]="theme === 'sombre' ? '#6978b8' : '#F43F5E'" 
+                class="text-white w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 backdrop-blur-sm border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed hover:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/30"
+                [ngStyle]="{'background':Background11}"
+                
                 aria-label="Match précédent">
                 <i class="fa-solid fa-chevron-left text-xs"></i>
               </button>
               <button (click)="nextMatch()" [disabled]="matchs.length <= 1"
-                class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 backdrop-blur-sm border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed hover:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/30"
-                [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.2)' : 'rgba(244, 63, 94, 0.1)'"
-                [style.color]="theme === 'sombre' ? '#6978b8' : '#F43F5E'" 
+                class="text-white w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 backdrop-blur-sm border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed hover:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/30"
+                [ngStyle]="{'background':Background11}"
                 aria-label="Match suivant">
                 <i class="fa-solid fa-chevron-right text-xs"></i>
               </button>
             </div>
           </div>
 
-          <!-- Carousel Content -->
-          <div class="relative overflow-hidden bg-gradient-to-b from-transparent to-black/5">
+          <!-- ( Section 8 ) Carousel Content -->
+          <div class="relative overflow-hidden">
             <div class="flex transition-transform duration-500 ease-out"
               [style.transform]="'translateX(-' + currentMatch * 100 + '%)'">
 
@@ -267,20 +275,17 @@
 
               <!-- Empty State -->
               <div *ngIf="matchs.length === 0" class="w-full flex-shrink-0 p-6 text-center">
-                <div class="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center animate-pulse-gentle"
-                  [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.2)' : '#f3f4f6'">
-                  <i class="fa-solid fa-calendar-xmark text-2xl"
-                    [style.color]="theme === 'sombre' ? '#6978b8' : '#9ca3af'"></i>
+                <div [ngStyle]="{'background':Background12}" class="text-white w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center animate-pulse-gentle">
+                  <i class="fa-solid fa-calendar-xmark text-2xl"></i>
                 </div>
-                <p class="text-sm font-medium opacity-70 mb-1">Aucun match programmé</p>
-                <p class="text-xs opacity-50">Revenez bientôt</p>
+                <p class="text-sm font-medium mb-1">Aucun match programmé</p>
+                <p class="text-xs">Revenez bientôt</p>
               </div>
             </div>
           </div>
 
-          <!-- Pagination dots -->
-          <div class="flex items-center justify-center gap-2 py-3 border-t border-white/10 bg-gradient-to-r from-transparent via-white/5 to-transparent"
-            [style.border-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.3)' : 'rgba(244, 63, 94, 0.2)'">
+          <!-- ( Section 9 ) Pagination dots -->
+          <div class="flex items-center justify-center gap-2 py-3" [ngStyle]="{'border-bottom': 'none','border-top': BorderHeader3,'border-left': 'none','border-right': 'none'}">
             <button *ngFor="let match of matchs; let i = index" (click)="goToMatch(i)"
               class="h-1.5 rounded-full transition-all duration-500 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-white/30" 
               [class.w-6]="i === currentMatch" [class.w-1.5]="i !== currentMatch"

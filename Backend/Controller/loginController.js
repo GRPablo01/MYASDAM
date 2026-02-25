@@ -35,9 +35,7 @@ exports.loginUser = async (req, res) => {
       key: user.key,
       status: user.status,
       compte: user.compte,
-      suivis: user.suivis || [],
-      abonnements: user.abonnements || [],
-      poste: user.poste || null
+      cookie: user.cookie, 
     };
 
     res.status(200).json({ message: 'Connexion réussie', user: userResponse, token });
@@ -75,4 +73,21 @@ exports.getCurrentUser = async (req, res) => {
     console.error('[GET CURRENT USER ERROR]', error);
     res.status(500).json({ message: 'Erreur serveur' });
   }
+};
+
+
+// ==============================
+// ✏️ METTRE À JOUR LE COOKIE VIA Key
+// ==============================
+exports.updateCookieByKey = async (req, res) => {
+  const { key } = req.params;
+  const { cookie } = req.body;
+
+  const user = await User.findOne({ key });
+  if (!user) return res.status(404).json({ message: 'Utilisateur introuvable' });
+
+  user.cookie = cookie;
+  await user.save();
+  
+  res.json({ message: 'Cookie mis à jour', user });
 };

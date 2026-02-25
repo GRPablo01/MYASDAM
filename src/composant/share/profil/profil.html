@@ -7,7 +7,7 @@
         (click)="toggleDropdown()" [ngStyle]="{'background': Background, 'color': Text}"
         class="group flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-1.5 sm:py-2 rounded-full backdrop-blur-sm transition-all duration-300 active:scale-95 focus:outline-none">
 
-        <!-- Avatar -->
+        <!-- Avatar avec statut -->
         <div class="relative">
             <div [ngStyle]="{'background': Background1, 'color':'#FFF'}"
                 class="w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm shadow-inner transition-transform duration-300">
@@ -23,6 +23,10 @@
                     </svg>
                 </ng-template>
             </div>
+
+            <!-- Cercle de statut -->
+            <span [ngStyle]="{'background-color': StatutColor}"
+                class="absolute bottom-0 right-0 w-2 h-2 sm:w-3 sm:h-3 rounded-full border border-white"></span>
         </div>
 
         <!-- Infos utilisateur - TOUJOURS VISIBLE -->
@@ -54,19 +58,40 @@
 
         <!-- Header -->
         <div class="px-3 sm:px-4 py-2 sm:py-3" [ngStyle]="{'background': Background2, 'color': '#FFF'}">
-            <p class="text-sm font-bold truncate">
-                {{ nom && prenom ? (nom + ' ' + prenom) : 'Invité' }}
-            </p>
-            <p class="text-xs truncate opacity-70">
+
+            <!-- Ligne Nom + Statut -->
+            <div class="flex items-center gap-2">
+
+                <!-- Nom complet -->
+                <p class="text-sm font-bold truncate">
+                    {{ nom && prenom ? (nom + ' ' + prenom) : 'Invité' }}
+                </p>
+
+                <!-- Badge Statut utilisateur -->
+                <span [ngStyle]="{'background-color': StatutColor}"
+                    class="flex items-center gap-1 px-2 py-0.5 rounded-full text-white text-xs sm:text-[10px] font-medium">
+                    <!-- Cercle de couleur (optionnel, peut rester blanc ou transparent) -->
+                    <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full border border-white"></span>
+                    <!-- Texte du statut -->
+                    <span class="truncate capitalize">
+                        {{ statut }}
+                    </span>
+                </span>
+
+            </div>
+
+            <!-- Email en dessous -->
+            <p class="text-xs truncate opacity-70 mt-0.5">
                 {{ email || 'Aucun email' }}
             </p>
-        </div> 
+
+        </div>
 
         <!-- Options -->
         <div class="py-1" [ngStyle]="{'background': Background3}">
 
             <!-- PROFIL -->
-            <a href="#" role="menuitem"
+            <a href="/dashboard" role="menuitem"
                 class="group flex items-center px-3 sm:px-4 py-2 sm:py-2.5 text-sm transition-all duration-200 active:scale-[0.98]">
 
                 <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center mr-2 sm:mr-3 shrink-0"
@@ -75,7 +100,7 @@
                 </div>
 
                 <div class="flex-1 min-w-0">
-                    <span class="font-medium text-sm">Profil</span>
+                    <span class="font-medium text-sm">DashBoard</span>
                     <span class="block text-xs opacity-60 truncate">
                         Gérer votre compte
                     </span>

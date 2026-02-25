@@ -1,0 +1,95 @@
+<!-- Overlay semi-transparent avec animation -->
+<div
+  *ngIf="show"
+  class="fixed inset-0 z-[11002] bg-black/60 animate-fade-in"
+  aria-hidden="true"
+></div>
+
+<!-- Banner cookies -->
+<div
+  *ngIf="show"
+  role="dialog"
+  aria-labelledby="cookie-title"
+  aria-describedby="cookie-desc"
+  class="fixed bottom-0 left-0 right-0 z-[11003] w-full px-4 pb-4 animate-slide-up"
+>
+  <div
+  [ngStyle]="{'background':Background,'color':Text}"
+    class="w-full max-w-4xl mx-auto rounded-2xl shadow-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6"
+  >
+    <!-- Logo + Texte -->
+    <div class="flex items-start gap-4 flex-1">
+      <img
+        src="assets/LOGO.png"
+        alt=""
+        class="w-12 h-12 flex-shrink-0 drop-shadow-lg"
+        loading="lazy"
+      />
+      <div class="text-sm leading-relaxed">
+        <p id="cookie-desc">
+          Nous utilisons des cookies pour améliorer votre expérience :
+          navigation fluide, sécurisée et personnalisée.
+        </p>
+        <a
+          href="/cookies"
+          class="inline-block mt-2 underline hover:text-emerald-300 transition-colors"
+        >
+          En savoir plus
+        </a>
+      </div>
+    </div>
+
+    <!-- Boutons -->
+    <div class="flex gap-3 shrink-0">
+      <button
+      [ngStyle]="{'background':Background1}"
+        (click)="accept()"
+        class="px-5 py-2.5 rounded-full font-semibold text-white
+               hover:scale-105 active:scale-95 transition transform shadow hover:shadow-lg"
+        aria-label="Accepter les cookies"
+      >
+        Accepter
+      </button>
+      <button
+      [ngStyle]="{'border':Border,'color':Text}"
+        (click)="refuse()"
+        class="px-5 py-2.5 rounded-full font-semibold border
+               hover:bg-gray-100 hover:border-gray-500 active:scale-95 transition transform"
+        aria-label="Refuser les cookies"
+      >
+        Refuser
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Styles animés -->
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.5s ease-out forwards;
+  }
+</style>

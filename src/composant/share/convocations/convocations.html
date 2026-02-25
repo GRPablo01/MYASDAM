@@ -1,0 +1,1002 @@
+<!-- ============================================
+     SECTION CARD HAUT GAUCHE - CRÉATION CONVOCATION
+     ============================================ -->
+     <section class="p-4 flex justify-start items-start h-150vh">
+
+        <!-- ( Section 0 ) CARD AJOUT CONVOCATION - VERSION COMPACTE -->
+        <div [ngStyle]="{'background':Background,'border':BorderHeader,'color':Text}" 
+             class="group w-64 backdrop-blur-md border rounded-3xl shadow-lg
+                    hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] 
+                    transition-all duration-400 ease-out overflow-hidden relative cursor-pointer"
+             (click)="!showForm && toggleForm()">
+    
+            <!-- ( Section 1 ) HEADER ICON avec gradient animé -->
+            <div [ngStyle]="{'background':Background1}" 
+                 class="relative flex items-center justify-center py-8 overflow-hidden">
+    
+                <!-- ( Section 2 ) Orbes décoratifs -->
+                <div [ngStyle]="{'background':Background2}" 
+                     class="absolute top-0 left-0 w-32 h-32 rounded-full blur-2xl animate-pulse">
+                </div>
+                <div [ngStyle]="{'background':Background3}"
+                     class="absolute bottom-0 right-0 w-24 h-24 rounded-full blur-xl animate-pulse delay-700">
+                </div>
+                <div [ngStyle]="{'background':Background4}"
+                     class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-52 h-52 rounded-full blur-2xl">
+                </div>
+    
+                <!-- ( Section 3 ) Icône principale -->
+                <div [ngStyle]="{'background':Background5}" 
+                     class="relative w-20 h-20 flex items-center justify-center 
+                            backdrop-blur rounded-2xl shadow-xl border border-white/40
+                            group-hover:rotate-12 group-hover:scale-105 
+                            transition-all duration-400 ease-out">
+                    <i [ngStyle]="{'color':icon}" 
+                       class="fa-solid fa-clipboard-list text-2xl group-hover:animate-bounce"></i>
+                </div>
+    
+                <!-- Indicateurs de statut -->
+                <div class="absolute top-4 right-4 flex items-center gap-1.5">
+                    <div [ngStyle]="{'background':Background6}" class="w-2 h-2 rounded-full animate-ping"></div>
+                    <div [ngStyle]="{'background':Background6}" class="w-2 h-2 rounded-full shadow-lg"></div>
+                </div>
+            </div>
+    
+            <!-- CONTENU -->
+            <div class="p-6 text-center space-y-4 relative">
+    
+                <!-- ( Section 4 ) -->
+                <div class="space-y-1">
+                    <h3 class="text-lg font-bold tracking-tight transition-colors duration-300">
+                        Ajouter une Convocation
+                    </h3>
+                    <div [ngStyle]="{'background':Background1}"
+                         class="w-10 h-1 rounded-full mx-auto transform scale-x-0 group-hover:scale-x-100 transition-transform duration-400">
+                    </div>
+                </div>
+    
+                <p class="text-xs leading-relaxed max-w-[200px] mx-auto">
+                    Crée une nouvelle convocation pour organiser ta sélection de joueurs pour le prochain match.
+                </p>
+    
+                <!-- ( Section 5 ) BOUTON -->
+                <button [ngStyle]="{'background':Background1}" 
+                        (click)="toggleForm(); $event.stopPropagation()" 
+                        class="w-full relative overflow-hidden
+                               text-white py-3 rounded-xl font-bold text-xs uppercase tracking-wide
+                               shadow-lg shadow-blue-950/25
+                               hover:shadow-blue-950/40 hover:shadow-xl hover:scale-[1.02]
+                               active:scale-[0.97]
+                               transition-all duration-300 group/btn">
+    
+                    <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent 
+                                 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700"></span>
+    
+                    <span class="relative flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus text-xs transition-transform duration-300 group-hover/btn:rotate-90"></i>
+                        Créer une convocation
+                    </span>
+                </button>
+            </div>
+    
+            <!-- ( Section 6 ) Barre de progression décorative -->
+            <div [ngStyle]="{'background':Background1}" 
+                 class="h-1 w-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-400 origin-left">
+            </div>
+        </div>
+    </section>
+    
+    <!-- ============================================
+         POPUP MODAL - FORMULAIRE CRÉATION CONVOCATION
+         ============================================ -->
+    <div *ngIf="showForm" class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+    
+        <!-- OVERLAY -->
+        <div class="absolute inset-0 bg-slate-950/70 backdrop-blur-lg transition-opacity duration-300"
+             (click)="toggleForm()"></div>
+    
+        <!-- ( Section 7 ) POPUP CONTAINER -->
+        <div [ngStyle]="{'background':Background}" 
+             class="relative w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 max-h-[90vh] flex flex-col animate-slide-up">
+    
+            <!-- ( Section 8 ) HEADER -->
+            <div [ngStyle]="{'background':Background1}" 
+                 class="relative px-6 py-4 flex items-center justify-between flex-shrink-0 overflow-hidden">
+    
+                <!-- Pattern SVG animé -->
+                <div class="absolute inset-0 opacity-10 animate-[pulse_4s_ease-in-out_infinite]">
+                    <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <defs>
+                            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
+                            </pattern>
+                        </defs>
+                        <rect width="100" height="100" fill="url(#grid)"/>
+                    </svg>
+                </div>
+    
+                <!-- ( Section 9 ) -->
+                <div class="relative flex items-center gap-3">
+                    <div [ngStyle]="{'background':Background6}"
+                         class="w-12 h-12 backdrop-blur rounded-2xl flex items-center justify-center border border-white/30 shadow-lg">
+                        <i class="fa-solid fa-clipboard-list text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-xl tracking-tight text-white">Nouvelle Convocation</h2>
+                        <p class="text-xs mt-1 flex items-center gap-1 text-white">
+                            <i class="fa-solid fa-circle-info text-[10px]"></i>
+                            Organise ta sélection
+                        </p>
+                    </div>
+                </div>
+    
+                <button (click)="toggleForm()"
+                        [ngStyle]="{'background':Background7}"
+                        class="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/20 text-white transition-all duration-300 hover:rotate-90 hover:scale-110 group shadow-md">
+                    <i class="fa-solid fa-xmark text-lg transition-transform duration-200 group-hover:scale-125"></i>
+                </button>
+            </div>
+    
+            <!-- FORMULAIRE -->
+            <form [formGroup]="convocationForm" (ngSubmit)="ajouterConvocation()"
+                  class="p-6 space-y-4 overflow-y-auto custom-scrollbar">
+    
+                <!-- ( Section 10 ) Section: Informations du Match -->
+                <div [ngStyle]="{'background':Background8,'border':BorderHeader1}" 
+                     class="rounded-2xl p-4 shadow-sm border space-y-4 hover:shadow-md transition-shadow duration-300">
+                    
+                    <!-- ( Section 11 ) -->
+                    <div class="flex items-center gap-2 pb-2">
+                        <div [ngStyle]="{'background':Background6}" class="w-8 h-8 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-futbol text-white text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold uppercase tracking-wider">Match</h4>
+                            <p class="text-[10px]">Détails de la rencontre</p>
+                        </div>
+                    </div>
+    
+                    <!-- Match -->
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
+                            <i [ngStyle]="{'color':icon}" class="fa-solid fa-trophy text-[8px]"></i>
+                            Intitulé du match
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+                                <i [ngStyle]="{'color':icon}" class="fa-solid fa-gamepad transition-colors duration-200 text-xs"></i>
+                            </div>
+                            <input type="text" formControlName="match" placeholder="Votre Rencontre..."
+                                   [ngStyle]="{'background':Background9,'border':BorderHeader1}"
+                                   class="w-full pl-10 pr-3 py-3 rounded-xl font-medium placeholder-slate-400
+                                          transition-all duration-200 outline-none shadow-sm" />
+                        </div>
+                    </div>
+    
+                    <!-- Équipe -->
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
+                            <i [ngStyle]="{'color':icon}" class="fa-solid fa-shield-halved text-[8px]"></i>
+                            Équipe concernée
+                        </label>
+                        <div [ngStyle]="{'background':Background9,'border':BorderHeader1}"
+                             class="w-full pl-3 pr-3 py-3 rounded-xl font-medium shadow-sm">
+                            {{ equipeUser }}
+                        </div>
+                    </div>
+    
+                    <!-- Lieu -->
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
+                            <i [ngStyle]="{'color':icon}" class="fa-solid fa-location-dot text-[8px]"></i>
+                            Lieu
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+                                <i [ngStyle]="{'color':icon}" class="fa-solid fa-map-pin transition-colors duration-200 text-xs"></i>
+                            </div>
+                            <input type="text" formControlName="lieu" placeholder="Stade, Ville..."
+                                   [ngStyle]="{'background':Background9,'border':BorderHeader1}"
+                                   class="w-full pl-10 pr-3 py-3 rounded-xl font-medium placeholder-slate-400
+                                          transition-all duration-200 outline-none shadow-sm" />
+                        </div>
+                    </div>
+    
+                    <!-- Date et Heure -->
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
+                            <i [ngStyle]="{'color':icon}" class="fa-solid fa-calendar-check text-[8px]"></i>
+                            Date et heure
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+                                <i [ngStyle]="{'color':icon}" class="fa-solid fa-clock transition-colors duration-200 text-xs"></i>
+                            </div>
+                            <input type="datetime-local" formControlName="dateMatch"
+                                   [ngStyle]="{'background':Background9,'border':BorderHeader1}"
+                                   class="w-full pl-10 pr-3 py-3 rounded-xl font-medium placeholder-slate-400
+                                          transition-all duration-200 outline-none shadow-sm cursor-pointer" />
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- ( Section 12 ) Section: Sélection des Joueurs -->
+                <div [ngStyle]="{'background':Background8,'border':BorderHeader1}" 
+                     class="rounded-2xl p-4 shadow-sm border space-y-4 hover:shadow-md transition-shadow duration-300">
+                    
+                    <div class="flex items-center gap-2 pb-2">
+                        <div [ngStyle]="{'background':Background6}" class="w-8 h-8 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-user-check text-white text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold uppercase tracking-wider">Sélection</h4>
+                            <p class="text-[10px]">Compose ton équipe</p>
+                        </div>
+                    </div>
+    
+                    <!-- BOUTON PRINCIPAL COMPOSITION -->
+                    <div class="space-y-3">
+                        <label class="text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
+                            <i [ngStyle]="{'color':icon}" class="fa-solid fa-users text-[8px]"></i>
+                            Joueurs convoqués
+                        </label>
+    
+                        <!-- Affichage des joueurs sélectionnés (badges) -->
+                        <div *ngIf="joueursSelectionnes.length > 0" class="flex flex-wrap gap-2 mb-3">
+                            <div *ngFor="let joueur of joueursSelectionnes" 
+                                 [ngStyle]="{'background':Background1+'20','border':BorderHeader1}"
+                                 class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium border">
+                                <i [ngStyle]="{'color':icon}" class="fa-solid fa-user text-[10px]"></i>
+                                {{ joueur.prenom }} {{ joueur.nom }}
+                                <button type="button" (click)="retirerJoueur(joueur)" 
+                                        [ngStyle]="{'background':Background7}"
+                                        class="w-5 h-5 flex items-center justify-center rounded-full text-white transition-all hover:scale-110">
+                                    <i class="fa-solid fa-xmark text-[10px]"></i>
+                                </button>
+                            </div>
+                        </div>
+    
+                        <!-- Input caché pour le formulaire -->
+                        <input type="hidden" formControlName="joueur" />
+    
+                        <!-- Bouton ouvrir sélection -->
+                        <button type="button" (click)="openCompoModal()"
+                                [ngStyle]="{'background':Background1}"
+                                class="w-full relative overflow-hidden text-white py-3 rounded-xl font-bold text-xs uppercase tracking-wide
+                                       shadow-lg shadow-blue-950/25 hover:shadow-xl hover:shadow-blue-950/35 hover:scale-[1.02]
+                                       active:scale-[0.97] transition-all duration-300 group/compo flex items-center justify-center gap-2">
+                            
+                            <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent 
+                                         translate-x-[-100%] group-hover/compo:translate-x-[100%] transition-transform duration-700"></span>
+                            
+                            <i [ngStyle]="{'color':icon}" class="fa-solid fa-people-arrows text-lg group-hover/compo:animate-bounce"></i>
+                            <span>Choisir ma composition</span>
+                            <i class="fa-solid fa-chevron-right opacity-0 group-hover/compo:opacity-100 group-hover/compo:translate-x-1 transition-all duration-300"></i>
+                        </button>
+    
+                        <!-- Message info -->
+                        <div [ngStyle]="{'background':Background1+'10','border':BorderHeader1}"
+                             class="flex items-start gap-2 p-3 rounded-xl text-xs border">
+                            <i [ngStyle]="{'color':icon}" class="fa-solid fa-circle-info mt-0.5"></i>
+                            <p>Sélectionne tes joueurs en glissant-déposant ou via la vue terrain interactive avec formations tactiques.</p>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Actions Footer -->
+                <div [ngStyle]="{'border-top':BorderHeader1}" 
+                     class="flex flex-col sm:flex-row gap-3 pt-4 sticky bottom-0 backdrop-blur pb-2">
+    
+                    <button type="button" (click)="toggleForm()" 
+                            [ngStyle]="{'border':BorderHeader1}"
+                            class="flex-1 px-4 py-3 rounded-xl font-bold
+                                   hover:shadow-md active:scale-[0.97] transition-all duration-200 
+                                   flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrow-left text-xs"></i>
+                        Annuler
+                    </button>
+    
+                    <button type="submit" [disabled]="!convocationForm.valid || joueursSelectionnes.length === 0"
+                            [ngStyle]="{'background':Background1}"
+                            class="flex-[2] relative overflow-hidden px-6 py-3 
+                                   text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-950/25
+                                   hover:shadow-xl hover:shadow-blue-950/35 hover:scale-[1.02] active:scale-[0.97]
+                                   disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 
+                                   group/submit flex items-center justify-center gap-2">
+                        <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent 
+                                     translate-x-[-100%] group-hover/submit:translate-x-[100%] transition-transform duration-800"></span>
+                        <i class="fa-solid fa-paper-plane text-lg group-hover/submit:animate-bounce"></i>
+                        <span>Créer la convocation</span>
+                        <i class="fa-solid fa-arrow-right opacity-0 group-hover/submit:opacity-100 group-hover/submit:translate-x-1 transition-all duration-300"></i>
+                    </button>
+                </div>
+    
+                <!-- Message succès -->
+                <div *ngIf="message"
+                     class="flex items-center gap-3 p-4 bg-emerald-50 border-2 border-emerald-200 rounded-2xl animate-fade-in shadow-md">
+                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-emerald-500/30">
+                        <i class="fa-solid fa-check text-white text-base"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-emerald-900 font-bold text-sm">{{ message }}</p>
+                        <p class="text-emerald-600 text-[9px] mt-0.5">La convocation a été créée avec succès</p>
+                    </div>
+                    <button type="button" (click)="message = null"
+                            class="w-6 h-6 flex items-center justify-center rounded-full text-emerald-400 hover:text-emerald-600 hover:bg-emerald-100 transition-all duration-200">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+    
+            </form>
+        </div>
+    </div>
+    
+    <!-- ============================================
+         MODAL CHOIX MODE COMPOSITION
+         ============================================ -->
+    <div *ngIf="showCompoChoiceModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-fade-in">
+        
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity duration-300" 
+             (click)="closeCompoChoiceModal()"></div>
+    
+        <div [ngStyle]="{'background':Background, 'border-color': BorderHeader1}" 
+             class="relative w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 animate-slide-up border">
+            
+            <!-- Header -->
+            <div [ngStyle]="{'background':Background1}" 
+                 class="relative px-6 py-5 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div [ngStyle]="{'background':Background6}"
+                         class="w-12 h-12 backdrop-blur rounded-xl flex items-center justify-center border border-white/30">
+                        <i class="fa-solid fa-chess-board text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-lg">Mode de composition</h3>
+                        <p class="text-white/70 text-xs">Choisis comment sélectionner tes joueurs</p>
+                    </div>
+                </div>
+                <button (click)="closeCompoChoiceModal()" 
+                        [ngStyle]="{'background':Background7}"
+                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/20 text-white transition-all hover:rotate-90">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+    
+            <!-- Choix -->
+            <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                <!-- Option 1: Colonne Drag & Drop -->
+                <button (click)="openColumnCompo()" 
+                        [ngStyle]="{'background':Background8,'border-color':BorderHeader1}"
+                        class="group relative p-6 rounded-2xl border-2 hover:border-blue-500 transition-all duration-300 text-left">
+                    <div [ngStyle]="{'background':Background1}"
+                         class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                        <i class="fa-solid fa-list text-white text-2xl"></i>
+                    </div>
+                    <h4 class="font-bold mb-2 group-hover:text-blue-600 transition-colors">Liste simple</h4>
+                    <p class="text-xs leading-relaxed opacity-70">Vue en colonne avec drag & drop pour organiser rapidement ta liste de joueurs.</p>
+                    <div [ngStyle]="{'background':Background1}"
+                         class="absolute top-3 right-3 w-6 h-6 rounded-full text-white flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </button>
+    
+                <!-- Option 2: Terrain 3D -->
+                <button (click)="openFieldCompo()" 
+                        [ngStyle]="{'background':Background8,'border-color':BorderHeader1}"
+                        class="group relative p-6 rounded-2xl border-2 hover:border-emerald-500 transition-all duration-300 text-left">
+                    <div [ngStyle]="{'background':Background1}"
+                         class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                        <i class="fa-solid fa-futbol text-white text-2xl"></i>
+                    </div>
+                    <h4 class="font-bold mb-2 group-hover:text-emerald-600 transition-colors">Vue Terrain</h4>
+                    <p class="text-xs leading-relaxed opacity-70">Interface immersive avec terrain 3D, formations tactiques (4-4-2, 3-5-2...) et placement des joueurs.</p>
+                    <div [ngStyle]="{'background':Background1}"
+                         class="absolute top-3 right-3 w-6 h-6 rounded-full text-white flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </button>
+    
+            </div>
+    
+            <!-- Info -->
+            <div class="px-6 pb-6">
+                <div [ngStyle]="{'background':Background8,'border-color':BorderHeader1}"
+                     class="p-3 rounded-xl flex items-center gap-3 text-xs border">
+                    <i [ngStyle]="{'color':icon}" class="fa-solid fa-lightbulb"></i>
+                    <span>Tu pourras toujours changer de mode pendant la composition.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============================================
+         MODAL COMPOSITION COLONNE (DRAG & DROP)
+         ============================================ -->
+    <div *ngIf="showColumnCompo" class="fixed inset-0 z-[70] flex items-center justify-center p-4 animate-fade-in">
+        
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity duration-300" 
+             (click)="closeColumnCompo()"></div>
+    
+        <div [ngStyle]="{'background':Background, 'border-color': BorderHeader1}" 
+             class="relative w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 max-h-[90vh] flex flex-col animate-slide-up border">
+            
+            <!-- Header -->
+            <div [ngStyle]="{'background':Background1}" 
+                 class="relative px-6 py-4 flex items-center justify-between flex-shrink-0">
+                <div class="flex items-center gap-3">
+                    <div [ngStyle]="{'background':Background6}"
+                         class="w-10 h-10 backdrop-blur rounded-xl flex items-center justify-center border border-white/30">
+                        <i class="fa-solid fa-list text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-lg">Composition - Liste</h3>
+                        <p class="text-white/70 text-xs">Glisse les joueurs dans la convocation</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button (click)="switchToFieldMode()" 
+                            class="px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-medium transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-futbol"></i>
+                        Vue Terrain
+                    </button>
+                    <button (click)="closeColumnCompo()" 
+                            [ngStyle]="{'background':Background7}"
+                            class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/20 text-white transition-all hover:rotate-90">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+    
+            <!-- Content -->
+            <div class="flex-1 overflow-hidden flex flex-col sm:flex-row">
+                
+                <!-- Liste des joueurs disponibles -->
+                <div class="w-full sm:w-1/2 p-4 border-r overflow-y-auto custom-scrollbar"
+                     [ngStyle]="{'background':Background8,'border-color':BorderHeader1}">
+                    <h4 class="text-xs font-bold mb-3 flex items-center gap-2">
+                        <i [ngStyle]="{'color':icon}" class="fa-solid fa-users"></i>
+                        Joueurs disponibles ({{ joueursEquipe.length }})
+                    </h4>
+                    
+                    <div class="space-y-2">
+                        <div *ngFor="let joueur of joueursEquipe" 
+                             draggable="true"
+                             (dragstart)="onDragStart($event, joueur)"
+                             [ngStyle]="{'background':Background,'border-color':BorderHeader1}"
+                             class="group flex items-center gap-3 p-3 rounded-xl border shadow-sm hover:shadow-md cursor-move transition-all duration-200">
+                            
+                            <div [ngStyle]="{'background':Background1}"
+                                 class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                {{ getInitials(joueur) }}
+                            </div>
+                            
+                            <div class="flex-1">
+                                <p class="font-semibold text-sm">{{ joueur.prenom }} {{ joueur.nom }}</p>
+                                <p class="text-xs opacity-70">{{ joueur.poste || 'Non défini' }}</p>
+                            </div>
+                            
+                            <i class="fa-solid fa-grip-vertical opacity-40 group-hover:opacity-100 transition-colors"></i>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Zone de drop (Convocation) -->
+                <div class="w-full sm:w-1/2 p-4 overflow-y-auto custom-scrollbar"
+                     [ngStyle]="{'background':Background8}"
+                     (dragover)="onDragOver($event)"
+                     (drop)="onDrop($event)">
+                    
+                    <h4 class="text-xs font-bold mb-3 flex items-center gap-2">
+                        <i [ngStyle]="{'color':icon}" class="fa-solid fa-clipboard-check"></i>
+                        Convocation ({{ joueursSelectionnes.length }})
+                    </h4>
+    
+                    <!-- Zone vide -->
+                    <div *ngIf="joueursSelectionnes.length === 0" 
+                         [ngStyle]="{'border-color':BorderHeader1}"
+                         class="h-48 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center opacity-50">
+                        <i [ngStyle]="{'color':icon}" class="fa-solid fa-hand-pointer text-3xl mb-2 animate-bounce"></i>
+                        <p class="text-sm font-medium">Glisse les joueurs ici</p>
+                    </div>
+    
+                    <!-- Liste sélectionnée -->
+                    <div class="space-y-2">
+                        <div *ngFor="let joueur of joueursSelectionnes; let i = index" 
+                             [ngStyle]="{'background':Background,'border-color':BorderHeader1}"
+                             class="flex items-center gap-3 p-3 rounded-xl border-2 shadow-sm">
+                            
+                            <div [ngStyle]="{'background':Background1}"
+                                 class="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold text-xs">
+                                {{ i + 1 }}
+                            </div>
+                            
+                            <div [ngStyle]="{'background':Background1}"
+                                 class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                {{ getInitials(joueur) }}
+                            </div>
+                            
+                            <div class="flex-1">
+                                <p class="font-semibold text-sm">{{ joueur.prenom }} {{ joueur.nom }}</p>
+                                <p class="text-xs opacity-70">{{ joueur.poste || 'Non défini' }}</p>
+                            </div>
+                            
+                            <button (click)="retirerJoueur(joueur)" 
+                                    [ngStyle]="{'background':Background7}"
+                                    class="w-8 h-8 flex items-center justify-center rounded-full text-white transition-all hover:rotate-90">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Footer -->
+            <div class="p-4 border-t flex justify-between items-center"
+                 [ngStyle]="{'background':Background,'border-color':BorderHeader1}">
+                <span class="text-xs opacity-70">{{ joueursSelectionnes.length }} joueur(s) sélectionné(s)</span>
+                <button (click)="validateCompo()" 
+                        [ngStyle]="{'background':Background1}"
+                        class="px-6 py-3 text-white rounded-xl font-bold text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-check"></i>
+                    Valider la composition
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============================================
+         MODAL COMPOSITION TERRAIN 3D
+         ============================================ -->
+    <div *ngIf="showFieldCompo" class="fixed inset-0 z-[70] flex items-center justify-center p-4 animate-fade-in">
+        
+        <div class="absolute inset-0 bg-slate-950/90 backdrop-blur-md transition-opacity duration-300" 
+             (click)="closeFieldCompo()"></div>
+    
+        <div class="relative w-full max-w-6xl bg-slate-900 rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 max-h-[95vh] flex flex-col animate-slide-up border-2 border-slate-700">
+            
+            <!-- Header avec sélecteur de formation -->
+            <div [ngStyle]="{'background':Background1}" 
+                 class="relative px-6 py-4 flex items-center justify-between flex-shrink-0">
+                <div class="flex items-center gap-4">
+                    <div [ngStyle]="{'background':Background6}"
+                         class="w-10 h-10 backdrop-blur rounded-xl flex items-center justify-center border border-white/30">
+                        <i class="fa-solid fa-futbol text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-lg">Composition Tactique</h3>
+                        <p class="text-white/70 text-xs">Formation {{ currentFormation.structure }} - {{ currentFormation.name }}</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <!-- Sélecteur de formation -->
+                    <div class="relative">
+                        <select [ngModel]="selectedFormation" (ngModelChange)="onFormationChange($event)" 
+                                [ngStyle]="{'background':Background7,'border-color':BorderHeader1}"
+                                class="appearance-none backdrop-blur border text-white py-2 pl-4 pr-10 rounded-xl text-xs font-medium focus:outline-none cursor-pointer transition-all">
+                            <option *ngFor="let formation of availableFormations" [value]="formation.id" 
+                                    [ngStyle]="{'background':Background,'color':Text}">
+                                {{ formation.name }} ({{ formation.structure }})
+                            </option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+                            <i class="fa-solid fa-chevron-down text-white/70 text-xs"></i>
+                        </div>
+                    </div>
+    
+                    <button (click)="switchToColumnMode()" 
+                            class="px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-medium transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-list"></i>
+                        Vue Liste
+                    </button>
+                    <button (click)="closeFieldCompo()" 
+                            [ngStyle]="{'background':Background7}"
+                            class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/20 text-white transition-all hover:rotate-90">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+    
+            <!-- Content -->
+            <div class="flex-1 overflow-hidden flex flex-col lg:flex-row">
+                
+                <!-- Terrain de football -->
+                <div class="flex-1 relative bg-emerald-800 p-4 overflow-hidden">
+                    
+                    <!-- Terrain SVG avec lignes -->
+                    <div class="relative w-full h-full min-h-[600px] bg-gradient-to-b from-emerald-600 to-emerald-700 rounded-2xl border-4 border-white/20 shadow-inner overflow-hidden">
+                        
+                        <!-- Lignes du terrain -->
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <line x1="50" y1="0" x2="50" y2="100" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+                            <circle cx="50" cy="50" r="15" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+                            <circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.4)"/>
+                            <rect x="20" y="0" width="60" height="20" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+                            <rect x="35" y="0" width="30" height="8" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+                            <rect x="20" y="80" width="60" height="20" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+                            <rect x="35" y="92" width="30" height="8" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+                        </svg>
+    
+                        <!-- CONTENEUR DES JOUEURS SUR LE TERRAIN -->
+                        <div class="absolute inset-0 flex flex-col justify-end pb-16 px-4 pt-16">
+                            
+                            <!-- LIGNE 4: ATTAQUANTS -->
+                            <div class="flex justify-center mb-6 gap-6" 
+                                 [class.gap-12]="currentFormation.attack === 1" 
+                                 [class.gap-8]="currentFormation.attack === 2" 
+                                 [class.gap-4]="currentFormation.attack >= 3">
+                                <ng-container *ngFor="let i of getRange(currentFormation.attack); let idx = index">
+                                    <div (dragover)="onDragOver($event)" 
+                                         (drop)="onDropToField($event, 'attaquant', idx)"
+                                         class="transform hover:scale-105 transition-transform">
+                                        <ng-container *ngTemplateOutlet="playerSlot; context: { 
+                                            $implicit: getJoueurAtPosition('attaquant', idx), 
+                                            position: 'attaquant', 
+                                            index: idx, 
+                                            color: 'rose',
+                                            label: 'ATT'
+                                        }"></ng-container>
+                                    </div>
+                                </ng-container>
+                            </div>
+    
+                            <!-- LIGNE 3: MILIEUX -->
+                            <div class="flex justify-center mb-6 gap-4" 
+                                 [class.gap-8]="currentFormation.midfield <= 3" 
+                                 [class.gap-4]="currentFormation.midfield === 4" 
+                                 [class.gap-2]="currentFormation.midfield >= 5">
+                                <ng-container *ngFor="let i of getRange(currentFormation.midfield); let idx = index">
+                                    <div (dragover)="onDragOver($event)" 
+                                         (drop)="onDropToField($event, 'milieu', idx)"
+                                         class="transform hover:scale-105 transition-transform">
+                                        <ng-container *ngTemplateOutlet="playerSlot; context: { 
+                                            $implicit: getJoueurAtPosition('milieu', idx), 
+                                            position: 'milieu', 
+                                            index: idx, 
+                                            color: 'emerald',
+                                            label: 'MIL'
+                                        }"></ng-container>
+                                    </div>
+                                </ng-container>
+                            </div>
+    
+                            <!-- LIGNE 2: DÉFENSEURS -->
+                            <div class="flex justify-center mb-6 gap-4" 
+                                 [class.gap-8]="currentFormation.defense <= 3" 
+                                 [class.gap-4]="currentFormation.defense === 4" 
+                                 [class.gap-2]="currentFormation.defense >= 5">
+                                <ng-container *ngFor="let i of getRange(currentFormation.defense); let idx = index">
+                                    <div (dragover)="onDragOver($event)" 
+                                         (drop)="onDropToField($event, 'defenseur', idx)"
+                                         class="transform hover:scale-105 transition-transform">
+                                        <ng-container *ngTemplateOutlet="playerSlot; context: { 
+                                            $implicit: getJoueurAtPosition('defenseur', idx), 
+                                            position: 'defenseur', 
+                                            index: idx, 
+                                            color: 'blue',
+                                            label: 'DEF'
+                                        }"></ng-container>
+                                    </div>
+                                </ng-container>
+                            </div>
+    
+                            <!-- LIGNE 1: GARDIEN -->
+                            <div class="flex justify-center">
+                                <div (dragover)="onDragOver($event)" 
+                                     (drop)="onDropToField($event, 'gardien', 0)"
+                                     class="transform hover:scale-105 transition-transform">
+                                    <ng-container *ngTemplateOutlet="playerSlot; context: { 
+                                        $implicit: getJoueurAtPosition('gardien', 0), 
+                                        position: 'gardien', 
+                                        index: 0, 
+                                        color: 'yellow',
+                                        label: 'GK'
+                                    }"></ng-container>
+                                </div>
+                            </div>
+    
+                        </div>
+    
+                        <!-- Légende -->
+                        <div class="absolute bottom-4 left-4 flex gap-3 bg-black/40 backdrop-blur rounded-lg px-3 py-2 border border-white/10">
+                            <div class="flex items-center gap-1.5 text-white/90 text-xs">
+                                <div class="w-3 h-3 rounded-full bg-yellow-400 border border-white"></div> GK
+                            </div>
+                            <div class="flex items-center gap-1.5 text-white/90 text-xs">
+                                <div class="w-3 h-3 rounded-full bg-blue-500 border border-white"></div> DEF
+                            </div>
+                            <div class="flex items-center gap-1.5 text-white/90 text-xs">
+                                <div class="w-3 h-3 rounded-full bg-emerald-500 border border-white"></div> MIL
+                            </div>
+                            <div class="flex items-center gap-1.5 text-white/90 text-xs">
+                                <div class="w-3 h-3 rounded-full bg-rose-500 border border-white"></div> ATT
+                            </div>
+                        </div>
+    
+                        <!-- Info formation -->
+                        <div class="absolute top-4 right-4 bg-black/50 backdrop-blur rounded-xl px-4 py-2 border border-white/20">
+                            <p class="text-white font-bold text-sm">{{ currentFormation.structure }}</p>
+                            <p class="text-white/70 text-xs">{{ joueursSelectionnes.length }}/11 joueurs</p>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Sidebar joueurs -->
+                <div class="w-full lg:w-80 border-l flex flex-col"
+                     [ngStyle]="{'background':Background,'border-color':BorderHeader1}">
+                    
+                    <!-- Formation info -->
+                    <div class="p-4 border-b"
+                         [ngStyle]="{'background':Background8,'border-color':BorderHeader1}">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-bold text-sm flex items-center gap-2">
+                                <i [ngStyle]="{'color':icon}" class="fa-solid fa-chess-board"></i>
+                                {{ currentFormation.name }}
+                            </h4>
+                            <span [ngStyle]="{'background':Background1,'color':'white'}"
+                                  class="text-xs font-bold px-2 py-1 rounded-lg border border-white/20">{{ currentFormation.structure }}</span>
+                        </div>
+                        <p class="text-xs leading-relaxed opacity-70">{{ currentFormation.description }}</p>
+                    </div>
+    
+                    <!-- Joueurs disponibles -->
+                    <div class="p-4 border-b"
+                         [ngStyle]="{'background':Background8,'border-color':BorderHeader1}">
+                        <h4 class="font-bold text-sm flex items-center gap-2 mb-1">
+                            <i [ngStyle]="{'color':icon}" class="fa-solid fa-users"></i>
+                            Joueurs disponibles
+                        </h4>
+                        <p class="text-xs opacity-70">Glisse sur les emplacements du terrain</p>
+                    </div>
+                    
+                    <div class="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar-dark">
+                        <div *ngFor="let joueur of getAvailableJoueurs()" 
+                             draggable="true"
+                             (dragstart)="onDragStart($event, joueur)"
+                             [ngStyle]="{'background':Background9,'border-color':BorderHeader1}"
+                             class="group flex items-center gap-3 p-3 rounded-xl border cursor-move transition-all hover:shadow-lg">
+                            
+                            <div [ngStyle]="{'background':Background1}"
+                                 class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 group-hover:border-white transition-all">
+                                {{ getInitials(joueur) }}
+                            </div>
+                            
+                            <div class="flex-1 min-w-0">
+                                <p class="font-medium text-sm truncate">{{ joueur.prenom }} {{ joueur.nom }}</p>
+                                <p class="text-xs opacity-70">{{ joueur.poste || 'Polyvalent' }}</p>
+                            </div>
+                            
+                            <i class="fa-solid fa-grip-lines opacity-40 group-hover:opacity-100 transition-colors"></i>
+                        </div>
+    
+                        <div *ngIf="getAvailableJoueurs().length === 0" class="text-center py-8 opacity-50">
+                            <i [ngStyle]="{'color':icon}" class="fa-solid fa-check-circle text-3xl mb-3"></i>
+                            <p class="text-sm">Tous les joueurs sont placés !</p>
+                            <p class="text-xs mt-1">Formation complète</p>
+                        </div>
+                    </div>
+    
+                    <!-- Résumé équipe -->
+                    <div class="p-4 border-t"
+                         [ngStyle]="{'background':Background8,'border-color':BorderHeader1}">
+                        <div class="grid grid-cols-2 gap-2 text-center text-xs mb-3">
+                            <div [ngStyle]="{'background':Background9}"
+                                 class="rounded-lg p-3">
+                                <span class="block text-2xl font-bold">{{ joueursSelectionnes.length }}</span>
+                                <span class="opacity-70">Sélectionnés</span>
+                            </div>
+                            <div [ngStyle]="{'background':Background9}"
+                                 class="rounded-lg p-3">
+                                <span [ngStyle]="{'color':icon}" class="block text-2xl font-bold">{{ getAvailableJoueurs().length }}</span>
+                                <span class="opacity-70">Disponibles</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Compteur par poste -->
+                        <div class="grid grid-cols-4 gap-1 text-xs rounded-lg p-2"
+                             [ngStyle]="{'background':Background9}">
+                            <div class="flex flex-col items-center gap-1">
+                                <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                                <span class="font-bold">{{ countByPosition('gardien') }}</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1">
+                                <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                                <span class="font-bold">{{ countByPosition('defenseur') }}</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1">
+                                <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                                <span class="font-bold">{{ countByPosition('milieu') }}</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1">
+                                <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                                <span class="font-bold">{{ countByPosition('attaquant') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Footer -->
+            <div class="p-4 border-t flex justify-between items-center"
+                 [ngStyle]="{'background':Background,'border-color':BorderHeader1}">
+                <div class="flex gap-2">
+                    <button (click)="resetField()" 
+                            class="px-4 py-2.5 opacity-70 hover:opacity-100 text-sm transition-all flex items-center gap-2 rounded-xl">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Réinitialiser
+                    </button>
+                    <button (click)="autoFillFormation()" 
+                            [disabled]="getAvailableJoueurs().length === 0"
+                            [ngStyle]="{'color':icon}"
+                            class="px-4 py-2.5 text-sm transition-all flex items-center gap-2 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        Remplissage auto
+                    </button>
+                </div>
+                <button (click)="validateFieldCompo()" 
+                        [ngStyle]="{'background':Background1}"
+                        class="px-6 py-3 text-white rounded-xl font-bold text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-check"></i>
+                    Valider {{ joueursSelectionnes.length > 0 ? '(' + joueursSelectionnes.length + ')' : '' }}
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TEMPLATE POUR SLOT DE JOUEUR -->
+    <ng-template #playerSlot let-joueur let-position="position" let-index="index" let-color="color" let-label="label">
+    
+        <!-- Slot occupé -->
+        <div *ngIf="joueur; else emptySlot" 
+             class="relative w-20 h-24 rounded-2xl border-2 shadow-xl flex flex-col items-center justify-center 
+                    transform translate-y-10 hover:-translate-y-3 hover:scale-110 transition-all duration-300 ease-out cursor-pointer"
+             [class.border-yellow-400]="color === 'yellow'"
+             [class.border-blue-400]="color === 'blue'"
+             [class.border-emerald-400]="color === 'emerald'"
+             [class.border-rose-400]="color === 'rose'"
+             [ngStyle]="{'background':Background}"
+             draggable="true"
+             (dragstart)="onDragStartFromField($event, joueur)">
+    
+            <!-- Cercle position -->
+            <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg mb-1 border-2 border-white shadow-lg
+                        transition-transform duration-300 group-hover:scale-110"
+                 [class.bg-yellow-400]="color === 'yellow'"
+                 [class.text-slate-900]="color === 'yellow'"
+                 [class.bg-blue-500]="color === 'blue'"
+                 [class.bg-emerald-500]="color === 'emerald'"
+                 [class.bg-rose-500]="color === 'rose'"
+                 [class.text-white]="color !== 'yellow'">
+                {{ getInitials(joueur) }}
+            </div>
+    
+            <!-- Nom -->
+            <span class="text-[10px] font-bold text-center px-1 truncate w-full leading-tight">
+                {{ joueur.nom }}
+            </span>
+            <span class="text-[8px] truncate w-full text-center opacity-50">
+                {{ joueur.prenom }}
+            </span>
+    
+            <!-- Supprimer -->
+            <button (click)="retirerJoueurField(joueur)" 
+                    [ngStyle]="{'background':Background7}"
+                    class="absolute -top-2 -right-2 w-6 h-6 rounded-full text-white text-xs flex items-center justify-center shadow-lg 
+                           transition-all duration-300 hover:scale-110 hover:rotate-90">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+    
+            <!-- Index -->
+            <div class="absolute -bottom-1 -left-1 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white"
+                 [ngStyle]="{'background':Background1}">
+                {{ index + 1 }}
+            </div>
+        </div>
+    
+        <!-- Slot vide -->
+        <ng-template #emptySlot>
+            <div class="w-20 h-24 border-2 border-dashed border-white/30 rounded-2xl flex flex-col items-center justify-center 
+                        text-white/30 hover:border-white/60 hover:text-white/60 backdrop-blur-sm
+                        transform -translate-y-2 hover:-translate-y-3 transition-all duration-300 ease-out cursor-pointer group">
+                
+                <i class="fa-solid fa-plus text-2xl mb-1 group-hover:scale-110 transition-transform duration-300"></i>
+                <span class="text-[9px] uppercase tracking-wider font-medium">{{ label }}</span>
+                <span class="text-[8px] opacity-50 mt-0.5">Pos {{ index + 1 }}</span>
+    
+            </div>
+        </ng-template>
+    
+    </ng-template>
+    
+    <!-- Styles additionnels -->
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+    
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+    
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #3b82f6, #6366f1);
+            border-radius: 4px;
+        }
+    
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #2563eb, #4f46e5);
+        }
+    
+        /* Scrollbar dark */
+        .custom-scrollbar-dark::-webkit-scrollbar {
+            width: 6px;
+        }
+    
+        .custom-scrollbar-dark::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+    
+        .custom-scrollbar-dark::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+    
+        .custom-scrollbar-dark::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(15px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out forwards;
+        }
+    
+        .animate-slide-up {
+            animation: slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    
+        /* Drag and drop styles */
+        .dragging {
+            opacity: 0.5;
+            transform: scale(0.9) rotate(5deg);
+        }
+    
+        .drag-over {
+            background-color: rgba(59, 130, 246, 0.3) !important;
+            border-color: #60a5fa !important;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+    
+        /* Formation animations */
+        .formation-change {
+            animation: formationPulse 0.5s ease-in-out;
+        }
+    
+        @keyframes formationPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+    
+        /* Hover effects for player slots */
+        .player-slot-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+    </style>
