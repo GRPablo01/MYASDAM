@@ -1,0 +1,248 @@
+<div class="h-150vh bg-gradient-to-br from-gray-50 via-white to-gray-100 relative">
+
+    <!-- OVERLAY GLOBAL -->
+    <div *ngIf="selectedActu"
+         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+         (click)="closePopup()">
+    </div>
+
+    <!-- ========================= -->
+    <!-- FEED PRINCIPAL -->
+    <!-- ========================= -->
+
+    <div class="w-full max-w-[650px] mx-auto space-y-6 py-6 px-4 relative z-10">
+
+        <!-- Etat vide -->
+        <div *ngIf="actus.length === 0" class="text-center py-20">
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Aucune actualité</h3>
+            <p class="text-sm text-gray-500">Les publications apparaîtront ici.</p>
+        </div>
+
+        <!-- Cards -->
+        <article *ngFor="let actu of actus; let i = index"
+                 class="bg-white rounded-2xl shadow hover:shadow-xl transition cursor-pointer"
+                 (click)="openPopup(actu,i)">
+
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                        <span class="font-bold text-red-600">
+                            {{ getInitiales(actu.auteur) }}
+                        </span>
+                    </div>
+
+                    <div>
+                        <p class="font-bold text-gray-900">{{ actu.auteur }}</p>
+                        <p class="text-xs text-gray-500">
+                            {{ actu.dateCreation | date:'dd MMM yyyy HH:mm' }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="text-xs text-gray-400">
+                    {{ actu.likes || 0 }} ❤️
+                </div>
+            </div>
+
+            <!-- Image -->
+            <div *ngIf="actu.image" class="aspect-square bg-gray-100">
+                <img [src]="'http://localhost:3000/uploads/' + actu.image"
+                     class="w-full h-full object-cover">
+            </div>
+
+            <!-- Texte -->
+            <div class="p-4">
+                <p class="text-sm">
+                    <span class="font-bold">{{ actu.auteur }}</span>
+                    {{ actu.titre }}
+                </p>
+            </div>
+
+            <!-- Preview commentaires -->
+            <div *ngIf="actu.commentaires?.length"
+                 class="px-4 pb-4 space-y-2">
+
+                <div *ngFor="let com of actu.commentaires | slice:0:2"
+                     class="flex gap-2 items-start">
+
+                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                        <span class="text-xs font-bold">
+                            {{ getInitiales(com.nomComplet) }}
+                        </span>
+                    </div>
+
+                    <div>
+                        <p class="text-xs font-bold">
+                            {{ com.nomComplet }}
+                        </p>
+                        <p class="text-sm text-gray-700">
+                            {{ com.contenu }}
+                        </p>
+                    </div>
+
+                </div>
+
+                <button *ngIf="(actu.commentaires?.length || 0) > 2"
+                    (click)="openAllComments(actu,i); $event.stopPropagation()"
+                    class="text-xs text-red-600">
+                    Voir tous les commentaires
+                </button>
+            </div>
+        </article>
+    </div>
+
+    <!-- ========================= -->
+    <!-- POPUP DETAIL ACTU -->
+    <!-- ========================= -->
+
+    <div *ngIf="selectedActu as actu"
+         class="fixed inset-0 z-50 flex items-center justify-center p-4">
+
+        <div class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
+             (click)="$event.stopPropagation()">
+
+            <!-- Header -->
+            <div class="flex justify-between items-center p-4 border-b">
+
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                        <span class="font-bold text-red-600">
+                            {{ getInitiales(actu.auteur) }}
+                        </span>
+                    </div>
+
+                    <div>
+                        <p class="font-bold">{{ actu.auteur }}</p>
+                        <p class="text-xs text-gray-500">
+                            {{ actu.dateCreation | date:'dd MMMM yyyy HH:mm' }}
+                        </p>
+                    </div>
+                </div>
+
+                <button (click)="closePopup()"
+                        class="text-gray-400 hover:text-gray-700">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Body scrollable -->
+            <div class="overflow-y-auto p-4 space-y-4">
+
+                <img *ngIf="actu.image"
+                     [src]="'http://localhost:3000/uploads/' + actu.image"
+                     class="w-full object-contain max-h-[50vh]">
+
+                <p>
+                    <span class="font-bold">{{ actu.auteur }}</span>
+                    {{ actu.titre }}
+                </p>
+
+                <!-- Preview commentaires popup -->
+                <div *ngIf="actu.commentaires?.length">
+
+                    <h4 class="font-bold text-sm mb-2">
+                        Commentaires ({{ actu.commentaires.length }})
+                    </h4>
+
+                    <div *ngFor="let com of actu.commentaires | slice:0:2"
+                         class="flex gap-2 mb-2">
+
+                        <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                            <span class="text-xs font-bold">
+                                {{ getInitiales(com.nomComplet) }}
+                            </span>
+                        </div>
+
+                        <div>
+                            <p class="text-xs font-bold">
+                                {{ com.nomComplet }}
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                {{ com.contenu }}
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <button (click)="openAllCommentsFromPopup()"
+                            class="text-xs text-red-600">
+                        Voir tous les commentaires
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="showAllComments && selectedActu as actu"
+     class="fixed inset-0 bg-black/50 z-[60] flex items-end sm:items-center justify-center">
+
+    <div class="bg-white w-full max-w-2xl max-h-[85vh] rounded-t-3xl sm:rounded-3xl flex flex-col">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center p-4 border-b">
+            <h3 class="font-bold">
+                Tous les commentaires ({{ actu.commentaires?.length || 0 }})
+            </h3>
+
+            <button (click)="closeAllComments()">
+                ✕
+            </button>
+        </div>
+
+        <!-- Liste -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-4">
+
+            <div *ngIf="actu.commentaires?.length; else noComments">
+
+                <div *ngFor="let com of actu.commentaires"
+                     class="flex gap-3">
+
+                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                        <span class="font-bold text-sm">
+                            {{ getInitiales(com.nomComplet) }}
+                        </span>
+                    </div>
+
+                    <div>
+                        <p class="font-bold text-sm">
+                            {{ com.nomComplet }}
+                        </p>
+                        <p class="text-sm text-gray-700">
+                            {{ com.contenu }}
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <ng-template #noComments>
+                <p class="text-center text-gray-400">
+                    Aucun commentaire pour le moment.
+                </p>
+            </ng-template>
+
+        </div>
+
+        <!-- Input -->
+        <div class="p-4 border-t flex gap-3">
+
+            <input type="text"
+                   class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm"
+                   [(ngModel)]="newComment[selectedIndex]">
+
+            <button (click)="commenterActu(actu, selectedIndex)"
+                    class="bg-red-500 text-white px-4 rounded-full">
+                Envoyer
+            </button>
+
+        </div>
+
+    </div>
+</div>

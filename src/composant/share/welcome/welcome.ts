@@ -185,26 +185,6 @@ export class Welcome implements OnInit {
       //---------- Section 8 ----------//
       this.Background12 = '#6978b8';
 
-
-
-
-
-
-      
-      // this.Background1 = '#6978b8';
-      // this.BorderHeader = '#64748B';
-      // this.Text1 = '#6978b8';
-      // this.Background3 = '#334155';
-      // this.Background4 = '#6978b8';
-      // this.Text2 = '#6978b8';
-      // this.Background5 = '#64748B';
-      // this.BorderHeader1 = '2px solid #6978b8';
-
-
-      // this.Background1 = '#6978b8';
-      // this.Background2 = '#0F172A';
-      // this.Background3 = '#334155';
-      // this.Background4 = '#6978b8';
       
 
       return;

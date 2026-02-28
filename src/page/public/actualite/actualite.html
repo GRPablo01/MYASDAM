@@ -1,8 +1,85 @@
 <!-- ================= LOADER ================= -->
-<div *ngIf="!isLoaded" class="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
-    <span class="text-lg font-bold text-white">Chargement...</span>
+<div *ngIf="!isLoaded"
+    class="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm transition-all duration-300">
+
+    <div class="animate-pulse text-lg font-bold text-white tracking-wider">
+        Chargement...
+    </div>
+
 </div>
 
-<div class="actus-container">
-    
+<!-- ================= PAGE ================= -->
+<div class="actus-container min-h-screen transition-colors duration-500">
+    <app-header></app-header>
+    <app-actus></app-actus>
+    <app-footer></app-footer>
 </div>
+
+
+<style>
+    /* ============================= */
+    /* 🌙 THÈME SOMBRE */
+    /* ============================= */
+
+    .theme-sombre {
+        background-color: #0f172a;
+        color: white;
+    }
+
+    .theme-sombre::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .theme-sombre::-webkit-scrollbar-track {
+        background: #0f172a;
+    }
+
+    .theme-sombre::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #2563eb, #1e40af);
+        border-radius: 10px;
+        border: 2px solid #0f172a;
+        transition: 0.3s;
+    }
+
+    .theme-sombre::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #3b82f6, #2563eb);
+    }
+
+
+    /* ============================= */
+    /* ☀️ THÈME CLAIR */
+    /* ============================= */
+
+    .theme-clair {
+        background-color: #f8fafc;
+        color: #0f172a;
+    }
+
+    .theme-clair::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .theme-clair::-webkit-scrollbar-track {
+        background: #e2e8f0;
+    }
+
+    .theme-clair::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #64748b, #334155);
+        border-radius: 10px;
+        border: 2px solid #e2e8f0;
+        transition: 0.3s;
+    }
+
+    .theme-clair::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #475569, #1e293b);
+    }
+
+
+    /* ============================= */
+    /* 🔥 Scroll fluide */
+    /* ============================= */
+
+    html {
+        scroll-behavior: smooth;
+    }
+</style>

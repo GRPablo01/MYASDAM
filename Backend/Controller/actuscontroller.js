@@ -9,10 +9,7 @@ const crypto = require('crypto'); // pour générer la key unique
 // ==============================
 exports.creerActus = async (req, res) => {
   try {
-    console.log('📄 req.body reçu :', req.body);
-    console.log('📸 req.file reçu :', req.file);
-
-    const { nom, saison } = req.body;
+    const { titre, auteur, saison } = req.body; // titre + auteur
 
     // Vérifier si une image a été envoyée
     if (!req.file) {
@@ -25,18 +22,18 @@ exports.creerActus = async (req, res) => {
 
     // Créer l'objet Actus avec champs supplémentaires
     const nouvelleActus = new Actus({
-      nom,
-      saison,
-      image: req.file.filename, // <-- stocke seulement le nom du fichier
+      titre,
+      auteur: auteur || '',          // peut rester vide si non fourni
+      saison: saison || '2026',
+      image: req.file.filename,       // <-- stocke seulement le nom du fichier
       likes: 0,
       favoris: 0,
-      commentaires: [], // tableau vide au départ
+      commentaires: [],               // tableau vide au départ
       key: keyUnique
     });
 
     // Sauvegarder dans MongoDB
     await nouvelleActus.save();
-    console.log('✅ Actus sauvegardée :', nouvelleActus);
 
     // Réponse au frontend
     res.status(201).json({
@@ -60,7 +57,6 @@ exports.getActus = async (req, res) => {
   try {
     // Récupérer toutes les actus triées par date de création descendante
     const actus = await Actus.find().sort({ dateCreation: -1 });
-    console.log('📦 Actus récupérées :', actus.length);
     res.json(actus);
   } catch (error) {
     console.error('🔥 Erreur récupération actus :', error);
@@ -71,63 +67,80 @@ exports.getActus = async (req, res) => {
   }
 };
 
-// ==============================
-// 👍 Ajouter un like
-// ==============================
-exports.ajouterLike = async (req, res) => {
+// toggle like par key
+exports.toggleLikeParKey = async (req, res) => {
   try {
-    const { id } = req.params;
-    const actus = await Actus.findByIdAndUpdate(
-      id,
-      { $inc: { likes: 1 } },
-      { new: true }
-    );
-    res.json({ message: 'Like ajouté', data: actus });
-  } catch (error) {
-    console.error('🔥 Erreur ajout like :', error);
-    res.status(500).json({ message: 'Erreur serveur', error: error.message });
-  }
-};
+    const { key } = req.params;
+    const { userId } = req.body; // l'identifiant unique de l'utilisateur
 
-// ==============================
-// ⭐ Ajouter un favori
-// ==============================
-exports.ajouterFavori = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const actus = await Actus.findByIdAndUpdate(
-      id,
-      { $inc: { favoris: 1 } },
-      { new: true }
-    );
-    res.json({ message: 'Favori ajouté', data: actus });
-  } catch (error) {
-    console.error('🔥 Erreur ajout favori :', error);
-    res.status(500).json({ message: 'Erreur serveur', error: error.message });
-  }
-};
+    const actus = await Actus.findOne({ key });
+    if (!actus) return res.status(404).json({ message: 'Actu non trouvée' });
 
-// ==============================
-// 💬 Ajouter un commentaire
-// ==============================
-exports.ajouterCommentaire = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { nom, contenu } = req.body;
+    if (!actus.likesUsers) actus.likesUsers = [];
 
-    if (!nom || !contenu) {
-      return res.status(400).json({ message: 'Nom et contenu requis' });
+    // Toggle like
+    if (actus.likesUsers.includes(userId)) {
+      actus.likesUsers = actus.likesUsers.filter(u => u !== userId);
+    } else {
+      actus.likesUsers.push(userId);
     }
 
-    const actus = await Actus.findByIdAndUpdate(
-      id,
-      { $push: { commentaires: { nom, contenu } } },
+    actus.likes = actus.likesUsers.length;
+    await actus.save();
+
+    res.json({ likes: actus.likes, isLiked: actus.likesUsers.includes(userId) });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erreur serveur', error: err.message });
+  }
+};
+
+// toggle favori par key
+exports.toggleFavoriParKey = async (req, res) => {
+  try {
+    const { key } = req.params;
+    const { userId } = req.body;
+
+    const actus = await Actus.findOne({ key });
+    if (!actus) return res.status(404).json({ message: 'Actu non trouvée' });
+
+    if (!actus.favorisUsers) actus.favorisUsers = [];
+
+    // Toggle favori
+    if (actus.favorisUsers.includes(userId)) {
+      actus.favorisUsers = actus.favorisUsers.filter(u => u !== userId);
+    } else {
+      actus.favorisUsers.push(userId);
+    }
+
+    actus.favoris = actus.favorisUsers.length;
+    await actus.save();
+
+    res.json({ favoris: actus.favoris, isFavori: actus.favorisUsers.includes(userId) });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erreur serveur', error: err.message });
+  }
+};
+
+
+// Ajouter un commentaire par key
+exports.ajouterCommentaireParKey = async (req, res) => {
+  try {
+    const { key } = req.params;
+    const { nomComplet, contenu } = req.body;
+    if (!nomComplet || !contenu) {
+      return res.status(400).json({ message: 'Nom complet et contenu requis' });
+    }
+    const actus = await Actus.findOneAndUpdate(
+      { key },
+      { $push: { commentaires: { nomComplet, contenu } } },
       { new: true }
     );
-
+    if (!actus) return res.status(404).json({ message: 'Actu non trouvée' });
     res.json({ message: 'Commentaire ajouté', data: actus });
   } catch (error) {
-    console.error('🔥 Erreur ajout commentaire :', error);
+    console.error('🔥 Erreur ajout commentaire par key :', error);
     res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 };

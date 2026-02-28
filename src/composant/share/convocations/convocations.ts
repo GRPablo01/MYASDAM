@@ -9,7 +9,7 @@ import { AuthService } from '../../../../Backend/Services/User/Auth.Service';
 ========================= */
 
 interface Joueur {
-  id: string;
+  key: string;
   nom: string;
   prenom: string;
   poste?: string;
@@ -239,28 +239,33 @@ export class Convocations implements OnInit {
   }
 
   loadJoueursEquipe(): void {
-
     if (!this.equipeUser) return;
-
+  
     this.authService.getAllUsers().subscribe({
       next: (users: any) => {
-
+        // Vérifier que c'est bien un tableau
         const usersArray = Array.isArray(users) ? users : [];
-
+  
+        // Filtrer uniquement les joueurs appartenant à la même équipe que l'entraîneur connecté
         this.joueursEquipe = usersArray
-          .filter(u =>
-            u.role?.toLowerCase() === 'joueur' &&
-            u.equipe === this.equipeUser
+          .filter(u => 
+            u.role?.toLowerCase() === 'joueur' &&  // seulement les joueurs
+            u.equipe === this.equipeUser          // et qui ont la même équipe que l'entraîneur connecté
           )
           .map(u => ({
-            id: u.id || u._id,
+            key: u.key || u._key,
             nom: u.nom,
             prenom: u.prenom,
-            poste: u.poste || 'Non défini'
           }));
-      }
+  
+        console.log('Joueurs de mon équipe :', this.joueursEquipe);
+      },
+      error: (err) => console.error('Erreur récupération joueurs :', err)
     });
   }
+  
+  
+  
 
   /* =========================
      FORM SUBMIT
@@ -367,34 +372,73 @@ export class Convocations implements OnInit {
 
   onDragStart(event: DragEvent, joueur: Joueur): void {
     if (event.dataTransfer) {
-      event.dataTransfer.setData('text/plain', JSON.stringify(joueur));
+      // CORRECTION : Créer une copie profonde pour éviter les mutations
+      const joueurCopy = JSON.stringify(joueur);
+      event.dataTransfer.setData('application/json', joueurCopy);
+      event.dataTransfer.setData('text/plain', joueurCopy); // Fallback
       event.dataTransfer.effectAllowed = 'move';
+      
+      // Ajouter une classe visuelle
+      const target = event.target as HTMLElement;
+      target.classList.add('dragging');
     }
+  }
+
+  onDragEnd(event: DragEvent): void {
+    const target = event.target as HTMLElement;
+    target.classList.remove('dragging');
   }
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
-    event.dataTransfer!.dropEffect = 'move';
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
+    }
+  }
+
+  onDragEnter(event: DragEvent): void {
+    event.preventDefault();
+    const target = event.currentTarget as HTMLElement;
+    target.classList.add('drag-over');
+  }
+
+  onDragLeave(event: DragEvent): void {
+    const target = event.currentTarget as HTMLElement;
+    target.classList.remove('drag-over');
   }
 
   onDrop(event: DragEvent): void {
     event.preventDefault();
-    const data = event.dataTransfer?.getData('text/plain');
+    const target = event.currentTarget as HTMLElement;
+    target.classList.remove('drag-over');
+    
+    const data = event.dataTransfer?.getData('application/json') || event.dataTransfer?.getData('text/plain');
     if (data) {
-      const joueur: Joueur = JSON.parse(data);
-      this.ajouterJoueur(joueur);
+      try {
+        const joueur: Joueur = JSON.parse(data);
+        this.ajouterJoueur(joueur);
+      } catch (e) {
+        console.error('Erreur parsing JSON:', e);
+      }
     }
   }
 
   ajouterJoueur(joueur: Joueur): void {
-    if (!this.joueursSelectionnes.find(j => j.id === joueur.id)) {
-      this.joueursSelectionnes.push(joueur);
+    // CORRECTION : Vérifier si déjà présent et créer une copie
+    if (!this.joueursSelectionnes.find(j => j.key === joueur.key)) {
+      // Créer une nouvelle instance pour éviter les références partagées
+      const newJoueur: Joueur = {
+        ...joueur,
+        positionField: undefined,
+        positionIndex: undefined
+      };
+      this.joueursSelectionnes.push(newJoueur);
       this.updateFormJoueur();
     }
   }
 
   retirerJoueur(joueur: Joueur): void {
-    this.joueursSelectionnes = this.joueursSelectionnes.filter(j => j.id !== joueur.id);
+    this.joueursSelectionnes = this.joueursSelectionnes.filter(j => j.key !== joueur.key);
     this.updateFormJoueur();
   }
 
@@ -408,19 +452,53 @@ export class Convocations implements OnInit {
 
   onDropToField(event: DragEvent, position: string, index: number): void {
     event.preventDefault();
-    const data = event.dataTransfer?.getData('text/plain');
-    if (data) {
-      const joueur: Joueur = JSON.parse(data);
-      joueur.positionField = position as any;
-      joueur.positionIndex = index;
-      this.ajouterJoueurField(joueur);
+    event.stopPropagation();
+    
+    const target = event.currentTarget as HTMLElement;
+    target.classList.remove('drag-over');
+    
+    const data = event.dataTransfer?.getData('application/json') || event.dataTransfer?.getData('text/plain');
+    if (!data) return;
+
+    try {
+      const draggedJoueur: Joueur = JSON.parse(data);
+      
+      // CORRECTION : Vérifier si un joueur occupe déjà cette position
+      const existingJoueur = this.getJoueurAtPosition(position, index);
+      
+      // CORRECTION : Retirer le joueur de sa position précédente s'il existe
+      this.joueursSelectionnes = this.joueursSelectionnes.filter(j => j.key !== draggedJoueur.key);
+      
+      // Si un joueur occupe déjà cette position, le retirer
+      if (existingJoueur && existingJoueur.key !== draggedJoueur.key) {
+        this.joueursSelectionnes = this.joueursSelectionnes.filter(j => j.key !== existingJoueur.key);
+      }
+      
+      // CORRECTION : Créer une nouvelle instance avec les propriétés de position
+      const newJoueur: Joueur = {
+        ...draggedJoueur,
+        positionField: position as any,
+        positionIndex: index
+      };
+      
+      this.joueursSelectionnes.push(newJoueur);
+      this.updateFormJoueur();
+      
+    } catch (e) {
+      console.error('Erreur lors du drop sur le terrain:', e);
     }
   }
 
   ajouterJoueurField(joueur: Joueur): void {
-    // Retirer si déjà présent à une autre position
-    this.joueursSelectionnes = this.joueursSelectionnes.filter(j => j.id !== joueur.id);
-    this.joueursSelectionnes.push(joueur);
+    // CORRECTION : Toujours créer une copie pour éviter les mutations
+    const existingIndex = this.joueursSelectionnes.findIndex(j => j.key === joueur.key);
+    
+    if (existingIndex >= 0) {
+      // Mettre à jour la position si déjà présent
+      this.joueursSelectionnes[existingIndex] = { ...joueur };
+    } else {
+      this.joueursSelectionnes.push({ ...joueur });
+    }
     this.updateFormJoueur();
   }
 
@@ -430,8 +508,13 @@ export class Convocations implements OnInit {
 
   onDragStartFromField(event: DragEvent, joueur: Joueur): void {
     if (event.dataTransfer) {
-      event.dataTransfer.setData('text/plain', JSON.stringify(joueur));
+      const joueurCopy = JSON.stringify(joueur);
+      event.dataTransfer.setData('application/json', joueurCopy);
+      event.dataTransfer.setData('text/plain', joueurCopy);
       event.dataTransfer.effectAllowed = 'move';
+      
+      const target = event.target as HTMLElement;
+      target.classList.add('dragging');
     }
   }
 
@@ -442,8 +525,9 @@ export class Convocations implements OnInit {
   }
 
   getAvailableJoueurs(): Joueur[] {
+    // CORRECTION : Retourner seulement les joueurs qui ne sont PAS déjà sélectionnés
     return this.joueursEquipe.filter(j => 
-      !this.joueursSelectionnes.find(js => js.id === j.id)
+      !this.joueursSelectionnes.some(js => js.key === j.key)
     );
   }
 
@@ -457,12 +541,13 @@ export class Convocations implements OnInit {
 
   onFormationChange(formationId: string): void {
     this.selectedFormation = formationId;
-    // Réinitialiser les positions des joueurs si la formation change
+    // CORRECTION : Réinitialiser les positions mais garder les joueurs sélectionnés
     this.joueursSelectionnes = this.joueursSelectionnes.map(j => ({
       ...j,
       positionField: undefined,
       positionIndex: undefined
     }));
+    this.updateFormJoueur();
   }
 
   resetField(): void {
@@ -474,44 +559,78 @@ export class Convocations implements OnInit {
     const available = this.getAvailableJoueurs();
     const formation = this.currentFormation;
     
-    // Remplir automatiquement selon la formation
+    // CORRECTION : Créer des copies des joueurs pour éviter les mutations
     let index = 0;
+    const newSelections = [...this.joueursSelectionnes];
+    
+    // Fonction utilitaire pour ajouter un joueur à une position
+    const addToPosition = (position: string, posIndex: number) => {
+      if (index >= available.length) return false;
+      
+      const joueur = available[index];
+      // Vérifier si le joueur n'est pas déjà dans la sélection
+      if (!newSelections.find(j => j.key === joueur.key)) {
+        newSelections.push({
+          ...joueur,
+          positionField: position as any,
+          positionIndex: posIndex
+        });
+        index++;
+        return true;
+      }
+      index++;
+      return false;
+    };
     
     // Gardien
-    if (index < available.length) {
-      available[index].positionField = 'gardien';
-      available[index].positionIndex = 0;
-      this.ajouterJoueurField(available[index]);
-      index++;
-    }
+    addToPosition('gardien', 0);
     
     // Défenseurs
-    for (let i = 0; i < formation.defense && index < available.length; i++) {
-      available[index].positionField = 'defenseur';
-      available[index].positionIndex = i;
-      this.ajouterJoueurField(available[index]);
-      index++;
+    for (let i = 0; i < formation.defense; i++) {
+      addToPosition('defenseur', i);
     }
     
     // Milieux
-    for (let i = 0; i < formation.midfield && index < available.length; i++) {
-      available[index].positionField = 'milieu';
-      available[index].positionIndex = i;
-      this.ajouterJoueurField(available[index]);
-      index++;
+    for (let i = 0; i < formation.midfield; i++) {
+      addToPosition('milieu', i);
     }
     
     // Attaquants
-    for (let i = 0; i < formation.attack && index < available.length; i++) {
-      available[index].positionField = 'attaquant';
-      available[index].positionIndex = i;
-      this.ajouterJoueurField(available[index]);
-      index++;
+    for (let i = 0; i < formation.attack; i++) {
+      addToPosition('attaquant', i);
     }
+    
+    this.joueursSelectionnes = newSelections;
+    this.updateFormJoueur();
   }
 
   validateFieldCompo(): void {
     this.closeFieldCompo();
   }
 
+  // CORRECTION : Nouvelle méthode pour vérifier si une position est occupée
+  isPositionOccupied(position: string, index: number): boolean {
+    return this.joueursSelectionnes.some(j => 
+      j.positionField === position && j.positionIndex === index
+    );
+  }
+
+  // CORRECTION : Méthode pour échanger deux joueurs sur le terrain
+  swapJoueurs(joueur1: Joueur, position2: string, index2: number): void {
+    const joueur2 = this.getJoueurAtPosition(position2, index2);
+    
+    if (!joueur2) return;
+    
+    // Échanger les positions
+    const tempPos = joueur1.positionField;
+    const tempIndex = joueur1.positionIndex;
+    
+    joueur1.positionField = joueur2.positionField;
+    joueur1.positionIndex = joueur2.positionIndex;
+    
+    joueur2.positionField = tempPos;
+    joueur2.positionIndex = tempIndex;
+    
+    this.updateFormJoueur();
+  }
 }

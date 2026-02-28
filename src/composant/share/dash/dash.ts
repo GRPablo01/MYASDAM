@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Icon } from '../../priver/icon/icon';
 import { Commande } from '../commande/commande';
+import { SectionDate2 } from "../section-date2/section-date2";
 
 interface User {
   nom?: string;
@@ -31,7 +32,7 @@ type ViewSection =
 @Component({
   selector: 'app-dash',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule,Icon,Commande],
+  imports: [CommonModule, HttpClientModule, FormsModule, Icon, Commande, SectionDate2],
   templateUrl: './dash.html',
   styleUrls: ['./dash.css']
 })

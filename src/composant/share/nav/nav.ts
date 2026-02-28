@@ -54,10 +54,10 @@ export class Nav implements OnInit {
 
     entraineur: [
       { label: 'Accueil', path: '/accueil', icon: 'fas fa-home' },
-      { label: 'Équipe', path: '/equipe', icon: 'fas fa-users' },
-      { label: 'Statistiques', path: '/stats', icon: 'fas fa-chart-bar' },
-      { label: 'Calendrier', path: '/calendrier', icon: 'fas fa-calendar-alt' },
+      { label: 'Actualité', path: '/actus', icon: 'fas fa-newspaper' },
       { label: 'Communiquer', path: '/commun', icon: 'fas fa-comments' },
+      { label: 'Matchs', path: '/match', icon: 'fas fa-futbol' },
+      { label: 'Classement', path: '/classe', icon: 'fas fa-trophy' },
     ],
 
     admin: [

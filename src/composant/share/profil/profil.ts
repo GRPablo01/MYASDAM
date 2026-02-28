@@ -33,7 +33,7 @@ export class Profil implements OnInit {
   email = '';
   initials = '';
   statut: 'en ligne' | 'ne pas déranger' | 'absent' = 'en ligne'; // ← ajouté
-
+  activeHover: string | null = null;
   // 🎨 Couleurs dynamiques utilisées dans ton HTML
   Text = '';
   Background = '';

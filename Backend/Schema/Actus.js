@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
+// Schéma des commentaires
 const CommentaireSchema = new mongoose.Schema({
-  nom: {
+  nomComplet: {        // ici on met nom + prénom
     type: String,
     required: true,
     trim: true
@@ -17,11 +18,18 @@ const CommentaireSchema = new mongoose.Schema({
   }
 });
 
+// Schéma des actualités
 const ActusSchema = new mongoose.Schema({
 
-  nom: {
+  titre: {            // nouveau champ pour le titre de l'actualité
     type: String,
     required: true,
+    trim: true
+  },
+
+  auteur: {           // facultatif, nom complet de l'auteur de l'actu
+    type: String,
+    required: false,
     trim: true
   },
 
@@ -59,7 +67,7 @@ const ActusSchema = new mongoose.Schema({
   key: {
     type: String,
     required: true,
-    unique: true, // assure que chaque key est unique
+    unique: true,
     trim: true
   }
 

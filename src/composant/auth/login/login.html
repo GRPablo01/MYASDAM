@@ -1,212 +1,186 @@
-<div
-  class="min-h-screen lg:min-h-screen
-         bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900
-         flex items-center justify-center
-         p-4 relative overflow-hidden">
+<app-icon></app-icon>
 
-  <!-- Effets de fond animés -->
-  <div class="absolute inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
-    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-  </div>
+<!-- =============================== -->
+<!-- PAGE CONNEXION ASDAM -->
+<!-- =============================== -->
+<div class="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden"
+  [ngStyle]="{'background': Backgroundprincipal,'color':Textprincipal}">
 
-  <!-- Conteneur principal -->
-  <div
-    class="w-full max-w-5xl
-           bg-white/95 backdrop-blur-xl
-           rounded-3xl shadow-2xl
-           overflow-hidden border border-white/20
-           relative z-10
-           flex flex-col lg:flex-row
-           lg:min-h-[600px]">
+  <!-- CARD PRINCIPALE avec image de fond et overlay de couleur adaptatif -->
+  <div class="w-full max-w-[420px] rounded-[32px] overflow-hidden relative shadow-2xl animate-fade-in">
 
-    <!-- ================= SIDEBAR GAUCHE ================= -->
-    <!-- 👇 MASQUÉ EN MOBILE -->
-    <div class="hidden lg:flex lg:w-80
-                bg-gradient-to-b from-slate-50 to-gray-100
-                border-r border-gray-200
-                p-8 flex-col">
-
-      <!-- CONTENU IDENTIQUE (inchangé) -->
-      <!-- LOGO -->
-      <div class="mb-10 text-center lg:text-left">
-        <div class="w-16 h-16 mb-4 mx-auto lg:mx-0
-            bg-gradient-to-br from-red-600 to-rose-600
-            rounded-2xl shadow-lg
-            flex items-center justify-center
-            transform hover:scale-110 transition-all duration-500
-            overflow-hidden">
-
-          <img
-            src="assets/LOGO.png"
-            alt="Logo TeamAsdam"
-            class="w-15 h-15 object-contain"
-          />
-        </div>
-
-        <h2 class="text-2xl font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
-          MYASDAM
-        </h2>
-        <p class="text-xs text-gray-500 mt-1 font-medium">Votre espace Asdam</p>
-      </div>
-
-      <!-- ÉTAPES -->
-      <div class="flex-1 space-y-6">
-
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold
-          border-4 shadow-lg transition-all duration-300"
-               [class]="currentStep === 1
-               ? 'bg-red-600 text-white border-red-200 scale-110 ring-4 ring-red-200'
-               : 'bg-gray-200 text-gray-400 border-gray-100'">
-            1
-          </div>
-
-          <div>
-            <h4 class="font-bold text-sm"
-                [class]="currentStep === 1 ? 'text-red-600' : 'text-gray-400'">
-              Connexion
-            </h4>
-            <p class="text-xs text-gray-500">Accédez à votre compte</p>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="pt-6 border-t border-gray-200">
-        <div class="bg-red-50 border border-red-100 rounded-xl p-4 text-xs text-red-700">
-          Connectez-vous pour gérer vos équipes et accéder à votre espace personnel.
-        </div>
-      </div>
+    <!-- COUCHE IMAGE -->
+    <div class="absolute inset-0 z-0">
+      <img src="assets/imageLogin.jpg" alt="Background" class="w-full h-full object-cover">
     </div>
 
-    <!-- ================= FORMULAIRE ================= -->
-    <div class="flex-1
-                px-6 py-6
-                lg:p-12
-                flex flex-col justify-center">
+    <!-- COUCHE COULEUR PAR-DESSUS L'IMAGE - Adaptative selon le thème -->
+    <div [ngStyle]="{
+         'background': isDarkMode ? Backgroundcards + 90 : Backgroundcards + 95,
+         'opacity': '0.9'
+       }" class="absolute inset-0 z-[1] mix-blend-multiply transition-all duration-500">
+    </div>
 
-      <!-- 👇 LOGO MOBILE UNIQUEMENT -->
-      <div class="lg:hidden text-center mb-4">
-        <img src="assets/LOGO.png"
-             class="w-14 h-14 mx-auto mb-2 object-contain" />
-        <h2 class="text-lg font-bold text-red-600">MYASDAM</h2>
+    <!-- OVERLAY SOMBRE ADDITIONNEL POUR LA LISIBILITÉ (plus fort en mode sombre) -->
+    <div [ngStyle]="{
+         'background': isDarkMode ? Backgroundcards + 20 : Backgroundcards + 80,
+         'opacity': '0.8'
+       }" class="absolute inset-0 z-[2] transition-all duration-500">
+    </div>
+
+    <!-- BOUTON TOGGLE THEME - Coin supérieur droit -->
+    <button type="button" (click)="toggleTheme()"
+      class="absolute top-4 right-4 z-30 w-12 h-12 rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300"
+      [ngStyle]="{'background': 'rgba(255,255,255,0.2)', 'border': '1px solid rgba(255,255,255,0.3)', 'backdrop-filter': 'blur(10px)'}"
+      [attr.aria-label]="isDarkMode ? 'Passer en mode clair' : 'Passer en mode sombre'">
+      <i class="fa-solid text-xl transition-all duration-500" [class.fa-sun]="isDarkMode" [class.fa-moon]="!isDarkMode"
+        [ngStyle]="{'color': isDarkMode ? '#F5F5F5' : '#1A1A1A'}"></i>
+    </button>
+
+    <!-- CONTENU -->
+    <div class="relative z-10 p-8 pt-6">
+
+      <!-- HEADER : LOGO + TITRE -->
+      <div class="flex items-center gap-3 mb-4">
+        <!-- LOGO ASDAM -->
+        <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 p-1 backdrop-blur-sm">
+          <img src="assets/LOGO.png" alt="Logo ASDAM" class="w-full h-full object-contain">
+        </div>
+        <!-- TITRE ASDAM -->
+        <h1 [ngStyle]="{'color':Textprincipal}" class="text-4xl font-black tracking-tight drop-shadow-lg">ASDAM</h1>
       </div>
 
-      <!-- Header -->
-      <div class="mb-6 text-center lg:text-left">
-        <h3 class="text-xl lg:text-2xl font-bold text-gray-800 mb-1">
-          Connexion
-        </h3>
-        <p class="text-gray-500 text-xs lg:text-sm">
-          Entrez vos identifiants pour accéder à votre compte
-        </p>
-      </div>
+      <!-- TITRE CONNEXION -->
+      <h2 [ngStyle]="{'color':Textprincipal}"  class="text-3xl font-black text-center mb-3 drop-shadow-md">Connexion</h2>
 
-      <form
-        [formGroup]="loginForm"
-        (ngSubmit)="onSubmit()"
-        class="space-y-4 lg:space-y-6
-               max-w-md mx-auto lg:mx-0 w-full">
-
-        <!-- EMAIL -->
-        <div class="group relative">
-          <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-              <!-- icon inchangée -->
-              <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207">
-                </path>
-              </svg>
-            </div>
-            Email
-          </label>
-
-          <input type="email"
-            formControlName="email"
-            placeholder="Votre Email"
-            class="w-full bg-gray-50 text-gray-400 border-2 border-gray-200
-                   rounded-xl px-4 py-2.5 lg:py-3.5
-                   text-sm lg:text-base
-                   focus:outline-none focus:border-blue-500
-                   focus:bg-white focus:ring-4 focus:ring-blue-500/10
-                   transition-all duration-300" />
-        </div>
-
-        <!-- PASSWORD -->
-        <div class="group relative">
-          <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center">
-              <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            </div>
-            Mot de passe
-          </label>
-
-          <div class="relative">
-            <input
-              [type]="showPassword ? 'text' : 'password'"
-              formControlName="password"
-              placeholder="Votre PASSWORD"
-              class="w-full bg-gray-50 text-gray-400 border-2 border-gray-200
-                    rounded-xl px-4 py-2.5 lg:py-3.5 pr-12
-                    text-sm lg:text-base
-                    focus:outline-none focus:border-blue-500
-                    focus:bg-white focus:ring-4 focus:ring-blue-500/10
-                    transition-all duration-300"
-            />
-
-            <!-- Bouton pour toggle mot de passe -->
-            <button
-              type="button"
-              (click)="togglePassword()"
-              class="absolute inset-y-0 right-4 flex items-center text-gray-400 hover:text-blue-600 transition"
-            >
-              <!-- Icône qui change -->
-              <ng-container *ngIf="showPassword; else eyeClosed">
-                <!-- Icone "oeil ouvert" -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M10 3C5 3 1.73 7.11 1.07 10c.66 2.89 3.93 7 8.93 7s8.27-4.11 8.93-7c-.66-2.89-3.93-7-8.93-7zM10 15a5 5 0 110-10 5 5 0 010 10z" />
-                  <path d="M10 7a3 3 0 100 6 3 3 0 000-6z" />
-                </svg>
-              </ng-container>
-              <ng-template #eyeClosed>
-                <!-- Icone "oeil barré" -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M4.03 3.97a.75.75 0 10-1.06 1.06l1.062 1.062A9.448 9.448 0 001.07 10c.66 2.89 3.93 7 8.93 7a9.423 9.423 0 004.68-1.19l2.28 2.28a.75.75 0 101.06-1.06l-15-15zM10 15c-4.05 0-7.31-4.11-7.97-7a9.448 9.448 0 012.25-2.9l1.83 1.83a3 3 0 004.99 4.99l1.83 1.83A9.423 9.423 0 0110 15z" />
-                  <path d="M13.5 10a3.5 3.5 0 00-4.95-4.95l4.95 4.95z" />
-                </svg>
-              </ng-template>
-            </button>
-          </div>
-        </div>
-
-
-        <!-- BUTTON -->
-        <button type="submit"
-          [disabled]="loginForm.invalid"
-          class="w-full bg-gradient-to-r from-rose-600 to-red-600
-                 text-white font-bold
-                 py-3 lg:py-4
-                 rounded-xl shadow-lg
-                 transition-all duration-300">
-          Se connecter
-        </button>
-
-      </form>
-
-      <!-- Lien inscription -->
-      <p class="text-center mt-6 lg:mt-8 text-gray-500 text-xs lg:text-sm font-medium">
-        Pas encore de compte ?
-        <a routerLink="/inscription"
-          class="text-red-600 hover:text-blue-800 font-bold hover:underline ml-1">
-          Inscrivez-vous
-        </a>
+      <!-- SOUS-TITRE -->
+      <p [ngStyle]="{'color':Textsecondaire}"  class="text-center text-sm mb-8 leading-relaxed px-2 drop-shadow">
+        Connectez-vous pour accéder à votre espace personnel et gérer vos activités
       </p>
 
+      <!-- MESSAGE DE NOTIFICATION -->
+      <div *ngIf="message"
+        class="mb-4 p-3 rounded-lg text-center text-sm font-medium animate-slide-down backdrop-blur-sm" [ngClass]="{
+           'bg-green-500/20 text-green-100 border border-green-400/30': messageType === 'success',
+           'bg-red-500/20 text-red-100 border border-red-400/30': messageType === 'error'
+         }">
+        {{ message }}
+      </div>
+
+      <!-- FORMULAIRE -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+
+        <!-- CHAMP EMAIL - Thème Clair/Sombre (ngStyle version) -->
+        <div class="relative group">
+          <div class="absolute left-4 top-1/2 -translate-y-1/2 text-lg z-10 transition-colors duration-300"
+              [ngStyle]="{ 'color': isDarkMode ? 'rgba(255,255,255,0.7)' : '#6B7280' }">
+            <i class="fa-solid fa-envelope"></i>
+          </div>
+          
+          <input 
+            type="email" 
+            formControlName="email" 
+            placeholder="Adresse e-mail"
+            class="w-full h-12 pl-12 pr-4 rounded-xl text-base transition-all duration-300 focus:outline-none focus:ring-2 backdrop-blur-md"
+            [ngStyle]="isDarkMode ? {
+              'background': 'rgba(255,255,255,0.15)',
+              'color': '#FFFFFF',
+              'border': '1px solid rgba(255,255,255,0.3)',
+              '--tw-ring-color': '#F43F5E'
+            } : {
+              'background': 'rgba(255,255,255,0.9)',
+              'color': '#1F2937',
+              'border': '1px solid #E5E7EB',
+              'box-shadow': '0 1px 3px rgba(0,0,0,0.1)',
+              '--tw-ring-color': '#F43F5E'
+            }">
+        </div>
+
+        <!-- CHAMP MOT DE PASSE - Thème Clair/Sombre (ngStyle version) -->
+        <div class="relative group">
+          <!-- Icône Clé -->
+          <div class="absolute left-4 top-1/2 -translate-y-1/2 text-lg z-10 transition-colors duration-300"
+              [ngStyle]="{ 'color': isDarkMode ? 'rgba(255,255,255,0.7)' : '#6B7280' }">
+            <i class="fa-solid fa-key"></i>
+          </div>
+          
+          <!-- Input Mot de passe -->
+          <input 
+            [type]="showPassword ? 'text' : 'password'" 
+            formControlName="password" 
+            placeholder="Mot de passe"
+            class="w-full h-12 pl-12 pr-12 rounded-xl text-base transition-all duration-300 focus:outline-none focus:ring-2 backdrop-blur-md"
+            [ngStyle]="isDarkMode ? {
+              'background': 'rgba(255,255,255,0.15)',
+              'color': '#FFFFFF',
+              'border': '1px solid rgba(255,255,255,0.3)',
+              '--tw-ring-color': '#F43F5E'
+            } : {
+              'background': 'rgba(255,255,255,0.9)',
+              'color': '#1F2937',
+              'border': '1px solid #E5E7EB',
+              'box-shadow': '0 1px 3px rgba(0,0,0,0.1)',
+              '--tw-ring-color': '#F43F5E'
+            }">
+          
+          <!-- Toggle mot de passe - CORRIGÉ -->
+          <button 
+            type="button" 
+            (click)="togglePassword()"
+            class="absolute right-4 top-1/2 -translate-y-1/2 text-lg transition-all duration-300 hover:scale-110"
+            [ngClass]="{
+              'text-white/70 hover:text-white': isDarkMode,
+              'text-gray-500 hover:text-rose-500': !isDarkMode
+            }">
+            <i class="fa-solid" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+          </button>
+        </div>
+
+
+        <!-- LIEN MOT DE PASSE OUBLIÉ -->
+        <div class="text-right">
+          <a routerLink="/forgot-password"
+            [ngStyle]="{ 'background-color': Rougeprincipal, 'padding': '8px 16px', 'border-radius': '8px', 'display': 'inline-block' }"
+            class="text-sm font-medium hover:underline transition-all duration-300 text-white drop-shadow">
+            Mot de passe oublié ?
+          </a>
+        </div>
+
+        <!-- BOUTON CONNEXION -->
+        <button type="submit" [disabled]="loginForm.invalid"
+          class="w-full h-12 rounded-xl font-semibold text-base tracking-wide shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+          [ngStyle]="{
+            'background': isHovered ? '#7b0519' : Rougeprincipal,
+            'color': '#FFFFFF'
+          }">
+          <span *ngIf="!loginForm.disabled">Se connecter</span>
+          <i *ngIf="loginForm.disabled" class="fa-solid fa-circle-notch fa-spin"></i>
+        </button>
+
+        <!-- LIEN INSCRIPTION -->
+        <div class="text-center mt-6 pt-2">
+          <span class="text-sm font-bold">Nouveau sur ASDAM ? </span>
+          <a routerLink="/inscription"
+            [ngStyle]="{ 
+              'background-color': isDarkMode ? Rougeprincipal : Rougeprincipal,
+              'padding': '8px 16px',
+              'border-radius': '8px',
+              'display': 'inline-block'
+            }"
+            class="text-sm font-bold hover:underline transition-all duration-300 text-white drop-shadow">
+            Inscrivez-Vous
+          </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-8 pt-4">
+          <p class="text-xs drop-shadow">
+            © 2026 ASDAM. Tous droits réservés.
+          </p>
+        </div>
+
+      </form>
     </div>
   </div>
+
 </div>

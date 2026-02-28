@@ -55,10 +55,10 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/reset-link/confirm`, { token, password: motDePasse }).toPromise();
   }
 
-  // ✅ Récupérer tous les utilisateurs
-  getAllUsers(): Observable<any> {
-    return this.http.get(`${this.apiUrl}`);
+  getAllUsers() {
+    return this.http.get('http://localhost:3000/api/auth/users'); // <-- attention au /auth
   }
+  
 
   /** ==========================
    * AJOUTER SUIVI

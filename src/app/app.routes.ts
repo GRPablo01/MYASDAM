@@ -18,7 +18,7 @@ export const routes: Routes = [
     { path: 'connexion', component: Connexion },
     { path: 'inscription', component: Inscription },
     { path: 'accueil', component: Acceuil },
-    { path: 'actualite', component: Actualite },
+    { path: 'actus', component: Actualite },
     { path: 'dashboard', component: Dashboard },
     
 

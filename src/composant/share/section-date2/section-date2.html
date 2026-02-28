@@ -1,0 +1,671 @@
+<!-- ============================================
+     SECTION PLANNING - VERSION AMÉLIORÉE
+     ============================================ -->
+<!-- ( Section 0 ) -->
+<section [ngStyle]="{'background':Background,'color':Text}" class=" p-6 h-150vh relative overflow-hidden">
+
+  <!-- ( Section 1 ) HEADER AMÉLIORÉ -->
+  <div [ngStyle]="{'background':Background1,'border':BorderHeader}"
+    class="relative flex flex-col lg:flex-row justify-between items-center mb-8 backdrop-blur-xl p-6 rounded-3xl shadow-xl border hover:shadow-2xl transition-all duration-500">
+
+    <div class="flex items-center gap-4 mb-4 lg:mb-0">
+      <div [ngStyle]="{'background':Background2}"
+        class="relative w-16 h-16 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-950/30 group overflow-hidden">
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000">
+        </div>
+        <div class="absolute top-0 left-0 w-full h-full bg-emerald-500/20 rounded-full blur-xl animate-pulse"></div>
+        <i
+          class="fa-solid fa-calendar-days text-white text-2xl relative z-10 group-hover:scale-110 transition-transform duration-300"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold">
+          Planning {{ currentMonthName }}
+        </h2>
+        <p class="text-sm text-slate-500 flex items-center gap-2 mt-1">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span class="font-medium">{{ events.length || 0 }} événements ce mois</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Toggle View Mode Amélioré -->
+    <div [ngStyle]="{'background':Background2,'border':BorderHeader}"
+      class="flex gap-2 p-2 rounded-2xl backdrop-blur-sm border shadow-inner">
+      <button (click)="viewMode='month'"
+        class="relative px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 flex items-center gap-2 overflow-hidden group"
+        [ngStyle]="{
+      'background': viewMode==='month' ? Background1 : Background2,
+      'color': viewMode==='month' ? 'white' : '#475569',
+    }">
+        <i class="fa-solid fa-grid-2" [class.animate-bounce]="viewMode==='month'"></i>
+        Mois
+        <div *ngIf="viewMode==='month'"
+          class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] animate-[shimmer_2s_infinite]">
+        </div>
+      </button>
+      <button (click)="viewMode='day'"
+        class="relative px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 flex items-center gap-2 overflow-hidden group"
+        [ngStyle]="{
+            'background': viewMode==='day' ? Background1 : Background2,
+            'color': viewMode==='day' ? 'white' : '#475569',
+          }">
+        <i class="fa-solid fa-list" [class.animate-bounce]="viewMode==='day'"></i>
+        Jour
+        <div *ngIf="viewMode==='day'"
+          class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] animate-[shimmer_2s_infinite]">
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ( Section 2 ) Navigation Mois Améliorée -->
+  <div class="flex justify-between items-center mb-6">
+    <button (click)="goToPreviousMonth()" [ngStyle]="{'background':Background1,'color':Text}"
+      class="group px-5 py-3 rounded-xl backdrop-blur-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2 font-semibold text-slate-700">
+      <div [ngStyle]="{'background':Background2}"
+        class="w-8 h-8 rounded-lg  flex items-center justify-center  transition-colors duration-300">
+        <i class="fa-solid fa-chevron-left text-sm transition-colors duration-300"></i>
+      </div>
+      <span class="hidden sm:inline">Mois précédent</span>
+    </button>
+
+    <div [ngStyle]="{'background':Background1}" class="px-6 py-2 backdrop-blur rounded-full shadow-md">
+      <span class="text-sm font-bold">{{ currentMonthName }}</span>
+    </div>
+
+    <button (click)="goToNextMonth()" [ngStyle]="{'background':Background1,'color':Text}"
+      class="group px-5 py-3 rounded-xl backdrop-blur-sm  shadow-lg hover:shadow-xl hover:-translate-y-0.5  transition-all duration-300 flex items-center gap-2 font-semibold text-slate-700">
+      <span class="hidden sm:inline">Mois suivant</span>
+      <div [ngStyle]="{'background':Background2}"
+        class="w-8 h-8 rounded-lg  flex items-center justify-center  transition-colors duration-300">
+        <i class="fa-solid fa-chevron-right text-sm transition-colors duration-300"></i>
+      </div>
+    </button>
+  </div>
+
+  <!-- ============================= -->
+  <!-- MODE MOIS (CALENDRIER GRID) -->
+  <!-- ============================= -->
+  <div *ngIf="viewMode==='month'" class="relative animate-fade-in">
+
+    <div class="grid grid-cols-7 auto-rows-fr gap-3">
+      <!-- ( Section 3 ) En-têtes des jours améliorés -->
+      <div *ngFor="let dayName of ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']; let i = index"
+        (mouseenter)="hoverIndex = i" (mouseleave)="hoverIndex = -1" class="flex items-center justify-center
+                  h-8
+                  font-bold text-xs
+                  uppercase tracking-wider 
+                  backdrop-blur-md rounded-xl 
+                  border
+                  transition-all duration-300 cursor-pointer" [ngStyle]="{
+              'background': Background1,
+              'color': Text
+          }">
+        {{ dayName }}
+      </div>
+
+
+      <!-- Jours du calendrier améliorés -->
+      <div *ngFor="let day of daysInCurrentMonth; let i = index" class="group relative bg-white/5 backdrop-blur-sm p-4 rounded-2xl shadow-md border border-slate-100/80 
+                   min-h-[140px] cursor-pointer overflow-hidden transition-all duration-500
+                   hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] hover:border-blue-300/50 hover:bg-white"
+        [class.bg-gradient-to-br]="isToday(day)" [class.from-blue-50]="isToday(day)" [class.to-indigo-50]="isToday(day)"
+        [class.border-blue-400]="isToday(day)" [class.shadow-blue-200]="isToday(day)" [class.ring-2]="isToday(day)"
+        [class.ring-blue-400/50]="isToday(day)" (click)="onDayClick(day)">
+
+        <!-- Effet de brillance -->
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none">
+        </div>
+
+        <!-- Numéro du jour amélioré -->
+        <!-- <div class="flex justify-between items-start mb-3 relative z-10">
+          <span
+            class="font-bold text-xl transition-colors duration-300 w-10 h-10 flex items-center justify-center rounded-xl"
+            [class.bg-blue-600]="isToday(day)" [class.text-white]="isToday(day)" [class.text-slate-700]="!isToday(day)"
+            [class.group-hover:text-blue-700]="!isToday(day)" [class.group-hover:bg-blue-50]="!isToday(day)">
+            {{ day }}
+          </span>
+          <div *ngIf="isToday(day)"
+            class="px-3 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-bold rounded-full uppercase tracking-wider shadow-lg shadow-blue-500/30 animate-pulse">
+            Aujourd'hui
+          </div>
+        </div> -->
+
+        <!-- Événements du jour améliorés -->
+        <!-- <div class="space-y-2 relative z-10">
+          <div *ngFor="let event of getEventsForDate(formatDateForDay(day)) | slice:0:3; let last = last"
+            (click)="onEventClick(event); $event.stopPropagation()" class="group/event relative text-xs p-3 rounded-xl bg-gradient-to-r from-slate-50 to-slate-100 border border-slate-200/80
+                       hover:from-blue-50 hover:to-indigo-50 hover:border-blue-300 hover:shadow-md
+                       transition-all duration-300 cursor-pointer overflow-hidden">
+            <div
+              class="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-blue-600 to-rose-500 rounded-l-xl group-hover/event:from-emerald-500 group-hover/event:to-blue-500 transition-all duration-300">
+            </div>
+            <div class="pl-3">
+              <div class="font-bold text-slate-800 group-hover/event:text-blue-900 truncate flex items-center gap-1">
+                <i class="fa-solid fa-futbol text-[10px] text-blue-500"></i>
+                {{ event.title }}
+              </div>
+              <div
+                class="flex items-center gap-1.5 text-[10px] text-slate-500 group-hover/event:text-blue-600 mt-1 font-medium">
+                <i class="fa-solid fa-clock text-[9px]"></i>
+                {{ event.heureDebut }} - {{event.heureFin }}
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+        <!-- Indicateur si plus de 3 événements -->
+        <!-- <ng-container *ngIf="getEventsForDate(formatDateForDay(day)) as dayEvents">
+          <div *ngIf="dayEvents.length > 3"
+            class="absolute bottom-3 right-3 px-2 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-[10px] font-bold text-white shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300 z-10">
+            +{{ dayEvents.length - 3 }}
+          </div>
+        </ng-container> -->
+
+        <!-- Indicateur d'événements (points) -->
+        <!-- <ng-container *ngIf="getEventsForDate(formatDateForDay(day)) as dayEvents">
+          <div *ngIf="dayEvents.length > 0" class="absolute bottom-3 left-3 flex gap-1">
+            <div *ngFor="let _ of dayEvents | slice:0:3"
+              class="w-1.5 h-1.5 rounded-full bg-blue-400 group-hover:bg-emerald-400 transition-colors duration-300">
+            </div>
+          </div>
+        </ng-container> -->
+
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================= -->
+  <!-- MODE JOUR (TIMELINE) - CORRIGÉ -->
+  <!-- ============================= -->
+  <div *ngIf="viewMode==='day'" class="relative overflow-hidden animate-slide-up">
+    <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 overflow-hidden">
+
+      <!-- Header timeline amélioré --
+      <div
+        class="relative bg-gradient-to-r from-blue-950 via-indigo-900 to-rose-900 p-8 flex items-center justify-between overflow-hidden">
+        <!-- Pattern SVG animé --
+        <div class="absolute inset-0 opacity-10 animate-[pulse_4s_ease-in-out_infinite]">
+          <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5" />
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#grid)" />
+          </svg>
+        </div>
+
+        <div class="relative flex items-center gap-4">
+          <div
+            class="w-14 h-14 bg-white/15 backdrop-blur rounded-2xl flex items-center justify-center border border-white/30 shadow-lg">
+            <i class="fa-solid fa-clock text-white text-2xl animate-pulse"></i>
+          </div>
+          <div>
+            <h3 class="text-white font-bold text-xl tracking-tight">Vue Journalière</h3>
+            <p class="text-blue-200 text-sm flex items-center gap-2">
+              <i class="fa-solid fa-calendar-day text-xs"></i>
+              {{ currentMonthName }} - Jour {{ selectedDay || 'Sélectionnez un jour' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Badge nombre d'événements --
+        <div *ngIf="selectedDay" class="relative px-4 py-2 bg-white/10 backdrop-blur rounded-xl border border-white/20">
+          <span class="text-white font-bold text-sm">{{ getEventsForDate(formatDateForDay(selectedDay))?.length || 0 }}
+            événements</span>
+        </div>
+      </div>
+
+      <!-- Timeline avec événements sur une seule ligne par jour --
+      <div class="overflow-x-auto custom-scrollbar">
+        <table class="w-full border-collapse table-fixed">
+          <thead class="sticky top-0 z-20">
+            <tr class="bg-slate-50/90 backdrop-blur-md border-b-2 border-slate-200">
+              <th
+                class="p-4 text-left w-24 sticky left-0 bg-slate-50/95 backdrop-blur-md z-30 border-r border-slate-200">
+                <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Jour</span>
+              </th>
+              <th *ngFor="let h of hours"
+                class="p-3 border-b-2 border-slate-200 border-l text-center w-[80px] hover:bg-slate-100 transition-colors duration-200">
+                <div class="flex flex-col items-center gap-1">
+                  <span class="text-xs font-bold text-slate-700">{{ h }}</span>
+                  <div class="w-1.5 h-1.5 rounded-full bg-gradient-to-b from-blue-400 to-rose-400"></div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let day of daysInCurrentMonth; let dayIndex = index"
+              class="group hover:bg-blue-50/30 transition-all duration-300 border-b border-slate-100 relative"
+              [class.bg-blue-50/40]="isToday(day)" [class.shadow-inner]="isToday(day)"
+              style="height: 100px; position: relative;">
+
+              <!-- Colonne Jour --
+              <td
+                class="p-4 border-b border-slate-100 font-bold sticky left-0 bg-white/98 backdrop-blur-md z-10 border-r border-slate-200 group-hover:bg-blue-50 transition-colors duration-300 w-24"
+                [class.text-blue-700]="isToday(day)" [class.text-slate-700]="!isToday(day)">
+                <div class="flex items-center gap-3">
+                  <span class="text-lg w-8 h-8 flex items-center justify-center rounded-lg"
+                    [class.bg-blue-600]="isToday(day)" [class.text-white]="isToday(day)">
+                    {{ day }}
+                  </span>
+                  <div *ngIf="isToday(day)" class="relative flex h-2 w-2">
+                    <span
+                      class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Cellules horaires (fond uniquement) --
+              <td *ngFor="let h of hours; let hourIndex = index"
+                class="p-0 border-b border-slate-100 border-l w-[80px] h-[100px] relative group/cell cursor-pointer align-top"
+                (click)="onCellClick(formatDateForDay(day), h)">
+
+                <!-- Lignes de repère pour les minutes --
+                <div class="absolute inset-0 pointer-events-none">
+                  <div class="h-1/4 border-b border-slate-100/30"></div>
+                  <div class="h-1/4 border-b border-slate-100/30"></div>
+                  <div class="h-1/4 border-b border-slate-100/30"></div>
+                </div>
+
+                <!-- Indicateur hover pour ajout --
+                <div *ngIf="!hasEventAtHour(formatDateForDay(day), h)"
+                  class="absolute inset-0 flex items-center justify-center opacity-0 group-hover/cell:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                    <i class="fa-solid fa-plus text-blue-400 text-xs"></i>
+                  </div>
+                </div>
+              </td>
+
+              <!-- CONTENEUR D'ÉVÉNEMENTS - Positionné absolument dans la ligne --
+              <div class="absolute left-[96px] right-0 top-0 bottom-0 pointer-events-none" style="height: 100px;">
+                <!-- Un seul événement par ligne, centré verticalement --
+                <ng-container *ngFor="let ev of getEventsForDate(formatDateForDay(day)); let evIndex = index">
+                  <div *ngIf="shouldDisplayEvent(ev, day)" [style.left.px]="calculateEventLeftPixels(ev)"
+                    [style.width.px]="calculateEventWidthPixels(ev)" [style.top.px]="10" [style.height.px]="80"
+                    (click)="onEventClick(ev); $event.stopPropagation()"
+                    class="absolute pointer-events-auto bg-gradient-to-br from-blue-600 via-indigo-600 to-rose-600 rounded-xl p-3 shadow-xl shadow-blue-500/30
+                                  hover:from-emerald-600 hover:to-blue-600 hover:shadow-emerald-500/40 hover:scale-[1.02] hover:z-20
+                                  transition-all duration-300 cursor-pointer overflow-hidden group/event border border-white/20 flex flex-col justify-center">
+
+                    <!-- Effet shimmer --
+                    <div
+                      class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover/event:translate-x-[100%] transition-transform duration-700">
+                    </div>
+
+                    <div class="relative flex flex-col justify-center h-full gap-2">
+                      <!-- Badge durée si > 1h --
+                      <div *ngIf="getEventDurationMinutes(ev) > 60"
+                        class="absolute -top-2 -right-2 bg-amber-400 text-amber-900 text-[10px] font-bold px-2 py-1 rounded-full shadow-sm">
+                        {{ formatDuration(ev) }}
+                      </div>
+
+                      <div class="flex items-center gap-2 text-[10px] font-bold text-white/80 uppercase tracking-wider">
+                        <i class="fa-solid fa-clock text-[9px]"></i>
+                        {{ ev.heureDebut }} - {{ ev.heureFin }}
+                      </div>
+                      <div class="text-sm font-bold text-white leading-tight flex items-center gap-2 truncate">
+                        <i class="fa-solid" [class.fa-futbol]="ev.type === 'match'"
+                          [class.fa-calendar]="ev.type !== 'match'"></i>
+                        {{ ev.title }}
+                      </div>
+                      <div *ngIf="getEventDurationMinutes(ev) > 60" class="text-[10px] text-white/80 truncate">
+                        {{ ev.description || 'Cliquez pour voir les détails' }}
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </tr>
+          </tbody>
+        </table>
+      </div>-->
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================================
+     MODAL DÉTAILS - EVENT vs MATCH (ADAPTATIF)
+     ============================================ -->
+<div *ngIf="selectedEvent" class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+
+  <!-- Backdrop premium --
+  <div class="absolute inset-0 bg-slate-950/85 backdrop-blur-2xl transition-opacity duration-300"
+    (click)="closeEventModal()"></div>
+
+  <!-- Modal Container --
+  <div
+    class="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-500 animate-slide-up border border-white/60 max-h-[90vh] overflow-y-auto">
+
+    <!-- HEADER ADAPTATIF --
+    <div class="relative px-8 py-6 flex items-center justify-between overflow-hidden"
+      [ngClass]="isMatch(selectedEvent) ? 'bg-gradient-to-r from-blue-950 via-indigo-900 to-rose-900' : 'bg-gradient-to-r from-violet-900 via-purple-900 to-fuchsia-900'">
+
+      <!-- Pattern animé --
+      <div class="absolute inset-0 opacity-10">
+        <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5" />
+            </pattern>
+          </defs>
+          <rect width="100" height="100" fill="url(#grid)" />
+        </svg>
+      </div>
+
+      <div class="relative flex items-center gap-4">
+        <!-- Icon adaptatif --
+        <div
+          class="w-14 h-14 bg-white/15 backdrop-blur rounded-2xl flex items-center justify-center border border-white/30 shadow-lg">
+          <i [ngClass]="isMatch(selectedEvent) ? 'fa-solid fa-futbol' : 'fa-solid fa-calendar-star'"
+            class="text-white text-2xl animate-pulse"></i>
+        </div>
+
+        <div>
+          <h2 class="text-white font-bold text-xl tracking-tight">
+            {{ isMatch(selectedEvent) ? 'Détails du Match' : 'Détails de l\'Événement' }}
+          </h2>
+          <p class="text-white/70 text-sm mt-1 flex items-center gap-2">
+            <i class="fa-solid" [ngClass]="isMatch(selectedEvent) ? 'fa-circle-info' : 'fa-star'"></i>
+            {{ isMatch(selectedEvent) ? 'Confrontation sportive' : 'Activité club' }}
+          </p>
+        </div>
+      </div>
+
+      <button (click)="closeEventModal()"
+        class="relative w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-300 hover:rotate-90 hover:scale-110 group shadow-lg backdrop-blur-sm border border-white/20">
+        <i class="fa-solid fa-xmark text-xl transition-transform duration-200 group-hover:scale-125"></i>
+      </button>
+    </div>
+
+    <!-- CONTENU ADAPTATIF --
+    <div class="p-8 space-y-6 bg-slate-50/50">
+
+      <!-- TITRE & STATUT --
+      <div
+        class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow duration-300">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex-1 pr-4">
+            <h3 class="text-2xl font-bold text-slate-800 mb-2 leading-tight">{{ selectedEvent.title ||
+              selectedEvent.title }}</h3>
+
+            <!-- Type spécifique --
+            <div class="flex items-center gap-2 text-sm text-slate-500">
+              <i
+                [ngClass]="isMatch(selectedEvent) ? 'fa-solid fa-trophy text-amber-500' : 'fa-solid fa-tag text-violet-500'"></i>
+              <span class="font-medium">
+                {{ isMatch(selectedEvent) ? (selectedEvent.typeMatch || 'Match') : (selectedEvent.theme || 'Événement')
+                }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Badge Statut dynamique --
+          <div class="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border"
+            [ngClass]="getStatusColor(selectedEvent.statut || '')">
+            {{ selectedEvent.statut || 'À Venir' }}
+          </div>
+        </div>
+
+        <!-- Badges catégorie --
+        <div class="flex flex-wrap gap-2">
+          <span
+            class="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-bold border border-blue-200 flex items-center gap-1.5">
+            <i class="fa-solid fa-users text-[10px]"></i>
+            {{ selectedEvent.categorie || 'Senior' }}
+          </span>
+
+          <!-- Badge Équipe (uniquement pour match) --
+          <span *ngIf="isMatch(selectedEvent) && selectedEvent.equipeDom"
+            class="px-3 py-1.5 bg-rose-50 text-rose-700 rounded-lg text-xs font-bold border border-rose-200 flex items-center gap-1.5">
+            <i class="fa-solid fa-shirt text-[10px]"></i>
+            {{ selectedEvent.equipeDom }}
+          </span>
+
+          <!-- Badge Créateur (uniquement pour event) --
+          <span *ngIf="!isMatch(selectedEvent) && selectedEvent.createdBy"
+            class="px-3 py-1.5 bg-violet-50 text-violet-700 rounded-lg text-xs font-bold border border-violet-200 flex items-center gap-1.5">
+            <i class="fa-solid fa-user text-[10px]"></i>
+            {{ selectedEvent.createdBy }}
+          </span>
+        </div>
+      </div>
+
+      <!-- DESCRIPTION (uniquement pour Event) --
+      <div *ngIf="!isMatch(selectedEvent) && selectedEvent.description"
+        class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-align-left text-violet-500"></i>
+          Description
+        </h4>
+        <p class="text-slate-700 leading-relaxed">{{ selectedEvent.description }}</p>
+      </div>
+
+      <!-- INFOS TEMPS & LIEU --
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Date & Heure --
+        <div
+          class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div
+              class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center group-hover:bg-blue-600 transition-colors duration-300">
+              <i
+                class="fa-regular fa-clock text-blue-600 group-hover:text-white text-lg transition-colors duration-300"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Horaire</h4>
+            </div>
+          </div>
+          <div class="space-y-1 pl-1">
+            <p class="text-lg font-bold text-slate-800">
+              {{ (selectedEvent.date | date:'EEEE d MMMM yyyy':'':'fr') || 'Date à définir' }}
+            </p>
+            <p class="text-sm text-slate-600 flex items-center gap-2">
+              <i class="fa-solid fa-hourglass-start text-blue-500 text-xs"></i>
+              <!-- Format adaptatif selon type --
+              <span *ngIf="isMatch(selectedEvent)">
+                {{ selectedEvent.heureDebut }}
+                <span class="text-slate-400">(durée approx.)</span>
+              </span>
+              <span *ngIf="!isMatch(selectedEvent)">
+                {{ selectedEvent.heureDebut }} - {{ selectedEvent.heureFin }}
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Lieu --
+        <div
+          class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div
+              class="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center group-hover:bg-rose-600 transition-colors duration-300">
+              <i
+                class="fa-solid fa-location-dot text-rose-600 group-hover:text-white text-lg transition-colors duration-300"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Lieu</h4>
+            </div>
+          </div>
+          <div class="pl-1">
+            <p class="text-lg font-bold text-slate-800">{{ selectedEvent.lieu || 'Lieu à confirmer' }}</p>
+            <p class="text-sm text-slate-500">
+              {{ isMatch(selectedEvent) ? 'Terrain de football' : 'Salle/Emplacement' }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONFRONTATION (uniquement pour Match) --
+      <div *ngIf="isMatch(selectedEvent) && selectedEvent.equipeDom"
+        class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-shield-halved text-blue-500"></i>
+          Confrontation
+        </h4>
+
+        <div class="flex items-center justify-center gap-6">
+          <!-- Équipe Domicile --
+          <div class="flex flex-col items-center gap-2 flex-1">
+            <div
+              class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 flex items-center justify-center p-2 hover:scale-105 transition-transform duration-300">
+              <img *ngIf="selectedEvent.logoDom" [src]="selectedEvent.logoDom" class="w-full h-full object-contain"
+                alt="Logo domicile">
+              <i *ngIf="!selectedEvent.logoDom" class="fa-solid fa-shield-halved text-blue-400 text-2xl"></i>
+            </div>
+            <span class="text-sm font-bold text-slate-700 text-center">{{ selectedEvent.equipeDom }}</span>
+            <span class="text-xs text-slate-400">Domicile</span>
+          </div>
+
+          <!-- VS --
+          <div class="flex flex-col items-center">
+            <div
+              class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-950 to-indigo-900 flex items-center justify-center shadow-lg animate-pulse">
+              <span class="text-white font-black text-sm italic">VS</span>
+            </div>
+          </div>
+
+          <!-- Équipe Extérieur --
+          <div class="flex flex-col items-center gap-2 flex-1">
+            <div
+              class="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-50 to-rose-100 border-2 border-rose-200 flex items-center justify-center p-2 hover:scale-105 transition-transform duration-300">
+              <img *ngIf="selectedEvent.logoExt" [src]="selectedEvent.logoExt" class="w-full h-full object-contain"
+                alt="Logo extérieur">
+              <i *ngIf="!selectedEvent.logoExt" class="fa-solid fa-shield text-rose-400 text-2xl"></i>
+            </div>
+            <span class="text-sm font-bold text-slate-700 text-center">{{ selectedEvent.equipeExt || 'Adversaire'
+              }}</span>
+            <span class="text-xs text-slate-400">Extérieur</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MÉTADONNÉES (uniquement pour Event) --
+      <div *ngIf="!isMatch(selectedEvent)" class="bg-slate-100/50 rounded-xl p-4 border border-slate-200">
+        <div class="flex items-center justify-between text-xs text-slate-500">
+          <!-- <span class="flex items-center gap-1">
+            <i class="fa-solid fa-key text-slate-400"></i>
+            ID: {{ selectedEvent.key || selectedEvent.id }}
+          </span> --
+          <!-- <span class="flex items-center gap-1">
+            <i class="fa-regular fa-calendar text-slate-400"></i>
+            Créé le {{ selectedEvent.createdAt | date:'short':'':'fr' }}
+          </span> --
+        </div>
+      </div>
+
+      <!-- ACTIONS --
+      <div class="flex gap-3 pt-2">
+        <button (click)="closeEventModal()" class="flex-1 px-6 py-4 border-2 border-slate-300 rounded-xl font-bold text-slate-600 
+                 hover:border-slate-400 hover:bg-white hover:text-slate-800 hover:shadow-lg 
+                 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-arrow-left text-sm"></i>
+          Retour
+        </button>
+
+        <!-- Bouton action secondaire (optionnel) --
+        <button *ngIf="isMatch(selectedEvent)"
+          class="flex-1 px-6 py-4 bg-blue-600 text-white rounded-xl font-bold
+                 hover:bg-blue-700 hover:shadow-lg active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-share-nodes text-sm"></i>
+          Partager
+        </button>
+      </div>
+
+    </div>
+  </div>-->
+</div>
+
+
+<!-- Styles globaux -->
+<style>
+  /* Scrollbar personnalisée */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #3b82f6, #10b981);
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #2563eb, #059669);
+  }
+
+  /* Animations */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Amélioration des inputs date/time */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.4);
+    cursor: pointer;
+    transition: filter 0.2s;
+  }
+
+  input[type="date"]:focus::-webkit-calendar-picker-indicator,
+  input[type="time"]:focus::-webkit-calendar-picker-indicator {
+    filter: invert(0.2) sepia(1) saturate(5) hue-rotate(200deg);
+  }
+
+  /* Effet de glassmorphism amélioré */
+  .backdrop-blur-xl {
+    backdrop-filter: blur(24px);
+  }
+</style>
