@@ -1,0 +1,12 @@
+<button
+  type="button"
+  (mouseenter)="hoverNews = true"
+  (mouseleave)="hoverNews = false"
+  class="w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300"
+  aria-label="News"
+>
+  <i
+    class="fa-solid fa-newspaper text-xl transition-all duration-500"
+    [ngStyle]="{ 'color': hoverNews ? themeService.primary : themeService.Iconnormal }"
+  ></i>
+</button>

@@ -1,424 +1,409 @@
 <!-- welcome.component.html -->
-<app-icon></app-icon>
+<section [ngStyle]="{'background': themeService.Backgroundcards}"
+  class="w-full h-150vh pt-10 relative overflow-hidden flex flex-col">
 
-<!-- ============================================
-     SECTION HERO - VERSION FULL WIDTH DESKTOP / CENTERED MOBILE
-     ============================================ -->
-<!-- ( Section 0 ) -->
-<section [ngStyle]="{'background': Background, 'color': Text}"
-  class="w-full h-150vh py-8 sm:py-12 px-4 sm:px-6 lg:px-8 xl:px-12 relative overflow-hidden flex items-center"
-  role="banner" aria-label="Bienvenue sur Myasdam">
 
-  <!-- ( Section 1 ) Background Elements Premium -->
-  <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-    
-    
-    
-    
-    
-    <!-- Grid Pattern -->
-    <div class="absolute inset-0 bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]"
-      [ngStyle]="{
-        'background-image': 'linear-gradient(' + Background4 + '2D 1px, transparent 1px), linear-gradient(90deg, ' + Background4 + '0D 1px, transparent 1px)'
-      }">
+  <!-- ================= MOBILE TOP ACTIONS ================= -->
+  <div 
+  class="fixed top-16 left-1 z-50 p-2 rounded-full"
+  [ngStyle]="{'background-color': themeService.Backgroundcards + 'cc'}"
+>
+  <app-icon3 class="block"></app-icon3>
+</div>
+
+  <!-- BACKGROUND ANIMÉ (même style que fonctionalite.html)-->
+  <div class="absolute inset-0 pointer-events-none overflow-hidden">
+    <!-- Grille de fond -->
+    <div class="absolute inset-0 opacity-[0.08]" [ngStyle]="{
+           'background-image': 'linear-gradient(' + themeService.Textsecondaire + ' 1px, transparent 1px), linear-gradient(90deg, ' + themeService.Textsecondaire + ' 1px, transparent 1px)',
+           'background-size': '50px 50px'
+         }">
     </div>
-        
   </div>
 
-  <!-- CONTAINER FULL WIDTH -->
-  <div class="w-full relative z-10 h-full flex items-center">
-    
-    <!-- Layout Grid - Responsive: centered on mobile, full width on desktop -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 items-center w-full">
+  <!-- CONTENU PRINCIPAL -->
+  <div class="relative z-10 w-full max-w-[95vw] mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-12 lg:py-20 flex-1 flex items-center">
 
-      <!-- ============================================
-           TEXT SECTION - Centered on mobile, left-aligned on desktop
-           ============================================ -->
-      <div class="flex flex-col items-center lg:items-start text-center lg:text-left space-y-4 sm:space-y-6 order-2 lg:order-1 w-full px-0 lg:pl-8 xl:pl-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
 
-        <!-- ( Section 2 ) Badge Saison -->
-        <div class="inline-flex animate-slide-in-left" role="status" aria-label="Saison en cours">
-          <div [ngStyle]="{'background': Background1, 'border': BorderHeader}"
-            class="group relative overflow-hidden backdrop-blur-2xl border rounded-full shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 cursor-default">
-            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
-            <span class="relative text-white text-[10px] sm:text-xs font-bold px-4 py-2 rounded-full tracking-widest uppercase flex items-center gap-2">
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-emerald-400"></span>
-                <span class="relative inline-flex rounded-full h-full w-full bg-emerald-400"></span>
-              </span>
-              <i class="fa-solid fa-calendar-days text-xs group-hover:rotate-12 transition-transform duration-300"></i>
-              <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">Saison 2025 - 2026</span>
-            </span>
-          </div>
+      <!-- ================= SECTION TEXTE (Gauche) ================= -->
+      <div class="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 animate-slide-up">
+
+        <!-- Badge Saison -->
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest backdrop-blur-md border shadow-lg"
+          [ngStyle]="{
+               'background': themeService.primarySoft,
+               'border-color': themeService.primary + '40',
+               'color': themeService.primary
+             }">
+          <i class="fas fa-calendar-days"></i>
+          <span>Saison 2025 - 2026</span>
         </div>
 
-        <!-- ( Section 3 ) Titre -->
-        <div class="space-y-1 relative animate-slide-in-up w-full" style="animation-delay: 0.1s;">
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight uppercase leading-[0.9] drop-shadow-2xl">
-            <span class="block">Welcome to</span>
+        <!-- Titre Principal avec Gradient -->
+        <div class="space-y-2">
+          <h1 class="text-5xl lg:text-7xl font-black tracking-tight leading-[0.9]"
+            [ngStyle]="{'color': themeService.Textprincipal}">
+            Welcome to
           </h1>
-          <div class="relative inline-block group cursor-default">
-            <h2 [ngStyle]="{'color': Text1}"
-              class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight uppercase leading-[0.9] relative z-10 transition-all duration-300 group-hover:tracking-wider">
-              Myasdam
-            </h2>
-            <div class="absolute -inset-4 blur-3xl opacity-30 scale-90 group-hover:scale-110 group-hover:opacity-50 transition-all duration-700" 
-                 [ngStyle]="{'background': 'radial-gradient(circle, ' + Text1 + ' 0%, transparent 70%)'}"></div>
-            <div class="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-current to-transparent opacity-50 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-center"></div>
-          </div>
+
+          <h2
+            class="text-5xl lg:text-7xl font-black uppercase leading-[0.9] flex items-center gap-4 justify-center lg:justify-start">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r" [ngStyle]="{
+                    'background-image': 'linear-gradient(135deg, ' + themeService.primary + ', ' + themeService.primaryHover + ')'
+                  }">
+              <i class="fas fa-shield-halved text-5xl lg:text-6xl"></i>
+            </span>
+            <span class="bg-clip-text text-transparent bg-gradient-to-r" [ngStyle]="{
+                    'background-image': 'linear-gradient(135deg, ' + themeService.primary + ', ' + themeService.primaryHover + ')'
+                  }">
+              ASDAM
+            </span>
+          </h2>
         </div>
 
-        <!-- ( Section 4 ) Description - Centered on mobile, left on desktop -->
-        <div class=" relative group animate-slide-in-up w-full max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto lg:mx-0" style="animation-delay: 0.2s;">
-          <div [ngStyle]="{'background':Background6}" class="absolute inset-0 backdrop-blur-xl rounded-2xl transform -rotate-1 group-hover:rotate-0 transition-all duration-700 group-hover:scale-[1.02] shadow-xl"></div>
-          <p class="relative text-base sm:text-lg leading-relaxed font-medium p-5 sm:p-6 rounded-2xl border border-white/20 shadow-lg group-hover:shadow-xl transition-all duration-500 backdrop-blur-sm ">
-            Rejoignez une communauté passionnée. Suivez vos entraînements, consultez les résultats en temps réel et vivez le sport autrement.
+        <!-- Description Card Glassmorphism -->
+        <div
+          class="relative p-6 rounded-2xl backdrop-blur-xl border-2 shadow-2xl max-w-xl transform transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1"
+          [ngStyle]="{
+               'background': themeService.Backgroundcards + '80',
+               'border-color': themeService.Bordernormal
+             }">
+          <!-- Effet de brillance -->
+          <div
+            class="absolute inset-0 rounded-2xl opacity-50 bg-gradient-to-br from-white/10 to-transparent pointer-events-none">
+          </div>
+
+          <p class="text-base sm:text-lg leading-relaxed font-medium flex items-start gap-3 relative z-10"
+            [ngStyle]="{'color': themeService.Textsecondaire}">
+            <i class="fas fa-users mt-1 text-lg" [ngStyle]="{'color': themeService.primary}"></i>
+            <span>
+              Rejoignez une communauté passionnée. Suivez vos entraînements,
+              consultez les résultats en temps réel et vivez le sport autrement.
+            </span>
           </p>
         </div>
 
-        <!-- ( Section 5 ) CTA Buttons - Centered on mobile, left on desktop -->
-        <div class="flex flex-col sm:flex-row gap-3 pt-2 animate-slide-in-up w-full sm:w-auto justify-center lg:justify-start" style="animation-delay: 0.3s;">
-          <button [ngStyle]="{'background': Background7, 'color': '#FFFFFF'}"
-            class="group relative overflow-hidden font-bold px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 text-base min-w-[200px] ring-2 ring-transparent focus:ring-white/50 focus:outline-none"
-            aria-label="Voir les matchs à venir">
-            <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
-            <span class="relative flex items-center gap-2">
-              <i class="fa-solid fa-futbol text-lg group-hover:animate-bounce-slow"></i>
-              <span>Voir les Matchs</span>
-              <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
-            </span>
-          </button>
+        <!-- Boutons d'Action -->
+        <div class="flex flex-col sm:flex-row gap-4 pt-4">
 
-          <button [ngStyle]="{'background': Background8, 'border': BorderHeader1}"
-            class="group relative overflow-hidden backdrop-blur-xl border-2 font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 text-base min-w-[200px] focus:outline-none focus:ring-2 focus:ring-white/30"
-            aria-label="Consulter le planning">
-            <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
-            <span class="relative flex items-center gap-2">
-              <i class="fa-regular fa-calendar-check text-lg group-hover:scale-110 transition-transform duration-300"></i>
-              <span>Planning</span>
-              <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
-            </span>
-          </button>
-        </div>
-
-      </div>
-
-      <!-- ============================================
-           CAROUSEL SECTION - Centered on mobile, right-aligned on desktop
-           ============================================ -->
-      <!-- ( Section 6 ) -->
-      <div class="w-full animate-slide-in-right order-1 lg:order-2 flex items-center justify-center lg:justify-end px-0 lg:pr-8 xl:pr-12" style="animation-delay: 0.3s;">
-        <div [ngStyle]="{'background':Background9,'border':BorderHeader2}"
-          class="w-full max-w-md lg:max-w-lg xl:max-w-xl backdrop-blur-3xl rounded-2xl border shadow-2xl overflow-hidden transition-all duration-500 hover:shadow-3xl hover:border-white/20 group/card">
-          
-          <!-- ( Section 7 ) Carousel Header -->
-          <div [ngStyle]="{'border-bottom': BorderHeader3,'border-top': 'none','border-left': 'none','border-right': 'none'}" class="flex items-center justify-between px-5 py-4 border-b">
-            <div class="flex items-center gap-3">
-              <div [ngStyle]="{'background':Background10}" class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transform group-hover/card:scale-105 transition-transform duration-300">
-                <i class="fa-solid fa-calendar-day text-white text-sm"></i>
-              </div>
-              <div>
-                <span class="text-xs font-bold uppercase tracking-wider block">
-                  Prochains Matchs
-                </span>
-                <span class="text-[10px] opacity-60">
-                  {{ matchs.length > 0 ? matchs.length + ' matchs' : 'Aucun match' }}
-                </span>
-              </div>
+          <!-- Bouton Principal -->
+          <button
+            class="group relative px-8 py-4 rounded-xl font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] flex items-center gap-3 justify-center overflow-hidden"
+            [ngStyle]="{
+                    'background': 'linear-gradient(135deg, ' + themeService.primary + ', ' + themeService.primary + ')',
+                    'box-shadow': '0 10px 30px -10px ' + themeService.primary + '80'
+                  }">
+            <!-- Effet hover shine -->
+            <div
+              class="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent">
             </div>
 
-            <div class="flex items-center gap-1">
-              <button (click)="prevMatch()" [disabled]="matchs.length <= 1"
-                class="text-white w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 backdrop-blur-sm border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed hover:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/30"
-                [ngStyle]="{'background':Background11}"
-                
-                aria-label="Match précédent">
-                <i class="fa-solid fa-chevron-left text-xs"></i>
+            <i class="fas fa-futbol text-lg relative z-10"></i>
+            <span class="relative z-10 uppercase tracking-wider text-sm">Voir les Matchs</span>
+            <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1 relative z-10"></i>
+          </button>
+
+          <!-- Bouton Secondaire -->
+          <button (mouseenter)="hoverBtn = true" (mouseleave)="hoverBtn = false"
+            class="group px-8 py-4 rounded-xl font-bold shadow-xl transition-all duration-300 hover:scale-105 border-2 flex items-center gap-3 justify-center backdrop-blur-md"
+            [ngStyle]="{
+              'background': themeService.Backgroundcards + '60',
+              'border-color': hoverBtn ? themeService.primary : themeService.Bordernormal,
+              'color': themeService.Textprincipal
+            }">
+            <i class="far fa-calendar-check text-lg" [ngStyle]="{'color': themeService.primary}"></i>
+            <span class="uppercase tracking-wider text-sm">Planning</span>
+            <i
+              class="fas fa-arrow-right transition-transform group-hover:translate-x-1 opacity-0 group-hover:opacity-100 -ml-2 group-hover:ml-0"></i>
+          </button>
+
+        </div>
+
+        <!-- Stats rapides -->
+        <div class="flex gap-8 pt-4">
+          <div class="text-center">
+            <div class="text-2xl font-black" [ngStyle]="{'color': themeService.primary}">150+</div>
+            <div class="text-xs uppercase tracking-wider" [ngStyle]="{'color': themeService.Textsecondaire}">Membres
+            </div>
+          </div>
+          <div class="w-px bg-gray-300/30"></div>
+          <div class="text-center">
+            <div class="text-2xl font-black" [ngStyle]="{'color': themeService.primary}">12</div>
+            <div class="text-xs uppercase tracking-wider" [ngStyle]="{'color': themeService.Textsecondaire}">Équipes
+            </div>
+          </div>
+          <div class="w-px bg-gray-300/30"></div>
+          <div class="text-center">
+            <div class="text-2xl font-black" [ngStyle]="{'color': themeService.primary}">24/7</div>
+            <div class="text-xs uppercase tracking-wider" [ngStyle]="{'color': themeService.Textsecondaire}">Support
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SECTION CAROUSEL (Droite) ================= -->
+      <div class="w-full animate-slide-up" style="animation-delay: 0.2s;">
+
+        <!-- Card Carousel Glassmorphism -->
+        <div
+          class="relative rounded-3xl shadow-2xl overflow-hidden backdrop-blur-xl border-2 transform transition-all duration-500 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)]"
+          [ngStyle]="{
+               'background': themeService.Backgroundcards + '90',
+               'border-color': themeService.Bordernormal
+             }">
+
+          <!-- Header avec dégradé -->
+          <div class="relative px-6 py-5 border-b flex items-center justify-between overflow-hidden"
+            [ngStyle]="{'border-color': themeService.Bordernormal + '50'}">
+            <!-- Fond dégradé subtil -->
+            <div class="absolute inset-0 opacity-10 bg-gradient-to-r from-transparent via-current to-transparent"
+              [ngStyle]="{'color': themeService.primary}"></div>
+
+            <span class="font-bold uppercase tracking-wider flex items-center gap-2 text-sm relative z-10"
+              [ngStyle]="{'color': themeService.Textprincipal}">
+              <i class="fas fa-calendar-day" [ngStyle]="{'color': themeService.primary}"></i>
+              Prochains Matchs
+            </span>
+
+            <!-- Navigation -->
+            <div class="flex gap-2 relative z-10">
+              <button (click)="prevMatch()" (mouseenter)="hoverBtn = true" (mouseleave)="hoverBtn = false"
+                class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg border"
+                [ngStyle]="{
+    'background': themeService.Backgroundprincipal,
+    'border-color': hoverBtn ? themeService.primary : themeService.Bordernormal,
+    'color': themeService.Textprincipal
+  }">
+                <i class="fas fa-chevron-left text-sm"></i>
               </button>
-              <button (click)="nextMatch()" [disabled]="matchs.length <= 1"
-                class="text-white w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 backdrop-blur-sm border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed hover:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/30"
-                [ngStyle]="{'background':Background11}"
-                aria-label="Match suivant">
-                <i class="fa-solid fa-chevron-right text-xs"></i>
+
+              <button (click)="nextMatch()"
+                class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg border"
+                [ngStyle]="{
+                        'background': themeService.primary,
+                        'border-color': themeService.primary,
+                        'color': '#ffffff'
+                      }">
+                <i class="fas fa-chevron-right text-sm"></i>
               </button>
             </div>
           </div>
 
-          <!-- ( Section 8 ) Carousel Content -->
-          <div class="relative overflow-hidden">
+          <!-- Contenu Carousel -->
+          <div class="relative overflow-hidden p-6">
             <div class="flex transition-transform duration-500 ease-out"
               [style.transform]="'translateX(-' + currentMatch * 100 + '%)'">
 
-              <!-- Match Card -->
-              <div *ngFor="let match of matchs; let i = index" class="w-full flex-shrink-0 p-5" role="tabpanel" [attr.aria-label]="'Match ' + (i + 1)">
-                
-                <!-- Date & Location -->
-                <div class="flex items-center justify-between mb-4">
-                  <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl flex flex-col items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300"
-                      [style.background]="theme === 'sombre' ? 'linear-gradient(135deg, #6978b8, #818fd5)' : 'linear-gradient(135deg, #F43F5E, #BE123C)'">
-                      <span class="text-white font-black text-lg leading-none">{{ match.date | date:'dd' }}</span>
-                      <span class="text-white/90 text-[10px] font-bold uppercase">{{ match.date | date:'MMM' }}</span>
+              <div *ngFor="let match of matchs; let i = index" class="w-full flex-shrink-0 space-y-6">
+
+                <!-- Date et Type -->
+                <div class="flex justify-between items-start">
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2 text-sm opacity-70"
+                      [ngStyle]="{'color': themeService.Textsecondaire}">
+                      <i class="fas fa-calendar"></i>
+                      <span class="capitalize">{{ match.date | date:'EEEE dd MMMM yyyy':'':'fr' }}</span>
                     </div>
-                    <div>
-                      <p class="text-[10px] font-bold uppercase tracking-wider opacity-60 mb-0.5"
-                        [style.color]="theme === 'sombre' ? '#94a3b8' : '#6b7280'">
-                        {{ match.date | date:'yyyy' }}
-                      </p>
-                      <p class="text-base font-black" [style.color]="Text">
-                        {{ match.date | date:'EEEE' }}
-                      </p>
+                    <div class="flex items-center gap-2 text-xl font-bold"
+                      [ngStyle]="{'color': themeService.Textprincipal}">
+                      <i class="far fa-clock" [ngStyle]="{'color': themeService.primary}"></i>
+                      <span>{{ match.heure || '--:--' }}</span>
                     </div>
                   </div>
 
-                  <div class="flex flex-col items-end gap-1">
-                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-md"
-                      [class.bg-emerald-500]="match.localisationMatch === 'Domicile'"
-                      [class.bg-orange-500]="match.localisationMatch !== 'Domicile'"
-                      class="text-white">
-                      <span class="relative flex h-1.5 w-1.5">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-white"></span>
-                        <span class="relative inline-flex rounded-full h-full w-full bg-white"></span>
-                      </span>
-                      <span>{{ match.localisationMatch }}</span>
+                  <span
+                    class="text-xs font-bold px-4 py-2 rounded-full text-white shadow-lg flex items-center gap-2 transform hover:scale-105 transition-transform"
+                    [class.bg-emerald-500]="match.localisationMatch === 'Domicile'"
+                    [class.bg-orange-500]="match.localisationMatch !== 'Domicile'">
+                    <i class="fas fa-location-dot"></i>
+                    {{ match.localisationMatch }}
+                  </span>
+                </div>
+
+                <!-- Affichage des Équipes -->
+                <div class="flex justify-between items-center py-4 relative">
+                  <!-- Ligne de connexion -->
+                  <div class="absolute top-1/2 left-0 right-0 h-0.5 opacity-10"
+                    [ngStyle]="{'background': themeService.Textsecondaire}"></div>
+
+                  <!-- Équipe Domicile -->
+                  <div class="flex flex-col items-center gap-3 flex-1 relative z-10">
+                    <div
+                      class="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl border-2 transition-transform duration-300 hover:scale-110 bg-white p-1"
+                      [ngStyle]="{'border-color': themeService.primary}">
+                      <img [src]="match.logoDom" [alt]="'Logo ' + match.equipeDom" class="w-full h-full object-contain"
+                        onerror="this.src='assets/LOGO.png'">
                     </div>
-                    <span class="text-[10px] font-medium opacity-70" [style.color]="Text">
-                      {{ match.heure || '--:--' }}
+                    <span class="text-sm font-bold text-center max-w-[100px] leading-tight"
+                      [ngStyle]="{'color': themeService.Textprincipal}">
+                      {{ match.equipeDom }}
+                    </span>
+                  </div>
+
+                  <!-- VS / Score -->
+                  <div class="flex flex-col items-center px-6 relative z-10">
+                    <div class="w-16 h-16 rounded-full flex items-center justify-center shadow-xl border-2 mb-2"
+                      [ngStyle]="{
+                           'background': 'linear-gradient(135deg, ' + themeService.primary + ', ' + themeService.primaryHover + ')',
+                           'border-color': themeService.primary
+                         }">
+                      <span class="text-2xl font-black text-white">
+                        VS
+                      </span>
+                    </div>
+                    <span class="text-3xl font-black tracking-tighter" [ngStyle]="{'color': themeService.primary}">
+                      {{ match.scoreDom ?? '-' }} : {{ match.scoreExt ?? '-' }}
+                    </span>
+                    <span class="text-xs uppercase tracking-wider mt-1 px-3 py-1 rounded-full" [ngStyle]="{
+                            'background': themeService.primarySoft,
+                            'color': themeService.primary
+                          }">
+                      {{ match.typeMatch }}
+                    </span>
+                  </div>
+
+                  <!-- Équipe Extérieur -->
+                  <div class="flex flex-col items-center gap-3 flex-1 relative z-10">
+                    <div
+                      class="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl border-2 transition-transform duration-300 hover:scale-110 bg-white p-1"
+                      [ngStyle]="{'border-color': themeService.Borderhover}">
+                      <img [src]="match.logoExt" [alt]="'Logo ' + match.equipeExt" class="w-full h-full object-contain"
+                        onerror="this.src='assets/LOGO.png'">
+                    </div>
+                    <span class="text-sm font-bold text-center max-w-[100px] leading-tight"
+                      [ngStyle]="{'color': themeService.Textprincipal}">
+                      {{ match.equipeExt }}
                     </span>
                   </div>
                 </div>
 
-                <!-- Score Board -->
-                <div class="relative p-4 rounded-xl border border-white/10 backdrop-blur-md shadow-inner"
-                  [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.1)' : 'rgba(244, 63, 94, 0.03)'">
-                  
-                  <!-- Home Team -->
-                  <div class="flex items-center justify-between mb-3">
-                    <div class="flex items-center gap-3 flex-1 min-w-0">
-                      <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden shadow-md ring-2 ring-white/10"
-                        [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.3)' : '#e0e7ff'">
-                        <img *ngIf="match.logoDom" [src]="match.logoDom" [alt]="'Logo ' + match.equipeDom"
-                          class="w-full h-full object-cover">
-                        <i *ngIf="!match.logoDom" class="fa-solid fa-shield-halved text-lg"
-                          [style.color]="theme === 'sombre' ? '#6978b8' : '#4f46e5'"></i>
-                      </div>
-                      <div class="flex flex-col min-w-0">
-                        <span class="font-bold text-sm truncate" [style.color]="Text">
-                          {{ match.equipeDom }}
-                        </span>
-                        <span class="text-[10px] opacity-60 font-medium">Domicile</span>
-                      </div>
-                    </div>
-                    <span class="text-2xl font-black ml-2 tabular-nums" [style.color]="Text1">{{ match.scoreDom !== null ? match.scoreDom : '-' }}</span>
-                  </div>
+                <!-- Info supplémentaire -->
+                <div class="flex justify-between items-center text-xs pt-4 border-t gap-4"
+                  [ngStyle]="{'border-color': themeService.Bordernormal + '50'}">
+                  <span class="flex items-center gap-2 px-3 py-2 rounded-lg backdrop-blur-sm"
+                    [ngStyle]="{'background': themeService.Backgroundprincipal + '50'}">
+                    <i class="fas fa-map-marker-alt" [ngStyle]="{'color': themeService.primary}"></i>
+                    <span [ngStyle]="{'color': themeService.Textsecondaire}">{{ match.lieu }}</span>
+                  </span>
 
-                  <!-- VS Divider -->
-                  <div class="flex items-center justify-center gap-2 my-2 relative">
-                    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                    <div class="flex flex-col items-center px-2 py-1 rounded-full border border-white/10 backdrop-blur-sm"
-                      [style.background-color]="theme === 'sombre' ? 'rgba(105, 120, 184, 0.2)' : 'rgba(244, 63, 94, 0.1)'">
-                      <span class="text-[10px] font-bold opacity-50 uppercase tracking-widest">VS</span>
-                      <span class="text-[10px] font-bold" 
-                        [class.text-emerald-400]="match.lieu === 'domicile'"
-                        [class.text-orange-400]="match.lieu !== 'domicile'">
-                        {{ match.categorie || 'Match' }}
-                      </span>
-                    </div>
-                    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                  </div>
-
-                  <!-- Away Team -->
-                  <div class="flex items-center justify-between mt-3">
-                    <span class="text-2xl font-black mr-2 tabular-nums" [style.color]="Text1">{{ match.scoreExt !== null ? match.scoreExt : '-' }}</span>
-                    <div class="flex items-center gap-3 flex-1 justify-end min-w-0">
-                      <div class="flex flex-col items-end min-w-0">
-                        <span class="font-bold text-sm text-right truncate" [style.color]="Text">
-                          {{ match.equipeExt }}
-                        </span>
-                        <span class="text-[10px] opacity-60 font-medium">Extérieur</span>
-                      </div>
-                      <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden shadow-md ring-2 ring-white/10"
-                        [style.background-color]="theme === 'sombre' ? 'rgba(244, 63, 94, 0.3)' : '#ffe4e6'">
-                        <img *ngIf="match.logoExt" [src]="match.logoExt" [alt]="'Logo ' + match.equipeExt"
-                          class="w-full h-full object-cover">
-                        <i *ngIf="!match.logoExt" class="fa-solid fa-shield text-lg"
-                          [style.color]="theme === 'sombre' ? '#F43F5E' : '#e11d48'"></i>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Status Badge -->
-                  <div class="absolute top-2 right-2">
-                    <span class="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full border" [ngClass]="{
-                      'bg-emerald-500/20 text-emerald-300 border-emerald-500/30': match.statut === 'En cours',
-                      'bg-blue-500/20 text-blue-300 border-blue-500/30': match.statut === 'A venir',
-                      'bg-gray-500/20 text-gray-300 border-gray-500/30': match.statut === 'Terminé'
-                    }">
-                      {{ match.statut }}
-                    </span>
-                  </div>
+                  <span class="flex items-center gap-2 px-3 py-2 rounded-lg backdrop-blur-sm"
+                    [ngStyle]="{'background': themeService.Backgroundprincipal + '50'}">
+                    <i class="fas fa-user-group" [ngStyle]="{'color': themeService.primary}"></i>
+                    <span [ngStyle]="{'color': themeService.Textsecondaire}">{{ match.categorie }}</span>
+                  </span>
                 </div>
 
-                <!-- Footer Info -->
-                <div class="flex items-center justify-between mt-4 text-xs font-medium"
-                  [style.color]="theme === 'sombre' ? '#94a3b8' : '#6b7280'">
-                  <div class="flex items-center gap-1.5">
-                    <i class="fa-solid fa-location-dot text-xs" [style.color]="Text1"></i>
-                    <span class="truncate max-w-[140px]">{{ match.lieu || 'Stade à confirmer' }}</span>
+              </div>
+
+              <!-- État vide -->
+              <div *ngIf="matchs.length === 0" class="w-full py-12 text-center">
+                <div class="flex flex-col items-center gap-4 opacity-50">
+                  <div class="w-20 h-20 rounded-full flex items-center justify-center text-3xl"
+                    [ngStyle]="{'background': themeService.primarySoft}">
+                    <i class="fas fa-calendar-xmark" [ngStyle]="{'color': themeService.primary}"></i>
                   </div>
-                  <div class="flex items-center gap-1.5 text-[10px] opacity-70">
-                    <i class="fa-solid fa-clock text-xs"></i>
-                    <span>{{ match.heure || 'Horaire à définir' }}</span>
-                  </div>
+                  <p [ngStyle]="{'color': themeService.Textsecondaire}">Aucun match programmé</p>
                 </div>
               </div>
 
-              <!-- Empty State -->
-              <div *ngIf="matchs.length === 0" class="w-full flex-shrink-0 p-6 text-center">
-                <div [ngStyle]="{'background':Background12}" class="text-white w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center animate-pulse-gentle">
-                  <i class="fa-solid fa-calendar-xmark text-2xl"></i>
-                </div>
-                <p class="text-sm font-medium mb-1">Aucun match programmé</p>
-                <p class="text-xs">Revenez bientôt</p>
-              </div>
             </div>
           </div>
 
-          <!-- ( Section 9 ) Pagination dots -->
-          <div class="flex items-center justify-center gap-2 py-3" [ngStyle]="{'border-bottom': 'none','border-top': BorderHeader3,'border-left': 'none','border-right': 'none'}">
+          <!-- Pagination -->
+          <div class="flex justify-center gap-2 py-5 border-t"
+            [ngStyle]="{'border-color': themeService.Bordernormal + '50'}">
             <button *ngFor="let match of matchs; let i = index" (click)="goToMatch(i)"
-              class="h-1.5 rounded-full transition-all duration-500 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-white/30" 
-              [class.w-6]="i === currentMatch" [class.w-1.5]="i !== currentMatch"
-              [style.background-color]="i === currentMatch ? (theme === 'sombre' ? '#6978b8' : '#F43F5E') : (theme === 'sombre' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)')"
-              [attr.aria-label]="'Aller au match ' + (i + 1)" 
-              [attr.aria-current]="i === currentMatch ? 'true' : 'false'">
+              class="h-2 rounded-full transition-all duration-300 hover:scale-125" [class.w-8]="i === currentMatch"
+              [class.w-2]="i !== currentMatch"
+              [style.background]="i === currentMatch ? themeService.primary : themeService.Textsecondaire + '40'"
+              [style.opacity]="i === currentMatch ? '1' : '0.5'">
             </button>
           </div>
+
+          <!-- Indicateur de défilement -->
+          <div class="absolute bottom-20 right-6 flex flex-col gap-1">
+            <div *ngFor="let match of matchs; let i = index" class="w-1 rounded-full transition-all duration-300"
+              [class.h-6]="i === currentMatch" [class.h-2]="i !== currentMatch"
+              [style.background]="i === currentMatch ? themeService.primary : themeService.Textsecondaire + '30'">
+            </div>
+          </div>
+
         </div>
       </div>
 
     </div>
   </div>
+
+
 </section>
 
+<!-- STYLES (mêmes animations que fonctionalite.html) -->
 <style>
-  /* ============================================
-     ANIMATIONS & UTILITAIRES
-     ============================================ */
-  
-  @keyframes slide-in-left {
-    from { opacity: 0; transform: translateX(-30px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  @keyframes slide-in-right {
-    from { opacity: 0; transform: translateX(30px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  @keyframes slide-in-up {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes float-slow {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(20px, -20px) scale(1.05); }
-    66% { transform: translate(-10px, 10px) scale(0.95); }
-  }
-
-  @keyframes float-slow-reverse {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(-20px, 20px) scale(1.05); }
-    66% { transform: translate(10px, -10px) scale(0.95); }
-  }
-
-  @keyframes pulse-gentle {
-    0%, 100% { opacity: 0.4; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.05); }
-  }
-
-  @keyframes bounce-slow {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-3px); }
-  }
-
-  .animate-slide-in-left {
-    animation: slide-in-left 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    opacity: 0;
-  }
-
-  .animate-slide-in-right {
-    animation: slide-in-right 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    opacity: 0;
-  }
-
-  .animate-slide-in-up {
-    animation: slide-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    opacity: 0;
-  }
-
-  .animate-float-slow {
-    animation: float-slow 20s ease-in-out infinite;
-  }
-
-  .animate-float-slow-reverse {
-    animation: float-slow-reverse 25s ease-in-out infinite;
-  }
-
-  .animate-pulse-gentle {
-    animation: pulse-gentle 6s ease-in-out infinite;
-  }
-
-  .animate-bounce-slow {
-    animation: bounce-slow 2s ease-in-out infinite;
-  }
-
-  .hover\:shadow-3xl:hover {
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  }
-
-  .tabular-nums {
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* Hauteur fixe utilitaires */
-  .h-\[150vh\] {
-    height: 150vh;
-  }
-
-  /* Accessibilité */
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.2s !important;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
     }
-    
-    .animate-slide-in-left,
-    .animate-slide-in-right,
-    .animate-slide-in-up {
+
+    to {
       opacity: 1;
-      transform: none;
     }
   }
 
-  button:focus-visible,
-  a:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Effet de glassmorphism renforcé */
+  .glass-card {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Scrollbar personnalisée */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: v-bind('themeService.Rougeprincipal');
     border-radius: 4px;
-  }
-
-  button:focus,
-  a:focus {
-    outline: none;
-  }
-
-  ::selection {
-    background-color: rgba(255, 255, 255, 0.3);
-    color: inherit;
   }
 </style>

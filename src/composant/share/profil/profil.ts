@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { Icon } from "../../priver/icon/icon";
+import { ThemeService } from '../../../../Backend/Services/theme.service';
 
 interface Utilisateur {
   nom: string;
   prenom: string;
   photoProfil?: string;
-  theme?: 'clair' | 'sombre';
   role?: string;
   email?: string;
-  statut?: 'en ligne' | 'ne pas déranger' | 'absent'; // ← ajouté
+  statut?: 'en ligne' | 'ne pas déranger' | 'absent';
 }
 
 @Component({
@@ -17,186 +19,199 @@ interface Utilisateur {
   templateUrl: './profil.html',
   styleUrls: ['./profil.css'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HttpClientModule, Icon,RouterLink],
 })
 export class Profil implements OnInit {
 
-  dropdownOpen = false;
   utilisateur: Utilisateur | null = null;
 
-  theme: 'clair' | 'sombre' = 'clair';
+  menuOpen = false;
 
-  // Infos utilisateur
   nom = '';
   prenom = '';
   role = '';
   email = '';
   initials = '';
-  statut: 'en ligne' | 'ne pas déranger' | 'absent' = 'en ligne'; // ← ajouté
-  activeHover: string | null = null;
-  // 🎨 Couleurs dynamiques utilisées dans ton HTML
-  Text = '';
-  Background = '';
-  Background1 = '';
-  Background2 = '';
-  Background3 = '';
-  Background4 = '';
-  TextRouge = '';
-  borderligne = '';
-  StatutColor = ''; // couleur pour afficher le statut
 
-  constructor(private router: Router) {}
+  statut: 'en ligne' | 'ne pas déranger' | 'absent' = 'en ligne';
+  StatutColor = '';
+
+  unreadMessagesCount: number = 3;
+  currentYear: number = new Date().getFullYear();
+
+  constructor(
+    private router: Router,
+    public themeService: ThemeService
+  ) {}
 
   ngOnInit(): void {
     this.loadUser();
-    this.setThemeColors();
+    this.setStatutColor();
   }
 
-  /** Chargement utilisateur */
+  /**
+   * Chargement utilisateur depuis localStorage
+   */
   private loadUser(): void {
+
     const userStr = localStorage.getItem('utilisateur');
 
-    // 🔴 NON CONNECTÉ
-    if (!userStr) {
-      this.utilisateur = null;
-      this.setStatutColor();
-      return;
-    }
+    if (!userStr) return;
 
-    // 🟢 CONNECTÉ
     try {
+
       const user: Utilisateur = JSON.parse(userStr);
+
       this.utilisateur = user;
 
       this.nom = user.nom || '';
       this.prenom = user.prenom || '';
-      this.role = user.role || '';
+      this.role = user.role || 'supporter';
       this.email = user.email || '';
-      this.statut = user.statut || 'en ligne'; // ← récupère le statut
-
-      if (user.theme === 'clair' || user.theme === 'sombre') {
-        this.theme = user.theme;
-      }
+      this.statut = user.statut || 'en ligne';
 
       this.generateInitials();
-      this.setStatutColor();
 
     } catch (error) {
+
       console.error('Erreur parsing utilisateur', error);
-      this.utilisateur = null;
-      this.setStatutColor();
+
     }
+
   }
 
-  /** Génération initiales */
+  /**
+   * Génération des initiales
+   */
   private generateInitials(): void {
-    const n = this.nom.trim().charAt(0).toUpperCase();
-    const p = this.prenom.trim().charAt(0).toUpperCase();
-    this.initials = (n || '') + (p || '');
+
+    const n = this.nom?.charAt(0)?.toUpperCase() || '';
+    const p = this.prenom?.charAt(0)?.toUpperCase() || '';
+
+    this.initials = n + p;
+
   }
 
-  /** Toggle menu */
-  toggleDropdown(): void {
-    this.dropdownOpen = !this.dropdownOpen;
+  /**
+   * Toggle menu
+   */
+  toggleMenu(): void {
+
+    this.menuOpen = !this.menuOpen;
+
   }
 
-  /** Fermer si clic extérieur */
+  formatRole(role: string | null | undefined): string {
+    if (!role || role === 'Inviter') {
+      return 'Supporter';
+    }
+    // Met la première lettre en majuscule et le reste en minuscule
+    return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+  }
+
+  /**
+   * Fermer menu
+   */
+  closeMenu(): void {
+
+    this.menuOpen = false;
+
+  }
+
+  /**
+   * Fermer si clic extérieur
+   */
   @HostListener('document:click', ['$event'])
   onClick(event: Event): void {
+
     const target = event.target as HTMLElement;
-    if (!target.closest('#userButton') && !target.closest('#dropdownMenu')) {
-      this.dropdownOpen = false;
-    }
-  }
 
-  /** Changement thème */
-  changeTheme(nouveauTheme: 'clair' | 'sombre'): void {
-    this.theme = nouveauTheme;
+    if (!target.closest('#userMenuButton') && !target.closest('#userMenuDropdown')) {
 
-    if (this.utilisateur) {
-      this.utilisateur.theme = nouveauTheme;
-      localStorage.setItem('utilisateur', JSON.stringify(this.utilisateur));
+      this.menuOpen = false;
+
     }
 
-    this.setThemeColors();
   }
 
-  /** Changer statut */
+  /**
+   * Changer statut utilisateur
+   */
   changeStatut(nouveauStatut: 'en ligne' | 'ne pas déranger' | 'absent'): void {
+
     this.statut = nouveauStatut;
 
     if (this.utilisateur) {
+
       this.utilisateur.statut = nouveauStatut;
+
       localStorage.setItem('utilisateur', JSON.stringify(this.utilisateur));
+
     }
 
     this.setStatutColor();
+
   }
 
-  /** Définir couleur du statut pour affichage */
+  /**
+   * Couleur statut
+   */
   private setStatutColor(): void {
+
     switch (this.statut) {
+
       case 'en ligne':
-        this.StatutColor = '#22C55E'; // vert
+        this.StatutColor = '#22C55E';
         break;
+
       case 'ne pas déranger':
-        this.StatutColor = '#F87171'; // rouge
+        this.StatutColor = '#EF4444';
         break;
+
       case 'absent':
-        this.StatutColor = '#FBBF24'; // jaune/orange
+        this.StatutColor = '#F59E0B';
         break;
+
       default:
-        this.StatutColor = '#94A3B8'; // gris neutre
+        this.StatutColor = '#94A3B8';
+
     }
+
   }
 
-  /** 🎨 Gestion des thèmes */
-  private setThemeColors(): void {
-
-    // 🔴 1️⃣ NON CONNECTÉ
-    if (!this.utilisateur) {
-      this.Background  = '#475569';
-      this.Background1 = '#334155';
-      this.Background2 = '#475569';
-      this.Background3 = '#64748B';
-
-      this.Text = '#FFFFFF';
-      this.TextRouge = '#F87171';
-      this.borderligne = '#94A3B8';
-      return;
-    }
-
-    // 🌙 2️⃣ CONNECTÉ + SOMBRE
-    if (this.theme === 'sombre') {
-      this.Background  = '#0F172A';
-      this.Background1 = '#6978b8';
-      this.Background2 = '#0F172A';
-      this.Background3 = '#334155';
-      this.Background4 = '#6978b8';
-
-      this.Text = '#FFFFFF';
-      this.TextRouge = '#F87171';
-      this.borderligne = '#334155';
-    }
-
-    // ☀️ 3️⃣ CONNECTÉ + CLAIR
-    else {
-      this.Background  = '#DC2626';
-      this.Background1 = '#a80303';
-      this.Background2 = '#DC2626';
-      this.Background3 = '#FFFFFF';
-      this.Background4 = '#DC2626';
-
-      this.Text = '#000';
-      this.TextRouge = '#DC2626';
-      this.borderligne = '#CBD5E1';
-    }
-  }
-
-  /** Déconnexion */
+  /**
+   * Déconnexion
+   */
   deconnecter(): void {
+
     localStorage.clear();
     sessionStorage.clear();
+
     this.router.navigate(['/connexion']);
+
   }
+
+  /**
+   * Label statut
+   */
+  getStatutLabel(): string {
+
+    switch (this.statut) {
+
+      case 'en ligne':
+        return 'En ligne';
+
+      case 'ne pas déranger':
+        return 'Ne pas déranger';
+
+      case 'absent':
+        return 'Absent';
+
+      default:
+        return 'Hors ligne';
+
+    }
+
+  }
+
 }

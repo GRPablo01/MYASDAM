@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Icon } from "../../priver/icon/icon";
+import { Router } from '@angular/router';
+import { ThemeService } from '../../../../Backend/Services/theme.service';
 
 interface NavLink {
   label: string;
@@ -11,7 +13,6 @@ interface NavLink {
 
 interface Utilisateur {
   role?: string;
-  theme?: 'clair' | 'sombre';
 }
 
 @Component({
@@ -24,23 +25,15 @@ interface Utilisateur {
 export class Nav implements OnInit {
 
   utilisateur: Utilisateur | null = null;
-
   userRole: string = 'invité';
   navLinks: NavLink[] = [];
   isLoggedIn: boolean = false;
+  hoverIndex: number = -1;
 
-  // 🔹 Theme
-  userTheme: 'clair' | 'sombre' | null = null;
-  theme: 'clair' | 'sombre' = 'clair';
-
-  // Couleurs dynamiques
-  Text = '';
-  Text1 = '';
-  Background = '';
-  Background1 = '';
-  Background2 = '';
-  Logo = '';
-  borderligne = '';
+  constructor(
+    private router: Router,
+    public themeService: ThemeService
+  ) {}
 
   private roleLinks: { [role: string]: NavLink[] } = {
 
@@ -79,106 +72,55 @@ export class Nav implements OnInit {
 
   ngOnInit(): void {
     this.loadUser();
-    this.setThemeColors();
   }
 
-  /** 🔹 Chargement utilisateur */
   private loadUser(): void {
 
     const utilisateurStr = localStorage.getItem('utilisateur');
 
-    // 🔴 NON CONNECTÉ
     if (!utilisateurStr) {
-      this.utilisateur = null;
-      this.userTheme = null;
       this.userRole = 'invité';
       this.navLinks = this.roleLinks['invité'];
       return;
     }
 
-    // 🟢 CONNECTÉ
     try {
       const utilisateur: Utilisateur = JSON.parse(utilisateurStr);
       this.utilisateur = utilisateur;
       this.isLoggedIn = true;
 
-      // 🔹 Rôle
       this.userRole = (utilisateur.role || '').toLowerCase();
       if (!this.userRole || !this.roleLinks[this.userRole]) {
         this.userRole = 'invité';
       }
+
       this.navLinks = this.roleLinks[this.userRole];
 
-      // 🔹 Thème
-      this.userTheme = utilisateur.theme || null;
-      if (this.userTheme === 'clair' || this.userTheme === 'sombre') {
-        this.theme = this.userTheme;
-      }
-
-    } catch (error) {
-      console.error('Erreur parsing utilisateur', error);
+    } catch {
       this.userRole = 'invité';
       this.navLinks = this.roleLinks['invité'];
-      this.theme = 'clair';
-      this.userTheme = null;
     }
   }
 
-  /** 🎨 Gestion thème dynamique */
-  private setThemeColors(): void {
+  getLinkStyle(isActive: boolean, index: number) {
 
-    // 🔴 1️⃣ NON CONNECTÉ
-    if (!this.utilisateur) {
-      this.Background  = '#475569';
-      this.Background1 = '#6978b8';
-      this.Text = '#FFFFFF';
-      this.Text1 = '#FFFFFF';
-      this.borderligne = '1px solid #475569';
-      this.Logo = 'assets/IconGris.svg';
-      return;
+    if (isActive) {
+      return {
+        background: this.themeService.primary,
+        color: '#FFF'
+      };
     }
 
-    // 🌙 2️⃣ CONNECTÉ + SOMBRE
-    if (this.theme === 'sombre') {
-      this.Background  = '#0F172A';
-      this.Background1 = '#6978b8';
-      this.Text = '#FFFFFF';
-      this.Text1 = '#FFFFFF';
-      this.borderligne = '1px solid #334155';
-      this.Logo = 'assets/IconBlanc.svg';
+    if (this.hoverIndex === index) {
+      return {
+        background: this.themeService.Sidebarlienhover,
+        color: this.themeService.Textprincipal
+      };
     }
 
-    // ☀️ 3️⃣ CONNECTÉ + CLAIR
-    else {
-      this.Background  = '#DC2626';
-      this.Background1 = '#DC2626';
-      this.Text = '#000000';
-      this.Text1 = '#FFFFFF';
-      this.borderligne = '1px solid #E5E7EB';
-      this.Logo = 'assets/IconBlack.svg';
-    }
-  }
-
-
-
-  hoverIndex: number = -1;
-
-getLinkStyle(isActive: boolean, index: number) {
-  if (isActive) {
     return {
-      color: 'white',
-      background: this.Background1
-    };
-  } else if (this.hoverIndex === index) {
-    return {
-      color: 'white',
-      background: this.Background1
-    };
-  } else {
-    return {
-      color: this.Text,
-      background: 'transparent'
+      background: 'transparent',
+      color: this.themeService.Textprincipal
     };
   }
-}
 }

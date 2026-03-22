@@ -1,0 +1,424 @@
+<!-- 🚫 BLOQUAGE MOBILE -->
+<div 
+  *ngIf="isMobile"
+  class="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden font-sans selection:bg-opacity-30"
+  [ngStyle]="{
+    'background': themeService.Backgroundprincipal,
+    'color': themeService.Textprincipal,
+    'selection:background': themeService.primarySoft
+  }"
+>
+
+  <!-- 🔥 THEME TOP RIGHT -->
+  <div 
+    class="absolute top-4 right-4 z-[200] p-2 rounded-xl backdrop-blur-md transition-transform duration-300 hover:scale-105"
+    [ngStyle]="{
+      'background': themeService.Backgroundcards,
+      'border': themeService.Bordernormal,
+      'box-shadow': '0 4px 20px ' + themeService.primarySoft
+    }"
+  >
+    <app-theme></app-theme>
+  </div>
+
+  <!-- 🌌 FOND ANIMÉ AMÉLIORÉ -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <!-- Orbes animés avec mouvement fluide -->
+    <div 
+      class="absolute w-[600px] h-[600px] rounded-full blur-[120px] animate-float-slow opacity-60"
+      [ngStyle]="{
+        'background': 'radial-gradient(circle, ' + themeService.primarySoft + ' 0%, transparent 70%)',
+        'top': '10%',
+        'left': '20%'
+      }"
+    ></div>
+    
+    <div 
+      class="absolute w-[500px] h-[500px] rounded-full blur-[100px] animate-float-slow-reverse opacity-40"
+      [ngStyle]="{
+        'background': 'radial-gradient(circle, ' + themeService.secondary + ' 0%, transparent 70%)',
+        'bottom': '10%',
+        'right': '10%'
+      }"
+    ></div>
+
+    <!-- Grille subtile -->
+    <div 
+      class="absolute inset-0 opacity-[0.03]"
+      style="background-image: radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0); background-size: 40px 40px;"
+    ></div>
+  </div>
+
+  <!-- CONTENU -->
+  <div class="relative z-10 w-full max-w-md px-6 py-8 animate-fade-in-up">
+    
+    <!-- CARD PRINCIPALE -->
+    <div 
+      class="relative backdrop-blur-2xl rounded-3xl p-8 overflow-hidden transition-all duration-500 hover:shadow-2xl group"
+      [ngStyle]="{
+        'background': 'linear-gradient(135deg, ' + themeService.Backgroundcards + ' 0%, ' + themeService.Backgroundcards + 'DD 100%)',
+        'border': themeService.Bordernormal,
+        'box-shadow': '0 8px 32px ' + themeService.primarySoft + ', inset 0 1px 0 rgba(255,255,255,0.1)'
+      }"
+    >
+      <!-- Effet de brillance au hover -->
+      <div 
+        class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+        [ngStyle]="{
+          'background': 'linear-gradient(105deg, transparent 40%, ' + themeService.primarySoft + ' 50%, transparent 60%)',
+          'transform': 'translateX(-100%)',
+          'animation': 'shine 3s infinite'
+        }"
+      ></div>
+
+      <!-- Ligne lumineuse supérieure -->
+      <div 
+        class="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-[2px] rounded-full overflow-hidden"
+      >
+        <div 
+          class="w-full h-full animate-pulse-glow"
+          [ngStyle]="{
+            'background': 'linear-gradient(90deg, transparent, ' + themeService.primary + ', transparent)'
+          }"
+        ></div>
+      </div>
+
+      <!-- ICON AVEC ANIMATION -->
+      <div class="flex justify-center mb-8">
+        <div class="relative">
+          <!-- Halo pulsant -->
+          <div 
+            class="absolute inset-0 rounded-full blur-xl animate-pulse-ring"
+            [ngStyle]="{'background': themeService.primary}"
+          ></div>
+          
+          <!-- Halo secondaire -->
+          <div 
+            class="absolute inset-0 rounded-3xl blur-lg animate-float"
+            [ngStyle]="{'background': themeService.primarySoft}"
+          ></div>
+
+          <!-- Container principal -->
+          <div 
+            class="relative w-24 h-24 rounded-3xl flex items-center justify-center animate-breathe"
+            [ngStyle]="{
+              'background': 'linear-gradient(135deg, ' + themeService.secondary + ' 0%, ' + themeService.secondarySoft + ' 100%)',
+              'border': themeService.Bordernormal,
+              'box-shadow': 'inset 0 2px 4px rgba(255,255,255,0.1), 0 8px 24px ' + themeService.primarySoft
+            }"
+          >
+            <svg 
+              class="w-12 h-12 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" 
+              [ngStyle]="{'color': themeService.primary}" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24" 
+              stroke-width="1.5"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+
+          <!-- Badge d'erreur animé -->
+          <div 
+            class="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center shadow-lg animate-bounce-subtle"
+            [ngStyle]="{
+              'background': 'linear-gradient(135deg, ' + themeService.primary + ' 0%, ' + themeService.primaryHover + ' 100%)',
+              'color': '#fff',
+              'box-shadow': '0 4px 12px ' + themeService.primarySoft
+            }"
+          >
+            <span class="text-sm font-bold">✕</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TITRE AVEC GRADIENT ANIMÉ -->
+      <h1 
+        class="text-3xl font-bold text-center mb-3 tracking-tight animate-fade-in"
+        style="animation-delay: 0.1s"
+        [ngStyle]="{
+          'background': 'linear-gradient(to right, ' + themeService.Textprincipal + ', ' + themeService.primary + ', ' + themeService.Textprincipal + ')',
+          'background-size': '200% auto',
+          '-webkit-background-clip': 'text',
+          'color': 'transparent',
+          'animation': 'gradient-shift 3s linear infinite'
+        }"
+      >
+        Taille d'écran incompatible
+      </h1>
+
+      <!-- TEXTE DESCRIPTIF -->
+      <p 
+        class="text-center mb-8 text-sm leading-relaxed max-w-xs mx-auto animate-fade-in"
+        style="animation-delay: 0.2s"
+        [ngStyle]="{'color': themeService.Textsecondaire}"
+      >
+        Cette application nécessite une résolution minimale pour garantir une expérience optimale et sécurisée.
+      </p>
+
+      <!-- SECTION RÉSOLUTION AMÉLIORÉE -->
+      <div 
+        class="rounded-2xl p-5 mb-6 animate-fade-in transition-transform duration-300 hover:scale-[1.02]"
+        style="animation-delay: 0.3s"
+        [ngStyle]="{
+          'background': 'linear-gradient(135deg, ' + themeService.secondarySoft + ' 0%, ' + themeService.secondary + '40 100%)',
+          'border': themeService.Bordernormal,
+          'backdrop-filter': 'blur(10px)'
+        }"
+      >
+        <div class="flex justify-between items-center text-sm mb-3">
+          <span class="font-medium" [ngStyle]="{'color': themeService.Textsecondaire}">
+            Résolution requise
+          </span>
+          <span 
+            class="font-bold px-3 py-1 rounded-full text-xs"
+            [ngStyle]="{
+              'background': themeService.primarySoft,
+              'color': themeService.primary
+            }"
+          >
+            ≥ 382px
+          </span>
+        </div>
+
+        <!-- Barre de progression dynamique -->
+        <div class="relative">
+          <div 
+            class="w-full h-3 rounded-full overflow-hidden backdrop-blur-sm"
+            [ngStyle]="{'background': themeService.secondaryHover}"
+          >
+            <!-- Progression basée sur la taille actuelle -->
+            <div 
+              class="h-full rounded-full relative transition-all duration-1000 ease-out"
+              [ngStyle]="{
+                'background': 'linear-gradient(90deg, ' + themeService.primary + ' 0%, ' + themeService.primaryHover + ' 100%)',
+                'width': (currentWidth / 382 * 100) > 100 ? '100%' : (currentWidth / 382 * 60) + '%',
+                'box-shadow': '0 0 10px ' + themeService.primarySoft
+              }"
+            >
+              <!-- Effet shimmer -->
+              <div class="absolute inset-0 shimmer-diagonal"></div>
+            </div>
+          </div>
+          
+          <!-- Indicateur de position -->
+          <div 
+            class="absolute top-1/2 -translate-y-1/2 w-1 h-4 rounded-full transition-all duration-1000"
+            [ngStyle]="{
+              'background': themeService.Textsecondaire,
+              'left': (currentWidth / 382 * 100) > 100 ? '100%' : (currentWidth / 382 * 60) + '%',
+              'transform': 'translate(-50%, -50%)',
+              'box-shadow': '0 0 8px ' + themeService.Textsecondaire
+            }"
+          ></div>
+        </div>
+
+        <div class="flex justify-between text-xs mt-3 font-medium">
+          <span [ngStyle]="{'color': themeService.Textsecondaire}">
+            Actuel: <span class="font-bold" [ngStyle]="{'color': themeService.primary}">{{ currentWidth }}px</span>
+          </span>
+          <span [ngStyle]="{'color': themeService.Textsecondaire}">
+            Objectif: 382px
+          </span>
+        </div>
+      </div>
+
+      <!-- SUGGESTIONS INTERACTIVES -->
+      <div class="space-y-3 mb-6">
+        <div 
+          *ngFor="let suggestion of [
+            {icon: '💻', text: 'Utilisez un ordinateur', delay: 0.4},
+            {icon: '🔄', text: 'Passez en mode paysage', delay: 0.5}
+          ]; let i = index"
+          class="flex items-center gap-4 text-sm p-4 rounded-xl cursor-pointer transition-all duration-300 hover:translate-x-2 group/item animate-fade-in"
+          [style.animation-delay]="suggestion.delay + 's'"
+          [ngStyle]="{
+            'background': 'linear-gradient(90deg, ' + themeService.secondary + ' 0%, ' + themeService.secondarySoft + ' 100%)',
+            'border': themeService.Bordernormal
+          }"
+        >
+          <div 
+            class="w-10 h-10 rounded-lg flex items-center justify-center text-lg transition-transform duration-300 group-hover/item:scale-110 group-hover/item:rotate-6"
+            [ngStyle]="{'background': themeService.secondaryHover}"
+          >
+            {{ suggestion.icon }}
+          </div>
+          <div class="flex-1">
+            <span class="font-medium block">{{ suggestion.text }}</span>
+            <span 
+              class="text-xs opacity-0 group-hover/item:opacity-100 transition-opacity duration-300"
+              [ngStyle]="{'color': themeService.Textsecondaire}"
+            >
+              Cliquez pour plus d'infos
+            </span>
+          </div>
+          <svg 
+            class="w-4 h-4 opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300"
+            [ngStyle]="{'color': themeService.primary}"
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- FOOTER ÉLÉGANT -->
+      <div 
+        class="pt-6 text-center animate-fade-in"
+        style="animation-delay: 0.6s"
+        [ngStyle]="{'border-top': '1px solid ' + themeService.secondaryHover}"
+      >
+        <div class="flex items-center justify-center gap-2 mb-2">
+          <div 
+            class="w-2 h-2 rounded-full animate-pulse"
+            [ngStyle]="{'background': themeService.primary}"
+          ></div>
+          <p 
+            class="text-xs font-medium tracking-widest uppercase"
+            [ngStyle]="{'color': themeService.Textsecondaire}"
+          >
+            ASDAM Platform
+          </p>
+          <div 
+            class="w-2 h-2 rounded-full animate-pulse"
+            [ngStyle]="{'background': themeService.primary, 'animation-delay': '0.5s'}"
+          ></div>
+        </div>
+        <p class="text-[10px] opacity-50" [ngStyle]="{'color': themeService.Textsecondaire}">
+          Version 2.0 • Optimisé pour desktop
+        </p>
+      </div>
+    </div>
+
+    <!-- Message subtil en dessous -->
+    <p 
+      class="text-center text-xs mt-6 opacity-60 animate-fade-in"
+      style="animation-delay: 0.8s"
+      [ngStyle]="{'color': themeService.Textsecondaire}"
+    >
+      Besoin d'aide ? Contactez le support technique
+    </p>
+  </div>
+</div>
+
+<!-- STYLES ANIMATIONS -->
+<style>
+  @keyframes shimmer-diagonal {
+    0% { transform: translateX(-100%) skewX(-15deg); }
+    100% { transform: translateX(200%) skewX(-15deg); }
+  }
+
+  .shimmer-diagonal {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,0.3),
+      transparent
+    );
+    animation: shimmer-diagonal 2.5s infinite;
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .animate-fade-in {
+    opacity: 0;
+    animation: fade-in 0.5s ease-out forwards;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float-slow {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
+
+  .animate-float-slow {
+    animation: float-slow 20s ease-in-out infinite;
+  }
+
+  @keyframes float-slow-reverse {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-30px, 30px) scale(1.1); }
+    66% { transform: translate(20px, -20px) scale(0.9); }
+  }
+
+  .animate-float-slow-reverse {
+    animation: float-slow-reverse 25s ease-in-out infinite;
+  }
+
+  @keyframes pulse-ring {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 0; }
+    100% { transform: scale(0.8); opacity: 0.5; }
+  }
+
+  .animate-pulse-ring {
+    animation: pulse-ring 2s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .animate-breathe {
+    animation: breathe 4s ease-in-out infinite;
+  }
+
+  @keyframes bounce-subtle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .animate-bounce-subtle {
+    animation: bounce-subtle 2s ease-in-out infinite;
+  }
+
+  @keyframes gradient-shift {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes shine {
+    0% { transform: translateX(-100%) skewX(-15deg); }
+    100% { transform: translateX(200%) skewX(-15deg); }
+  }
+</style>

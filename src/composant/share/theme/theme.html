@@ -1,0 +1,15 @@
+<button
+  type="button"
+  (click)="toggleTheme()"
+  (mouseenter)="hover = true"
+  (mouseleave)="hover = false"
+  class="w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300"
+  [attr.aria-label]="themeService.isDarkMode ? 'Passer en clair' : 'Passer en sombre'"
+>
+  <i
+    class="fa-solid text-xl transition-all duration-500"
+    [class.fa-sun]="themeService.isDarkMode"
+    [class.fa-moon]="!themeService.isDarkMode"
+    [ngStyle]="{ 'color': hover ? themeService.primary : themeService.Iconnormal }"
+  ></i>
+</button>

@@ -31,7 +31,7 @@
   
     
     <!-- CONTENU -->
-    <div class="flex-1 p-8">
+    <div class="flex-1">
 
         <div *ngIf="currentView === 'Centre de Commande'">
             <app-commande></app-commande>
@@ -54,7 +54,7 @@
         </div>
 
         <div *ngIf="currentView === 'profil'">
-            <h2 class="text-3xl font-bold mb-6">Profil</h2>
+            <app-info></app-info>
         </div>
 
     </div>

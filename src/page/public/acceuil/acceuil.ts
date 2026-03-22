@@ -1,90 +1,70 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Header } from "../../../composant/public/header/header";
 import { FormsModule } from '@angular/forms';
 import { Footer } from "../../../composant/share/footer/footer";
-import { Welcome } from '../../../composant/share/welcome/welcome';
 import { Fonctionalite } from "../../../composant/share/fonctionalite/fonctionalite";
 import { SectionDate1 } from '../../../composant/share/section-date1/section-date1';
 import { Cookie } from '../../../composant/priver/cookie/cookie';
+import { Welcome } from '../../../composant/share/welcome/welcome';
+import { Barre } from '../../../composant/share/barre/barre';
+import { ThemeService } from '../../../../Backend/Services/theme.service';
+import { Mobile } from "../../../composant/share/mobile/mobile";
+
+
+
 
 @Component({
   selector: 'app-acceuil',
   standalone: true,
   imports: [
     CommonModule,
-    Welcome,
     HttpClientModule,
     Header,
     FormsModule,
     Footer,
     Fonctionalite,
     SectionDate1,
-    Cookie
-  ],
+    Cookie,
+    Welcome,
+    Barre,
+    Mobile
+],
   templateUrl: './acceuil.html',
   styleUrl: './acceuil.css',
 })
 export class Acceuil implements OnInit {
 
-  // ✅ Chargement
+  // ✅ Loader
   isLoaded: boolean = false;
+  userRole: string = '';
 
   // ✅ Connexion
   isLoggedIn: boolean = false;
 
-  // 🎨 Thème
-  theme: 'clair' | 'sombre' = 'sombre';
-
-  // 🎨 Couleurs dynamiques
-  Background = '';
-  Background1 = '';
-  Background2 = '';
-  Background3 = '';
-  Background4 = '';
-  Background5 = '';
-  Background6 = '';
-  Background7 = '';
-  Background8 = '';
-  Background9 = '';
-  Background10 = '';
-  Background11 = '';
-  Background12 = '';
-  BorderHeader = '';
-  BorderHeader1 = '';
-  BorderHeader2 = '';
-  BorderHeader3 = '';
-  Text = '';
-  Text1 = '';
-  Text2 = '';
-
   constructor(
     private titleService: Title,
-    private renderer: Renderer2,
-    private http: HttpClient
+    public themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
 
-    // 🧠 Titre onglet
+    // 🧠 Titre
     this.titleService.setTitle('MY ASDAM | Accueil');
 
+    // 👤 Vérif utilisateur
     const utilisateurString = localStorage.getItem('utilisateur');
 
     if (utilisateurString) {
-      const utilisateur = JSON.parse(utilisateurString);
-
       this.isLoggedIn = true;
-
-      if (utilisateur.theme) {
-        this.theme = utilisateur.theme;
-      }
     }
 
-    // 🎨 Appliquer couleurs
-    this.setThemeColors();
+    // 🎨 Appliquer thème depuis localStorage
+    this.themeService.applyTheme(this.themeService.isDarkMode);
+
+    // 🎯 Scrollbar dynamique
     this.updateScrollbarColors();
 
     // ⏳ Loader
@@ -93,53 +73,37 @@ export class Acceuil implements OnInit {
     }, 300);
   }
 
-  // 🎯 Scrollbar dynamique
+  /**
+   * 🎯 Scrollbar dynamique avec ThemeService
+   */
   updateScrollbarColors(): void {
 
     const root = document.documentElement;
 
-    if (this.theme === 'sombre') {
+    if (this.themeService.isDarkMode) {
 
-      root.style.setProperty('--scroll-track', '#1E293B');
-      root.style.setProperty('--scroll-thumb', '#6978b8');
-      root.style.setProperty('--scroll-thumb-hover', '#ec4899');
+      root.style.setProperty('--scroll-track', this.themeService.Backgroundprincipal);
+      root.style.setProperty('--scroll-thumb', this.themeService.primary);
+      root.style.setProperty('--scroll-thumb-hover', this.themeService.primaryHover);
 
     } else {
 
-      root.style.setProperty('--scroll-track', '#FFFFFF');
-      root.style.setProperty('--scroll-thumb', '#F43F5E');
-      root.style.setProperty('--scroll-thumb-hover', '#f59e0b');
-
+      root.style.setProperty('--scroll-track','');
+      root.style.setProperty('--scroll-thumb', this.themeService.primary);
+      root.style.setProperty('--scroll-thumb-hover', this.themeService.primaryHover);
     }
   }
-  /**
-   * 🎨 Gestion des thèmes
-   */
-  private setThemeColors(): void {
 
-    // 🔴 NON CONNECTÉ
-    if (!this.isLoggedIn) {
-
-      this.Background  = '#1E293B';
-      this.Background1 = '#6978b8';
-
-      return;
+  getRoleColor(roleId: string): string {
+    switch (roleId) {
+      case 'admin':
+        return '#F43F5E'; // rouge
+      case 'user':
+        return '#3B82F6'; // bleu
+      case 'coach':
+        return '#10B981'; // vert
+      default:
+        return '#6B7280'; // gris
     }
-
-    // 🌙 CONNECTÉ + SOMBRE
-    if (this.theme === 'sombre') {
-
-      this.Background  = '#1E293B';
-      this.Background1 = '#6978b8';
-      
-
-      return;
-    }
-
-    // ☀️ CONNECTÉ + CLAIR
-
-    this.Background  = '#FFFFFF';
-    this.Background1 = '#DC2626';
-
   }
 }

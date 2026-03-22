@@ -6,6 +6,11 @@ import { RouterLink } from '@angular/router';
 
 import { MatchService, Match } from '../../../../Backend/Services/match.service';
 import { Icon } from '../../priver/icon/icon';
+import { ThemeService } from '../../../../Backend/Services/theme.service';
+import { Icon3 } from '../../public/icon3/icon3';
+
+
+
 
 interface Utilisateur {
   nom?: string;
@@ -16,47 +21,30 @@ interface Utilisateur {
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterLink, Icon],
+  imports: [FormsModule, CommonModule, RouterLink, Icon,Icon3],
   templateUrl: './welcome.html',
   styleUrl: './welcome.css'
 })
 export class Welcome implements OnInit {
 
-  constructor(private matchService: MatchService) {}
+  constructor(
+    private matchService: MatchService,
+    public themeService: ThemeService
+  ) {}
 
   // 🔐 Utilisateur
   utilisateur: Utilisateur | null = null;
   isLoggedIn = false;
 
+  hoverBtn = false;
+  currentTime: string = '';
+
   nom = '';
   prenom = '';
   initiales = '';
-  theme: 'clair' | 'sombre' = 'clair';
 
   // 📱 Responsive
   isMobile = false;
-
-  // 🎨 Couleurs dynamiques
-  Background = '';
-  Background1 = '';
-  Background2 = '';
-  Background3 = '';
-  Background4 = '';
-  Background5 = '';
-  Background6 = '';
-  Background7 = '';
-  Background8 = '';
-  Background9 = '';
-  Background10 = '';
-  Background11 = '';
-  Background12 = '';
-  BorderHeader = '';
-  BorderHeader1 = '';
-  BorderHeader2 = '';
-  BorderHeader3 = '';
-  Text = '';
-  Text1 = '';
-  Text2 = '';
 
   // 🎠 Carrousel
   matchs: Match[] = [];
@@ -69,7 +57,6 @@ export class Welcome implements OnInit {
     this.loadMatchs();
   }
 
-  // 📱 Détection mobile
   detectMobile(): void {
     this.isMobile = window.innerWidth < 768;
     window.addEventListener('resize', () => {
@@ -77,9 +64,6 @@ export class Welcome implements OnInit {
     });
   }
 
-  /**
-   * 🔹 Charger utilisateur depuis localStorage
-   */
   private loadUserInfo(): void {
     const storedUser = localStorage.getItem('utilisateur');
 
@@ -92,150 +76,20 @@ export class Welcome implements OnInit {
         this.prenom = this.utilisateur?.prenom || '';
         this.initiales = this.getInitiales(this.nom, this.prenom);
 
-        this.theme =
-          this.utilisateur?.theme === 'sombre' ||
-          this.utilisateur?.theme === 'clair'
-            ? this.utilisateur.theme
-            : 'clair';
-
       } catch (error) {
         console.error('Erreur parsing utilisateur :', error);
         this.utilisateur = null;
         this.isLoggedIn = false;
-        this.theme = 'clair';
       }
-    } else {
-      this.utilisateur = null;
-      this.isLoggedIn = false;
-      this.theme = 'clair';
     }
-
-    this.setThemeColors();
   }
 
-  // 🔤 Initiales
   getInitiales(nom: string, prenom: string): string {
     return (nom?.[0] || '').toUpperCase() + (prenom?.[0] || '').toUpperCase();
   }
-
-  /**
-   * 🎨 Gestion des thèmes
-   */
-  private setThemeColors(): void {
-
-    // 🔴 1️⃣ NON CONNECTÉ
-    if (!this.isLoggedIn) {
-
-      this.Background  = '#1E293B';
-      this.Text = '#FFFFFF';
-      this.Background1 = '#6978b8';
-      this.BorderHeader = '#334155';
-      this.Text1 = '#6978b8';
-      this.Text2 = '#6978b8';
-      this.Background3 = '#64748B';
-      this.Background4 = '#334155';
-      this.Background5 = '#334155';
-      this.BorderHeader1 = '2px solid #6978b8';
+  
 
 
-      
-
-      return;
-    }
-
-    // 🌙 2️⃣ CONNECTÉ + SOMBRE
-    if (this.theme === 'sombre') {
-
-      //---------- Section 0 ----------//
-      this.Background  = '#1E293B';
-      this.Text = '#FFFFFF';
-
-      //---------- Section 1 ----------//
-      this.Background1 = '#6978b8';
-      this.Background2 = '#6978b8';
-      this.Background3 = '#6978b8';
-      this.Background4 = '#6978b8';
-
-      //---------- Section 2 ----------//
-      this.Background5 = '#6978b8';
-      this.BorderHeader = '2px solid #64748B';
-
-      //---------- Section 3 ----------//
-      this.Text1 = '#6978b8';
-
-      //---------- Section 4 ----------//
-      this.Background6 = '#334155';
-
-      //---------- Section 5 ----------//
-      // Bouton 1
-      this.Background7 = '#6978b8';
-      // Bouton 2
-      this.Background8 = '#334155';
-      this.BorderHeader1 = '2px solid #6978b8';
-
-      //---------- Section 6 ----------//
-      this.Background9 = '#334155';
-      this.BorderHeader2 = '2px solid #6978b8';
-
-      //---------- Section 7 ----------//
-      this.BorderHeader3 = '2px solid #6978b8';
-      this.Background10 = '#6978b8';
-      this.Background11 = '#64748B';
-
-      //---------- Section 8 ----------//
-      this.Background12 = '#6978b8';
-
-      
-
-      return;
-    }
-
-    // ☀️ 3️⃣ CONNECTÉ + CLAIR
-
-    //---------- Section 0 ----------//
-    this.Background  = '#FFFFFF';
-    this.Text = '#000000';
-
-    //---------- Section 1 ----------//
-    this.Background1 = '#DC2626';
-    this.Background2 = '#DC2626';
-    this.Background3 = '#DC2626';
-    this.Background4 = '#DC2626';
-
-    //---------- Section 2 ----------//
-    this.Background5 = '#DC2626';
-    this.BorderHeader = '2px solid #a80303';
-
-    //---------- Section 3 ----------//
-    this.Text1 = '#DC2626';
-
-    //---------- Section 4 ----------//
-    this.Background6 = '#e9e6e6';
-
-    //---------- Section 5 ----------//
-    // Bouton 1
-    this.Background7 = '#DC2626';
-    // Bouton 2
-    this.Background8 = '#e9e6e6';
-    this.BorderHeader1 = '2px solid #DC2626';
-
-    //---------- Section 6 ----------//
-    this.Background9 = '#e9e6e6';
-    this.BorderHeader2 = '2px solid #DC2626';
-
-    //---------- Section 7 ----------//
-    this.BorderHeader3 = '2px solid #DC2626';
-    this.Background10 = '#DC2626';
-    this.Background11 = '#a3464680';
-
-    //---------- Section 8 ----------//
-    this.Background12 = '#DC2626';
-    
-  }
-
-  /**
-   * ⚽ Charger les matchs
-   */
   private loadMatchs(): void {
     this.matchService.getMatchs().subscribe({
       next: (data) => {
@@ -248,7 +102,6 @@ export class Welcome implements OnInit {
     });
   }
 
-  // 🎠 Navigation carrousel
   nextMatch(): void {
     if (!this.totalMatches) return;
     this.currentMatch = (this.currentMatch + 1) % this.totalMatches;
@@ -263,74 +116,4 @@ export class Welcome implements OnInit {
   goToMatch(index: number): void {
     this.currentMatch = index;
   }
-
-  // Méthodes utilitaires pour le téléphone mockup
-
-// Méthodes pour le mockup téléphone
-
-/**
- * Retourne l'index du match suivant
- */
-getNextIndex(): number {
-  if (!this.totalMatches) return 0;
-  return (this.currentMatch + 1) % this.totalMatches;
-}
-
-/**
- * Génère les initiales d'une équipe
- */
-getTeamInitials(teamName: string | undefined): string {
-  if (!teamName) return '?';
-  
-  // Si c'est un acronyme déjà court (ASDAM, PSG, etc.)
-  if (teamName.length <= 4) return teamName.toUpperCase();
-  
-  // Sinon prend les 3 premières lettres
-  return teamName.substring(0, 3).toUpperCase();
-}
-
-/**
- * Retourne une couleur de gradient basée sur le nom de l'équipe
- */
-getTeamColor(teamName: string | undefined): string {
-  if (!teamName) return 'linear-gradient(135deg, #666 0%, #333 100%)';
-  
-  // Couleurs prédéfinies pour certaines équipes
-  const colors: { [key: string]: string } = {
-    'ASDAM': 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)',
-    'Paris Saint-Germain': 'linear-gradient(135deg, #004170 0%, #002540 100%)',
-    'PSG': 'linear-gradient(135deg, #004170 0%, #002540 100%)',
-    'Olympique de Marseille': 'linear-gradient(135deg, #00bfff 0%, #0080ff 100%)',
-    'OM': 'linear-gradient(135deg, #00bfff 0%, #0080ff 100%)',
-  };
-  
-  if (colors[teamName]) return colors[teamName];
-  
-  // Génère une couleur unique basée sur le nom
-  let hash = 0;
-  for (let i = 0; i < teamName.length; i++) {
-    hash = teamName.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  
-  const hue = Math.abs(hash % 360);
-  return `linear-gradient(135deg, hsl(${hue}, 70%, 50%) 0%, hsl(${hue}, 70%, 30%) 100%)`;
-}
-
-/**
- * Retourne une possession simulée (à remplacer par vraies données)
- */
-getPossession(): number {
-  // Si tu as des données réelles, utilise-les ici
-  return 50 + Math.floor(Math.random() * 20); // Entre 50% et 70%
-}
-
-/**
- * Retourne un nombre de tirs simulé (à remplacer par vraies données)
- */
-getTirs(): number {
-  // Si tu as des données réelles, utilise-les ici
-  return Math.floor(Math.random() * 15) + 5; // Entre 5 et 20
-}
-
-
 }

@@ -1,5 +1,4 @@
 const Match = require('../Schema/Match');
-const crypto = require('crypto');
 
 // 🏟️ Liste des stades à domicile
 const stadesDomicile = [
@@ -7,7 +6,27 @@ const stadesDomicile = [
   "stade d'andelnans"
 ];
 
-// Créer un match
+// ==============================
+// 🔑 Génération aléatoire de clé
+// ==============================
+function randomSuffix(length = 5) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+function generateKey() {
+  const numberPart = Math.floor(Math.random() * 100000);
+  const suffix = randomSuffix(5);
+  return `${numberPart}${suffix}`;
+}
+
+// ==============================
+// ➕ Créer un match
+// ==============================
 const createMatch = async (req, res) => {
   try {
     const { 
@@ -22,7 +41,17 @@ const createMatch = async (req, res) => {
       categorie 
     } = req.body;
 
-    const keyUnique = crypto.randomBytes(8).toString('hex');
+    // 🔐 Génération clé UNIQUE
+    let keyUnique;
+    let existe = true;
+
+    while (existe) {
+      keyUnique = generateKey();
+      const matchExistant = await Match.findOne({ key: keyUnique });
+      if (!matchExistant) {
+        existe = false;
+      }
+    }
 
     // ✅ Détermination domicile / extérieur
     let localisationMatch = 'Exterieur';
@@ -61,7 +90,9 @@ const createMatch = async (req, res) => {
   }
 };
 
-// Récupérer tous les matchs
+// ==============================
+// 📥 Récupérer tous les matchs
+// ==============================
 const getAllMatchs = async (req, res) => {
   try {
     const matchs = await Match.find();

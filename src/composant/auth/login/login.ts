@@ -88,11 +88,14 @@ export class Login implements OnInit {
           this.message = 'Connexion réussie 🎉';
 
           const utilisateur = {
+            key: res.user.key,
             nom: res.user.nom,
             prenom: res.user.prenom,
             email: res.user.email,
             role: res.user.role,
-            theme: res.user.theme
+            equipe: res.user.equipe,
+            theme: res.user.theme,
+            status: res.user.status
           };
 
           localStorage.setItem('token', res.token);

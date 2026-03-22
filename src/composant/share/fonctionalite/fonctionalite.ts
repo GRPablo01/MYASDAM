@@ -1,19 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Icon } from '../../priver/icon/icon';
+import { ThemeService } from '../../../../Backend/Services/theme.service';
 
 interface Role {
   id: string;
   label: string;
   features: string[];
   description: string;
+  icon: string;
 }
 
 interface User {
   id?: string;
   nom?: string;
   role?: string;
-  theme?: string;
+  theme?: 'clair' | 'sombre';
 }
 
 @Component({
@@ -21,171 +23,21 @@ interface User {
   standalone: true,
   imports: [CommonModule, Icon],
   templateUrl: './fonctionalite.html',
-  styleUrl: './fonctionalite.css',
+  styleUrls: ['./fonctionalite.css'],
 })
 export class Fonctionalite implements OnInit {
 
-  // ===============================
-  // USER
-  // ===============================
   user: User | null = null;
   userRole: string = '';
-  userTheme: string = 'clair';
-  theme: 'clair' | 'sombre' = 'clair';
+  userTheme: 'clair' | 'sombre' = 'clair';
+  selectedRole: Role | null = null;
+  showLoginModal: boolean = false;
 
-  // ===============================
-  // COULEURS GLOBALES
-  // ===============================
-  Logo = '';
-  Forme = '';
-
-  Background: string = '';
-  Background1: string = '';
-  Background2: string = '';
-  Background3: string = '';
-  Background4: string = '';
-  Background5: string = '';
-  Background6: string = '';
-  Background7: string = '';
-  Background8: string = '';
-  Background9: string = '';
-  Background10: string = '';
-  Background11: string = '';
-  Background12: string = '';
-
-  Text: string = '';
-  Text1: string = '';
-  Text2: string = '';
-  Text3: string = '';
-
-  BorderHeader: string = '';
-  BorderHeader1: string = '';
-  BorderHeader2: string = '';
-  BorderHeader3: string = '';
-
-  backgroundDegrade1: string = '';
-  backgroundDegrade2: string = '';
-
-  // ===============================
-  // INIT
-  // ===============================
-  ngOnInit(): void {
-    this.loadUserFromLocalStorage();
-  }
-
-  get isLoggedIn(): boolean {
-    return !!this.user;
-  }
-
-  private loadUserFromLocalStorage(): void {
-    const userData = localStorage.getItem('utilisateur');
-
-    if (!userData) {
-      console.warn('Aucun utilisateur dans le localStorage');
-      this.setThemeColors();
-      return;
-    }
-
-    try {
-      this.user = JSON.parse(userData);
-      this.userRole = this.user?.role || '';
-      this.userTheme = this.user?.theme || 'clair';
-      this.theme = this.userTheme === 'sombre' ? 'sombre' : 'clair';
-    } catch (error) {
-      console.error('Erreur parsing utilisateur:', error);
-    }
-
-    this.setThemeColors();
-  }
-
-  // ===============================
-  // THEMES
-  // ===============================
-  private setThemeColors(): void {
-
-    // 🔴 NON CONNECTÉ
-    if (!this.isLoggedIn) {
-      this.Background  = '#1E293B';
-      this.Text = '#FFFFFF';
-      this.Background1 = '#6978b8';
-      this.BorderHeader = '#334155';
-      this.Text1 = '#6978b8';
-      this.Text2 = '#6978b8';
-      this.Background3 = '#64748B';
-      this.Background4 = '#334155';
-      this.Background5 = '#334155';
-      this.BorderHeader1 = '2px solid #6978b8';
-      return;
-    }
-
-    // 🌙 SOMBRE
-    if (this.theme === 'sombre') {
-
-      this.Background  = '#1E293B';
-      this.Text = '#FFFFFF';
-
-      this.Background1 = '#6978b8';
-      this.Background2 = '#6978b8';
-      this.Background3 = '#6978b8';
-      this.Background4 = '#6978b8';
-      this.Background5 = '#6978b8';
-
-      this.BorderHeader = '2px solid #64748B';
-      this.Text1 = '#6978b8';
-
-      this.Background6 = '#334155';
-
-      this.Background7 = '#6978b8';
-      this.Background8 = '#334155';
-      this.BorderHeader1 = '2px solid #6978b8';
-
-      this.Background9 = '#334155';
-      this.BorderHeader2 = '2px solid #6978b8';
-
-      this.BorderHeader3 = '2px solid #6978b8';
-      this.Background10 = '#6978b8';
-      this.Background11 = '#64748B';
-
-      this.Background12 = '#6978b8';
-      return;
-    }
-
-    // ☀️ CLAIR
-    this.Background  = '#FFFFFF';
-    this.Text = '#000000';
-
-    this.Background1 = '#DC2626';
-    this.Background2 = '#DC2626';
-    this.Background3 = '#DC2626';
-    this.Background4 = '#DC2626';
-    this.Background5 = '#DC2626';
-
-    this.BorderHeader = '2px solid #a80303';
-    this.Text1 = '#DC2626';
-
-    this.Background6 = '#e9e6e6';
-
-    this.Background7 = '#DC2626';
-    this.Background8 = '#e9e6e6';
-    this.BorderHeader1 = '2px solid #DC2626';
-
-    this.Background9 = '#e9e6e6';
-    this.BorderHeader2 = '2px solid #DC2626';
-
-    this.BorderHeader3 = '2px solid #DC2626';
-    this.Background10 = '#DC2626';
-    this.Background11 = '#a3464680';
-
-    this.Background12 = '#DC2626';
-  }
-
-  // ===============================
-  // ROLES
-  // ===============================
   roles: Role[] = [
     {
       id: 'joueur',
       label: 'Joueur',
+      icon: 'fas fa-user', // Font Awesome pour joueur
       features: [
         'Consulter le calendrier des matchs',
         'Voir les statistiques personnelles',
@@ -197,6 +49,7 @@ export class Fonctionalite implements OnInit {
     {
       id: 'entraineur',
       label: 'Entraineur',
+      icon: 'fas fa-chess-knight', // Font Awesome pour entraîneur
       features: [
         'Gérer les compositions d\'équipe',
         'Analyser les statistiques collectives',
@@ -208,6 +61,7 @@ export class Fonctionalite implements OnInit {
     {
       id: 'inviter',
       label: 'Invité',
+      icon: 'fas fa-eye', // Font Awesome pour invité
       features: [
         'Voir les matchs publics',
         'Consulter les résultats',
@@ -218,6 +72,7 @@ export class Fonctionalite implements OnInit {
     {
       id: 'admin',
       label: 'Administrateur',
+      icon: 'fas fa-shield-alt', // Font Awesome pour admin
       features: [
         'Gérer les utilisateurs',
         'Configurer les paramètres',
@@ -227,7 +82,6 @@ export class Fonctionalite implements OnInit {
       description: 'Contrôle total sur la plateforme et gestion complète des aspects du club.'
     }
   ];
-
   private roleColors: { [key: string]: string } = {
     joueur: '#dc2626',
     entraineur: '#2563eb',
@@ -235,29 +89,62 @@ export class Fonctionalite implements OnInit {
     admin: '#7c3aed'
   };
 
-  private roleIcons: { [key: string]: string } = {
-    joueur: '⚽',
-    entraineur: '📋',
-    inviter: '👁️',
-    admin: '⚡'
+  private roleIconsFA: { [key: string]: string } = {
+    joueur: 'fas fa-futbol',
+    entraineur: 'fas fa-clipboard-list',
+    inviter: 'fas fa-eye',
+    admin: 'fas fa-crown'
   };
 
-  private accessLevels: { [key: string]: number } = {
-    joueur: 60,
-    entraineur: 80,
-    inviter: 30,
-    admin: 100
-  };
+  constructor(public themeService: ThemeService) {}
+
+  ngOnInit(): void {
+    this.loadUserFromLocalStorage();
+  }
+
+  get isLoggedIn(): boolean {
+    return !!this.user;
+  }
+
+  private loadUserFromLocalStorage(): void {
+    const userData = localStorage.getItem('utilisateur');
+    if (!userData) return;
+
+    try {
+      this.user = JSON.parse(userData);
+      this.userRole = this.user?.role || '';
+      this.userTheme = this.user?.theme === 'sombre' ? 'sombre' : 'clair';
+      this.themeService.applyTheme(this.userTheme === 'sombre');
+    } catch (error) {
+      console.error('Erreur parsing utilisateur:', error);
+    }
+  }
 
   getRoleColor(roleId: string): string {
     return this.roleColors[roleId] || '#dc2626';
   }
 
   getRoleIcon(roleId: string): string {
-    return this.roleIcons[roleId] || '●';
+    return this.roleIconsFA[roleId] || 'fas fa-user';
   }
 
-  getAccessLevel(roleId: string): number {
-    return this.accessLevels[roleId] || 50;
+  openRoleModal(role: Role): void {
+    this.selectedRole = role;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeRoleModal(event?: MouseEvent): void {
+    if (!event || event.target === event.currentTarget) {
+      this.selectedRole = null;
+      document.body.style.overflow = 'auto';
+    }
+  }
+
+  openLoginModal(): void {
+    this.showLoginModal = true;
+  }
+
+  requestRoleAccess(role: Role): void {
+    alert(`Demande d'accès envoyée pour le rôle: ${role.label}`);
   }
 }

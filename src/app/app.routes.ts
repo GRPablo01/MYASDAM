@@ -5,6 +5,7 @@ import { Inscription } from '../page/auth/inscription/inscription';
 import { Acceuil } from '../page/public/acceuil/acceuil';
 import { Actualite } from '../page/public/actualite/actualite';
 import { Dashboard } from '../page/public/dashboard/dashboard';
+import { QRCode } from '../page/public/qrcode/qrcode';
 
 
 
@@ -20,6 +21,7 @@ export const routes: Routes = [
     { path: 'accueil', component: Acceuil },
     { path: 'actus', component: Actualite },
     { path: 'dashboard', component: Dashboard },
+    { path: 'qrcode', component: QRCode },
     
 
 ];

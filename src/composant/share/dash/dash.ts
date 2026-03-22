@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Icon } from '../../priver/icon/icon';
 import { Commande } from '../commande/commande';
 import { SectionDate2 } from "../section-date2/section-date2";
+import { Info } from "../info/info";
 
 interface User {
   nom?: string;
@@ -32,13 +33,25 @@ type ViewSection =
 @Component({
   selector: 'app-dash',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule, Icon, Commande, SectionDate2],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    FormsModule,
+    Icon,
+    Commande,
+    SectionDate2,
+    Info
+  ],
   templateUrl: './dash.html',
   styleUrls: ['./dash.css']
 })
 export class Dash implements OnInit {
 
   user: User | null = null;
+
+  // rôle effectif (invite si non connecté)
+  role: UserRole = 'invite';
+
   currentView!: ViewSection;
   theme: 'clair' | 'sombre' = 'clair';
   isLoading = false;
@@ -46,7 +59,7 @@ export class Dash implements OnInit {
   hoveredItem: ViewSection | null = null;
 
   // =========================
-  // COULEURS (TOUTES DÉCLARÉES)
+  // COULEURS
   // =========================
   Background = '';
   Background1 = '';
@@ -69,6 +82,7 @@ export class Dash implements OnInit {
   // NAVIGATION
   // =========================
   readonly navItems: Record<UserRole, { id: ViewSection; label: string; icon: string }[]> = {
+
     joueur: [
       { id: 'planning', label: 'Planning', icon: 'fa-solid fa-calendar-days' },
       { id: 'match', label: 'Match', icon: 'fa-solid fa-futbol' },
@@ -76,6 +90,7 @@ export class Dash implements OnInit {
       { id: 'convocations', label: 'Convocations', icon: 'fa-solid fa-calendar-check' },
       { id: 'profil', label: 'Profil', icon: 'fa-solid fa-user' }
     ],
+
     entraineur: [
       { id: 'Centre de Commande', label: 'Centre de Commande', icon: 'fa-solid fa-sliders' },
       { id: 'planning', label: 'Planning', icon: 'fa-solid fa-calendar-days' },
@@ -84,10 +99,12 @@ export class Dash implements OnInit {
       { id: 'convocations', label: 'Convocations', icon: 'fa-solid fa-calendar-check' },
       { id: 'profil', label: 'Profil', icon: 'fa-solid fa-user' }
     ],
+
     invite: [
       { id: 'planning', label: 'Planning', icon: 'fa-solid fa-calendar-days' },
       { id: 'profil', label: 'Profil', icon: 'fa-solid fa-user' }
     ],
+
     admin: [
       { id: 'Centre de Commande', label: 'Centre de Commande', icon: 'fa-solid fa-sliders' },
       { id: 'planning', label: 'Planning', icon: 'fa-solid fa-calendar-days' },
@@ -98,31 +115,47 @@ export class Dash implements OnInit {
     ]
   };
 
+  // =========================
+  // INIT
+  // =========================
+
   ngOnInit(): void {
+
     const data = localStorage.getItem('utilisateur');
+
     if (data) {
       this.user = JSON.parse(data);
+      this.role = this.user?.role ?? 'invite';
       this.theme = this.user?.theme ?? 'clair';
+    } else {
+      // utilisateur non connecté = invite
+      this.role = 'invite';
     }
 
     this.setThemeColors();
 
-    if (this.user?.role) {
-      this.currentView = this.navItems[this.user.role][0].id;
-    }
+    this.currentView = this.navItems[this.role][0].id;
   }
 
+  // =========================
+  // THEME
+  // =========================
+
   setThemeColors() {
+
     if (this.theme === 'sombre') {
+
       this.Background = '#1e293b';
-      this.Background1 = '#0f172a ';
+      this.Background1 = '#0f172a';
       this.Background2 = '#1e293b';
       this.Background3 = '#334155';
       this.Background4 = '#475569';
       this.Text = '#ffffff';
       this.Text1 = '#6978b8';
       this.BorderHeader = '#334155';
+
     } else {
+
       this.Background = '#ffffff';
       this.Background1 = '#DC2626';
       this.Background2 = '#f8fafc';
@@ -131,8 +164,13 @@ export class Dash implements OnInit {
       this.Text = '#000000';
       this.Text1 = '#DC2626';
       this.BorderHeader = '#e5e7eb';
+
     }
   }
+
+  // =========================
+  // NAVIGATION
+  // =========================
 
   setView(view: ViewSection) {
     this.currentView = view;
@@ -143,6 +181,7 @@ export class Dash implements OnInit {
   }
 
   get currentNavItems() {
-    return this.user?.role ? this.navItems[this.user.role] : [];
+    return this.navItems[this.role];
   }
+
 }
