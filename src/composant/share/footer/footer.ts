@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Icon } from '../../priver/icon/icon';
 import { FormsModule } from '@angular/forms';
+import { ThemeService } from '../../../../Backend/Services/theme.service';
+
 
 interface Social {
   label: string;
@@ -31,6 +33,7 @@ interface Utilisateur {
 })
 export class Footer implements OnInit {
 
+  constructor(public themeService: ThemeService) {}
   // ===============================
   // RESPONSIVE
   // ===============================
@@ -49,26 +52,6 @@ export class Footer implements OnInit {
   theme: 'clair' | 'sombre' = 'clair';
 
   logoHover = false;
-
-  // ===============================
-  // COULEURS
-  // ===============================
-  Background = '';
-  Background4 = '';
-  Background6 = '';
-  BackgroundGlow = '';
-  CardBackground = '';
-  TextMuted = '';
-  SocialBackground = '';
-  GradientPrimary = '';
-  BadgeBackground = '';
-  IconBackgroundPrimary = '';
-  HoverBackground = '';
-  BorderLight = '';
-  BorderHeader = '';
-  Text = '';
-  Text1 = '';
-  Text2 = '';
 
   // ===============================
   // LIENS
@@ -121,7 +104,6 @@ export class Footer implements OnInit {
 
     if (!storedUser) {
       this.isLoggedIn = false;
-      this.setThemeColors();
       return;
     }
 
@@ -137,8 +119,6 @@ export class Footer implements OnInit {
     } catch {
       this.isLoggedIn = false;
     }
-
-    this.setThemeColors();
   }
 
   private filterLinksByRole(): void {
@@ -159,45 +139,7 @@ export class Footer implements OnInit {
     return (nom?.[0] || '').toUpperCase() + (prenom?.[0] || '').toUpperCase();
   }
 
-  private setThemeColors(): void {
-
-    if (!this.isLoggedIn || this.theme === 'sombre') {
-      this.Background = '#1E293B';
-      this.Background4 = '#334155';
-      this.Background6 = '#334155';
-      this.BackgroundGlow = 'rgba(105,120,184,0.5)';
-      this.CardBackground = 'rgba(255,255,255,0.05)';
-      this.TextMuted = 'rgba(255,255,255,0.6)';
-      this.SocialBackground = 'rgba(255,255,255,0.05)';
-      this.GradientPrimary = 'linear-gradient(135deg,#6978b8,#818fd5)';
-      this.BadgeBackground = 'rgba(105,120,184,0.15)';
-      this.IconBackgroundPrimary = 'rgba(105,120,184,0.2)';
-      this.HoverBackground = 'rgba(255,255,255,0.05)';
-      this.BorderLight = 'rgba(255,255,255,0.1)';
-      this.BorderHeader = '2px solid #64748B';
-      this.Text = '#FFFFFF';
-      this.Text1 = '#6978b8';
-      this.Text2 = '#6978b8';
-      return;
-    }
-
-    this.Background = '#FFFFFF';
-    this.Background4 = '#DC2626';
-    this.Background6 = '#f3f3f3';
-    this.BackgroundGlow = 'rgba(220,38,38,0.5)';
-    this.CardBackground = 'rgba(255,255,255,0.7)';
-    this.TextMuted = 'rgba(0,0,0,0.5)';
-    this.SocialBackground = 'rgba(0,0,0,0.03)';
-    this.GradientPrimary = 'linear-gradient(135deg,#F43F5E,#BE123C)';
-    this.BadgeBackground = 'rgba(244,63,94,0.15)';
-    this.IconBackgroundPrimary = 'rgba(244,63,94,0.1)';
-    this.HoverBackground = 'rgba(0,0,0,0.05)';
-    this.BorderLight = 'rgba(0,0,0,0.1)';
-    this.BorderHeader = '2px solid #DC2626';
-    this.Text = '#000000';
-    this.Text1 = '#DC2626';
-    this.Text2 = '#DC2626';
-  }
+  
 
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });

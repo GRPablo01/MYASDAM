@@ -9,6 +9,9 @@ export class ThemeService {
   private darkMode = new BehaviorSubject<boolean>(false);
   isDarkMode$ = this.darkMode.asObservable();
 
+  // Observable public pour que les composants puissent s'abonner
+  themeChange$ = this.darkMode.asObservable();
+
   
   // 🎨 Couleurs globales
   Backgroundprincipal = '';

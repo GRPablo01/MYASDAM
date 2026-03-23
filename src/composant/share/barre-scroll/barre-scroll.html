@@ -1,0 +1,146 @@
+<!-- barre-scroll.html -->
+<div class="barre-scroll-wrapper" [class.dark-mode]="themeService.isDarkMode">
+  
+    <!-- Header avec titre et contrôles -->
+    <div class="scroll-header">
+      <div class="header-content">
+        <h3 class="scroll-title">
+          <span class="title-icon">📋</span>
+          Liste des éléments
+          <span class="item-count">{{ items.length }}</span>
+        </h3>
+        
+        <!-- Contrôles de navigation rapide -->
+        <div class="quick-controls" *ngIf="enableQuickNav">
+          <button 
+            class="nav-btn prev" 
+            (click)="quickNavigate('prev')"
+            [attr.aria-label]="'Élément précédent'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <span class="selected-indicator">{{ selectedItemId }} / {{ items.length }}</span>
+          <button 
+            class="nav-btn next" 
+            (click)="quickNavigate('next')"
+            [attr.aria-label]="'Élément suivant'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+  
+      <!-- Barre de progression -->
+      <div class="progress-container" *ngIf="showProgressBar">
+        <div class="progress-track">
+          <div class="progress-fill" [style]="progressBarStyle"></div>
+        </div>
+        <span class="progress-text">{{ scrollProgress | number:'1.0-0' }}%</span>
+      </div>
+    </div>
+  
+    <!-- Zone de scroll principale -->
+    <div class="scroll-outer-container">
+      <!-- Bouton scroll to top -->
+      <button 
+        class="scroll-btn top" 
+        *ngIf="showScrollButtons && scrollProgress > 10"
+        (click)="scrollToTop()"
+        [class.visible]="scrollProgress > 10">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+      </button>
+  
+      <!-- Conteneur scrollable -->
+      <div 
+        class="scroll-container custom-scrollbar"
+        [style.max-height]="maxHeight"
+        (scroll)="onScroll($event)"
+        [class.scrolling]="isScrolling">
+        
+        <div class="scroll-content">
+          <div 
+            *ngFor="let item of visibleItems; let i = index; trackBy: trackById"
+            class="scroll-item"
+            [class.active]="item.id === selectedItemId"
+            [class.has-subtitle]="item.subtitle"
+            [attr.data-item-id]="item.id"
+            (click)="selectItem(item)"
+            [style.--item-index]="i">
+            
+            <!-- Ligne de connexion visuelle -->
+            <div class="item-connector" *ngIf="i > 0"></div>
+            
+            <!-- Indicateur de position -->
+            <div class="position-indicator">
+              <div class="indicator-dot" [class.active]="item.id === selectedItemId"></div>
+              <div class="indicator-line" *ngIf="i < items.length - 1"></div>
+            </div>
+  
+            <!-- Contenu de l'item -->
+            <div class="item-content">
+              <div class="item-main">
+                <span class="item-icon" *ngIf="item.icon">{{ item.icon }}</span>
+                
+                <div class="item-text">
+                  <h4 class="item-title">{{ item.title }}</h4>
+                  <p class="item-subtitle" *ngIf="item.subtitle">{{ item.subtitle }}</p>
+                </div>
+  
+                <!-- Badge -->
+                <span class="item-badge" *ngIf="item.badge" [class]="'badge-' + (i % 4)">
+                  {{ item.badge }}
+                </span>
+              </div>
+  
+              <!-- Indicateur visuel d'activité -->
+              <div class="active-indicator" *ngIf="item.id === selectedItemId">
+                <div class="pulse-ring"></div>
+              </div>
+            </div>
+  
+            <!-- Effet de hover amélioré -->
+            <div class="hover-effect"></div>
+          </div>
+        </div>
+  
+        <!-- Footer de la liste -->
+        <div class="scroll-footer">
+          <span class="footer-text">Fin de la liste</span>
+          <div class="footer-line"></div>
+        </div>
+      </div>
+  
+      <!-- Bouton scroll to bottom -->
+      <button 
+        class="scroll-btn bottom" 
+        *ngIf="showScrollButtons && scrollProgress < 90"
+        (click)="scrollToBottom()"
+        [class.visible]="scrollProgress < 90">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+    </div>
+  
+    <!-- Footer avec statistiques -->
+    <div class="scroll-stats">
+      <div class="stat-item">
+        <span class="stat-label">Sélectionné</span>
+        <span class="stat-value">{{ selectedItemId }}</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-label">Total</span>
+        <span class="stat-value">{{ items.length }}</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-label">Progression</span>
+        <span class="stat-value">{{ scrollProgress | number:'1.0-0' }}%</span>
+      </div>
+    </div>
+  </div>

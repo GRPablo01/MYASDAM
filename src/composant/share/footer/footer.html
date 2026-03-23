@@ -4,30 +4,19 @@
      FOOTER - FULL WIDTH RESPONSIVE (MOBILE CENTERED)
      ============================================ -->
 <footer 
-  class="w-full relative overflow-hidden"
-  [ngStyle]="{ 'background': Background, 'color': Text }"
+  class="w-full h-318 sm:h-130 -mt-3 relative overflow-hidden"
+  [ngStyle]="{ 'background': themeService.Backgroundcards, 'color': themeService.Textprincipal }"
   role="contentinfo"
   aria-label="Pied de page Myasdam"
 >
 
-  <!-- ================= BACKGROUND ================= -->
-  <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-
-    <div class="absolute top-0 left-1/3 w-[500px] h-[500px] rounded-full blur-3xl opacity-0 animate-float-slow"
-         [ngStyle]="{'background': 'radial-gradient(circle, ' + Text1 + ' 0%, transparent 70%)'}">
+  <!-- BACKGROUND ANIMÉ -->
+  <div class="absolute inset-0 pointer-events-none overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.08]" [ngStyle]="{
+           'background-image': 'linear-gradient(' + themeService.Textsecondaire + ' 1px, transparent 1px), linear-gradient(90deg, ' + themeService.Textsecondaire + ' 1px, transparent 1px)',
+           'background-size': '50px 50px'
+         }">
     </div>
-
-    <div class="absolute bottom-0 right-1/3 w-[400px] h-[400px] rounded-full blur-3xl opacity-0 animate-float-slow-reverse"
-         [ngStyle]="{'background': 'radial-gradient(circle, ' + Text1 + ' 0%, transparent 70%)'}">
-    </div>
-
-    <div class="absolute inset-0 bg-[size:60px_60px] opacity-40"
-      [ngStyle]="{
-        'background-image':
-        'linear-gradient(' + Background4 + '2D 1px, transparent 1px), linear-gradient(90deg,' + Background4 + '0D 1px, transparent 1px)'
-      }">
-    </div>
-
   </div>
 
   <!-- ================= CONTENT ================= -->
@@ -46,23 +35,24 @@
 
           <div class="w-16 h-16 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-500 relative overflow-hidden"
                [ngStyle]="{
-                 'background': GradientPrimary,
+                 'background': themeService.primary,
                  'transform': logoHover ? 'rotate(6deg) scale(1.05)' : 'none'
                }">
 
             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
 
-            <img src="assets/LOGO.png" 
+            <img src="{{ themeService.ThemeImage }}" 
                  class="w-10 h-10 object-contain relative z-10"
                  alt="Logo MYASDAM" />
           </div>
 
           <div>
             <h2 class="text-2xl sm:text-3xl font-black tracking-tight"
-                [ngStyle]="{ 'color': Text1 }">
+                [ngStyle]="{ 'color': themeService.primary }">
               MYASDAM
             </h2>
-            <p class="text-xs uppercase tracking-widest opacity-60">
+            <p class="text-xs uppercase tracking-widest opacity-60"
+               [ngStyle]="{ 'color': themeService.Textsecondaire }">
               Plateforme officielle
             </p>
           </div>
@@ -70,7 +60,8 @@
         </div>
 
         <!-- Description -->
-        <p class="text-sm sm:text-base leading-relaxed opacity-80 max-w-md">
+        <p class="text-sm sm:text-base leading-relaxed opacity-80 max-w-md"
+           [ngStyle]="{ 'color': themeService.Textsecondaire }">
           Rejoignez notre communauté pour suivre vos activités,
           consulter vos convocations et rester informé des nouveautés.
         </p>
@@ -82,10 +73,10 @@
              target="_blank"
              rel="noopener noreferrer"
              class="w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1"
-             [ngStyle]="{ 'background': SocialBackground }">
+             [ngStyle]="{ 'background': themeService.secondary }">
 
             <i [class]="social.icon"
-               [ngStyle]="{ 'color': Text1 }"
+               [ngStyle]="{ 'color': themeService.primary }"
                class="text-lg"></i>
           </a>
         </div>
@@ -96,17 +87,18 @@
       <div class="lg:col-span-3 flex flex-col items-center md:items-start">
 
         <h4 class="font-bold mb-6 text-lg"
-            [ngStyle]="{ 'color': Text2 }">
+            [ngStyle]="{ 'color': themeService.Textprincipal }">
           Liens utiles
         </h4>
 
         <ul class="space-y-3">
           <li *ngFor="let link of filteredLinks">
             <a [href]="link.url"
-               class="group flex items-center justify-center md:justify-start gap-3 transition-all duration-300 hover:translate-x-2">
+               class="group flex items-center justify-center md:justify-start gap-3 transition-all duration-300 hover:translate-x-2"
+               [ngStyle]="{ 'color': themeService.Textsecondaire }">
 
               <div class="w-2 h-2 rounded-full"
-                   [ngStyle]="{ 'background': Text2 }"></div>
+                   [ngStyle]="{ 'background': themeService.primary }"></div>
 
               <span class="relative">
                 {{ link.label }}
@@ -123,7 +115,7 @@
       <div class="lg:col-span-4 space-y-4 flex flex-col items-center md:items-start">
 
         <h4 class="font-bold text-lg"
-            [ngStyle]="{ 'color': Text2 }">
+            [ngStyle]="{ 'color': themeService.Textprincipal }">
           Contact
         </h4>
 
@@ -131,12 +123,12 @@
         <a href="mailto:contact@monsite.com"
            class="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:scale-[1.02] w-full max-w-md"
            [ngStyle]="{
-             'background': CardBackground,
-             'border': '1px solid ' + BorderLight
+             'background': themeService.Backgroundcards,
+             'border': themeService.Bordernormal
            }">
 
           <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
-               [ngStyle]="{ 'background': GradientPrimary }">
+               [ngStyle]="{ 'background': themeService.primary }">
             <i class="fa-solid fa-envelope text-white text-lg"></i>
           </div>
 
@@ -151,12 +143,12 @@
         <a href="tel:+33000000000"
            class="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:scale-[1.02] w-full max-w-md"
            [ngStyle]="{
-             'background': CardBackground,
-             'border': '1px solid ' + BorderLight
+             'background': themeService.Backgroundcards,
+             'border': themeService.Bordernormal
            }">
 
           <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
-               [ngStyle]="{ 'background': GradientPrimary }">
+               [ngStyle]="{ 'background': themeService.primary }">
             <i class="fa-solid fa-phone text-white text-lg"></i>
           </div>
 
@@ -167,7 +159,8 @@
 
         </a>
 
-        <div class="text-sm opacity-70 pt-2 text-center md:text-left">
+        <div class="text-sm opacity-70 pt-2 text-center md:text-left"
+             [ngStyle]="{ 'color': themeService.Textsecondaire }">
           Lun - Ven : <span class="font-semibold">9h00 - 18h00</span>
         </div>
 
@@ -177,11 +170,11 @@
 
     <!-- ================= BOTTOM BAR ================= -->
     <div class="border-t mt-16 pt-8 flex flex-col md:flex-row justify-center md:justify-between items-center gap-6 text-center md:text-left"
-         [ngStyle]="{ 'border-color': BorderLight }">
+         [ngStyle]="{ 'border-color': themeService.Bordernormal }">
 
       <p class="text-sm opacity-70">
         © 2026
-        <span class="font-bold" [ngStyle]="{ 'color': Text1 }">
+        <span class="font-bold" [ngStyle]="{ 'color': themeService.primary }">
           MYASDAM
         </span>
         — Tous droits réservés
@@ -190,7 +183,8 @@
       <div class="flex flex-wrap justify-center gap-6 text-sm">
         <a *ngFor="let legal of legalLinks"
            [href]="legal.url"
-           class="relative group">
+           class="relative group"
+           [ngStyle]="{ 'color': themeService.Textsecondaire }">
 
           {{ legal.label }}
 

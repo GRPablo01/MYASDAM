@@ -12,9 +12,7 @@ import { Welcome } from '../../../composant/share/welcome/welcome';
 import { Barre } from '../../../composant/share/barre/barre';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
 import { Mobile } from "../../../composant/share/mobile/mobile";
-
-
-
+import { BarreScroll } from '../../../composant/share/barre-scroll/barre-scroll';
 
 @Component({
   selector: 'app-acceuil',
@@ -30,10 +28,11 @@ import { Mobile } from "../../../composant/share/mobile/mobile";
     Cookie,
     Welcome,
     Barre,
-    Mobile
-],
+    Mobile,
+    BarreScroll
+  ],
   templateUrl: './acceuil.html',
-  styleUrl: './acceuil.css',
+  styleUrls: ['./acceuil.css'],
 })
 export class Acceuil implements OnInit {
 
@@ -50,13 +49,11 @@ export class Acceuil implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     // 🧠 Titre
     this.titleService.setTitle('MY ASDAM | Accueil');
 
     // 👤 Vérif utilisateur
     const utilisateurString = localStorage.getItem('utilisateur');
-
     if (utilisateurString) {
       this.isLoggedIn = true;
     }
@@ -64,8 +61,8 @@ export class Acceuil implements OnInit {
     // 🎨 Appliquer thème depuis localStorage
     this.themeService.applyTheme(this.themeService.isDarkMode);
 
-    // 🎯 Scrollbar dynamique
-    this.updateScrollbarColors();
+    // 🎯 Scrollbar dynamique inversée
+    this.initScrollbar();
 
     // ⏳ Loader
     setTimeout(() => {
@@ -74,26 +71,41 @@ export class Acceuil implements OnInit {
   }
 
   /**
-   * 🎯 Scrollbar dynamique avec ThemeService
+   * 🎯 Initialisation scrollbar dynamique avec ThemeService
    */
-  updateScrollbarColors(): void {
+  private initScrollbar(): void {
+    // Mettre à jour au chargement
+    this.updateScrollbarColors(this.themeService.isDarkMode);
 
+    // S'abonner aux changements de thème
+    this.themeService.themeChange$.subscribe(isDark => {
+      this.updateScrollbarColors(isDark);
+    });
+  }
+
+  /**
+   * 🎨 Met à jour les couleurs de la scrollbar (inversées)
+   */
+  private updateScrollbarColors(isDark: boolean): void {
     const root = document.documentElement;
 
-    if (this.themeService.isDarkMode) {
+    if (isDark) {
 
-      root.style.setProperty('--scroll-track', this.themeService.Backgroundprincipal);
-      root.style.setProperty('--scroll-thumb', this.themeService.primary);
-      root.style.setProperty('--scroll-thumb-hover', this.themeService.primaryHover);
-
+      // Mode LIGHT → appliquer les couleurs du DARK
+      root.style.setProperty('--scroll-track', '#121212');       // Dark track
+      root.style.setProperty('--scroll-thumb', '#C1121F');       // Dark thumb
+      root.style.setProperty('--scroll-thumb-hover', '#FF4D4D'); // Dark hover
     } else {
-
-      root.style.setProperty('--scroll-track','');
-      root.style.setProperty('--scroll-thumb', this.themeService.primary);
-      root.style.setProperty('--scroll-thumb-hover', this.themeService.primaryHover);
+      // Mode DARK → appliquer les couleurs du LIGHT
+      root.style.setProperty('--scroll-track', '#F4F6F8');       // Light track
+      root.style.setProperty('--scroll-thumb', '#C1121F');       // Light thumb
+      root.style.setProperty('--scroll-thumb-hover', '#E5383B'); // Light hover
     }
   }
 
+  /**
+   * 🔹 Retourne la couleur associée à un rôle
+   */
   getRoleColor(roleId: string): string {
     switch (roleId) {
       case 'admin':

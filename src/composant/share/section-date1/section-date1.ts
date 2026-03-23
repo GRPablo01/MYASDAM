@@ -16,7 +16,8 @@ interface Evenement {
   heure: string;
   duree: string;
   type: 'match' | 'reunion' | 'entrainement' | 'autre';
-  jour: 'aujourdhui' | 'demain';
+  jour?: 'aujourdhui' | 'demain';
+  date?: string;
   live?: boolean;
 }
 
@@ -37,8 +38,6 @@ export class SectionDate1 implements OnInit {
   prenom: string = '';
   initiales: string = '';
   theme: 'clair' | 'sombre' = 'clair';
-  Logo = '';
-  Forme = '';
 
   currentDate!: Date;
   tomorrowDate!: Date;
@@ -47,22 +46,39 @@ export class SectionDate1 implements OnInit {
     return !!this.nom;
   }
 
-  
-
   // ===============================
-  // DONNÉES
+  // DONNÉES - SÉPARÉES PROPREMENT
   // ===============================
   evenements: Evenement[] = [];
   matchs: Match[] = [];
 
-  aujourdHuiEvents: any[] = [];
-  demainEvents: any[] = [];
+  // Événements réguliers séparés par jour
+  aujourdHuiEvents: Evenement[] = [];
+  demainEvents: Evenement[] = [];
+
+  // Matchs séparés par jour
+  aujourdHuiMatchs: Match[] = [];
+  demainMatchs: Match[] = [];
+
+  // Totaux
+  get totalEvents(): number {
+    return this.aujourdHuiEvents.length + this.demainEvents.length + 
+           this.aujourdHuiMatchs.length + this.demainMatchs.length;
+  }
+
+  get totalAujourdHui(): number {
+    return this.aujourdHuiEvents.length + this.aujourdHuiMatchs.length;
+  }
+
+  get totalDemain(): number {
+    return this.demainEvents.length + this.demainMatchs.length;
+  }
 
   constructor(
     private eventService: EventService,
     private matchService: MatchService,
     public themeService: ThemeService
-  ) { }
+  ) {}
 
   // ===============================
   // INIT
@@ -70,11 +86,38 @@ export class SectionDate1 implements OnInit {
   ngOnInit(): void {
     this.detectMobile();
     this.loadUserInfo();
+
+    this.currentDate = this.getStartOfDay(new Date());
+    this.tomorrowDate = new Date(this.currentDate);
+    this.tomorrowDate.setDate(this.tomorrowDate.getDate() + 1);
+
+    console.log('📅 Aujourd\'hui :', this.currentDate);
+    console.log('📅 Demain :', this.tomorrowDate);
+
     this.loadEvenements();
     this.loadMatchs();
   }
 
-  // 📱 Détection mobile
+  // ===============================
+  // DATE UTILS
+  // ===============================
+  private getStartOfDay(date: Date): Date {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+
+  private isToday(date: Date): boolean {
+    return this.getStartOfDay(date).getTime() === this.currentDate.getTime();
+  }
+
+  private isTomorrow(date: Date): boolean {
+    return this.getStartOfDay(date).getTime() === this.tomorrowDate.getTime();
+  }
+
+  // ===============================
+  // MOBILE
+  // ===============================
   detectMobile(): void {
     this.isMobile = window.innerWidth < 768;
     window.addEventListener('resize', () => {
@@ -87,31 +130,20 @@ export class SectionDate1 implements OnInit {
   // ===============================
   private loadUserInfo(): void {
     const storedUser = localStorage.getItem('utilisateur');
-
     if (storedUser) {
       try {
         const user: Utilisateur = JSON.parse(storedUser);
         this.nom = user.nom || '';
         this.prenom = user.prenom || '';
         this.initiales = this.getInitiales(this.nom, this.prenom);
-        this.theme =
-          user.theme === 'sombre' || user.theme === 'clair'
-            ? user.theme
-            : 'clair';
+        this.theme = user.theme === 'sombre' ? 'sombre' : 'clair';
+        console.log('👤 Utilisateur chargé :', user);
       } catch (error) {
         console.error('Erreur parsing utilisateur :', error);
-        this.theme = 'clair';
       }
     }
-
-    
   }
 
-  
-
-  // ===============================
-  // OUTILS
-  // ===============================
   getInitiales(nom: string, prenom: string): string {
     return (nom?.[0] || '').toUpperCase() + (prenom?.[0] || '').toUpperCase();
   }
@@ -122,20 +154,98 @@ export class SectionDate1 implements OnInit {
   private loadEvenements(): void {
     this.eventService.getEvents().subscribe({
       next: (data: Evenement[]) => {
+        console.log('📥 EVENTS API RAW :', data);
         this.evenements = data;
-        
+        this.filterData();
       },
-      error: (err) => console.error('Erreur chargement événements :', err),
+      error: (err) => console.error('❌ Erreur événements :', err),
     });
   }
 
   private loadMatchs(): void {
     this.matchService.getMatchs().subscribe({
       next: (data: Match[]) => {
+        console.log('📥 MATCHS API RAW :', data);
         this.matchs = data;
-        
+        this.filterData();
       },
-      error: (err) => console.error('Erreur chargement matchs :', err),
+      error: (err) => console.error('❌ Erreur matchs :', err),
     });
+  }
+
+  // ===============================
+  // 🔥 FILTRAGE STRICT AUJOURD'HUI / DEMAIN
+  // ===============================
+  private filterData(): void {
+    console.log('==============================');
+    console.log('🚀 FILTRAGE EN COURS');
+    console.log('==============================');
+
+    // Reset des tableaux
+    this.aujourdHuiEvents = [];
+    this.demainEvents = [];
+    this.aujourdHuiMatchs = [];
+    this.demainMatchs = [];
+
+    // ===== EVENTS =====
+    this.evenements.forEach(event => {
+      let eventDate: Date | null = null;
+
+      if (event.date) {
+        eventDate = new Date(event.date);
+      } else if (event.jour === 'aujourdhui') {
+        eventDate = this.currentDate;
+      } else if (event.jour === 'demain') {
+        eventDate = this.tomorrowDate;
+      }
+
+      if (!eventDate) return;
+
+      if (this.isToday(eventDate)) {
+        this.aujourdHuiEvents.push(event);
+      } else if (this.isTomorrow(eventDate)) {
+        this.demainEvents.push(event);
+      }
+    });
+
+    // ===== MATCHS =====
+    this.matchs.forEach(match => {
+      if (!match.date) return;
+
+      const matchDate = new Date(match.date);
+
+      if (this.isToday(matchDate)) {
+        this.aujourdHuiMatchs.push(match);
+      } else if (this.isTomorrow(matchDate)) {
+        this.demainMatchs.push(match);
+      }
+    });
+
+    console.log('📊 RESULTAT FINAL :');
+    console.log('➡️ Events Aujourd\'hui :', this.aujourdHuiEvents.length);
+    console.log('➡️ Matchs Aujourd\'hui :', this.aujourdHuiMatchs.length);
+    console.log('➡️ Events Demain :', this.demainEvents.length);
+    console.log('➡️ Matchs Demain :', this.demainMatchs.length);
+    console.log('🔥 TOTAL :', this.totalEvents);
+
+    this.sortDataByTime();
+  }
+
+  // ===============================
+  // TRI PAR HEURE
+  // ===============================
+  private sortDataByTime(): void {
+    const getTimeValue = (heure: string): number => {
+      const [h, m] = heure.split(':').map(n => parseInt(n, 10) || 0);
+      return h * 60 + m;
+    };
+  
+    // Tri des événements
+    this.aujourdHuiEvents.sort((a, b) => getTimeValue(a.heure ?? '00:00') - getTimeValue(b.heure ?? '00:00'));
+    this.demainEvents.sort((a, b) => getTimeValue(a.heure ?? '00:00') - getTimeValue(b.heure ?? '00:00'));
+  
+    // Tri des matchs
+    this.aujourdHuiMatchs.sort((a, b) => getTimeValue(a.heure ?? '00:00') - getTimeValue(b.heure ?? '00:00'));
+    this.demainMatchs.sort((a, b) => getTimeValue(a.heure ?? '00:00') - getTimeValue(b.heure ?? '00:00'));
   }
 }
