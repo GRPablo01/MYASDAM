@@ -91,8 +91,8 @@ export class SectionDate1 implements OnInit {
     this.tomorrowDate = new Date(this.currentDate);
     this.tomorrowDate.setDate(this.tomorrowDate.getDate() + 1);
 
-    console.log('📅 Aujourd\'hui :', this.currentDate);
-    console.log('📅 Demain :', this.tomorrowDate);
+    // console.log('📅 Aujourd\'hui :', this.currentDate);
+    // console.log('📅 Demain :', this.tomorrowDate);
 
     this.loadEvenements();
     this.loadMatchs();
@@ -137,7 +137,7 @@ export class SectionDate1 implements OnInit {
         this.prenom = user.prenom || '';
         this.initiales = this.getInitiales(this.nom, this.prenom);
         this.theme = user.theme === 'sombre' ? 'sombre' : 'clair';
-        console.log('👤 Utilisateur chargé :', user);
+        // console.log('👤 Utilisateur chargé :', user);
       } catch (error) {
         console.error('Erreur parsing utilisateur :', error);
       }
@@ -154,7 +154,7 @@ export class SectionDate1 implements OnInit {
   private loadEvenements(): void {
     this.eventService.getEvents().subscribe({
       next: (data: Evenement[]) => {
-        console.log('📥 EVENTS API RAW :', data);
+        // console.log('📥 EVENTS API RAW :', data);
         this.evenements = data;
         this.filterData();
       },
@@ -165,7 +165,7 @@ export class SectionDate1 implements OnInit {
   private loadMatchs(): void {
     this.matchService.getMatchs().subscribe({
       next: (data: Match[]) => {
-        console.log('📥 MATCHS API RAW :', data);
+        // console.log('📥 MATCHS API RAW :', data);
         this.matchs = data;
         this.filterData();
       },
@@ -177,9 +177,9 @@ export class SectionDate1 implements OnInit {
   // 🔥 FILTRAGE STRICT AUJOURD'HUI / DEMAIN
   // ===============================
   private filterData(): void {
-    console.log('==============================');
-    console.log('🚀 FILTRAGE EN COURS');
-    console.log('==============================');
+    // console.log('==============================');
+    // console.log('🚀 FILTRAGE EN COURS');
+    // console.log('==============================');
 
     // Reset des tableaux
     this.aujourdHuiEvents = [];
@@ -221,12 +221,12 @@ export class SectionDate1 implements OnInit {
       }
     });
 
-    console.log('📊 RESULTAT FINAL :');
-    console.log('➡️ Events Aujourd\'hui :', this.aujourdHuiEvents.length);
-    console.log('➡️ Matchs Aujourd\'hui :', this.aujourdHuiMatchs.length);
-    console.log('➡️ Events Demain :', this.demainEvents.length);
-    console.log('➡️ Matchs Demain :', this.demainMatchs.length);
-    console.log('🔥 TOTAL :', this.totalEvents);
+    // console.log('📊 RESULTAT FINAL :');
+    // console.log('➡️ Events Aujourd\'hui :', this.aujourdHuiEvents.length);
+    // console.log('➡️ Matchs Aujourd\'hui :', this.aujourdHuiMatchs.length);
+    // console.log('➡️ Events Demain :', this.demainEvents.length);
+    // console.log('➡️ Matchs Demain :', this.demainMatchs.length);
+    // console.log('🔥 TOTAL :', this.totalEvents);
 
     this.sortDataByTime();
   }

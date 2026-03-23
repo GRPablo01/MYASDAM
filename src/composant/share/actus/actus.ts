@@ -1,17 +1,9 @@
-import {
-  Component,
-  OnInit,
-  HostListener,
-  ElementRef,
-  ViewChildren,
-  QueryList,
-  ViewChild,
-  Renderer2
-} from '@angular/core';
-
-import { ActusService, Actu, Commentaire } from '.././../../../Backend/Services/actus.service';
-import { CommonModule, DecimalPipe } from '@angular/common';
+// actus.component.ts - Complet avec console.log
+import { Component, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActusService, Actu, Commentaire } from '../../../../Backend/Services/actus.service';
+import { ThemeService } from '../../../../Backend/Services/theme.service';
 
 type Role = 'entraineur' | 'admin' | 'joueur' | 'invite';
 
@@ -20,148 +12,122 @@ type Role = 'entraineur' | 'admin' | 'joueur' | 'invite';
   templateUrl: './actus.html',
   styleUrls: ['./actus.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, DecimalPipe],
+  imports: [CommonModule, FormsModule],
 })
 export class Actus implements OnInit {
 
-  // =============================
-  // VARIABLES
-  // =============================
-
   actus: Actu[] = [];
-
   newComment: string[] = [];
   commentSectionOpen: boolean[] = [];
-  showHeartAnimation: boolean[] = [];
   menuOpen: boolean[] = [];
-
   userRole: Role = 'joueur';
   userNom = '';
   userPrenom = '';
   currentUserId = '';
-
+  loading = false;
+  isCreateModalOpen = false;
   selectedActu: Actu | null = null;
-  selectedActuForComments: Actu | null = null;
 
-  selectedIndex = -1;
-  popupMenuOpen = false;
-
-  showAllComments = false;
-
-  modalNewComment = '';
-
-  showToast = false;
-  toastMessage = '';
-  toastType: 'success' | 'error' = 'success';
-
-  @ViewChildren('menuContainer') menuContainers!: QueryList<ElementRef>;
   @ViewChildren('commentInput') commentInputs!: QueryList<ElementRef>;
-  @ViewChild('popupCommentInput') popupCommentInput!: ElementRef;
 
-  constructor(
-    private actusService: ActusService,
-    private renderer: Renderer2
-  ) {}
-
-  // =============================
-  // INIT
-  // =============================
+  constructor(private actusService: ActusService, public themeService: ThemeService) {}
 
   ngOnInit(): void {
-    this.loadUserFromLocalStorage();
+    console.log('ngOnInit - Chargement de l’utilisateur et des actus');
+    this.loadUser();
     this.loadActus();
-
-    this.renderer.listen('document', 'click', () => this.closeAllMenus());
   }
 
   // =============================
-  // USER
+  // UTILISATEUR
   // =============================
-
-  loadUserFromLocalStorage(): void {
+  loadUser(): void {
     const userData = localStorage.getItem('utilisateur');
+    console.log('loadUser - localStorage utilisateur:', userData);
+
     if (!userData) return;
 
-    try {
-      const parsed = JSON.parse(userData);
-      this.userRole = parsed.role || 'joueur';
-      this.userNom = parsed.nom || '';
-      this.userPrenom = parsed.prenom || '';
-      this.currentUserId = parsed.id || `${this.userPrenom} ${this.userNom}`;
-    } catch (e) {
-      console.error('Erreur lecture localStorage user', e);
-    }
+    const parsed = JSON.parse(userData);
+    console.log('loadUser - parsed utilisateur:', parsed);
+
+    this.userRole = parsed.role || 'joueur';
+    this.userNom = parsed.nom || '';
+    this.userPrenom = parsed.prenom || '';
+    this.currentUserId = `${this.userPrenom} ${this.userNom}`;
+    console.log('loadUser - currentUserId:', this.currentUserId);
   }
 
   // =============================
-  // ACTUS
+  // CHARGEMENT DES ACTUS
   // =============================
-
   loadActus(): void {
+    this.loading = true;
+    console.log('loadActus - démarrage récupération actus');
+  
     this.actusService.getAllActus().subscribe({
       next: data => {
-
+        console.log('loadActus - données brutes reçues:', data);
+  
         this.actus = data.map(actu => {
-          const [prenom, ...rest] = (actu.auteur || '').split(' ');
-
-          return {
+          const commentaires = (actu.commentaires || []).map(c => ({
+            ...c,
+            userId: c.userId || c.nomComplet
+          }));
+  
+          const transformedActu: Actu = {
             ...actu,
-            prenom,
-            nom: rest.join(' '),
-            commentaires: (actu.commentaires || []).map(c => ({
-              ...c,
-              userId: c.userId || c.nomComplet
-            }))
+            prenom: actu.auteur?.split(' ')[0] || '',
+            nom: actu.auteur?.split(' ').slice(1).join(' ') || '',
+            commentaires,
+            likes: typeof actu.likes === 'number' ? actu.likes : 0,
+            favoris: typeof actu.favoris === 'number' ? actu.favoris : 0,
+            isLiked: false,
+            isFavori: false,
+            imageUrl: actu.image ? `http://localhost:3000/uploads/${actu.image}` : ''
           };
+  
+          console.log('loadActus - actu transformée:', transformedActu);
+          return transformedActu;
         });
-
+  
         const length = this.actus.length;
         this.newComment = new Array(length).fill('');
         this.commentSectionOpen = new Array(length).fill(false);
-        this.showHeartAnimation = new Array(length).fill(false);
         this.menuOpen = new Array(length).fill(false);
+        this.loading = false;
+  
+        console.log('loadActus - actus finalisées:', this.actus);
       },
-      error: err => console.error('Erreur récupération actus', err)
-    });
-  }
-
-  // =============================
-  // LIKE
-  // =============================
-
-  likeActu(actu: Actu, index?: number): void {
-    if (!actu.key) return;
-
-    const userId = `${this.userPrenom} ${this.userNom}`;
-
-    this.actusService.toggleLike(actu.key, userId).subscribe({
-      next: res => {
-        const i = this.actus.findIndex(a => a.key === actu.key);
-        if (i === -1) return;
-
-        this.actus[i].likes = res.likes;
-        this.actus[i].isLiked = res.isLiked;
-
-        if (res.isLiked && index !== undefined) {
-          this.showHeartAnimation[index] = true;
-          setTimeout(() => this.showHeartAnimation[index] = false, 1000);
-        }
+      error: err => {
+        console.error('loadActus - erreur récupération actus', err);
+        this.loading = false;
       }
     });
   }
 
-  favoriActu(actu: Actu): void {
+  // =============================
+  // LIKE / FAVORIS
+  // =============================
+  likeActu(actu: Actu, index: number) {
+    console.log('likeActu - avant like:', actu);
     if (!actu.key) return;
+    this.actusService.toggleLike(actu.key, `${this.userPrenom} ${this.userNom}`).subscribe(res => {
+      console.log('likeActu - réponse serveur:', res);
+      this.actus[index].likes = res.likes;
+      this.actus[index].isLiked = res.isLiked;
+      console.log('likeActu - après mise à jour:', this.actus[index]);
+    });
+  }
 
-    const userId = `${this.userPrenom} ${this.userNom}`;
-
-    this.actusService.toggleFavori(actu.key, userId).subscribe({
-      next: res => {
-        const i = this.actus.findIndex(a => a.key === actu.key);
-        if (i === -1) return;
-
-        this.actus[i].favoris = res.favoris;
-        this.actus[i].isFavori = res.isFavori;
+  favoriActu(actu: Actu) {
+    console.log('favoriActu - avant favori:', actu);
+    if (!actu.key) return;
+    this.actusService.toggleFavori(actu.key, `${this.userPrenom} ${this.userNom}`).subscribe(res => {
+      const index = this.actus.findIndex(a => a.key === actu.key);
+      if (index > -1) {
+        this.actus[index].favoris = res.favoris;
+        this.actus[index].isFavori = res.isFavori;
+        console.log('favoriActu - après mise à jour:', this.actus[index]);
       }
     });
   }
@@ -169,148 +135,144 @@ export class Actus implements OnInit {
   // =============================
   // COMMENTAIRES
   // =============================
-
-  toggleCommentSection(actu: Actu): void {
-    const index = this.actus.findIndex(a => a.key === actu.key);
-    if (index === -1) return;
-
+  toggleCommentSection(actu: Actu, index: number) {
     this.commentSectionOpen[index] = !this.commentSectionOpen[index];
-
+    console.log('toggleCommentSection - index:', index, 'open:', this.commentSectionOpen[index]);
     if (this.commentSectionOpen[index]) {
       setTimeout(() => {
-        this.commentInputs?.toArray()[index]?.nativeElement.focus();
+        const input = this.commentInputs?.toArray()[index];
+        input?.nativeElement?.focus();
       }, 300);
     }
   }
 
-  commenterActu(actu: Actu, index: number): void {
+  commenterActu(actu: Actu, index: number) {
     const contenu = this.newComment[index]?.trim();
-    if (!actu.key || !contenu) return;
+    console.log('commenterActu - contenu:', contenu);
+    if (!contenu || !actu.key) return;
 
-    const nomComplet = `${this.userPrenom} ${this.userNom}`;
-
-    this.actusService.addCommentaire(actu.key, nomComplet, contenu).subscribe({
-      next: res => {
-
-        this.actus[index].commentaires =
-          (res.data.commentaires as Commentaire[]).map(c => ({
-            ...c,
-            userId: c.userId || c.nomComplet
-          }));
-
-        this.newComment[index] = '';
-      }
+    this.actusService.addCommentaire(actu.key, `${this.userPrenom} ${this.userNom}`, contenu).subscribe(res => {
+      console.log('commenterActu - réponse serveur:', res);
+      this.actus[index].commentaires = (res.data.commentaires as Commentaire[]).map(c => ({
+        ...c,
+        userId: c.userId || c.nomComplet
+      }));
+      this.newComment[index] = '';
+      console.log('commenterActu - commentaires mis à jour:', this.actus[index].commentaires);
     });
-  }
-
-  canEditOrDelete(com: Commentaire): boolean {
-    return (
-      this.userRole === 'entraineur' ||
-      this.userRole === 'admin' ||
-      com.userId === this.currentUserId
-    );
-  }
-
-  editComment(com: Commentaire): void {
-    console.log('Modifier commentaire', com);
-  }
-
-  deleteComment(com: Commentaire): void {
-    console.log('Supprimer commentaire', com);
   }
 
   // =============================
   // MENUS
   // =============================
-
-  toggleMenu(index: number): void {
+  toggleMenu(index: number) {
     this.menuOpen = this.menuOpen.map((o, i) => i === index ? !o : false);
+    console.log('toggleMenu - menuOpen:', this.menuOpen);
   }
 
-  closeAllMenus(): void {
+  closeAllMenus() {
     this.menuOpen = this.menuOpen.map(() => false);
+    console.log('closeAllMenus - menuOpen:', this.menuOpen);
+  }
+
+  isAnyMenuOpen() {
+    const anyOpen = this.menuOpen.some(o => o);
+    console.log('isAnyMenuOpen:', anyOpen);
+    return anyOpen;
+  }
+
+  trackByActuId(index: number, item: Actu) {
+    return item.key || item._id;
   }
 
   // =============================
-  // POPUP
+  // AVATAR COLORS
   // =============================
-
-  openPopup(actu: Actu, index: number): void {
-    this.selectedActu = actu;
-    this.selectedIndex = index;
-    this.popupMenuOpen = false;
-    document.body.classList.add('popup-open');
-
-    setTimeout(() => this.popupCommentInput?.nativeElement.focus(), 100);
+  getAvatarColor(nomComplet: string): string {
+    const hash = this.hashString(nomComplet);
+    const colors = ['#F87171', '#FBBF24', '#34D399', '#60A5FA', '#A78BFA', '#F472B6'];
+    return colors[hash % colors.length];
   }
 
-  closePopup(): void {
-    this.selectedActu = null;
-    this.selectedIndex = -1;
-    this.popupMenuOpen = false;
-    document.body.classList.remove('popup-open');
+  getAvatarColorDark(nomComplet: string): string {
+    const hash = this.hashString(nomComplet);
+    const colors = ['#B91C1C', '#B45309', '#059669', '#1D4ED8', '#7C3AED', '#DB2777'];
+    return colors[hash % colors.length];
   }
 
-  openAllComments(actu: Actu, index: number): void {
-    this.selectedActu = actu;
-    this.selectedIndex = index;
-    this.showAllComments = true;
-    document.body.classList.add('popup-open');
+  private hashString(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return Math.abs(hash);
   }
 
-  closeAllComments(): void {
-    this.showAllComments = false;
-    document.body.classList.remove('popup-open');
-  }
-
-  openAllCommentsFromPopup(): void {
-    this.showAllComments = true;
-  }
-
-  // =============================
-  // UTILS
-  // =============================
-
-  getInitiales(nomComplet: string): string {
+  getInitiales(nomComplet: string) {
     if (!nomComplet) return '';
-
-    const parts = nomComplet.trim().split(' ').filter(p => p.length > 0);
-
-    if (parts.length === 0) return '';
+    const parts = nomComplet.split(' ').filter(p => p);
     if (parts.length === 1) return parts[0][0].toUpperCase();
-
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
-  showToastMessage(message: string, type: 'success' | 'error' = 'success'): void {
-    this.toastMessage = message;
-    this.toastType = type;
-    this.showToast = true;
-
-    setTimeout(() => this.showToast = false, 3000);
+  // =============================
+  // MODIFIER / SUPPRIMER ACTU
+  // =============================
+  editActu(actu: Actu): void {
+    this.selectedActu = { ...actu };
+    console.log('editActu - sélection actu:', actu);
   }
 
-  // =============================
-  // HOST LISTENER
-  // =============================
+  deleteActu(actu: Actu): void {
+    console.log('deleteActu - actu avant suppression:', actu);
+    if (!actu.key) return;
 
-  @HostListener('document:click', ['$event'])
-  handleDocumentClick(event: MouseEvent): void {
+    const confirmed = confirm('Voulez-vous vraiment supprimer cette actualité ? Cette action est irréversible.');
+    if (!confirmed) return;
 
-    const target = event.target as HTMLElement | null;
-
-    if (this.selectedActu && target && !target.closest('.relative')) {
-      this.popupMenuOpen = false;
-    }
-
-    let clickedInside = false;
-
-    this.menuContainers?.forEach(container => {
-      if (target && container.nativeElement.contains(target)) {
-        clickedInside = true;
-      }
+    this.actusService.deleteActu(actu.key).subscribe({
+      next: () => {
+        this.actus = this.actus.filter(a => a.key !== actu.key);
+        this.newComment = this.newComment.filter((_, i) => this.actus[i]?.key !== actu.key);
+        this.commentSectionOpen = this.commentSectionOpen.filter((_, i) => this.actus[i]?.key !== actu.key);
+        this.menuOpen = this.menuOpen.filter((_, i) => this.actus[i]?.key !== actu.key);
+        console.log('deleteActu - actus après suppression:', this.actus);
+      },
+      error: (err) => console.error('deleteActu - erreur suppression', err)
     });
-
-    if (!clickedInside) this.closeAllMenus();
   }
+
+  // =============================
+  // MODAL GESTION
+  // =============================
+  openCreateModal(): void {
+    this.isCreateModalOpen = true;
+    this.selectedActu = null;
+    console.log('openCreateModal - ouverture modal');
+  }
+
+  closeModal(event?: MouseEvent): void {
+    this.isCreateModalOpen = false;
+    this.selectedActu = null;
+    console.log('closeModal - fermeture modal');
+  }
+
+  // Popup commentaires
+  popupCommentOpen: { [key: number]: boolean } = {};
+
+  toggleCommentPopup(actu: Actu) {
+    const index = this.actus.indexOf(actu);
+    this.popupCommentOpen[index] = !this.popupCommentOpen[index];
+    console.log('toggleCommentPopup - index:', index, 'open:', this.popupCommentOpen[index]);
+  }
+
+  // ✅ Méthode pour savoir si une actu est récente (moins de 7 jours)
+  isRecent(dateStr: string | undefined): boolean {
+    if (!dateStr) return false;
+    const today = new Date();
+    const actuDate = new Date(dateStr);
+    const diffDays = (today.getTime() - actuDate.getTime()) / (1000 * 60 * 60 * 24);
+    return diffDays <= 7;
+  }
+  
 }

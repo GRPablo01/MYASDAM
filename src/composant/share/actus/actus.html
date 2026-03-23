@@ -1,248 +1,378 @@
-<div class="h-150vh bg-gradient-to-br from-gray-50 via-white to-gray-100 relative">
-
-    <!-- OVERLAY GLOBAL -->
-    <div *ngIf="selectedActu"
-         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
-         (click)="closePopup()">
-    </div>
-
-    <!-- ========================= -->
-    <!-- FEED PRINCIPAL -->
-    <!-- ========================= -->
-
-    <div class="w-full max-w-[650px] mx-auto space-y-6 py-6 px-4 relative z-10">
-
-        <!-- Etat vide -->
-        <div *ngIf="actus.length === 0" class="text-center py-20">
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Aucune actualité</h3>
-            <p class="text-sm text-gray-500">Les publications apparaîtront ici.</p>
+<!-- actus.html - Design Medium Centré -->
+<div *ngIf="loading" class="min-h-screen flex items-center justify-center" [ngStyle]="{'background': themeService.Backgroundcards}">
+    <div class="flex flex-col items-center gap-4">
+        <div class="relative w-14 h-14">
+            <div class="absolute inset-0 rounded-full border-4 border-t-transparent animate-spin"
+                 [ngStyle]="{'border-color': themeService.primary, 'border-top-color': 'transparent'}"></div>
+            <div class="absolute inset-2 rounded-full border-4 border-t-transparent animate-spin"
+                 [ngStyle]="{'border-color': themeService.secondarySoft, 'border-top-color': 'transparent', 'animation-direction': 'reverse'}"></div>
         </div>
+        <p [ngStyle]="{'color': themeService.Textsecondaire}" class="text-base font-medium animate-pulse">
+            Chargement des actualités...
+        </p>
+    </div>
+</div>
 
-        <!-- Cards -->
-        <article *ngFor="let actu of actus; let i = index"
-                 class="bg-white rounded-2xl shadow hover:shadow-xl transition cursor-pointer"
-                 (click)="openPopup(actu,i)">
-
-            <!-- Header -->
-            <div class="flex items-center justify-between p-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
-                        <span class="font-bold text-red-600">
-                            {{ getInitiales(actu.auteur) }}
-                        </span>
-                    </div>
-
-                    <div>
-                        <p class="font-bold text-gray-900">{{ actu.auteur }}</p>
-                        <p class="text-xs text-gray-500">
-                            {{ actu.dateCreation | date:'dd MMM yyyy HH:mm' }}
-                        </p>
-                    </div>
-                </div>
-
-                <div class="text-xs text-gray-400">
-                    {{ actu.likes || 0 }} ❤️
-                </div>
-            </div>
-
-            <!-- Image -->
-            <div *ngIf="actu.image" class="aspect-square bg-gray-100">
-                <img [src]="'http://localhost:3000/uploads/' + actu.image"
-                     class="w-full h-full object-cover">
-            </div>
-
-            <!-- Texte -->
-            <div class="p-4">
-                <p class="text-sm">
-                    <span class="font-bold">{{ actu.auteur }}</span>
-                    {{ actu.titre }}
-                </p>
-            </div>
-
-            <!-- Preview commentaires -->
-            <div *ngIf="actu.commentaires?.length"
-                 class="px-4 pb-4 space-y-2">
-
-                <div *ngFor="let com of actu.commentaires | slice:0:2"
-                     class="flex gap-2 items-start">
-
-                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                        <span class="text-xs font-bold">
-                            {{ getInitiales(com.nomComplet) }}
-                        </span>
-                    </div>
-
-                    <div>
-                        <p class="text-xs font-bold">
-                            {{ com.nomComplet }}
-                        </p>
-                        <p class="text-sm text-gray-700">
-                            {{ com.contenu }}
-                        </p>
-                    </div>
-
-                </div>
-
-                <button *ngIf="(actu.commentaires?.length || 0) > 2"
-                    (click)="openAllComments(actu,i); $event.stopPropagation()"
-                    class="text-xs text-red-600">
-                    Voir tous les commentaires
-                </button>
-            </div>
-        </article>
+<section [ngStyle]="{'background': themeService.Backgroundcards}" class="h-150vh mt-14 relative overflow-hidden py-8">
+    
+    <!-- BACKGROUND ANIMÉ -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.08]" [ngStyle]="{
+            'background-image': 'linear-gradient(' + themeService.Textsecondaire + ' 1px, transparent 1px), linear-gradient(90deg, ' + themeService.Textsecondaire + ' 1px, transparent 1px)',
+            'background-size': '50px 50px'
+            }">
+        </div>
     </div>
 
-    <!-- ========================= -->
-    <!-- POPUP DETAIL ACTU -->
-    <!-- ========================= -->
+    <!-- Header Centré -->
+    <div class="relative z-10 max-w-6xl mx-auto px-4 mb-10 text-center">
+        <h1 class="text-3xl md:text-5xl font-bold mb-3 bg-clip-text text-transparent inline-block"
+            [ngStyle]="{'background-image': 'linear-gradient(135deg, ' + themeService.Textprincipal + ', ' + themeService.Textsecondaire + ')'}">
+            Actualités
+        </h1>
+        <div class="h-1 w-28 mx-auto rounded-full" [ngStyle]="{'background': 'linear-gradient(90deg, ' + themeService.primary + ', ' + themeService.Iconactive + ')'}"></div>
+    </div>
 
-    <div *ngIf="selectedActu as actu"
-         class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <!-- Grille Centrée -->
+    <div *ngIf="!loading && actus?.length" class="relative z-10 w-full max-w-5xl mx-176 px-4 sm:px-6 pb-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
+            
+            <article *ngFor="let actu of actus; let i = index; trackBy: trackByActuId"
+                class="group relative w-full max-w-lg rounded-2xl overflow-hidden transition-all duration-500 backdrop-blur-xl"
+                [ngStyle]="{
+                    'background': 'linear-gradient(135deg, ' + themeService.Backgroundprincipal + 'ee, ' + themeService.Backgroundprincipal + 'cc)',
+                    'border': '1px solid ' + themeService.Bordernormal + '40',
+                    'box-shadow': '0 6px 30px 0 ' + themeService.Shadow + ', inset 0 1px 0 0 ' + themeService.primary + '20'
+                }"
+                role="article" [attr.aria-labelledby]="'actu-author-' + i">
 
-        <div class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
-             (click)="$event.stopPropagation()">
-
-            <!-- Header -->
-            <div class="flex justify-between items-center p-4 border-b">
-
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
-                        <span class="font-bold text-red-600">
-                            {{ getInitiales(actu.auteur) }}
-                        </span>
-                    </div>
-
-                    <div>
-                        <p class="font-bold">{{ actu.auteur }}</p>
-                        <p class="text-xs text-gray-500">
-                            {{ actu.dateCreation | date:'dd MMMM yyyy HH:mm' }}
-                        </p>
-                    </div>
+                <!-- Badge Nouveau -->
+                <div *ngIf="isRecent(actu.date)" 
+                     class="absolute top-4 right-4 z-20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg backdrop-blur-md"
+                     [ngStyle]="{'background': 'linear-gradient(135deg, ' + themeService.Iconactive + ', ' + themeService.primary + ')', 'color': '#fff'}">
+                    Nouveau
                 </div>
 
-                <button (click)="closePopup()"
-                        class="text-gray-400 hover:text-gray-700">
-                    ✕
-                </button>
-            </div>
-
-            <!-- Body scrollable -->
-            <div class="overflow-y-auto p-4 space-y-4">
-
-                <img *ngIf="actu.image"
-                     [src]="'http://localhost:3000/uploads/' + actu.image"
-                     class="w-full object-contain max-h-[50vh]">
-
-                <p>
-                    <span class="font-bold">{{ actu.auteur }}</span>
-                    {{ actu.titre }}
-                </p>
-
-                <!-- Preview commentaires popup -->
-                <div *ngIf="actu.commentaires?.length">
-
-                    <h4 class="font-bold text-sm mb-2">
-                        Commentaires ({{ actu.commentaires.length }})
-                    </h4>
-
-                    <div *ngFor="let com of actu.commentaires | slice:0:2"
-                         class="flex gap-2 mb-2">
-
-                        <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                            <span class="text-xs font-bold">
-                                {{ getInitiales(com.nomComplet) }}
+                <!-- Image -->
+                <div *ngIf="actu.image" class="relative w-full h-56 overflow-hidden">
+                    <img [src]="'http://localhost:3000/uploads/' + actu.image" alt="Image de l'actualité"
+                        class="w-full h-full object-cover transition-transform duration-600">
+                    
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-br opacity-25"
+                         [ngStyle]="{'background': 'linear-gradient(135deg, ' + themeService.primary + '50, transparent)'}"></div>
+                    
+                    <div class="absolute bottom-0 left-0 right-0 p-5 transform transition-transform duration-300 group-hover:translate-y-[-2px]">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold backdrop-blur-md border border-white/20"
+                                  [ngStyle]="{'background': themeService.primary + '35', 'color': '#fff'}">
+                                {{ actu.saison }}
+                            </span>
+                            <span class="text-xs text-white/80 flex items-center gap-1">
+                                <i class="fas fa-clock text-[10px]"></i> {{ actu.date | date:'dd/MM/yyyy' }}
                             </span>
                         </div>
-
-                        <div>
-                            <p class="text-xs font-bold">
-                                {{ com.nomComplet }}
-                            </p>
-                            <p class="text-sm text-gray-700">
-                                {{ com.contenu }}
-                            </p>
-                        </div>
-
+                        <h3 class="text-xl md:text-2xl font-bold text-white leading-tight drop-shadow-lg line-clamp-2">
+                            {{ actu.titre }}
+                        </h3>
                     </div>
-
-                    <button (click)="openAllCommentsFromPopup()"
-                            class="text-xs text-red-600">
-                        Voir tous les commentaires
-                    </button>
-
                 </div>
 
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-<div *ngIf="showAllComments && selectedActu as actu"
-     class="fixed inset-0 bg-black/50 z-[60] flex items-end sm:items-center justify-center">
-
-    <div class="bg-white w-full max-w-2xl max-h-[85vh] rounded-t-3xl sm:rounded-3xl flex flex-col">
-
-        <!-- Header -->
-        <div class="flex justify-between items-center p-4 border-b">
-            <h3 class="font-bold">
-                Tous les commentaires ({{ actu.commentaires?.length || 0 }})
-            </h3>
-
-            <button (click)="closeAllComments()">
-                ✕
-            </button>
-        </div>
-
-        <!-- Liste -->
-        <div class="flex-1 overflow-y-auto p-4 space-y-4">
-
-            <div *ngIf="actu.commentaires?.length; else noComments">
-
-                <div *ngFor="let com of actu.commentaires"
-                     class="flex gap-3">
-
-                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                        <span class="font-bold text-sm">
-                            {{ getInitiales(com.nomComplet) }}
+                <!-- Corps -->
+                <div class="p-5" [ngStyle]="{'background': themeService.Backgroundprincipal}">
+                    
+                    <!-- Auteur -->
+                    <div class="flex items-center gap-3 mb-4 pb-3 border-b"
+                         [ngStyle]="{'border-color': themeService.Bordernormal + '25'}">
+                        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                             [ngStyle]="{'background': 'linear-gradient(135deg, ' + themeService.primary + ', ' + themeService.Iconactive + ')'}">
+                            {{ getInitiales(actu.auteur || '') }}
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-semibold" [ngStyle]="{'color': themeService.Textprincipal}">{{ actu.auteur }}</p>
+                            <p class="text-xs" [ngStyle]="{'color': themeService.Textsecondaire}">Auteur</p>
+                        </div>
+                        <span class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide"
+                              [ngStyle]="{
+                                  'background': themeService.Textsecondaire + '18',
+                                  'color': themeService.Textsecondaire,
+                                  'border': '1px solid ' + themeService.Textsecondaire + '25'
+                              }">
+                            #{{ actu.key }}
                         </span>
                     </div>
 
-                    <div>
-                        <p class="font-bold text-sm">
-                            {{ com.nomComplet }}
-                        </p>
-                        <p class="text-sm text-gray-700">
-                            {{ com.contenu }}
-                        </p>
+                    <!-- Actions -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <!-- Like -->
+                            <button (click)="likeActu(actu, i)"
+                                class="flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 text-sm font-semibold"
+                                [ngStyle]="actu.isLiked ? {
+                                    'background': 'linear-gradient(135deg, ' + themeService.Iconactive + '18, ' + themeService.Iconactive + '10)',
+                                    'color': themeService.Iconactive,
+                                    'border': '1px solid ' + themeService.Iconactive + '35'
+                                } : {
+                                    'background': themeService.secondarySoft,
+                                    'color': themeService.Iconnormal,
+                                    'border': '1px solid ' + themeService.Bordernormal + '20'
+                                }">
+                                <i class="fas fa-heart" [class.text-red-500]="actu.isLiked"></i>
+                                <span [class.text-red-500]="actu.isLiked">{{ actu.likes || 0 }}</span>
+                            </button>
+
+                            <!-- Commentaires -->
+                            <button (click)="toggleCommentPopup(actu)"
+                                class="flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 text-sm font-semibold"
+                                [ngStyle]="popupCommentOpen[i] ? {
+                                    'background': 'linear-gradient(135deg, ' + themeService.primary + '18, ' + themeService.primary + '10)',
+                                    'color': themeService.primary,
+                                    'border': '1px solid ' + themeService.primary + '35'
+                                } : {
+                                    'background': themeService.secondarySoft,
+                                    'color': themeService.Iconnormal,
+                                    'border': '1px solid ' + themeService.Bordernormal + '20'
+                                }">
+                                <i class="fas fa-comment"></i>
+                                <span>{{ actu.commentaires?.length || 0 }}</span>
+                            </button>
+
+                            <!-- Favori -->
+                            <button (click)="favoriActu(actu)"
+                                class="flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 text-sm font-semibold"
+                                [ngStyle]="actu.isFavori ? {
+                                    'background': 'linear-gradient(135deg, #fbbf2418, #fbbf2410)',
+                                    'color': '#fbbf24',
+                                    'border': '1px solid #fbbf2435'
+                                } : {
+                                    'background': themeService.secondarySoft,
+                                    'color': themeService.Iconnormal,
+                                    'border': '1px solid ' + themeService.Bordernormal + '20'
+                                }">
+                                <i class="fas fa-star" [class.text-yellow-400]="actu.isFavori"></i>
+                                <span [class.text-yellow-400]="actu.isFavori">{{ actu.favoris || 0 }}</span>
+                            </button>
+                        </div>
                     </div>
 
+                    <!-- 2 Commentaires -->
+                    <div class="space-y-3 mb-4" *ngIf="actu.commentaires?.length">
+                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider mb-2"
+                             [ngStyle]="{'color': themeService.Textsecondaire}">
+                            <i class="fas fa-comments text-[10px]"></i>
+                            <span>Derniers commentaires</span>
+                        </div>
+                        
+                        <div *ngFor="let com of actu.commentaires | slice:0:2" 
+                             class="flex gap-3 items-start p-3 rounded-xl transition-all duration-200 hover:shadow-md group/comment"
+                             [ngStyle]="{
+                                 'background': 'linear-gradient(135deg, ' + themeService.secondarySoft + '50, transparent)',
+                                 'border': '1px solid ' + themeService.Bordernormal + '18'
+                             }">
+                            <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-xs flex-shrink-0 shadow-md transform transition-transform group-hover/comment:scale-110"
+                                 [ngStyle]="{'background': 'linear-gradient(135deg, ' + getAvatarColor(com.userId || '') + ', ' + getAvatarColorDark(com.userId || '') + ')'}">
+                                {{ getInitiales(com.userId || '') }}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between mb-0.5">
+                                    <p class="text-xs font-bold truncate" [ngStyle]="{'color': themeService.Textprincipal}">
+                                        {{ com.userId }}
+                                    </p>
+                                    <time class="text-[10px] opacity-60" [ngStyle]="{'color': themeService.Textsecondaire}">
+                                        {{ com.date | date:'HH:mm' }}
+                                    </time>
+                                </div>
+                                <p class="text-sm line-clamp-2 leading-relaxed" [ngStyle]="{'color': themeService.Textprincipal}">
+                                    {{ com.contenu }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input -->
+                    <form (submit)="$event.preventDefault(); commenterActu(actu, i)" 
+                          class="flex gap-2.5 items-center p-2 rounded-xl transition-all duration-200 focus-within:shadow-lg"
+                          [ngStyle]="{
+                              'background': themeService.secondarySoft,
+                              'border': '1px solid ' + themeService.Bordernormal + '25'
+                          }">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                             [ngStyle]="{'background': 'linear-gradient(135deg, ' + themeService.primary + '20, ' + themeService.primary + '10)'}">
+                            <i class="fas fa-pen text-xs" [ngStyle]="{'color': themeService.primary}"></i>
+                        </div>
+                        <input type="text" [(ngModel)]="newComment[i]" name="comment-{{i}}"
+                            placeholder="Écrivez un commentaire..."
+                            class="flex-1 bg-transparent border-none outline-none text-sm placeholder-gray-400 py-2"
+                            [ngStyle]="{'color': themeService.Textprincipal}">
+                        <button type="submit" 
+                            [disabled]="!newComment[i]?.trim()"
+                            class="px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2"
+                            [ngStyle]="newComment[i]?.trim() ? {
+                                'background': 'linear-gradient(135deg, ' + themeService.primary + ', ' + themeService.Iconactive + ')',
+                                'color': '#fff',
+                                'box-shadow': '0 3px 12px ' + themeService.primary + '40'
+                            } : {
+                                'background': 'transparent',
+                                'color': themeService.Textsecondaire,
+                                'opacity': '0.4'
+                            }">
+                            <i class="fas fa-paper-plane text-xs"></i>
+                            <span class="text-xs">Envoyer</span>
+                        </button>
+                    </form>
                 </div>
 
-            </div>
+                <!-- Overlay -->
+                <div *ngIf="popupCommentOpen[i]" 
+                     class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300"
+                     (click)="popupCommentOpen[i] = false"></div>
 
-            <ng-template #noComments>
-                <p class="text-center text-gray-400">
-                    Aucun commentaire pour le moment.
-                </p>
-            </ng-template>
+                <!-- Side Panel Centré pour mobile, droite pour desktop -->
+                <aside *ngIf="popupCommentOpen[i]"
+                    class="fixed inset-0 sm:inset-auto sm:top-0 sm:right-0 sm:h-full sm:w-[420px] z-50 transform transition-transform duration-500 ease-out shadow-2xl flex flex-col bg-white"
+                    [ngStyle]="{
+                        'background': 'linear-gradient(180deg, ' + themeService.Backgroundprincipal + 'f5, ' + themeService.Backgroundprincipal + 'fa)',
+                        'border-left': '1px solid ' + themeService.Bordernormal + '40'
+                    }">
+                    
+                    <!-- Header -->
+                    <div class="flex justify-between items-center p-5 border-b"
+                         [ngStyle]="{'border-color': themeService.Bordernormal + '30', 'background': 'linear-gradient(90deg, ' + themeService.primary + '08, transparent)'}">
+                        <div>
+                            <h3 class="text-lg font-bold flex items-center gap-2" [ngStyle]="{'color': themeService.Textprincipal}">
+                                <i class="fas fa-comments" [ngStyle]="{'color': themeService.primary}"></i>
+                                Commentaires
+                            </h3>
+                            <p class="text-xs mt-0.5" [ngStyle]="{'color': themeService.Textsecondaire}">
+                                {{ actu.commentaires?.length || 0 }} commentaire(s)
+                            </p>
+                        </div>
+                        <button (click)="popupCommentOpen[i] = false" 
+                                class="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:shadow-lg"
+                                [ngStyle]="{
+                                    'background': themeService.secondarySoft,
+                                    'color': themeService.Textprincipal,
+                                    'border': '1px solid ' + themeService.Bordernormal
+                                }">
+                            <i class="fas fa-times text-sm"></i>
+                        </button>
+                    </div>
 
+                    <!-- Liste -->
+                    <div class="flex-1 overflow-y-auto p-5 space-y-3">
+                        <div *ngFor="let com of actu.commentaires"
+                            class="group flex gap-3 p-3.5 rounded-xl transition-all duration-200 hover:shadow-md"
+                            [ngStyle]="{
+                                'background': 'linear-gradient(135deg, ' + themeService.secondarySoft + '60, transparent)',
+                                'border': '1px solid ' + themeService.Bordernormal + '18'
+                            }">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-xs shadow-md flex-shrink-0 transform transition-transform group-hover:scale-110"
+                                 [ngStyle]="{'background': 'linear-gradient(135deg, ' + getAvatarColor(com.userId || '') + ', ' + getAvatarColorDark(com.userId || '') + ')'}">
+                                {{ getInitiales(com.userId || '') }}
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-1">
+                                    <p class="text-xs font-bold" [ngStyle]="{'color': themeService.Textprincipal}">
+                                        {{ com.userId }}
+                                    </p>
+                                    <time class="text-[10px] px-2 py-0.5 rounded-full" 
+                                          [ngStyle]="{'background': themeService.secondarySoft, 'color': themeService.Textsecondaire}">
+                                        {{ com.date | date:'dd/MM HH:mm' }}
+                                    </time>
+                                </div>
+                                <p class="text-sm leading-relaxed" [ngStyle]="{'color': themeService.Textprincipal}">
+                                    {{ com.contenu }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- État vide -->
+                        <div *ngIf="!actu.commentaires?.length" class="text-center py-10">
+                            <div class="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center"
+                                 [ngStyle]="{'background': themeService.secondarySoft}">
+                                <i class="fas fa-comment-slash text-2xl" [ngStyle]="{'color': themeService.Textsecondaire}"></i>
+                            </div>
+                            <p class="text-sm" [ngStyle]="{'color': themeService.Textsecondaire}">Aucun commentaire</p>
+                            <p class="text-xs mt-1 opacity-70" [ngStyle]="{'color': themeService.Textsecondaire}">Soyez le premier !</p>
+                        </div>
+                    </div>
+
+                    <!-- Input fixe -->
+                    <div class="p-5 border-t" [ngStyle]="{'border-color': themeService.Bordernormal + '30', 'background': themeService.Backgroundprincipal}">
+                        <form (submit)="$event.preventDefault(); commenterActu(actu, i); popupCommentOpen[i] = false" 
+                              class="flex gap-2">
+                            <input type="text" [(ngModel)]="newComment[i]" name="comment-panel-{{i}}"
+                                placeholder="Écrivez un commentaire..."
+                                class="flex-1 px-4 py-2.5 rounded-lg border-2 outline-none transition-all text-sm"
+                                [ngStyle]="{
+                                    'background': themeService.secondarySoft,
+                                    'border-color': themeService.Bordernormal + '40',
+                                    'color': themeService.Textprincipal
+                                }">
+                            <button type="submit" 
+                                [disabled]="!newComment[i]?.trim()"
+                                class="px-5 py-2.5 rounded-lg font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg"
+                                [ngStyle]="newComment[i]?.trim() ? {
+                                    'background': 'linear-gradient(135deg, ' + themeService.primary + ', ' + themeService.Iconactive + ')',
+                                    'color': '#fff'
+                                } : {
+                                    'background': themeService.secondarySoft,
+                                    'color': themeService.Textsecondaire,
+                                    'opacity': '0.5'
+                                }">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </aside>
+
+            </article>
         </div>
-
-        <!-- Input -->
-        <div class="p-4 border-t flex gap-3">
-
-            <input type="text"
-                   class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm"
-                   [(ngModel)]="newComment[selectedIndex]">
-
-            <button (click)="commenterActu(actu, selectedIndex)"
-                    class="bg-red-500 text-white px-4 rounded-full">
-                Envoyer
-            </button>
-
-        </div>
-
     </div>
-</div>
+
+    <!-- Message vide Centré -->
+    <div *ngIf="!loading && !actus?.length" 
+         class="relative z-10 flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+        <div class="w-28 h-28 rounded-full flex items-center justify-center mb-5 animate-bounce"
+             [ngStyle]="{'background': 'linear-gradient(135deg, ' + themeService.secondarySoft + ', ' + themeService.Backgroundprincipal + ')', 'border': '2px solid ' + themeService.Bordernormal}">
+            <i class="fas fa-newspaper text-3xl" [ngStyle]="{'color': themeService.Textsecondaire}"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2" [ngStyle]="{'color': themeService.Textprincipal}">
+            Aucune actualité disponible
+        </h3>
+        <p class="text-sm" [ngStyle]="{'color': themeService.Textsecondaire}">
+            Revenez plus tard pour découvrir les nouvelles actualités.
+        </p>
+    </div>
+</section>
+
+<style>
+    @keyframes blob {
+        0% { transform: translate(0px, 0px) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+        100% { transform: translate(0px, 0px) scale(1); }
+    }
+    .animate-blob {
+        animation: blob 7s infinite;
+    }
+    .animation-delay-2000 {
+        animation-delay: 2s;
+    }
+    .animation-delay-4000 {
+        animation-delay: 4s;
+    }
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    /* Centrage spécifique pour les écrans larges */
+    @media (min-width: 768px) and (max-width: 1024px) {
+        .grid {
+            justify-content: center;
+        }
+    }
+</style>

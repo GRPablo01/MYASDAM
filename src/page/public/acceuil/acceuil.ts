@@ -36,11 +36,7 @@ import { BarreScroll } from '../../../composant/share/barre-scroll/barre-scroll'
 })
 export class Acceuil implements OnInit {
 
-  // ✅ Loader
   isLoaded: boolean = false;
-  userRole: string = '';
-
-  // ✅ Connexion
   isLoggedIn: boolean = false;
 
   constructor(
@@ -49,73 +45,35 @@ export class Acceuil implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 🧠 Titre
     this.titleService.setTitle('MY ASDAM | Accueil');
 
-    // 👤 Vérif utilisateur
     const utilisateurString = localStorage.getItem('utilisateur');
-    if (utilisateurString) {
-      this.isLoggedIn = true;
-    }
+    if (utilisateurString) this.isLoggedIn = true;
 
-    // 🎨 Appliquer thème depuis localStorage
-    this.themeService.applyTheme(this.themeService.isDarkMode);
+    // ✅ S'abonner au thème et mettre à jour scrollbar
+    this.themeService.themeChange$.subscribe(isDark => {
+      document.documentElement.classList.toggle('dark', isDark);
+      this.updateScrollbarColors(isDark);
+      console.log('Thème actif:', isDark ? 'Sombre' : 'Clair');
+    });
 
-    // 🎯 Scrollbar dynamique inversée
-    this.initScrollbar();
-
-    // ⏳ Loader
-    setTimeout(() => {
-      this.isLoaded = true;
-    }, 300);
-  }
-
-  /**
-   * 🎯 Initialisation scrollbar dynamique avec ThemeService
-   */
-  private initScrollbar(): void {
-    // Mettre à jour au chargement
+    // ⚡ Scrollbar au chargement
     this.updateScrollbarColors(this.themeService.isDarkMode);
 
-    // S'abonner aux changements de thème
-    this.themeService.themeChange$.subscribe(isDark => {
-      this.updateScrollbarColors(isDark);
-    });
+    // ⏳ Loader
+    setTimeout(() => this.isLoaded = true, 300);
   }
 
-  /**
-   * 🎨 Met à jour les couleurs de la scrollbar (inversées)
-   */
   private updateScrollbarColors(isDark: boolean): void {
     const root = document.documentElement;
-
     if (isDark) {
-
-      // Mode LIGHT → appliquer les couleurs du DARK
-      root.style.setProperty('--scroll-track', '#121212');       // Dark track
-      root.style.setProperty('--scroll-thumb', '#C1121F');       // Dark thumb
-      root.style.setProperty('--scroll-thumb-hover', '#FF4D4D'); // Dark hover
+      root.style.setProperty('--scroll-track', '#1E1E1E');
+      root.style.setProperty('--scroll-thumb', '#C1121F');
+      root.style.setProperty('--scroll-thumb-hover', '#FF4D4D');
     } else {
-      // Mode DARK → appliquer les couleurs du LIGHT
-      root.style.setProperty('--scroll-track', '#F4F6F8');       // Light track
-      root.style.setProperty('--scroll-thumb', '#C1121F');       // Light thumb
-      root.style.setProperty('--scroll-thumb-hover', '#E5383B'); // Light hover
-    }
-  }
-
-  /**
-   * 🔹 Retourne la couleur associée à un rôle
-   */
-  getRoleColor(roleId: string): string {
-    switch (roleId) {
-      case 'admin':
-        return '#F43F5E'; // rouge
-      case 'user':
-        return '#3B82F6'; // bleu
-      case 'coach':
-        return '#10B981'; // vert
-      default:
-        return '#6B7280'; // gris
+      root.style.setProperty('--scroll-track', '#FFFFFF');
+      root.style.setProperty('--scroll-thumb', '#C1121F');
+      root.style.setProperty('--scroll-thumb-hover', '#E5383B');
     }
   }
 }

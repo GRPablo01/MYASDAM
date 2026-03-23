@@ -24,7 +24,9 @@ export interface Actu {
   key?: string;
   dateCreation?: string;
   __v?: number;
-
+  imageUrl?: string;
+  isRecent?: boolean;
+  date?: string;
   commentaires: Commentaire[];
   // propriétés frontend
   isLiked?: boolean;
@@ -59,6 +61,11 @@ export class ActusService {
       `http://localhost:3000/api/actus/${key}/favori`,
       { userId }
     );
+  }
+
+  // Méthode pour supprimer une actu
+  deleteActu(key: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${key}`);
   }
   
 

@@ -1,14 +1,18 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Header } from "../../../composant/public/header/header";
 import { FormsModule } from '@angular/forms';
 import { Footer } from "../../../composant/share/footer/footer";
-import { Welcome } from '../../../composant/share/welcome/welcome';
 import { Fonctionalite } from "../../../composant/share/fonctionalite/fonctionalite";
 import { SectionDate1 } from '../../../composant/share/section-date1/section-date1';
 import { Cookie } from '../../../composant/priver/cookie/cookie';
+import { Welcome } from '../../../composant/share/welcome/welcome';
+import { Barre } from '../../../composant/share/barre/barre';
+import { ThemeService } from '../../../../Backend/Services/theme.service';
+import { Mobile } from "../../../composant/share/mobile/mobile";
+import { BarreScroll } from '../../../composant/share/barre-scroll/barre-scroll';
 import { Actus } from '../../../composant/share/actus/actus';
 
 @Component({
@@ -20,71 +24,42 @@ import { Actus } from '../../../composant/share/actus/actus';
     Header,
     FormsModule,
     Footer,
-    Actus
+    Actus,
+    Mobile,
     
   ],
   templateUrl: './actualite.html',
-  styleUrl: './actualite.css',
+  styleUrls: ['./actualite.css'],
 })
 export class Actualite implements OnInit {
 
-  // ✅ Chargement
+  // ✅ Loader
   isLoaded: boolean = false;
+  userRole: string = '';
 
   // ✅ Connexion
   isLoggedIn: boolean = false;
 
-  // 🎨 Thème
-  theme: 'clair' | 'sombre' = 'sombre';
-
-  // 🎨 Couleurs dynamiques
-  Background = '';
-  Background1 = '';
-  Background2 = '';
-  Background3 = '';
-  Background4 = '';
-  Background5 = '';
-  Background6 = '';
-  Background7 = '';
-  Background8 = '';
-  Background9 = '';
-  Background10 = '';
-  Background11 = '';
-  Background12 = '';
-  BorderHeader = '';
-  BorderHeader1 = '';
-  BorderHeader2 = '';
-  BorderHeader3 = '';
-  Text = '';
-  Text1 = '';
-  Text2 = '';
-
   constructor(
     private titleService: Title,
-    private renderer: Renderer2,
-    private http: HttpClient
+    public themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
+    // 🧠 Titre
+    this.titleService.setTitle('MY ASDAM | Accueil');
 
-    // 🧠 Titre onglet
-    this.titleService.setTitle('MY ASDAM | Actualité');
-
+    // 👤 Vérif utilisateur
     const utilisateurString = localStorage.getItem('utilisateur');
-
     if (utilisateurString) {
-      const utilisateur = JSON.parse(utilisateurString);
-
       this.isLoggedIn = true;
-
-      if (utilisateur.theme) {
-        this.theme = utilisateur.theme;
-      }
     }
 
-    // 🎨 Appliquer couleurs
-    this.setThemeColors();
-    this.updateScrollbarColors();
+    // 🎨 Appliquer thème depuis localStorage
+    this.themeService.applyTheme(this.themeService.isDarkMode);
+
+    // 🎯 Scrollbar dynamique inversée
+    this.initScrollbar();
 
     // ⏳ Loader
     setTimeout(() => {
@@ -92,53 +67,52 @@ export class Actualite implements OnInit {
     }, 300);
   }
 
-  // 🎯 Scrollbar dynamique
-  updateScrollbarColors(): void {
+  /**
+   * 🎯 Initialisation scrollbar dynamique avec ThemeService
+   */
+  private initScrollbar(): void {
+    // Mettre à jour au chargement
+    this.updateScrollbarColors(this.themeService.isDarkMode);
 
+    // S'abonner aux changements de thème
+    this.themeService.themeChange$.subscribe(isDark => {
+      this.updateScrollbarColors(isDark);
+    });
+  }
+
+  /**
+   * 🎨 Met à jour les couleurs de la scrollbar (inversées)
+   */
+  private updateScrollbarColors(isDark: boolean): void {
     const root = document.documentElement;
 
-    if (this.theme === 'sombre') {
+    if (isDark) {
 
-      root.style.setProperty('--scroll-track', '#1E293B');
-      root.style.setProperty('--scroll-thumb', '#6978b8');
-      root.style.setProperty('--scroll-thumb-hover', '#ec4899');
-
+      // Mode LIGHT → appliquer les couleurs du DARK
+      root.style.setProperty('--scroll-track', '#1E1E1E');       // Dark track
+      root.style.setProperty('--scroll-thumb', '#C1121F');       // Dark thumb
+      root.style.setProperty('--scroll-thumb-hover', '#FF4D4D'); // Dark hover
     } else {
-
-      root.style.setProperty('--scroll-track', '#FFFFFF');
-      root.style.setProperty('--scroll-thumb', '#F43F5E');
-      root.style.setProperty('--scroll-thumb-hover', '#f59e0b');
-
+      // Mode DARK → appliquer les couleurs du LIGHT
+      root.style.setProperty('--scroll-track', '#FFFFFF');       // Light track
+      root.style.setProperty('--scroll-thumb', '#C1121F');       // Light thumb
+      root.style.setProperty('--scroll-thumb-hover', '#E5383B'); // Light hover
     }
   }
+
   /**
-   * 🎨 Gestion des thèmes
+   * 🔹 Retourne la couleur associée à un rôle
    */
-  private setThemeColors(): void {
-
-    // 🔴 NON CONNECTÉ
-    if (!this.isLoggedIn) {
-
-      this.Background  = '#1E293B';
-      this.Background1 = '#6978b8';
-
-      return;
+  getRoleColor(roleId: string): string {
+    switch (roleId) {
+      case 'admin':
+        return '#F43F5E'; // rouge
+      case 'user':
+        return '#3B82F6'; // bleu
+      case 'coach':
+        return '#10B981'; // vert
+      default:
+        return '#6B7280'; // gris
     }
-
-    // 🌙 CONNECTÉ + SOMBRE
-    if (this.theme === 'sombre') {
-
-      this.Background  = '#1E293B';
-      this.Background1 = '#6978b8';
-      
-
-      return;
-    }
-
-    // ☀️ CONNECTÉ + CLAIR
-
-    this.Background  = '#FFFFFF';
-    this.Background1 = '#DC2626';
-
   }
 }
