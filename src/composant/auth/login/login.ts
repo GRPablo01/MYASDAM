@@ -85,7 +85,7 @@ export class Login implements OnInit {
           }
 
           this.messageType = 'success';
-          this.message = 'Connexion réussie 🎉';
+          this.message = 'Connexion réussie';
 
           const utilisateur = {
             key: res.user.key,
@@ -94,8 +94,8 @@ export class Login implements OnInit {
             email: res.user.email,
             role: res.user.role,
             equipe: res.user.equipe,
-            theme: res.user.theme,
-            status: res.user.status
+            status: res.user.status,
+            cookie: res.user.cookie || '' // ✅ ajout cookie avec sécurité
           };
 
           localStorage.setItem('token', res.token);

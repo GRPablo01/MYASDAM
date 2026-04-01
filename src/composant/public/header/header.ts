@@ -17,9 +17,6 @@ import { Icon3 } from '../icon3/icon3';
 
 
 
-// Service
-
-
 @Component({
   selector: 'app-header',
   standalone: true,

@@ -1,0 +1,62 @@
+<app-mobile></app-mobile>
+
+<!-- ================= LOADER ================= -->
+<div *ngIf="!isLoaded"
+     class="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm transition-all duration-300">
+
+  <div class="animate-pulse text-lg font-bold text-white tracking-wider">
+    Chargement...
+  </div>
+
+</div>
+
+<!-- ================= PAGE ================= -->
+<div class="actus-container min-h-screen transition-colors duration-500">
+
+    <!-- HEADER -->
+    <app-header></app-header>
+
+    <!-- CARDS MATCH -->
+    <app-cards-match></app-cards-match>
+
+    <!-- FOOTER -->
+    <app-footer></app-footer>
+
+</div>
+
+<style>
+/* ============================= */
+/* 🌙 THÈME SOMBRE / CLAIR */
+/* ============================= */
+:root {
+  --scroll-track: #ffffff;
+  --scroll-thumb: #C1121F;
+  --scroll-thumb-hover: #E5383B;
+}
+
+/* ============================= */
+/* 🔥 Scroll fluide et custom scrollbar */
+/* ============================= */
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+}
+
+html::-webkit-scrollbar {
+  width: 8px;
+}
+
+html::-webkit-scrollbar-track {
+  background: var(--scroll-track);
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb);
+  border-radius: 4px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scroll-thumb-hover);
+}
+</style>

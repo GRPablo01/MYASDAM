@@ -14,6 +14,7 @@ import { ThemeService } from '../../../../Backend/Services/theme.service';
 import { Mobile } from "../../../composant/share/mobile/mobile";
 import { BarreScroll } from '../../../composant/share/barre-scroll/barre-scroll';
 import { Actus } from '../../../composant/share/actus/actus';
+import { Icon3 } from '../../../composant/public/icon3/icon3';
 
 @Component({
   selector: 'app-actualite',
@@ -26,7 +27,7 @@ import { Actus } from '../../../composant/share/actus/actus';
     Footer,
     Actus,
     Mobile,
-    
+    Icon3
   ],
   templateUrl: './actualite.html',
   styleUrls: ['./actualite.css'],

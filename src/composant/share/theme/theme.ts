@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
-
 
 @Component({
   selector: 'app-theme',

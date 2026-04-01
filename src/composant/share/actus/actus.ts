@@ -1,9 +1,10 @@
-// actus.component.ts - Complet avec console.log
-import { Component, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
+// actus.component.ts
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ActusService, Actu, Commentaire } from '../../../../Backend/Services/actus.service';
+import { ActusService, Actu } from '../../../../Backend/Services/actus.service';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
+import { FormsModule } from '@angular/forms';
+import { Icon3 } from '../../public/icon3/icon3';
 
 type Role = 'entraineur' | 'admin' | 'joueur' | 'invite';
 
@@ -12,267 +13,261 @@ type Role = 'entraineur' | 'admin' | 'joueur' | 'invite';
   templateUrl: './actus.html',
   styleUrls: ['./actus.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,Icon3],
 })
 export class Actus implements OnInit {
 
   actus: Actu[] = [];
-  newComment: string[] = [];
-  commentSectionOpen: boolean[] = [];
+  isDark = false;
   menuOpen: boolean[] = [];
-  userRole: Role = 'joueur';
+  isConnected: boolean = false;
+
+  userRole: Role = 'invite'; // Par défaut invite pour non-connecté
   userNom = '';
   userPrenom = '';
   currentUserId = '';
+
   loading = false;
-  isCreateModalOpen = false;
   selectedActu: Actu | null = null;
+  isDetailOpen = false;
+  isCreateModalOpen = false;
 
-  @ViewChildren('commentInput') commentInputs!: QueryList<ElementRef>;
+  // Configuration responsive
+  isMobile = window.innerWidth < 768;
+  
+  // Configuration masonry optimisée
+  private readonly positions = [
+    { left: 5, top: 0 }, { left: 35, top: 30 }, { left: 65, top: 10 },
+    { left: 15, top: 320 }, { left: 45, top: 280 }, { left: 75, top: 350 },
+    { left: 25, top: 620 }, { left: 55, top: 580 }, { left: 10, top: 520 },
+    { left: 70, top: 680 }, { left: 40, top: 850 }, { left: 5, top: 780 }
+  ];
+  
+  private readonly rotations = [-6, -3, -2, 2, 4, 6, -5, 5, -4, 4, -2, 3];
 
-  constructor(private actusService: ActusService, public themeService: ThemeService) {}
+  constructor(
+    private actusService: ActusService,
+    public themeService: ThemeService
+  ) {
+    this.checkScreenSize();
+  }
+
+  // =============================
+  // GESTION DU RESPONSIVE
+  // =============================
+  checkScreenSize(): void {
+    this.isMobile = window.innerWidth < 768; // breakpoint mobile
+  }
+  
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.checkScreenSize();
+  }
+
+
+  
 
   ngOnInit(): void {
-    console.log('ngOnInit - Chargement de l’utilisateur et des actus');
     this.loadUser();
+    this.loadActus();
+    this.detectTheme();
+  }
+
+  detectTheme(): void {
+    // Détection simple du mode sombre basée sur la couleur de fond
+    const bg = this.themeService.Backgroundcards || '';
+    this.isDark = bg.includes('020617') || bg.includes('05155d') || bg.includes('0f172a');
+  }
+
+  // =============================
+  // USER
+  // =============================
+  loadUser(): void {
+    const userData = localStorage.getItem('utilisateur');
+    if (!userData) {
+      this.userRole = 'invite';
+      this.userNom = 'Visiteur';
+      this.userPrenom = '';
+      this.currentUserId = '';
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(userData);
+      this.userRole = parsed.role || 'joueur';
+      this.userNom = parsed.nom || '';
+      this.userPrenom = parsed.prenom || '';
+      this.currentUserId = `${this.userPrenom} ${this.userNom}`;
+    } catch {
+      this.userRole = 'invite';
+    }
+  }
+
+  canManageActus(): boolean {
+    return this.userRole === 'admin' || this.userRole === 'entraineur';
+  }
+
+  isOwner(actu: Actu): boolean {
+    return actu.auteur === this.currentUserId;
+  }
+
+  // =============================
+  // ACTUS
+  // =============================
+  loadActus(): void {
+    this.loading = true;
+    this.actusService.getAllActus().subscribe({
+      next: (data: Actu[]) => {   // ⚡ Type clair
+        if (!Array.isArray(data)) {
+          console.error('Data reçue n’est pas un tableau', data);
+          this.actus = [];
+          this.loading = false;
+          return;
+        }
+    
+        this.actus = data
+          .sort((a, b) => {
+            const dateA = a.dateCreation ? new Date(a.dateCreation).getTime() : 0;
+            const dateB = b.dateCreation ? new Date(b.dateCreation).getTime() : 0;
+            return dateB - dateA;
+          })
+          .map(actu => ({
+            ...actu,
+            imageUrl: actu.image
+              ? `http://localhost:3000/uploads/${actu.image}`
+              : 'assets/placeholder-news.jpg'
+          }));
+    
+        this.menuOpen = new Array(this.actus.length).fill(false);
+        this.loading = false;
+      },
+      error: err => {
+        console.error('Erreur chargement actus', err);
+        this.actus = [];
+        this.loading = false;
+      }
+    });
+  }
+
+  refreshActus(): void {
     this.loadActus();
   }
 
   // =============================
-  // UTILISATEUR
+  // MASONRY LAYOUT
   // =============================
-  loadUser(): void {
-    const userData = localStorage.getItem('utilisateur');
-    console.log('loadUser - localStorage utilisateur:', userData);
-
-    if (!userData) return;
-
-    const parsed = JSON.parse(userData);
-    console.log('loadUser - parsed utilisateur:', parsed);
-
-    this.userRole = parsed.role || 'joueur';
-    this.userNom = parsed.nom || '';
-    this.userPrenom = parsed.prenom || '';
-    this.currentUserId = `${this.userPrenom} ${this.userNom}`;
-    console.log('loadUser - currentUserId:', this.currentUserId);
+  getTransform(index: number): string {
+    if (this.isMobile) return 'none';
+    const rotation = this.rotations[index % this.rotations.length];
+    return `rotate(${rotation}deg)`;
   }
 
-  // =============================
-  // CHARGEMENT DES ACTUS
-  // =============================
-  loadActus(): void {
-    this.loading = true;
-    console.log('loadActus - démarrage récupération actus');
-  
-    this.actusService.getAllActus().subscribe({
-      next: data => {
-        console.log('loadActus - données brutes reçues:', data);
-  
-        this.actus = data.map(actu => {
-          const commentaires = (actu.commentaires || []).map(c => ({
-            ...c,
-            userId: c.userId || c.nomComplet
-          }));
-  
-          const transformedActu: Actu = {
-            ...actu,
-            prenom: actu.auteur?.split(' ')[0] || '',
-            nom: actu.auteur?.split(' ').slice(1).join(' ') || '',
-            commentaires,
-            likes: typeof actu.likes === 'number' ? actu.likes : 0,
-            favoris: typeof actu.favoris === 'number' ? actu.favoris : 0,
-            isLiked: false,
-            isFavori: false,
-            imageUrl: actu.image ? `http://localhost:3000/uploads/${actu.image}` : ''
-          };
-  
-          console.log('loadActus - actu transformée:', transformedActu);
-          return transformedActu;
-        });
-  
-        const length = this.actus.length;
-        this.newComment = new Array(length).fill('');
-        this.commentSectionOpen = new Array(length).fill(false);
-        this.menuOpen = new Array(length).fill(false);
-        this.loading = false;
-  
-        console.log('loadActus - actus finalisées:', this.actus);
-      },
-      error: err => {
-        console.error('loadActus - erreur récupération actus', err);
-        this.loading = false;
-      }
-    });
+  getPosition(index: number): { left: string; top: string } {
+    if (this.isMobile) return { left: '0', top: '0' };
+    const pos = this.positions[index % this.positions.length];
+    const offsetTop = (index * 25) % 80;
+    return {
+      left: `${pos.left}%`,
+      top: `${pos.top + offsetTop}px`
+    };
+  }
+
+  getZIndex(index: number): number {
+    return index;
   }
 
   // =============================
-  // LIKE / FAVORIS
+  // STATUT ACTU
   // =============================
-  likeActu(actu: Actu, index: number) {
-    console.log('likeActu - avant like:', actu);
-    if (!actu.key) return;
-    this.actusService.toggleLike(actu.key, `${this.userPrenom} ${this.userNom}`).subscribe(res => {
-      console.log('likeActu - réponse serveur:', res);
-      this.actus[index].likes = res.likes;
-      this.actus[index].isLiked = res.isLiked;
-      console.log('likeActu - après mise à jour:', this.actus[index]);
-    });
-  }
-
-  favoriActu(actu: Actu) {
-    console.log('favoriActu - avant favori:', actu);
-    if (!actu.key) return;
-    this.actusService.toggleFavori(actu.key, `${this.userPrenom} ${this.userNom}`).subscribe(res => {
-      const index = this.actus.findIndex(a => a.key === actu.key);
-      if (index > -1) {
-        this.actus[index].favoris = res.favoris;
-        this.actus[index].isFavori = res.isFavori;
-        console.log('favoriActu - après mise à jour:', this.actus[index]);
-      }
-    });
-  }
-
-  // =============================
-  // COMMENTAIRES
-  // =============================
-  toggleCommentSection(actu: Actu, index: number) {
-    this.commentSectionOpen[index] = !this.commentSectionOpen[index];
-    console.log('toggleCommentSection - index:', index, 'open:', this.commentSectionOpen[index]);
-    if (this.commentSectionOpen[index]) {
-      setTimeout(() => {
-        const input = this.commentInputs?.toArray()[index];
-        input?.nativeElement?.focus();
-      }, 300);
-    }
-  }
-
-  commenterActu(actu: Actu, index: number) {
-    const contenu = this.newComment[index]?.trim();
-    console.log('commenterActu - contenu:', contenu);
-    if (!contenu || !actu.key) return;
-
-    this.actusService.addCommentaire(actu.key, `${this.userPrenom} ${this.userNom}`, contenu).subscribe(res => {
-      console.log('commenterActu - réponse serveur:', res);
-      this.actus[index].commentaires = (res.data.commentaires as Commentaire[]).map(c => ({
-        ...c,
-        userId: c.userId || c.nomComplet
-      }));
-      this.newComment[index] = '';
-      console.log('commenterActu - commentaires mis à jour:', this.actus[index].commentaires);
-    });
-  }
-
-  // =============================
-  // MENUS
-  // =============================
-  toggleMenu(index: number) {
-    this.menuOpen = this.menuOpen.map((o, i) => i === index ? !o : false);
-    console.log('toggleMenu - menuOpen:', this.menuOpen);
-  }
-
-  closeAllMenus() {
-    this.menuOpen = this.menuOpen.map(() => false);
-    console.log('closeAllMenus - menuOpen:', this.menuOpen);
-  }
-
-  isAnyMenuOpen() {
-    const anyOpen = this.menuOpen.some(o => o);
-    console.log('isAnyMenuOpen:', anyOpen);
-    return anyOpen;
-  }
-
-  trackByActuId(index: number, item: Actu) {
-    return item.key || item._id;
-  }
-
-  // =============================
-  // AVATAR COLORS
-  // =============================
-  getAvatarColor(nomComplet: string): string {
-    const hash = this.hashString(nomComplet);
-    const colors = ['#F87171', '#FBBF24', '#34D399', '#60A5FA', '#A78BFA', '#F472B6'];
-    return colors[hash % colors.length];
-  }
-
-  getAvatarColorDark(nomComplet: string): string {
-    const hash = this.hashString(nomComplet);
-    const colors = ['#B91C1C', '#B45309', '#059669', '#1D4ED8', '#7C3AED', '#DB2777'];
-    return colors[hash % colors.length];
-  }
-
-  private hashString(str: string): number {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return Math.abs(hash);
-  }
-
-  getInitiales(nomComplet: string) {
-    if (!nomComplet) return '';
-    const parts = nomComplet.split(' ').filter(p => p);
-    if (parts.length === 1) return parts[0][0].toUpperCase();
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  }
-
-  // =============================
-  // MODIFIER / SUPPRIMER ACTU
-  // =============================
-  editActu(actu: Actu): void {
-    this.selectedActu = { ...actu };
-    console.log('editActu - sélection actu:', actu);
-  }
-
-  deleteActu(actu: Actu): void {
-    console.log('deleteActu - actu avant suppression:', actu);
-    if (!actu.key) return;
-
-    const confirmed = confirm('Voulez-vous vraiment supprimer cette actualité ? Cette action est irréversible.');
-    if (!confirmed) return;
-
-    this.actusService.deleteActu(actu.key).subscribe({
-      next: () => {
-        this.actus = this.actus.filter(a => a.key !== actu.key);
-        this.newComment = this.newComment.filter((_, i) => this.actus[i]?.key !== actu.key);
-        this.commentSectionOpen = this.commentSectionOpen.filter((_, i) => this.actus[i]?.key !== actu.key);
-        this.menuOpen = this.menuOpen.filter((_, i) => this.actus[i]?.key !== actu.key);
-        console.log('deleteActu - actus après suppression:', this.actus);
-      },
-      error: (err) => console.error('deleteActu - erreur suppression', err)
-    });
-  }
-
-  // =============================
-  // MODAL GESTION
-  // =============================
-  openCreateModal(): void {
-    this.isCreateModalOpen = true;
-    this.selectedActu = null;
-    console.log('openCreateModal - ouverture modal');
-  }
-
-  closeModal(event?: MouseEvent): void {
-    this.isCreateModalOpen = false;
-    this.selectedActu = null;
-    console.log('closeModal - fermeture modal');
-  }
-
-  // Popup commentaires
-  popupCommentOpen: { [key: number]: boolean } = {};
-
-  toggleCommentPopup(actu: Actu) {
-    const index = this.actus.indexOf(actu);
-    this.popupCommentOpen[index] = !this.popupCommentOpen[index];
-    console.log('toggleCommentPopup - index:', index, 'open:', this.popupCommentOpen[index]);
-  }
-
-  // ✅ Méthode pour savoir si une actu est récente (moins de 7 jours)
-  isRecent(dateStr: string | undefined): boolean {
-    if (!dateStr) return false;
-    const today = new Date();
-    const actuDate = new Date(dateStr);
-    const diffDays = (today.getTime() - actuDate.getTime()) / (1000 * 60 * 60 * 24);
+  isNew(actu: Actu): boolean {
+    if (!actu.dateCreation) return false;
+    const actuDate = new Date(actu.dateCreation);
+    const now = new Date();
+    const diffDays = Math.floor((now.getTime() - actuDate.getTime()) / (1000 * 60 * 60 * 24));
     return diffDays <= 7;
   }
-  
+
+  isVeryRecent(actu: Actu): boolean {
+    // Pour le badge "NOUVEAU" - seulement sur la plus récente
+    if (!actu.dateCreation || this.actus.length === 0) return false;
+    return this.actus[0]._id === actu._id && this.isNew(actu);
+  }
+
+  // =============================
+  // INTERACTIONS
+  // =============================
+  openActuDetail(actu: Actu): void {
+    this.selectedActu = actu;
+    this.isDetailOpen = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeDetail(): void {
+    this.isDetailOpen = false;
+    this.selectedActu = null;
+    document.body.style.overflow = 'auto';
+  }
+
+  openCreateModal(): void {
+    this.isCreateModalOpen = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeCreateModal(): void {
+    this.isCreateModalOpen = false;
+  }
+
+  toggleMenu(event: Event, index: number): void {
+    event.stopPropagation();
+    this.menuOpen = this.menuOpen.map((o, i) => i === index ? !o : false);
+  }
+
+  closeAllMenus(): void {
+    this.menuOpen.fill(false);
+  }
+
+  deleteActu(event: Event, actu: Actu, index: number): void {
+    event.stopPropagation();
+    if (confirm(`Supprimer "${actu.titre}" ?`)) {
+      // Appel API à implémenter
+      this.actus.splice(index, 1);
+      this.menuOpen.splice(index, 1);
+    }
+  }
+
+  editActu(event: Event, actu: Actu): void {
+    event.stopPropagation();
+    // Logique d'édition à implémenter
+    console.log('Edit', actu);
+  }
+
+  trackByActuId(index: number, item: Actu): string {
+    return item._id || item.key || index.toString();
+  }
+
+  // =============================
+  // UTILS
+  // =============================
+  getInitiales(nom: string): string {
+    if (!nom) return '?';
+    const parts = nom.trim().split(/\s+/);
+    if (parts.length > 1) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return parts[0].substring(0, 2).toUpperCase();
+  }
+
+  formatDate(dateStr?: string): string {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return "Aujourd'hui";
+    if (diffDays === 1) return "Hier";
+    if (diffDays < 7) return `Il y a ${diffDays} jours`;
+    
+    return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: '2-digit' });
+  }
 }

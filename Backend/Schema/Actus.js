@@ -1,35 +1,22 @@
 const mongoose = require('mongoose');
 
-// Schéma des commentaires
-const CommentaireSchema = new mongoose.Schema({
-  nomComplet: {        // ici on met nom + prénom
-    type: String,
-    required: true,
-    trim: true
-  },
-  contenu: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  date: {
-    type: Date,
-    default: Date.now
-  }
-});
-
-// Schéma des actualités
 const ActusSchema = new mongoose.Schema({
 
-  titre: {            // nouveau champ pour le titre de l'actualité
+  titre: {
     type: String,
     required: true,
     trim: true
   },
 
-  auteur: {           // facultatif, nom complet de l'auteur de l'actu
+  auteur: {
     type: String,
     required: false,
+    trim: true
+  },
+
+  description: {
+    type: String,
+    required: true,
     trim: true
   },
 
@@ -47,21 +34,6 @@ const ActusSchema = new mongoose.Schema({
   dateCreation: {
     type: Date,
     default: Date.now
-  },
-
-  likes: {
-    type: Number,
-    default: 0
-  },
-
-  favoris: {
-    type: Number,
-    default: 0
-  },
-
-  commentaires: {
-    type: [CommentaireSchema],
-    default: []
   },
 
   key: {

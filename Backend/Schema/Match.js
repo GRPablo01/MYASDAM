@@ -12,7 +12,7 @@ const MatchSchema = new mongoose.Schema({
   categorie: { type: String, required: true },
   scoreDom: { type: Number, default: 0 },
   scoreExt: { type: Number, default: 0 },
-  statut: { type: String, default: 'A venir' },
+  statut: { type: String, default: 'À venir' },
   localisationMatch: { type: String, required: true },
   key: { type: String, required: true, unique: true },
 });

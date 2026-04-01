@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { ThemeService } from '../../../../Backend/Services/theme.service';
 
 @Component({
   selector: 'app-ajouter-equipe',
@@ -21,32 +22,20 @@ export class AjouterEquipe implements OnInit {
 
   // Message de succès ou erreur
   message: string | null = null;
-
+  selectedFile: File | null = null;
+  isMobile = window.innerWidth <= 970;
+  hoverCard: boolean = false;
   // Auth / Theme
   isLoggedIn = false;
   theme: 'clair' | 'sombre' = 'clair';
 
-  // Couleurs dynamiques
-  Background = '';
-  Background1 = '';
-  Background2 = '';
-  Background3 = '';
-  Background4 = '';
-  Background5 = '';
-  Background6 = '';
-  Background7 = '';
-  Background8 = '';
-  Background9 = '';
-  icon = '';
-  BorderHeader = '';
-  BorderHeader1 = '';
-  BorderHeader2 = '';
-  Text = '';
- 
+  
   
   
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private http: HttpClient,
+    public themeService:ThemeService,
+  ) {
     // Initialisation du formulaire
     this.equipeForm = this.fb.group({
       nom: ['', Validators.required],
@@ -63,7 +52,6 @@ export class AjouterEquipe implements OnInit {
       this.isLoggedIn = true;
       this.theme = user.theme === 'sombre' ? 'sombre' : 'clair';
     }
-    this.setThemeColors();
   }
 
   // Toggle du formulaire modal
@@ -91,6 +79,26 @@ export class AjouterEquipe implements OnInit {
     }
   }
 
+  isDragging = false;
+selectedFileName: string | null = null;
+
+onFileDrop(event: DragEvent) {
+  event.preventDefault();
+  this.isDragging = false;
+  const files = event.dataTransfer?.files;
+  if (files && files.length > 0) {
+    this.handleFile(files[0]);
+  }
+}
+
+
+
+private handleFile(file: File) {
+  this.selectedFileName = file.name;
+  // Votre logique existante...
+}
+  
+
   removePreview(): void {
     this.logoPreview = null;
     this.equipeForm.patchValue({ logo: null });
@@ -104,81 +112,7 @@ export class AjouterEquipe implements OnInit {
     this.message = null;
   }
 
-  // Définir les couleurs selon le thème
-  private setThemeColors(): void {
-    if (!this.isLoggedIn || this.theme === 'sombre') {
-      // Thème sombre
-
-      // Section 0
-      this.Background = '#1E293B';
-      this.BorderHeader = '2px solid #64748B';
-      this.Text = '#FFFFFF';
-
-      // Section 1
-      this.Background1 = 'linear-gradient(135deg,#6978b8,#818fd5)';
-
-      // Section 2
-      this.Background2 = '#6978b8';
-      this.Background3 = '#818fd5';
-      this.Background4 = '#64748B';
-
-      // Section 3
-      this.Background5 = '#1E293B';
-      this.icon = '#FFFFFF';
-
-      // Section 9
-      this.Background6 = '#818fd5';
-      this.Background7 = '#6978b8';
-
-      // Section 10
-      this.Background8 = '#454f7ba1';
-
-      // Section 11
-      this.BorderHeader1 = '2px solid #64748B';
-
-      // Section 12
-      this.Background9 = '#505c91';
-
-      // Section 13
-      this.BorderHeader2 = '2px dotted #64748B';
-      return;
-    }
-
-    // Thème clair
-
-    // Section 0
-    this.Background = '#FFFFFF';
-    this.BorderHeader = '2px solid #A80303';
-    this.Text = '#000000';
-
-    // Section 1
-    this.Background1 = 'linear-gradient(135deg,#DC2626,#BE123C)';
-
-    // Section 2
-    this.Background2 = '#DC2626';
-    this.Background3 = '#BE123C';
-    this.Background4 = '#A80303';
-
-    // Section 3
-    this.Background5 = '#FFFFFF';
-    this.icon = '#DC2626';
-
-    // Section 9
-    this.Background6 = '#BE123C';
-    this.Background7 = '#DC2626';
-
-    // Section 10
-    this.Background8 = '#c9c8c8b3';
-
-    // Section 11
-    this.BorderHeader1 = '2px solid #A80303';
-
-    // Section 12
-    this.Background9 = '#F3F4F6';
-
-    // Section 13
-    this.BorderHeader2 = '2px dotted #A80303';
-  }
+  
 
   // Soumission du formulaire
   ajouterEquipe(): void {

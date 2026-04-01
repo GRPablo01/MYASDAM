@@ -45,25 +45,41 @@ export class Acceuil implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // 🧠 Titre de la page
     this.titleService.setTitle('MY ASDAM | Accueil');
 
+    // 👤 Vérification de la connexion utilisateur
     const utilisateurString = localStorage.getItem('utilisateur');
     if (utilisateurString) this.isLoggedIn = true;
 
-    // ✅ S'abonner au thème et mettre à jour scrollbar
-    this.themeService.themeChange$.subscribe(isDark => {
-      document.documentElement.classList.toggle('dark', isDark);
-      this.updateScrollbarColors(isDark);
-      console.log('Thème actif:', isDark ? 'Sombre' : 'Clair');
-    });
+    // 🎨 Appliquer le thème depuis le ThemeService (lecture localStorage)
+    this.themeService.applyTheme(this.themeService.isDarkMode);
 
-    // ⚡ Scrollbar au chargement
-    this.updateScrollbarColors(this.themeService.isDarkMode);
+    // 🎯 Initialisation de la scrollbar
+    this.initScrollbar();
 
     // ⏳ Loader
-    setTimeout(() => this.isLoaded = true, 300);
+    setTimeout(() => {
+      this.isLoaded = true;
+    }, 300);
   }
 
+  /**
+   * 🎯 Initialise la scrollbar dynamique et écoute les changements de thème
+   */
+  private initScrollbar(): void {
+    // Couleurs initiales
+    this.updateScrollbarColors(this.themeService.isDarkMode);
+
+    // Abonnement aux changements de thème
+    this.themeService.themeChange$.subscribe(isDark => {
+      this.updateScrollbarColors(isDark);
+    });
+  }
+
+  /**
+   * 🎨 Met à jour les couleurs de la scrollbar
+   */
   private updateScrollbarColors(isDark: boolean): void {
     const root = document.documentElement;
     if (isDark) {

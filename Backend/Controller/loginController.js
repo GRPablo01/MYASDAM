@@ -75,19 +75,33 @@ exports.getCurrentUser = async (req, res) => {
   }
 };
 
-
 // ==============================
 // ✏️ METTRE À JOUR LE COOKIE VIA Key
 // ==============================
 exports.updateCookieByKey = async (req, res) => {
-  const { key } = req.params;
-  const { cookie } = req.body;
+  try {
+    const { key } = req.params;
+    const { cookie } = req.body;
 
-  const user = await User.findOne({ key });
-  if (!user) return res.status(404).json({ message: 'Utilisateur introuvable' });
+    // 🔍 Vérification
+    if (!cookie) {
+      return res.status(400).json({ message: 'Cookie manquant' });
+    }
 
-  user.cookie = cookie;
-  await user.save();
-  
-  res.json({ message: 'Cookie mis à jour', user });
+    // 🔄 Mise à jour sans validation de tout le document
+    const result = await User.updateOne(
+      { key },
+      { $set: { cookie } }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: 'Utilisateur introuvable' });
+    }
+
+    res.json({ message: 'Cookie mis à jour' });
+
+  } catch (error) {
+    console.error('❌ Erreur update cookie :', error);
+    res.status(500).json({ message: 'Erreur serveur', error: error.message });
+  }
 };

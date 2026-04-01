@@ -15,23 +15,13 @@ export interface Actu {
   _id: string;
   titre: string;
   auteur: string;        
-  prenom?: string;       
-  nom?: string;          
+  description: string;    // ajouté pour ton contenu
   image?: string;        
   saison?: string;
-  likes: number;
-  favoris: number;
   key?: string;
   dateCreation?: string;
   __v?: number;
-  imageUrl?: string;
-  isRecent?: boolean;
-  date?: string;
-  commentaires: Commentaire[];
-  // propriétés frontend
-  isLiked?: boolean;
-  isFavori?: boolean;
-  
+  imageUrl?: string;      // pour afficher l'image côté frontend
 }
 
 @Injectable({

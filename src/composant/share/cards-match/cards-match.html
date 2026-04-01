@@ -1,0 +1,705 @@
+<!-- matchs.component.html -->
+<section class="relative min-h-screen flex flex-col transition-colors duration-500 mt-15" [style.background]="themeService.Backgroundcards">
+
+
+    <!-- ================= MOBILE TOP ACTIONS ================= -->
+    <div class="fixed top-16 left-1 z-50 p-2 rounded-full"
+        [ngStyle]="{'background-color': themeService.Backgroundcards + 'cc'}">
+        <app-icon3 class="block"></app-icon3>
+    </div>
+
+    <!-- BACKGROUND ANIMÉ - Non fixe, scroll avec le contenu -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden" style="position: absolute; height: 100%;">
+        <div class="absolute inset-0 opacity-[0.08]" [ngStyle]="{
+            'background-image': 'linear-gradient(' + themeService.Textsecondaire + ' 1px, transparent 1px), linear-gradient(90deg, ' + themeService.Textsecondaire + ' 1px, transparent 1px)',
+            'background-size': '50px 50px',
+            'background-attachment': 'scroll'
+            }">
+        </div>
+    </div>
+
+    <!-- ================= LAYOUT PRINCIPAL: SIDEBAR + CONTENT ================= -->
+    <div class="relative z-10 flex-1 flex flex-col lg:flex-row min-h-0">
+
+        <!-- ================= SIDEBAR FILTRES (Desktop) ================= -->
+        <aside [ngStyle]="{'background':themeService.Backgroundprincipal,'border':themeService.Borderfocus}"
+            class="hidden lg:block w-80 flex-shrink-0 mb-68 ml-3 mt-6 rounded-2xl overflow-y-auto custom-scrollbar">
+
+            <div class="p-6 space-y-6 sticky top-0">
+                <!-- Titre Sidebar -->
+                <div class="flex items-center justify-between pb-4 border-b"
+                    [style.border-color]="themeService.Bordernormal + '20'">
+                    <h2 class="flex items-center gap-2 text-lg font-bold" [style.color]="themeService.Textprincipal">
+                        <i class="fas fa-filter" [style.color]="themeService.primary"></i>
+                        Filtres
+                    </h2>
+                    <span *ngIf="activeFilters.length > 0" class="px-2.5 py-1 rounded-full text-xs font-bold"
+                        [style.background]="themeService.primary" [style.color]="'#fff'">
+                        {{ activeFilters.length }}
+                    </span>
+                </div>
+
+                <!-- Recherche -->
+                <div class="space-y-3">
+                    <label class="text-xs font-semibold uppercase tracking-wider flex items-center gap-2"
+                        [style.color]="themeService.Textsecondaire">
+                        <i class="fas fa-search" [style.color]="themeService.primary"></i>
+                        Recherche
+                    </label>
+                    <div class="relative group">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-sm transition-colors"
+                            [style.color]="focusSearch ? themeService.primary : themeService.Textsecondaire + '60'">
+                        </i>
+                        <input type="text" [(ngModel)]="filtresActifs.recherche" (input)="appliquerFiltres()"
+                            placeholder="Équipe, lieu, compétition..."
+                            class="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm outline-none transition-all duration-300 shadow-sm"
+                            [style.background]="themeService.Backgroundprincipal"
+                            [style.color]="themeService.Textprincipal"
+                            [style.border]="'2px solid ' + (focusSearch ? themeService.primary + '50' : 'transparent')"
+                            (focus)="focusSearch = true" (blur)="focusSearch = false">
+                    </div>
+                </div>
+
+                <!-- Périodes -->
+                <div class="space-y-3">
+                    <label class="text-xs font-semibold uppercase tracking-wider"
+                        [style.color]="themeService.Textsecondaire">
+                        Période
+                    </label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button *ngFor="let periode of periodes" (click)="setPeriode(periode.value)"
+                            class="flex flex-col items-center gap-2 p-3 rounded-xl text-xs font-medium transition-all duration-200 hover:scale-[1.02] shadow-sm"
+                            [style.background]="filtresActifs.periode === periode.value ? themeService.primary + '20' : themeService.Backgroundprincipal"
+                            [style.color]="filtresActifs.periode === periode.value ? themeService.primary : themeService.Textprincipal"
+                            [style.border]="'2px solid ' + (filtresActifs.periode === periode.value ? themeService.primary + '50' : 'transparent')">
+                            <i class="fas {{ periode.icon }} text-lg"></i>
+                            <span>{{ periode.label }}</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Statuts -->
+                <div class="space-y-3">
+                    <label class="text-xs font-semibold uppercase tracking-wider"
+                        [style.color]="themeService.Textsecondaire">
+                        Statuts
+                    </label>
+                    <div class="space-y-2">
+                        <button *ngFor="let statut of statutsDisponibles" (click)="toggleStatut(statut)"
+                            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all duration-200 group hover:translate-x-1 shadow-sm"
+                            [style.background]="filtresActifs.statuts.includes(statut) ? getStatutColor(statut) + '15' : themeService.Backgroundprincipal"
+                            [style.color]="filtresActifs.statuts.includes(statut) ? getStatutColor(statut) : themeService.Textprincipal">
+                            <div class="w-2.5 h-2.5 rounded-full transition-transform group-hover:scale-125"
+                                [style.background]="getStatutColor(statut)">
+                            </div>
+                            <i [class]="'fas ' + getStatutIcon(statut) + ' w-5 text-center'"></i>
+                            <span class="flex-1 text-left font-medium">{{ statut }}</span>
+                            <i *ngIf="filtresActifs.statuts.includes(statut)" class="fas fa-check text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reset -->
+                <button *ngIf="hasActiveFilters()" (click)="clearAllFilters()"
+                    class="w-full py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 shadow-sm"
+                    [style.background]="themeService.accent + '15'" [style.color]="themeService.accent">
+                    <i class="fas fa-undo-alt"></i>
+                    Réinitialiser les filtres
+                </button>
+            </div>
+        </aside>
+
+        <!-- ================= CONTENU PRINCIPAL ================= -->
+        <main class="flex-1 min-h-0 overflow-y-auto">
+
+            <!-- Hero Section -->
+            <div class="px-6 sm:px-8 lg:px-12 xl:px-16 py-8">
+                <div class="max-w-[1800px] mx-auto">
+                    <div class="relative rounded-3xl overflow-hidden p-8 md:p-12 shadow-xl"
+                        [style.background]="'linear-gradient(135deg, ' + themeService.primary + '15 0%, ' + themeService.Backgroundprincipal + ' 50%, ' + themeService.Backgroundcards + ' 100%)'"
+                        [style.border]="'1px solid ' + themeService.Bordernormal + '20'">
+
+
+
+                        <div
+                            class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                            <div class="max-w-2xl">
+                                <h1 class="text-3xl md:text-4xl lg:text-5xl font-black mb-3 tracking-tight"
+                                    [style.color]="themeService.Textprincipal">
+                                    Tous les matchs
+                                </h1>
+                                <p class="text-base md:text-lg opacity-70 leading-relaxed"
+                                    [style.color]="themeService.Textsecondaire">
+                                    Consultez et filtrez l'ensemble des rencontres de la saison.
+                                    Cliquez sur un match pour voir les détails complets.
+                                </p>
+                            </div>
+
+                            <!-- Stats Rapides -->
+                            <div class="flex gap-4 flex-shrink-0">
+                                <div class="px-6 py-4 rounded-2xl text-center shadow-lg"
+                                    [style.background]="themeService.Backgroundcards + '90'">
+                                    <div class="text-3xl font-black mb-1" [style.color]="themeService.primary">
+                                        {{ matchsFiltres.length }}
+                                    </div>
+                                    <div class="text-xs font-bold uppercase tracking-wider opacity-60"
+                                        [style.color]="themeService.Textsecondaire">
+                                        Match{{ matchsFiltres.length > 1 ? 's' : '' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtres Actifs -->
+            <div *ngIf="activeFilters.length > 0" class="px-6 sm:px-8 lg:px-12 xl:px-16 pb-6">
+                <div class="max-w-[1800px] mx-auto flex flex-wrap items-center gap-3">
+                    <span class="text-sm font-semibold mr-2" [style.color]="themeService.Textsecondaire">
+                        <i class="fas fa-filter mr-1"></i> Filtres actifs :
+                    </span>
+                    <span *ngFor="let filter of activeFilters"
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 hover:scale-105 cursor-pointer group shadow-sm"
+                        [style.background]="filter.type === 'status' ? getStatutColor(filter.value) + '20' : themeService.primary + '20'"
+                        [style.color]="filter.type === 'status' ? getStatutColor(filter.value) : themeService.primary"
+                        [style.border]="'1px solid ' + (filter.type === 'status' ? getStatutColor(filter.value) : themeService.primary) + '40'"
+                        (click)="removeFilter(filter)">
+                        {{ filter.label }}
+                        <i class="fas fa-times text-[10px] opacity-60 group-hover:opacity-100 transition-opacity"></i>
+                    </span>
+                    <button (click)="clearAllFilters()"
+                        class="text-xs font-semibold underline opacity-50 hover:opacity-100 transition-opacity px-3 py-2"
+                        [style.color]="themeService.Textsecondaire">
+                        Tout effacer
+                    </button>
+                </div>
+            </div>
+
+
+            <!-- Grille des Matchs -->
+            <div class="px-4 sm:px-6 lg:px-8 xl:px-12 pb-12 ml-5">
+                <div class="max-w-[1800px] mx-auto">
+
+                    <!-- État Chargement -->
+                    <div *ngIf="loading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <div *ngFor="let i of [1,2,3,4,5,6]"
+                            class="rounded-2xl overflow-hidden animate-pulse h-72 shadow-lg"
+                            [style.background]="themeService.Backgroundprincipal">
+                            <div class="h-36 opacity-20" [style.background]="themeService.Bordernormal"></div>
+                            <div class="p-6 space-y-4">
+                                <div class="h-5 rounded w-2/3 opacity-20"
+                                    [style.background]="themeService.Bordernormal"></div>
+                                <div class="h-4 rounded w-1/2 opacity-20"
+                                    [style.background]="themeService.Bordernormal"></div>
+                                <div class="flex justify-between mt-6">
+                                    <div class="h-12 rounded w-28 opacity-20"
+                                        [style.background]="themeService.Bordernormal"></div>
+                                    <div class="h-12 rounded w-28 opacity-20"
+                                        [style.background]="themeService.Bordernormal"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- État Vide -->
+                    <div *ngIf="!loading && matchsFiltres.length === 0"
+                        class="flex flex-col items-center justify-center py-24 px-4 text-center">
+                        <div class="relative mb-8">
+                            <div class="w-32 h-32 rounded-full flex items-center justify-center shadow-xl"
+                                [style.background]="themeService.Backgroundprincipal">
+                                <i class="fas fa-search text-6xl opacity-30"
+                                    [style.color]="themeService.Textsecondaire"></i>
+                            </div>
+                            <div class="absolute -bottom-2 -right-2 w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
+                                [style.background]="themeService.accent">
+                                <i class="fas fa-slash text-white text-lg transform rotate-45"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-3" [style.color]="themeService.Textprincipal">
+                            Aucun match trouvé
+                        </h3>
+                        <p class="text-lg opacity-60 max-w-md mb-8" [style.color]="themeService.Textsecondaire">
+                            Essayez de modifier vos critères de recherche ou réinitialisez les filtres.
+                        </p>
+                        <button (click)="clearAllFilters()"
+                            class="px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 flex items-center gap-3 text-base shadow-lg"
+                            [style.background]="themeService.primary" [style.color]="'#fff'">
+                            <i class="fas fa-undo-alt"></i>
+                            Réinitialiser les filtres
+                        </button>
+                    </div>
+
+                    <!-- Grille - 3 colonnes max -->
+                    <div *ngIf="!loading && matchsFiltres.length > 0"
+                        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                        <article *ngFor="let match of matchsFiltres; trackBy: trackByMatchId"
+                            class="group relative rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer shadow-lg hover:shadow-2xl"
+                            [style.background]="themeService.Backgroundprincipal"
+                            [style.border]="'1px solid ' + (activeCard === match._id ? themeService.primary + '50' : themeService.Bordernormal + '10')"
+                            [style.transform]="activeCard === match._id ? 'translateY(-8px) scale(1.01)' : 'translateY(0)'"
+                            (mouseenter)="activeCard = match._id ?? null" (mouseleave)="activeCard = null"
+                            (click)="openMatchDetails(match)">
+
+                            <!-- Bandeau Status -->
+                            <div class="absolute top-0 left-0 right-0 h-2 z-10 transition-all duration-300"
+                                [style.background]="getStatutColor(match.statut)"
+                                [style.box-shadow]="activeCard === match._id ? '0 0 20px ' + getStatutColor(match.statut) : 'none'">
+                            </div>
+
+                            <!-- Badge Live -->
+                            <div *ngIf="isLive(match)"
+                                class="absolute top-4 right-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider animate-pulse shadow-lg"
+                                [style.background]="'#ef4444'" [style.color]="'#fff'">
+                                <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+                                Live
+                            </div>
+
+                            <!-- Header Card -->
+                            <div class="p-6 pb-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-md"
+                                            [style.background]="themeService.primary + '15'">
+                                            <i [class]="'fas ' + getCompetitionIcon(match.typeMatch) + ' text-lg'"
+                                                [style.color]="themeService.primary"></i>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span class="text-sm font-bold uppercase tracking-wider"
+                                                [style.color]="themeService.Textsecondaire">
+                                                {{ match.typeMatch }}
+                                            </span>
+                                            <span class="text-[10px] opacity-50"
+                                                [style.color]="themeService.Textsecondaire">
+                                                {{ match.categorie }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span
+                                        class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm"
+                                        [style.background]="getStatutColor(match.statut) + '20'"
+                                        [style.color]="getStatutColor(match.statut)">
+                                        {{ getStatutLabel(match.statut) }}
+                                    </span>
+                                </div>
+
+                                <!-- Date & Heure & Lieu -->
+                                <div class="flex items-center justify-between text-xs font-medium">
+                                    <div class="flex items-center gap-4">
+                                        <div class="flex items-center gap-1.5"
+                                            [style.color]="themeService.Textsecondaire">
+                                            <i class="far fa-calendar"></i>
+                                            <span class="font-semibold">{{ formatDateRelative(match.date) }}</span>
+                                        </div>
+                                        <div class="w-1 h-1 rounded-full opacity-40"
+                                            [style.background]="themeService.Textsecondaire"></div>
+                                        <div class="flex items-center gap-1.5"
+                                            [style.color]="themeService.Textsecondaire">
+                                            <i class="far fa-clock"></i>
+                                            <span>{{ match.heure }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 max-w-[120px]"
+                                        [style.color]="themeService.Textsecondaire">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span class="truncate">{{ match.lieu || 'Stade non défini' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contenu Principal - VS -->
+                            <div class="px-6 py-8 relative">
+                                <!-- VS Background -->
+                                <div
+                                    class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
+                                    <span class="text-[160px] font-black italic"
+                                        [style.color]="themeService.primary">VS</span>
+                                </div>
+
+                                <div class="flex items-center justify-between gap-4 relative z-10">
+                                    <!-- Équipe Domicile -->
+                                    <div class="flex-1 flex flex-col items-center text-center min-w-0">
+                                        <div
+                                            class="relative mb-4 group-hover:scale-110 transition-transform duration-300">
+                                            <div class="absolute inset-0 rounded-full blur-xl opacity-0 transition-opacity duration-300"
+                                                [style.background]="getTeamColor(match.equipeDom || '')"
+                                                [style.opacity]="activeCard === match._id ? '0.4' : '0'"></div>
+                                            <div class="relative w-24 h-24 rounded-full flex items-center justify-center text-2xl font-bold shadow-xl"
+                                                [style.background]="themeService.Backgroundcards"
+                                                [style.border]="'3px solid ' + themeService.Bordernormal + '20'">
+                                                <img *ngIf="match.logoDom" [src]="match.logoDom"
+                                                    class="w-16 h-16 object-contain" [alt]="match.equipeDom">
+                                                <span *ngIf="!match.logoDom" [style.color]="themeService.Textprincipal">
+                                                    {{ match.equipeDom | slice:0:2 | uppercase }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <h3 class="text-base font-bold text-center leading-tight line-clamp-2 min-h-[2.5rem] flex items-center justify-center px-1"
+                                            [style.color]="themeService.Textprincipal">
+                                            {{ match.equipeDom }}
+                                        </h3>
+                                        <span class="text-[10px] mt-2 opacity-50 uppercase tracking-wider font-semibold"
+                                            [style.color]="themeService.Textsecondaire">Domicile</span>
+                                    </div>
+
+                                    <!-- Score / VS -->
+                                    <div class="flex-shrink-0 px-3">
+                                        <div *ngIf="match.scoreDom !== null && match.scoreExt !== null; else vsBlock"
+                                            class="flex items-center gap-2 px-5 py-4 rounded-2xl shadow-inner min-w-[100px] justify-center"
+                                            [style.background]="themeService.Backgroundcards"
+                                            [style.border]="'2px solid ' + themeService.primary + '30'">
+                                            <span class="text-3xl font-black min-w-[2ch] text-center"
+                                                [style.color]="themeService.Textprincipal">{{ match.scoreDom }}</span>
+                                            <span class="text-base font-bold opacity-30">:</span>
+                                            <span class="text-3xl font-black min-w-[2ch] text-center"
+                                                [style.color]="themeService.Textprincipal">{{ match.scoreExt }}</span>
+                                        </div>
+
+                                        <ng-template #vsBlock>
+                                            <div class="text-center py-5 min-w-[100px]">
+                                                <span class="text-5xl font-black italic"
+                                                    [style.color]="themeService.primary">VS</span>
+                                                <div class="text-xs uppercase tracking-widest mt-2 opacity-50 font-bold"
+                                                    [style.color]="themeService.Textsecondaire">À venir</div>
+                                            </div>
+                                        </ng-template>
+                                    </div>
+
+                                    <!-- Équipe Extérieur -->
+                                    <div class="flex-1 flex flex-col items-center text-center min-w-0">
+                                        <div
+                                            class="relative mb-4 group-hover:scale-110 transition-transform duration-300">
+                                            <div class="absolute inset-0 rounded-full blur-xl opacity-0 transition-opacity duration-300"
+                                                [style.background]="getTeamColor(match.equipeExt || '')"
+                                                [style.opacity]="activeCard === match._id ? '0.4' : '0'"></div>
+                                            <div class="relative w-24 h-24 rounded-full flex items-center justify-center text-2xl font-bold shadow-xl"
+                                                [style.background]="themeService.Backgroundcards"
+                                                [style.border]="'3px solid ' + themeService.Bordernormal + '20'">
+                                                <img *ngIf="match.logoExt" [src]="match.logoExt"
+                                                    class="w-16 h-16 object-contain" [alt]="match.equipeExt">
+                                                <span *ngIf="!match.logoExt" [style.color]="themeService.Textprincipal">
+                                                    {{ match.equipeExt | slice:0:2 | uppercase }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <h3 class="text-base font-bold text-center leading-tight line-clamp-2 min-h-[2.5rem] flex items-center justify-center px-1"
+                                            [style.color]="themeService.Textprincipal">
+                                            {{ match.equipeExt }}
+                                        </h3>
+                                        <span class="text-[10px] mt-2 opacity-50 uppercase tracking-wider font-semibold"
+                                            [style.color]="themeService.Textsecondaire">Extérieur</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="px-6 py-4 border-t transition-colors duration-300 flex items-center justify-between"
+                                [style.border-color]="themeService.Bordernormal + '15'"
+                                [style.background]="activeCard === match._id ? themeService.Backgroundcards + '50' : 'transparent'">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm"
+                                        [style.background]="themeService.Bordernormal + '15'"
+                                        [style.color]="themeService.Textsecondaire">
+                                        {{ match.categorie }}
+                                    </span>
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-medium" [style.color]="themeService.Textsecondaire">
+                                        Détails
+                                    </span>
+                                    <div class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100 transform translate-x-3 group-hover:translate-x-0 shadow-md"
+                                        [style.background]="themeService.primary + '20'"
+                                        [style.color]="themeService.primary">
+                                        <i class="fas fa-arrow-right text-xs"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Effet Hover Shine -->
+                            <div
+                                class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none overflow-hidden">
+                                <div class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
+                                    [style.background]="'linear-gradient(90deg, transparent, ' + themeService.primary + '08, transparent)'">
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- Pagination (si nécessaire) -->
+                    <div *ngIf="matchsFiltres.length >= 12" class="mt-12 text-center">
+                        <button
+                            class="px-8 py-4 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105 inline-flex items-center gap-2 group shadow-lg"
+                            [style.background]="themeService.Backgroundprincipal"
+                            [style.color]="themeService.Textprincipal"
+                            [style.border]="'1px solid ' + themeService.Bordernormal + '30'">
+                            <span>Charger plus de matchs</span>
+                            <i class="fas fa-chevron-down text-xs group-hover:translate-y-1 transition-transform"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ================= MODAL MOBILE FILTRES (Bottom Sheet) ================= -->
+    <div *ngIf="showFiltersMobile" class="absolute inset-0 z-[60] lg:hidden" style="position: fixed;">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
+            (click)="showFiltersMobile = false"></div>
+
+        <div class="absolute bottom-0 left-0 right-0 max-h-[90vh] overflow-y-auto rounded-t-3xl shadow-2xl"
+            [style.background]="themeService.Backgroundcards" [@slideUp]>
+
+            <!-- Handle -->
+            <div class="sticky top-0 pt-4 pb-3 bg-inherit z-10 flex flex-col items-center border-b"
+                [style.border-color]="themeService.Bordernormal + '20'">
+                <div class="w-12 h-1.5 rounded-full opacity-40 mb-3" [style.background]="themeService.Textsecondaire">
+                </div>
+                <div class="flex items-center justify-between w-full px-6">
+                    <h3 class="text-xl font-bold" [style.color]="themeService.Textprincipal">Filtres</h3>
+                    <button (click)="showFiltersMobile = false"
+                        class="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 shadow-md"
+                        [style.background]="themeService.Backgroundprincipal">
+                        <i class="fas fa-times text-sm" [style.color]="themeService.Textsecondaire"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <!-- Recherche Mobile -->
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-wider mb-3 block"
+                        [style.color]="themeService.Textsecondaire">
+                        Rechercher
+                    </label>
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2"
+                            [style.color]="themeService.Textsecondaire"></i>
+                        <input type="text" [(ngModel)]="filtresActifs.recherche" (input)="appliquerFiltres()"
+                            placeholder="Équipe, lieu..."
+                            class="w-full pl-12 pr-4 py-4 rounded-xl text-base outline-none shadow-sm"
+                            [style.background]="themeService.Backgroundprincipal"
+                            [style.color]="themeService.Textprincipal"
+                            [style.border]="'2px solid ' + themeService.Bordernormal + '30'">
+                    </div>
+                </div>
+
+                <!-- Périodes Mobile -->
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-wider mb-3 block"
+                        [style.color]="themeService.Textsecondaire">
+                        Période
+                    </label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button *ngFor="let periode of periodes" (click)="setPeriode(periode.value)"
+                            class="flex flex-col items-center gap-2 p-4 rounded-xl transition-all duration-200 shadow-sm"
+                            [style.background]="filtresActifs.periode === periode.value ? themeService.primary + '20' : themeService.Backgroundprincipal"
+                            [style.color]="filtresActifs.periode === periode.value ? themeService.primary : themeService.Textprincipal"
+                            [style.border]="'2px solid ' + (filtresActifs.periode === periode.value ? themeService.primary + '50' : 'transparent')">
+                            <i class="fas {{ periode.icon }} text-xl"></i>
+                            <span class="text-sm font-semibold">{{ periode.label }}</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Statuts Mobile -->
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-wider mb-3 block"
+                        [style.color]="themeService.Textsecondaire">
+                        Statuts
+                    </label>
+                    <div class="flex flex-wrap gap-2">
+                        <button *ngFor="let statut of statutsDisponibles" (click)="toggleStatut(statut)"
+                            class="flex items-center gap-2 px-4 py-3 rounded-full text-sm font-semibold transition-all duration-200 shadow-sm"
+                            [style.background]="filtresActifs.statuts.includes(statut) ? getStatutColor(statut) + '20' : themeService.Backgroundprincipal"
+                            [style.color]="filtresActifs.statuts.includes(statut) ? getStatutColor(statut) : themeService.Textprincipal"
+                            [style.border]="'2px solid ' + (filtresActifs.statuts.includes(statut) ? getStatutColor(statut) : themeService.Bordernormal + '30')">
+                            <div class="w-2.5 h-2.5 rounded-full" [style.background]="getStatutColor(statut)"></div>
+                            {{ statut }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Actions Mobile -->
+                <div class="flex gap-3 pt-4 border-t" [style.border-color]="themeService.Bordernormal + '20'">
+                    <button *ngIf="hasActiveFilters()" (click)="clearAllFilters()"
+                        class="flex-1 py-4 rounded-xl text-sm font-semibold shadow-sm"
+                        [style.background]="themeService.Backgroundprincipal"
+                        [style.color]="themeService.Textsecondaire">
+                        Réinitialiser
+                    </button>
+                    <button (click)="showFiltersMobile = false"
+                        class="flex-[2] py-4 rounded-xl text-sm font-semibold transition-all active:scale-95 shadow-lg"
+                        [style.background]="themeService.primary" [style.color]="'#fff'">
+                        Voir {{ matchsFiltres.length }} résultat{{ matchsFiltres.length > 1 ? 's' : '' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL DÉTAILS MATCH ================= -->
+    <div *ngIf="showMatchModal && selectedMatch" class="absolute inset-0 z-[70] flex items-center justify-center p-4"
+        style="position: fixed;">
+
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" (click)="closeMatchModal()"></div>
+
+        <!-- Modal -->
+        <div class="relative w-full max-w-4xl max-h-[95vh] overflow-y-auto rounded-3xl shadow-2xl"
+            [style.background]="themeService.Backgroundcards" [@scaleIn]>
+
+            <!-- Header -->
+            <div class="sticky top-0 z-10 flex items-center justify-between p-6 border-b"
+                [style.border-color]="themeService.Bordernormal + '20'"
+                [style.background]="themeService.Backgroundcards">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-md"
+                        [style.background]="themeService.primary + '15'">
+                        <i class="fas fa-futbol text-lg" [style.color]="themeService.primary"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold" [style.color]="themeService.Textprincipal">
+                            Détails du match
+                        </h2>
+                        <p class="text-xs opacity-60" [style.color]="themeService.Textsecondaire">
+                            {{ selectedMatch.typeMatch }} • {{ selectedMatch.categorie }}
+                        </p>
+                    </div>
+                </div>
+                <button (click)="closeMatchModal()"
+                    class="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 hover:rotate-90 shadow-md"
+                    [style.background]="themeService.Backgroundprincipal">
+                    <i class="fas fa-times" [style.color]="themeService.Textsecondaire"></i>
+                </button>
+            </div>
+
+            <!-- Contenu -->
+            <div class="p-8 space-y-8">
+                <!-- Statut -->
+                <div class="flex items-center justify-center">
+                    <span
+                        class="px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider flex items-center gap-2 shadow-md"
+                        [style.background]="getStatutColor(selectedMatch.statut) + '20'"
+                        [style.color]="getStatutColor(selectedMatch.statut)">
+                        <i [class]="'fas ' + getStatutIcon(selectedMatch.statut)"></i>
+                        {{ getStatutLabel(selectedMatch.statut) }}
+                    </span>
+                </div>
+
+                <!-- Affichage Équipes -->
+                <div class="flex items-center justify-center gap-8 md:gap-16 py-10">
+                    <!-- Domicile -->
+                    <div class="text-center flex-1">
+                        <div class="w-28 h-28 md:w-32 md:h-32 rounded-full flex items-center justify-center mb-5 shadow-2xl mx-auto relative"
+                            [style.background]="themeService.Backgroundprincipal"
+                            [style.border]="'4px solid ' + themeService.Bordernormal + '20'">
+                            <img *ngIf="selectedMatch.logoDom" [src]="selectedMatch.logoDom"
+                                class="w-16 h-16 md:w-20 md:h-20 object-contain">
+                            <span *ngIf="!selectedMatch.logoDom" class="text-3xl md:text-4xl font-black"
+                                [style.color]="themeService.Textprincipal">
+                                {{ selectedMatch.equipeDom | slice:0:2 | uppercase }}
+                            </span>
+                        </div>
+                        <h3 class="font-bold text-xl md:text-2xl mb-2" [style.color]="themeService.Textprincipal">
+                            {{ selectedMatch.equipeDom }}
+                        </h3>
+                        <span class="text-sm uppercase tracking-wider opacity-50 font-bold"
+                            [style.color]="themeService.Textsecondaire">Domicile</span>
+                    </div>
+
+                    <!-- Score -->
+                    <div class="text-center px-4">
+                        <div *ngIf="selectedMatch.scoreDom !== null && selectedMatch.scoreExt !== null; else vsModal"
+                            class="text-6xl md:text-7xl font-black tracking-tighter"
+                            [style.color]="themeService.primary">
+                            {{ selectedMatch.scoreDom }} - {{ selectedMatch.scoreExt }}
+                        </div>
+                        <ng-template #vsModal>
+                            <span class="text-5xl md:text-6xl font-black italic opacity-20"
+                                [style.color]="themeService.primary">VS</span>
+                        </ng-template>
+                        <div class="mt-4 text-base font-semibold px-6 py-2 rounded-full shadow-sm"
+                            [style.background]="themeService.Backgroundprincipal"
+                            [style.color]="themeService.Textsecondaire">
+                            {{ selectedMatch.date | date:'dd/MM/yyyy' }}
+                        </div>
+                    </div>
+
+                    <!-- Extérieur -->
+                    <div class="text-center flex-1">
+                        <div class="w-28 h-28 md:w-32 md:h-32 rounded-full flex items-center justify-center mb-5 shadow-2xl mx-auto relative"
+                            [style.background]="themeService.Backgroundprincipal"
+                            [style.border]="'4px solid ' + themeService.Bordernormal + '20'">
+                            <img *ngIf="selectedMatch.logoExt" [src]="selectedMatch.logoExt"
+                                class="w-16 h-16 md:w-20 md:h-20 object-contain">
+                            <span *ngIf="!selectedMatch.logoExt" class="text-3xl md:text-4xl font-black"
+                                [style.color]="themeService.Textprincipal">
+                                {{ selectedMatch.equipeExt | slice:0:2 | uppercase }}
+                            </span>
+                        </div>
+                        <h3 class="font-bold text-xl md:text-2xl mb-2" [style.color]="themeService.Textprincipal">
+                            {{ selectedMatch.equipeExt }}
+                        </h3>
+                        <span class="text-sm uppercase tracking-wider opacity-50 font-bold"
+                            [style.color]="themeService.Textsecondaire">Extérieur</span>
+                    </div>
+                </div>
+
+                <!-- Infos Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="p-5 rounded-2xl text-center transition-all hover:scale-105 shadow-sm cursor-default"
+                        [style.background]="themeService.Backgroundprincipal">
+                        <i class="far fa-calendar text-3xl mb-3" [style.color]="themeService.primary"></i>
+                        <div class="text-xs uppercase tracking-wider opacity-60 mb-1 font-bold"
+                            [style.color]="themeService.Textsecondaire">Date</div>
+                        <div class="font-bold text-sm" [style.color]="themeService.Textprincipal">
+                            {{ selectedMatch.date | date:'EEEE d MMM yyyy':'':'fr' }}
+                        </div>
+                    </div>
+
+                    <div class="p-5 rounded-2xl text-center transition-all hover:scale-105 shadow-sm cursor-default"
+                        [style.background]="themeService.Backgroundprincipal">
+                        <i class="far fa-clock text-3xl mb-3" [style.color]="themeService.primary"></i>
+                        <div class="text-xs uppercase tracking-wider opacity-60 mb-1 font-bold"
+                            [style.color]="themeService.Textsecondaire">Heure</div>
+                        <div class="font-bold text-sm" [style.color]="themeService.Textprincipal">
+                            {{ selectedMatch.heure }}
+                        </div>
+                    </div>
+
+                    <div class="p-5 rounded-2xl text-center transition-all hover:scale-105 shadow-sm cursor-default"
+                        [style.background]="themeService.Backgroundprincipal">
+                        <i class="fas fa-map-marker-alt text-3xl mb-3" [style.color]="themeService.primary"></i>
+                        <div class="text-xs uppercase tracking-wider opacity-60 mb-1 font-bold"
+                            [style.color]="themeService.Textsecondaire">Lieu</div>
+                        <div class="font-bold text-sm line-clamp-1" [style.color]="themeService.Textprincipal">
+                            {{ selectedMatch.lieu || 'Non défini' }}
+                        </div>
+                    </div>
+
+                    <div class="p-5 rounded-2xl text-center transition-all hover:scale-105 shadow-sm cursor-default"
+                        [style.background]="themeService.Backgroundprincipal">
+                        <i class="fas fa-layer-group text-3xl mb-3" [style.color]="themeService.primary"></i>
+                        <div class="text-xs uppercase tracking-wider opacity-60 mb-1 font-bold"
+                            [style.color]="themeService.Textsecondaire">Catégorie</div>
+                        <div class="font-bold text-sm" [style.color]="themeService.Textprincipal">
+                            {{ selectedMatch.categorie }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="p-6 border-t" [style.border-color]="themeService.Bordernormal + '20'">
+                <button (click)="closeMatchModal()"
+                    class="w-full py-4 rounded-xl font-semibold transition-all duration-200 hover:opacity-90 active:scale-95 text-base shadow-lg"
+                    [style.background]="themeService.primary" [style.color]="'#fff'">
+                    Fermer les détails
+                </button>
+            </div>
+        </div>
+    </div>
+
+</section>

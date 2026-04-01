@@ -5,11 +5,12 @@ import { Footer } from '../../../composant/share/footer/footer';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Dash } from '../../../composant/share/dash/dash';
+import { Mobile } from '../../../composant/share/mobile/mobile';
 
 
 @Component({
   selector: 'app-dashboard',
-  imports: [Header, Footer, CommonModule, Dash,HttpClientModule],
+  imports: [Header, Footer, CommonModule, Dash,HttpClientModule,Mobile],
   standalone:true,
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',

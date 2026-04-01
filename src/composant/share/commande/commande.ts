@@ -1,4 +1,14 @@
-import { Component } from '@angular/core';
+import { 
+  Component, 
+  HostListener, 
+  OnInit, 
+  OnDestroy,
+  ElementRef,
+  ViewChild,
+  ChangeDetectorRef
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AjouterEquipe } from '../ajouter-equipe/ajouter-equipe';
 import { CreerMatch } from '../creer-match/creer-match';
 import { CreerEvent } from "../creer-event/creer-event";
@@ -8,28 +18,17 @@ import { CreerActus } from "../creer-actus/creer-actus";
 @Component({
   selector: 'app-commande',
   standalone: true,
-  imports: [AjouterEquipe, CreerMatch, CreerEvent, Convocations, CreerActus],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    AjouterEquipe, 
+    CreerMatch, 
+    CreerEvent, 
+    Convocations, 
+    CreerActus
+  ],
   templateUrl: './commande.html',
-  styleUrl: './commande.css',
+  styleUrls: ['./commande.css'],
 })
-export class Commande {
-
-
-  cardWidth = 0;
-  gap = 24;
-  currentIndex = 0;
-  totalSlides = 5;
-
-  next() {
-    if (this.currentIndex < this.totalSlides - 1) {
-      this.currentIndex++;
-    }
-  }
-
-  prev() {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
-    }
-  }
-
+export class Commande{
 }

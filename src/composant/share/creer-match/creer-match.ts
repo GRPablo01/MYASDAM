@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { EquipeService, Equipe } from '../../../../Backend/Services/equipe.service';
+import { ThemeService } from '../../../../Backend/Services/theme.service';
 
 @Component({
   selector: 'app-creer-match',
@@ -17,30 +18,15 @@ export class CreerMatch implements OnInit {
   message: string | null = null;
   showMatchForm = false;
   equipes: Equipe[] = [];
+  hoverCard: boolean = false;
   localisationPreview: 'Domicile' | 'Exterieur' = 'Exterieur';
+  isMobile = window.innerWidth <= 970;
 
   backendUrl = 'http://localhost:3000';
 
   // 🔐 Gestion thème dynamique
   isLoggedIn = false;
   theme: 'clair' | 'sombre' = 'sombre';
-
-  // 🎨 Couleurs dynamiques
-  Background = '';
-  Background1 = '';
-  Background2 = '';
-  Background3 = '';
-  Background4 = '';
-  Background5 = '';
-  Background6 = '';
-  Background7 = '';
-  Background8 = '';
-  Background9 = '';
-  icon = '';
-  BorderHeader = '';
-  BorderHeader1 = '';
-  BorderHeader2 = '';
-  Text = '';
 
   stadesDomicile = [
     'stade de danjoutin',
@@ -50,7 +36,8 @@ export class CreerMatch implements OnInit {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private equipeService: EquipeService
+    private equipeService: EquipeService,
+    public themeService:ThemeService,
   ) {
     this.matchForm = this.fb.group({
       date: ['', Validators.required],
@@ -72,9 +59,6 @@ export class CreerMatch implements OnInit {
 
     // 🔥 Récupérer user depuis localStorage
     this.loadUserTheme();
-
-    // 🔥 Appliquer thème
-    this.setThemeColors();
 
     // 🔥 Charger équipes
     console.log("📡 Appel API pour récupérer les équipes...");
@@ -269,58 +253,5 @@ export class CreerMatch implements OnInit {
         this.message = 'Erreur lors de la création du match';
       }
     });
-  }
-
-  // ============================================
-  // 🎨 Gestion thème dynamique
-  // ============================================
-  private setThemeColors(): void {
-
-    console.log("🎨 Application des couleurs thème :", this.theme);
-
-    if (this.theme === 'sombre') {
-
-      this.Background = '#1E293B';
-      this.BorderHeader = '2px solid #64748B';
-      this.Text = '#FFFFFF';
-
-      this.Background1 = 'linear-gradient(135deg,#6978b8,#818fd5)';
-      this.Background2 = '#6978b8';
-      this.Background3 = '#818fd5';
-      this.Background4 = '#64748B';
-
-      this.Background5 = '#1E293B';
-      this.icon = '#FFFFFF';
-
-      this.Background6 = '#818fd5';
-      this.Background7 = '#6978b8';
-      this.Background8 = '#454f7ba1';
-
-      this.BorderHeader1 = '2px solid #64748B';
-      this.Background9 = '#505c91';
-      this.BorderHeader2 = '2px dotted #64748B';
-
-      return;
-    }
-
-    this.Background = '#FFFFFF';
-    this.BorderHeader = '2px solid #A80303';
-    this.Text = '#000000';
-
-    this.Background1 = 'linear-gradient(135deg,#DC2626,#BE123C)';
-    this.Background2 = '#DC2626';
-    this.Background3 = '#BE123C';
-    this.Background4 = '#A80303';
-
-    this.Background5 = '#FFFFFF';
-    this.icon = '#DC2626';
-
-    this.Background6 = '#BE123C';
-    this.Background7 = '#DC2626';
-    this.Background8 = '#c9c8c8b3';
-
-    this.BorderHeader1 = '2px solid #A80303';
-    this.Background9 = '#F3F4F6';
-    this.BorderHeader2 = '2px dotted #A80303';
   }
 }

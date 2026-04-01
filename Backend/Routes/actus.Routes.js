@@ -26,11 +26,4 @@ const upload = multer({ storage });
 router.post('/', upload.single('image'), actusController.creerActus);
 router.get('/', actusController.getActus);
 
-// -----------------------------
-// 👍 Likes, ⭐ Favoris, 💬 Commentaires par key
-// -----------------------------
-router.post('/:key/like', actusController.toggleLikeParKey);
-router.post('/:key/favori', actusController.toggleFavoriParKey);
-router.post('/:key/commentaire', actusController.ajouterCommentaireParKey);
-
 module.exports = router;

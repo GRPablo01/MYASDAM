@@ -7,6 +7,7 @@ import { Icon } from '../../priver/icon/icon';
 import { Commande } from '../commande/commande';
 import { SectionDate2 } from "../section-date2/section-date2";
 import { Info } from "../info/info";
+import { ThemeService } from '../../../../Backend/Services/theme.service';
 
 interface User {
   nom?: string;
@@ -48,6 +49,8 @@ type ViewSection =
 export class Dash implements OnInit {
 
   user: User | null = null;
+
+  constructor(public themeService: ThemeService) {}
 
   // rôle effectif (invite si non connecté)
   role: UserRole = 'invite';
@@ -101,6 +104,7 @@ export class Dash implements OnInit {
     ],
 
     invite: [
+      { id: 'Centre de Commande', label: 'Centre de Commande', icon: 'fa-solid fa-sliders' },
       { id: 'planning', label: 'Planning', icon: 'fa-solid fa-calendar-days' },
       { id: 'profil', label: 'Profil', icon: 'fa-solid fa-user' }
     ],
@@ -131,43 +135,10 @@ export class Dash implements OnInit {
       // utilisateur non connecté = invite
       this.role = 'invite';
     }
-
-    this.setThemeColors();
-
     this.currentView = this.navItems[this.role][0].id;
   }
 
-  // =========================
-  // THEME
-  // =========================
-
-  setThemeColors() {
-
-    if (this.theme === 'sombre') {
-
-      this.Background = '#1e293b';
-      this.Background1 = '#0f172a';
-      this.Background2 = '#1e293b';
-      this.Background3 = '#334155';
-      this.Background4 = '#475569';
-      this.Text = '#ffffff';
-      this.Text1 = '#6978b8';
-      this.BorderHeader = '#334155';
-
-    } else {
-
-      this.Background = '#ffffff';
-      this.Background1 = '#DC2626';
-      this.Background2 = '#f8fafc';
-      this.Background3 = '#f1f5f9';
-      this.Background4 = '#e2e8f0';
-      this.Text = '#000000';
-      this.Text1 = '#DC2626';
-      this.BorderHeader = '#e5e7eb';
-
-    }
-  }
-
+  
   // =========================
   // NAVIGATION
   // =========================

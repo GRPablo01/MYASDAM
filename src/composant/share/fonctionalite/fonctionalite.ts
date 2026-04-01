@@ -15,7 +15,6 @@ interface User {
   id?: string;
   nom?: string;
   role?: string;
-  theme?: 'clair' | 'sombre';
 }
 
 @Component({
@@ -29,7 +28,6 @@ export class Fonctionalite implements OnInit {
 
   user: User | null = null;
   userRole: string = '';
-  userTheme: 'clair' | 'sombre' = 'clair';
   selectedRole: Role | null = null;
   showLoginModal: boolean = false;
 
@@ -37,7 +35,7 @@ export class Fonctionalite implements OnInit {
     {
       id: 'joueur',
       label: 'Joueur',
-      icon: 'fas fa-user', // Font Awesome pour joueur
+      icon: 'fas fa-user',
       features: [
         'Consulter le calendrier des matchs',
         'Voir les statistiques personnelles',
@@ -49,7 +47,7 @@ export class Fonctionalite implements OnInit {
     {
       id: 'entraineur',
       label: 'Entraineur',
-      icon: 'fas fa-chess-knight', // Font Awesome pour entraîneur
+      icon: 'fas fa-chess-knight',
       features: [
         'Gérer les compositions d\'équipe',
         'Analyser les statistiques collectives',
@@ -61,7 +59,7 @@ export class Fonctionalite implements OnInit {
     {
       id: 'inviter',
       label: 'Invité',
-      icon: 'fas fa-eye', // Font Awesome pour invité
+      icon: 'fas fa-eye',
       features: [
         'Voir les matchs publics',
         'Consulter les résultats',
@@ -72,7 +70,7 @@ export class Fonctionalite implements OnInit {
     {
       id: 'admin',
       label: 'Administrateur',
-      icon: 'fas fa-shield-alt', // Font Awesome pour admin
+      icon: 'fas fa-shield-alt',
       features: [
         'Gérer les utilisateurs',
         'Configurer les paramètres',
@@ -82,6 +80,7 @@ export class Fonctionalite implements OnInit {
       description: 'Contrôle total sur la plateforme et gestion complète des aspects du club.'
     }
   ];
+
   private roleColors: { [key: string]: string } = {
     joueur: '#dc2626',
     entraineur: '#2563eb',
@@ -100,6 +99,7 @@ export class Fonctionalite implements OnInit {
 
   ngOnInit(): void {
     this.loadUserFromLocalStorage();
+    // ✅ Rien à faire pour le thème → déjà géré dans ThemeService (constructor)
   }
 
   get isLoggedIn(): boolean {
@@ -113,8 +113,6 @@ export class Fonctionalite implements OnInit {
     try {
       this.user = JSON.parse(userData);
       this.userRole = this.user?.role || '';
-      this.userTheme = this.user?.theme === 'sombre' ? 'sombre' : 'clair';
-      this.themeService.applyTheme(this.userTheme === 'sombre');
     } catch (error) {
       console.error('Erreur parsing utilisateur:', error);
     }

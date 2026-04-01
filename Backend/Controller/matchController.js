@@ -72,7 +72,7 @@ const createMatch = async (req, res) => {
       categorie,
       scoreDom: 0,
       scoreExt: 0,
-      statut: 'A venir',
+      statut: 'À venir',
       localisationMatch,
       key: keyUnique
     });

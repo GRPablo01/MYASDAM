@@ -1,0 +1,122 @@
+<!-- 🌟 CONTAINER COOKIES / RGPD -->
+<div class="cgu-container fixed inset-0 w-full h-full flex flex-col justify-center items-center
+            transition-colors duration-700 p-4 sm:p-6"
+     [ngStyle]="{'background': themeService.Backgroundprincipal}">
+
+    <!-- BACKGROUND ANIMÉ -->
+  <div class="absolute inset-0 pointer-events-none overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.08]" [ngStyle]="{
+           'background-image': 'linear-gradient(' + themeService.Textsecondaire + ' 1px, transparent 1px), linear-gradient(90deg, ' + themeService.Textsecondaire + ' 1px, transparent 1px)',
+           'background-size': '50px 50px'
+         }">
+    </div>
+  </div>
+
+    <!-- 🧩 Icône / Logo -->
+    <app-icon class="mb-4 sm:mb-6 animate-fade-in z-20"></app-icon>
+
+    <!-- 🌄 Image de fond -->
+    <div class="absolute inset-0 flex items-center justify-center">
+        <div class="absolute inset-0 bg-cover bg-center scale-105 blur-[1px] brightness-[0.4] transition-transform duration-700"
+             style="background-image: url('/assets/bg1.jpg');"></div>
+        <div class="absolute inset-0"
+             [ngStyle]="{'background': 'linear-gradient(to bottom right, '+themeService.Backgroundprincipal+'/80, '+themeService.accent+'/20)'}"
+             class="backdrop-blur-sm"></div>
+    </div>
+
+    <!-- 📄 Contenu COOKIES -->
+    <div class="relative z-20 max-w-3xl w-full rounded-2xl p-6 sm:p-8 shadow-2xl"
+         [ngStyle]="{
+            'background-color': themeService.Backgroundcards,
+            'color': themeService.Textprincipal,
+            'border': '2px solid ' + themeService.accent
+         }">
+
+        <!-- 🎯 En-tête Cookies -->
+        <div class="text-center mb-6 sm:mb-8">
+            <div class="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-4"
+                 [ngStyle]="{'background-color': themeService.Backgroundcards, 'backdrop-filter': 'blur(5px)'}">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
+                     [ngStyle]="{'color': themeService.accent}">
+                    <path fill-rule="evenodd"
+                          d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clip-rule="evenodd" />
+                </svg>
+                <span class="text-xs sm:text-sm font-medium" [ngStyle]="{'color': themeService.Textsecondaire}">
+                    Transparence & confidentialité
+                </span>
+            </div>
+
+            <h1 class="text-2xl sm:text-4xl font-bold"
+                [ngStyle]="{'color': themeService.Textprincipal}">
+                Politique de Cookies
+            </h1>
+
+            <p class="text-sm sm:text-base mt-2"
+               [ngStyle]="{'color': themeService.Textsecondaire}">
+                Dernière mise à jour : 31 Mars 2026
+            </p>
+        </div>
+
+        <!-- 📋 Sections Cookies paginées -->
+        <div class="space-y-4 sm:space-y-6">
+            <section *ngFor="let section of pagedSections; let i = index"
+                     class="rounded-xl p-4 sm:p-6 border hover:opacity-90 transition-all duration-300"
+                     [ngStyle]="{
+                        'background-color': themeService.Backgroundcards,
+                        'border-color': themeService.accent
+                     }">
+                <h2 class="text-lg sm:text-xl font-semibold mb-3 flex items-center gap-2"
+                    [ngStyle]="{'color': themeService.Textprincipal}">
+                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm"
+                          [ngStyle]="{'background-color': themeService.accent, 'color': '#FFFFFF'}">
+                        {{ i + 1 + currentPage * pageSize }}
+                    </span>
+                    {{ section.titre }}
+                </h2>
+                <p class="text-sm sm:text-base leading-relaxed"
+                   [ngStyle]="{'color': themeService.Textsecondaire}"
+                   [innerHTML]="section.contenu">
+                </p>
+            </section>
+        </div>
+
+        <!-- 🔹 Pagination -->
+        <div class="mt-4 flex justify-center gap-4">
+            <button (click)="prevPage()"
+                    [disabled]="currentPage === 0"
+                    [ngStyle]="{
+                        'background-color': currentPage > 0 ? themeService.accent : '#555555',
+                        'color': '#fff',
+                        'cursor': currentPage > 0 ? 'pointer' : 'not-allowed'
+                    }"
+                    class="px-4 py-2 rounded-lg transition-colors duration-200">
+                Précédent
+            </button>
+
+            <button (click)="nextPage()"
+                    [disabled]="(currentPage + 1) * pageSize >= sections.length"
+                    [ngStyle]="{
+                        'background-color': (currentPage + 1) * pageSize < sections.length ? themeService.accent : '#555555',
+                        'color': '#fff',
+                        'cursor': (currentPage + 1) * pageSize < sections.length ? 'pointer' : 'not-allowed'
+                    }"
+                    class="px-4 py-2 rounded-lg transition-colors duration-200">
+                Suivant
+            </button>
+        </div>
+
+        <!-- 🎯 Bouton Retour -->
+        <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+            <button (click)="goBack()"
+                    class="group relative px-6 py-3 rounded-xl font-semibold text-base sm:text-lg shadow-lg
+                           transform hover:scale-105 active:scale-95 transition-all duration-200 overflow-hidden"
+                    [ngStyle]="{'background': 'linear-gradient(to right, '+themeService.accent+', '+themeService.primary+')',
+                                'color': '#fff'}">
+                <span class="relative z-10">Retour</span>
+                <div class="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 
+                            transition-transform duration-300 origin-left"></div>
+            </button>
+        </div>
+    </div>
+</div>

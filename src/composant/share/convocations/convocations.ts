@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConvocationService, Convocation } from '../../../../Backend/Services/convocation.service';
 import { AuthService } from '../../../../Backend/Services/User/Auth.Service';
+import { ThemeService } from '../../../../Backend/Services/theme.service';
 
 /* =========================
    INTERFACES
@@ -66,6 +67,8 @@ export class Convocations implements OnInit {
   equipeUser: string = '';
   theme: 'clair' | 'sombre' = 'sombre';
   isLoggedIn = false;
+  isMobile = window.innerWidth <= 970;
+  hoverCard: boolean = false;
 
   /* =========================
      MODALS
@@ -97,25 +100,7 @@ export class Convocations implements OnInit {
       || this.availableFormations[0];
   }
 
-  /* =========================
-     COULEURS THEME
-  ========================= */
-
-  Background = '';
-  Background1 = '';
-  Background2 = '';
-  Background3 = '';
-  Background4 = '';
-  Background5 = '';
-  Background6 = '';
-  Background7 = '';
-  Background8 = '';
-  Background9 = '';
-  BorderHeader = '';
-  BorderHeader1 = '';
-  BorderHeader2 = '';
-  Text = '';
-  icon = '';
+  
 
   /* =========================
      CONSTRUCTOR
@@ -124,7 +109,8 @@ export class Convocations implements OnInit {
   constructor(
     private convocationService: ConvocationService,
     private fb: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    public themeService:ThemeService,
   ) {}
 
   /* =========================
@@ -145,7 +131,6 @@ export class Convocations implements OnInit {
 
     this.loadConvocations();
     this.loadJoueursEquipe();
-    this.setThemeColors();
   }
 
   /* =========================
@@ -177,51 +162,6 @@ export class Convocations implements OnInit {
     }
   }
 
-  /* =========================
-     THEME
-  ========================= */
-
-  private setThemeColors(): void {
-
-    if (!this.isLoggedIn || this.theme === 'sombre') {
-
-      this.Background = '#1E293B';
-      this.Text = '#FFFFFF';
-      this.BorderHeader = '2px solid #64748B';
-      this.BorderHeader1 = '2px solid #64748B';
-      this.BorderHeader2 = '2px dotted #64748B';
-
-      this.Background1 = 'linear-gradient(135deg,#6978b8,#818fd5)';
-      this.Background2 = '#6978b8';
-      this.Background3 = '#818fd5';
-      this.Background4 = '#64748B';
-      this.Background5 = '#1E293B';
-      this.Background6 = '#818fd5';
-      this.Background7 = '#6978b8';
-      this.Background8 = '#454f7ba1';
-      this.Background9 = '#505c91';
-      this.icon = '#FFFFFF';
-
-      return;
-    }
-
-    this.Background = '#FFFFFF';
-    this.Text = '#000000';
-    this.BorderHeader = '2px solid #A80303';
-    this.BorderHeader1 = '2px solid #A80303';
-    this.BorderHeader2 = '2px dotted #A80303';
-
-    this.Background1 = 'linear-gradient(135deg,#DC2626,#BE123C)';
-    this.Background2 = '#DC2626';
-    this.Background3 = '#BE123C';
-    this.Background4 = '#A80303';
-    this.Background5 = '#FFFFFF';
-    this.Background6 = '#BE123C';
-    this.Background7 = '#DC2626';
-    this.Background8 = '#c9c8c8b3';
-    this.Background9 = '#F3F4F6';
-    this.icon = '#DC2626';
-  }
 
   /* =========================
      DATA LOADING

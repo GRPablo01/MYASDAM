@@ -6,6 +6,9 @@ import { Acceuil } from '../page/public/acceuil/acceuil';
 import { Actualite } from '../page/public/actualite/actualite';
 import { Dashboard } from '../page/public/dashboard/dashboard';
 import { QRCode } from '../page/public/qrcode/qrcode';
+import { Match } from '../page/public/match/match';
+import { COOKIES } from '../page/public/cookies/cookies';
+
 
 
 
@@ -22,6 +25,8 @@ export const routes: Routes = [
     { path: 'actus', component: Actualite },
     { path: 'dashboard', component: Dashboard },
     { path: 'qrcode', component: QRCode },
+    { path: 'match', component: Match },
+    { path: 'cookies', component: COOKIES },
     
 
 ];
