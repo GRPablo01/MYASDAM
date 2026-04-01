@@ -13,9 +13,10 @@ import { Barre } from '../../../composant/share/barre/barre';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
 import { Mobile } from "../../../composant/share/mobile/mobile";
 import { BarreScroll } from '../../../composant/share/barre-scroll/barre-scroll';
+import { Convo } from '../../../composant/share/convo/convo';
 
 @Component({
-  selector: 'app-acceuil',
+  selector: 'app-convocations',
   standalone: true,
   imports: [
     CommonModule,
@@ -23,18 +24,13 @@ import { BarreScroll } from '../../../composant/share/barre-scroll/barre-scroll'
     Header,
     FormsModule,
     Footer,
-    Fonctionalite,
-    SectionDate1,
-    Cookie,
-    Welcome,
-    Barre,
     Mobile,
-    BarreScroll
+    Convo,
   ],
-  templateUrl: './acceuil.html',
-  styleUrls: ['./acceuil.css'],
+  templateUrl: './convocations.html',
+  styleUrls: ['./convocations.css'],
 })
-export class Acceuil implements OnInit {
+export class Convocations implements OnInit {
 
   isLoaded: boolean = false;
   isLoggedIn: boolean = false;
@@ -46,7 +42,7 @@ export class Acceuil implements OnInit {
 
   ngOnInit(): void {
     // 🧠 Titre de la page
-    this.titleService.setTitle('ASDAM | Accueil');
+    this.titleService.setTitle('ASDAM | Convo');
 
     // 👤 Vérification de la connexion utilisateur
     const utilisateurString = localStorage.getItem('utilisateur');

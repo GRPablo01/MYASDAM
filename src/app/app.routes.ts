@@ -8,6 +8,7 @@ import { Dashboard } from '../page/public/dashboard/dashboard';
 import { QRCode } from '../page/public/qrcode/qrcode';
 import { Match } from '../page/public/match/match';
 import { COOKIES } from '../page/public/cookies/cookies';
+import { Convocations } from '../page/public/convocations/convocations';
 
 
 
@@ -27,6 +28,7 @@ export const routes: Routes = [
     { path: 'qrcode', component: QRCode },
     { path: 'match', component: Match },
     { path: 'cookies', component: COOKIES },
+    { path: 'convo', component: Convocations },
     
 
 ];

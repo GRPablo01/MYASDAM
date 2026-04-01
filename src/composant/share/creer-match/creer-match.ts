@@ -55,25 +55,25 @@ export class CreerMatch implements OnInit {
 
   ngOnInit(): void {
 
-    console.log("🚀 Initialisation composant CreerMatch");
+    // console.log("🚀 Initialisation composant CreerMatch");
 
     // 🔥 Récupérer user depuis localStorage
     this.loadUserTheme();
 
     // 🔥 Charger équipes
-    console.log("📡 Appel API pour récupérer les équipes...");
+    // console.log("📡 Appel API pour récupérer les équipes...");
 
     this.equipeService.getEquipes().subscribe({
 
       next: data => {
-        console.log("✅ Équipes récupérées :", data);
+        // console.log("✅ Équipes récupérées :", data);
 
         this.equipes = data;
 
-        console.log("📊 Nombre d'équipes :", this.equipes.length);
+        // console.log("📊 Nombre d'équipes :", this.equipes.length);
 
         this.equipes.forEach(equipe => {
-          console.log("⚽ Equipe :", equipe.nom, "| Logo :", equipe.logo);
+          // console.log("⚽ Equipe :", equipe.nom, "| Logo :", equipe.logo);
         });
       },
 
@@ -85,7 +85,7 @@ export class CreerMatch implements OnInit {
     // 🔥 Détection domicile / extérieur
     this.matchForm.get('lieu')?.valueChanges.subscribe((lieu: string) => {
 
-      console.log("📍 Lieu saisi :", lieu);
+      // console.log("📍 Lieu saisi :", lieu);
 
       if (!lieu) return;
 
@@ -97,7 +97,7 @@ export class CreerMatch implements OnInit {
 
       this.localisationPreview = estDomicile ? 'Domicile' : 'Exterieur';
 
-      console.log("🏟 Localisation détectée :", this.localisationPreview);
+      // console.log("🏟 Localisation détectée :", this.localisationPreview);
 
       this.matchForm.patchValue({
         localisationMatch: this.localisationPreview
@@ -107,7 +107,7 @@ export class CreerMatch implements OnInit {
     // 🔥 Équipe domicile
     this.matchForm.get('equipeDom')?.valueChanges.subscribe((equipe) => {
 
-      console.log("🏠 Équipe domicile sélectionnée :", equipe);
+      // console.log("🏠 Équipe domicile sélectionnée :", equipe);
 
       this.updateLogo('dom');
     });
@@ -115,7 +115,7 @@ export class CreerMatch implements OnInit {
     // 🔥 Équipe extérieur
     this.matchForm.get('equipeExt')?.valueChanges.subscribe((equipe) => {
 
-      console.log("✈️ Équipe extérieur sélectionnée :", equipe);
+      // console.log("✈️ Équipe extérieur sélectionnée :", equipe);
 
       this.updateLogo('ext');
     });
@@ -128,7 +128,7 @@ export class CreerMatch implements OnInit {
 
     const userData = localStorage.getItem('utilisateur');
 
-    console.log("👤 Données utilisateur localStorage :", userData);
+    // console.log("👤 Données utilisateur localStorage :", userData);
 
     if (!userData) {
       this.isLoggedIn = false;
@@ -139,12 +139,12 @@ export class CreerMatch implements OnInit {
     try {
       const user = JSON.parse(userData);
 
-      console.log("👤 Utilisateur parsé :", user);
+      // console.log("👤 Utilisateur parsé :", user);
 
       this.isLoggedIn = true;
       this.theme = user.theme === 'clair' ? 'clair' : 'sombre';
 
-      console.log("🎨 Thème appliqué :", this.theme);
+      // console.log("🎨 Thème appliqué :", this.theme);
 
     } catch (error) {
 
@@ -164,7 +164,7 @@ export class CreerMatch implements OnInit {
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '');
 
-    console.log("🔤 Texte normalisé :", resultat);
+    // console.log("🔤 Texte normalisé :", resultat);
 
     return resultat;
   }
@@ -175,11 +175,11 @@ export class CreerMatch implements OnInit {
       ? this.matchForm.value.equipeDom
       : this.matchForm.value.equipeExt;
 
-    console.log("🔎 Recherche équipe :", nomEquipe);
+    // console.log("🔎 Recherche équipe :", nomEquipe);
 
     const equipe = this.equipes.find(e => e.nom === nomEquipe);
 
-    console.log("📦 Équipe trouvée :", equipe);
+    // console.log("📦 Équipe trouvée :", equipe);
 
     if (!equipe) {
       console.warn("⚠️ Aucune équipe trouvée pour :", nomEquipe);
@@ -194,13 +194,13 @@ export class CreerMatch implements OnInit {
 
     if (type === 'dom') {
 
-      console.log("🏠 Logo domicile appliqué");
+      // console.log("🏠 Logo domicile appliqué");
 
       this.matchForm.patchValue({ logoDom: logoUrl }, { emitEvent: false });
 
     } else {
 
-      console.log("✈️ Logo extérieur appliqué");
+      // console.log("✈️ Logo extérieur appliqué");
 
       this.matchForm.patchValue({ logoExt: logoUrl }, { emitEvent: false });
     }
@@ -210,12 +210,12 @@ export class CreerMatch implements OnInit {
 
     this.showMatchForm = !this.showMatchForm;
 
-    console.log("📋 Formulaire affiché :", this.showMatchForm);
+    // console.log("📋 Formulaire affiché :", this.showMatchForm);
   }
 
   creerMatch() {
 
-    console.log("📤 Tentative création match");
+    // console.log("📤 Tentative création match");
 
     if (this.matchForm.invalid) {
 
@@ -224,13 +224,13 @@ export class CreerMatch implements OnInit {
       return;
     }
 
-    console.log("📦 Données envoyées au backend :", this.matchForm.value);
+    // console.log("📦 Données envoyées au backend :", this.matchForm.value);
 
     this.http.post(`${this.backendUrl}/api/matchs`, this.matchForm.value).subscribe({
 
       next: (res: any) => {
 
-        console.log("✅ Réponse serveur :", res);
+        // console.log("✅ Réponse serveur :", res);
 
         this.message = res.message || 'Match créé avec succès !';
 

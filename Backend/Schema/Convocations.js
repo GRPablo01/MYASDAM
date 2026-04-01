@@ -1,9 +1,26 @@
 const mongoose = require('mongoose');
 
+// ==========================
+// Schéma joueur avec disponibilité
+// ==========================
+const joueurSchema = new mongoose.Schema({
+  key: { type: String, required: true, unique: true }, // clé unique pour chaque joueur
+  nom: { type: String, required: true },
+  present: { 
+    type: String,
+    enum: ['oui', 'non', 'non_repondu'], // oui = présent, non = absent, non_repondu = pas encore répondu
+    default: 'non_repondu'
+  }
+});
+
+// ==========================
+// Schéma convocation
+// ==========================
 const convocationSchema = new mongoose.Schema({
-  joueurs: {                       // 🔹 Renommé en "joueurs" pour plus de clarté
-    type: [String],                 // 🔹 Tableau de chaînes de caractères
-    required: true
+  joueurs: {
+    type: [joueurSchema], // 🔹 tableau d'objets joueur
+    required: [true, 'Le tableau de joueurs est obligatoire'],
+    validate: [arr => arr.length > 0, 'Il doit y avoir au moins un joueur']
   },
   equipe: {
     type: String,

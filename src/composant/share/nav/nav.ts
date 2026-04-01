@@ -40,7 +40,7 @@ export class Nav implements OnInit {
     joueur: [
       { label: 'Accueil', path: '/accueil', icon: 'fas fa-home' },
       { label: 'Actualité', path: '/actus', icon: 'fas fa-newspaper' },
-      { label: 'Communiquer', path: '/commun', icon: 'fas fa-comments' },
+      { label: 'Convocations', path: '/convo', icon: 'fa-solid fa-list' },
       { label: 'Matchs', path: '/match', icon: 'fas fa-futbol' },
       { label: 'Classement', path: '/classe', icon: 'fas fa-trophy' },
     ],
@@ -48,7 +48,7 @@ export class Nav implements OnInit {
     entraineur: [
       { label: 'Accueil', path: '/accueil', icon: 'fas fa-home' },
       { label: 'Actualité', path: '/actus', icon: 'fas fa-newspaper' },
-      { label: 'Communiquer', path: '/commun', icon: 'fas fa-comments' },
+      { label: 'Convocations', path: '/convo', icon: 'fa-solid fa-list' },
       { label: 'Matchs', path: '/match', icon: 'fas fa-futbol' },
       { label: 'Classement', path: '/classe', icon: 'fas fa-trophy' },
     ],

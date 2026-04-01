@@ -1,0 +1,38 @@
+<app-mobile></app-mobile>
+
+<!-- ================= LOADER ================= -->
+<div *ngIf="!isLoaded"
+     class="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm transition-all duration-300">
+
+  <div class="animate-pulse text-lg font-bold text-white tracking-wider">
+    Chargement...
+  </div>
+
+</div>
+
+<!-- ================= PAGE ================= -->
+<div class="actus-container min-h-screen transition-colors duration-500">
+
+  <app-header></app-header>
+  <app-convo></app-convo>
+  <app-footer></app-footer>
+
+</div>
+
+
+<style>
+    /* ============================= */
+/* 🌙 THÈME SOMBRE */
+/* ============================= */
+
+
+
+/* ============================= */
+/* 🔥 Scroll fluide */
+/* ============================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+</style>
