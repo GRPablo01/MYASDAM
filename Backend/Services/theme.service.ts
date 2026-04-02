@@ -50,6 +50,12 @@ export class ThemeService {
   Sidebarlienhover = '';
 
   ThemeImage: string = '';
+  BackgroundImage: string = '';
+
+  BgOui: string = '';
+  BgNon: string = '';
+  BorderOui: string = '';
+  BorderNon: string = '';
 
   constructor() {
     const storedTheme = localStorage.getItem('theme');
@@ -108,6 +114,11 @@ export class ThemeService {
       this.Iconnormal = '#CFCFCF';
       this.Iconhover = '#FF4D4D';
       this.Iconactive = '#C1121F';
+
+      this.BgOui      = '#14532d'; // vert foncé
+      this.BgNon      = '#7f1d1d'; // rouge foncé
+      this.BorderOui  = '#22c55e'; // vert vif (reste visible sur sombre)
+      this.BorderNon  = '#ef4444'; // rouge vif
   
       this.Fondboutonprincipal = '#FF4D4D';
       this.Fondboutonsecondaire = '#2A0F12';
@@ -116,6 +127,7 @@ export class ThemeService {
       this.Sidebarlienhover = '#2A0F12';
   
       this.ThemeImage = 'assets/LOGO.png';
+      this.BackgroundImage = 'assets/fondfeuillematch.png';
   
     } else {
       // ☀️ LIGHT MODE
@@ -138,6 +150,13 @@ export class ThemeService {
       this.accent = '#C1121F';
       this.accentHover = '#E5383B';
       this.accentSoft = '#FDEBEC';
+
+      // 🔵 Validation Convo
+      this.BgOui      = '#dcfce7';     // vert très clair
+      this.BgNon      = '#fee2e2';     // rouge très clair
+      this.BorderOui  = '#22c55e';     // vert vif
+      this.BorderNon  = '#ef4444'; 
+
   
       // UI
       this.Bordernormal = '1px solid #2A2A2A ';
@@ -155,6 +174,7 @@ export class ThemeService {
       this.Sidebarlienhover = '#FDEBEC';
   
       this.ThemeImage = 'assets/LOGO.png';
+      this.BackgroundImage = 'assets/fondfeuillematch.png';
     }
   }
 

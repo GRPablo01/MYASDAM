@@ -5,13 +5,14 @@ import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
+import { Icon3 } from '../../public/icon3/icon3';
 
 @Component({
   selector: 'app-convo',
   templateUrl: './convo.html',
   styleUrls: ['./convo.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule]
+  imports: [FormsModule, CommonModule, HttpClientModule,Icon3]
 })
 export class Convo implements OnInit {
 
@@ -55,13 +56,39 @@ export class Convo implements OnInit {
   loadConvocations(): void {
     console.log('⏳ Chargement des convocations...');
     this.loading = true;
-
+  
     this.convocationService.getConvocations().subscribe({
       next: (data) => {
         console.log('✅ Convocations récupérées depuis l’API :', data);
-        this.convocations = data;
+  
+        const nomComplet = `${this.prenom} ${this.nom}`.toLowerCase().trim();
+  
+        this.convocations = data.filter(convo => {
+  
+          // ✅ Vérifier équipe
+          const bonneEquipe = convo.equipe === this.equipe;
+  
+          // 🧑‍🏫 CAS 1 : ENTRAINEUR → voit toutes les convos de son équipe
+          if (this.role === 'entraineur') {
+            return bonneEquipe;
+          }
+  
+          // 👤 CAS 2 : JOUEUR → doit être dans la convo
+          if (this.role === 'joueur') {
+            const joueurDansConvo = convo.joueurs?.some(j =>
+              j.nom.toLowerCase().trim() === nomComplet
+            );
+  
+            return bonneEquipe && joueurDansConvo;
+          }
+  
+          // 🔒 AUTRES ROLES → rien
+          return false;
+        });
+  
+        console.log('🎯 Convocations filtrées :', this.convocations);
+  
         this.convo = this.convocations[0];
-        console.log('🎯 Convocation actuelle sélectionnée :', this.convo);
         this.loading = false;
       },
       error: (err) => {
@@ -101,5 +128,31 @@ export class Convo implements OnInit {
   getMatchsProchains(): number {
     const now = new Date();
     return this.convocations.filter(convo => new Date(convo.dateMatch) > now).length;
+  }
+
+  getPresentCount(convo: Convocation): number {
+    return convo.joueurs?.filter(j => j.present === 'oui').length || 0;
+  }
+
+  getAbsentCount(convo: Convocation): number {
+    return convo.joueurs?.filter(j => j.present === 'non').length || 0;
+  }
+
+  getInitials(nom: string): string {
+    if (!nom) return '';
+  
+    const mots = nom.split(' ');
+    
+    if (mots.length === 1) {
+      return mots[0].charAt(0).toUpperCase();
+    }
+  
+    return (
+      mots[0].charAt(0) + mots[mots.length - 1].charAt(0)
+    ).toUpperCase();
+  }
+
+  aDejaRepondu(joueur: Joueur): boolean {
+    return joueur.present === 'oui' || joueur.present === 'non';
   }
 }
