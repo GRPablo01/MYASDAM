@@ -13,6 +13,7 @@ import { Barre } from '../../../composant/share/barre/barre';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
 import { Mobile } from "../../../composant/share/mobile/mobile";
 import { BarreScroll } from '../../../composant/share/barre-scroll/barre-scroll';
+import { Teste } from '../../../composant/teste/teste';
 
 @Component({
   selector: 'app-acceuil',
@@ -29,7 +30,8 @@ import { BarreScroll } from '../../../composant/share/barre-scroll/barre-scroll'
     Welcome,
     Barre,
     Mobile,
-    BarreScroll
+    BarreScroll,
+    Teste
   ],
   templateUrl: './acceuil.html',
   styleUrls: ['./acceuil.css'],

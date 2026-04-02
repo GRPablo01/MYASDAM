@@ -4,11 +4,29 @@ const mongoose = require('mongoose');
 // Schéma joueur avec disponibilité
 // ==========================
 const joueurSchema = new mongoose.Schema({
-  key: { type: String, required: true, unique: true }, // clé unique pour chaque joueur
-  nom: { type: String, required: true },
+  key: { 
+    type: String, 
+    required: true, 
+    unique: true 
+  },
+
+  nom: { 
+    type: String, 
+    required: true 
+  },
+
+  prenom: { 
+    type: String 
+  },
+
+  email: { 
+    type: String,
+    required: true // tu peux mettre false si optionnel
+  },
+
   present: { 
     type: String,
-    enum: ['oui', 'non', 'non_repondu'], // oui = présent, non = absent, non_repondu = pas encore répondu
+    enum: ['oui', 'non', 'non_repondu'],
     default: 'non_repondu'
   }
 });

@@ -6,6 +6,7 @@ export interface Joueur {
   _id?: string;
   key: string;
   nom: string;
+  email?: string; 
   present: 'oui' | 'non' | 'non_repondu';
 }
 

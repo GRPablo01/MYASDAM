@@ -13,6 +13,7 @@ interface Joueur {
   key: string;
   nom: string;
   prenom: string;
+  email?: string;
   poste?: string;
   positionField?: 'gardien' | 'defenseur' | 'milieu' | 'attaquant';
   positionIndex?: number;
@@ -51,7 +52,7 @@ export class Convocations implements OnInit {
 
   /* =========================
      VARIABLES
-  ========================= */
+  ========================== */
 
   convocations: Convocation[] = [];
   joueursEquipe: Joueur[] = [];
@@ -72,7 +73,7 @@ export class Convocations implements OnInit {
 
   /* =========================
      MODALS
-  ========================= */
+  ========================== */
 
   showCompoChoiceModal = false;
   showColumnCompo = false;
@@ -80,7 +81,7 @@ export class Convocations implements OnInit {
 
   /* =========================
      FORMATIONS
-  ========================= */
+  ========================== */
 
   selectedFormation = '4-4-2';
 
@@ -100,24 +101,23 @@ export class Convocations implements OnInit {
       || this.availableFormations[0];
   }
 
-  
-
   /* =========================
      CONSTRUCTOR
-  ========================= */
+  ========================== */
 
   constructor(
     private convocationService: ConvocationService,
     private fb: FormBuilder,
     private authService: AuthService,
-    public themeService:ThemeService,
+    public themeService: ThemeService
   ) {}
 
   /* =========================
      INIT
-  ========================= */
+  ========================== */
 
   ngOnInit(): void {
+    console.log('🔹 Convocations Component initialized');
     this.loadUserFromStorage();
 
     this.convocationForm = this.fb.group({
@@ -135,86 +135,83 @@ export class Convocations implements OnInit {
 
   /* =========================
      USER STORAGE
-  ========================= */
+  ========================== */
 
   loadUserFromStorage(): void {
+    console.log('🔹 Loading user from localStorage');
     try {
       const userString = localStorage.getItem('utilisateur');
-
       if (!userString) {
+        console.log('⚠️ No localStorage user, fallback to AuthService');
         const user = this.authService.getUser();
         this.role = user?.role || '';
         this.equipeUser = user?.equipe || '';
         return;
       }
-
       const user: StoredUser = JSON.parse(userString);
-
+      console.log('✅ User loaded from storage:', user);
       this.role = user.role || '';
       this.equipeUser = user.equipe || '';
       this.theme = user.theme || 'sombre';
       this.isLoggedIn = true;
-
-    } catch {
+    } catch (err) {
+      console.error('❌ Error parsing user from storage:', err);
       const user = this.authService.getUser();
       this.role = user?.role || '';
       this.equipeUser = user?.equipe || '';
     }
   }
 
-
   /* =========================
      DATA LOADING
-  ========================= */
+  ========================== */
 
   loadConvocations(): void {
+    console.log('🔹 Loading convocations...');
     this.loading = true;
     this.convocationService.getConvocations().subscribe({
       next: data => {
+        console.log('✅ Convocations loaded:', data);
         this.convocations = data;
         this.loading = false;
       },
-      error: () => this.loading = false
+      error: err => {
+        console.error('❌ Error loading convocations:', err);
+        this.loading = false;
+      }
     });
   }
 
   loadJoueursEquipe(): void {
+    console.log('🔹 Loading team players for equipe:', this.equipeUser);
     if (!this.equipeUser) return;
-  
     this.authService.getAllUsers().subscribe({
       next: (users: any) => {
-        // Vérifier que c'est bien un tableau
         const usersArray = Array.isArray(users) ? users : [];
-  
-        // Filtrer uniquement les joueurs appartenant à la même équipe que l'entraîneur connecté
         this.joueursEquipe = usersArray
-          .filter(u => 
-            u.role?.toLowerCase() === 'joueur' &&  // seulement les joueurs
-            u.equipe === this.equipeUser          // et qui ont la même équipe que l'entraîneur connecté
-          )
+          .filter(u => u.role?.toLowerCase() === 'joueur' && u.equipe === this.equipeUser)
           .map(u => ({
             key: u.key || u._key,
             nom: u.nom,
             prenom: u.prenom,
+            email: u.email
           }));
-  
-        console.log('Joueurs de mon équipe :', this.joueursEquipe);
+        console.log('✅ Joueurs de mon équipe:', this.joueursEquipe);
       },
-      error: (err) => console.error('Erreur récupération joueurs :', err)
+      error: err => console.error('❌ Erreur récupération joueurs :', err)
     });
   }
-  
-  
-  
 
   /* =========================
      FORM SUBMIT
-  ========================= */
+  ========================== */
 
   ajouterConvocation(): void {
-
-    if (this.convocationForm.invalid || this.joueursSelectionnes.length === 0)
+    console.log('🔹 Adding convocation...');
+    if (this.convocationForm.invalid || this.joueursSelectionnes.length === 0) {
+      console.warn('⚠️ Form invalid or no players selected');
       return;
+    }
 
     const data = {
       ...this.convocationForm.value,
@@ -222,30 +219,37 @@ export class Convocations implements OnInit {
       formation: this.selectedFormation,
       joueursDetails: this.joueursSelectionnes
     };
+    console.log('📤 Convocation data to submit:', data);
 
     this.convocationService.createConvocation(data)
       .subscribe({
         next: () => {
+          console.log('✅ Convocation created successfully');
           this.message = 'Convocation créée avec succès !';
           setTimeout(() => {
             this.toggleForm();
             this.loadConvocations();
           }, 1500);
         },
-        error: () => this.message = 'Erreur lors de la création'
+        error: err => {
+          console.error('❌ Error creating convocation:', err);
+          this.message = 'Erreur lors de la création';
+        }
       });
   }
 
   /* =========================
      UTILITAIRES
-  ========================= */
+  ========================== */
 
   toggleForm(): void {
     this.showForm = !this.showForm;
+    console.log('🔹 toggleForm, showForm:', this.showForm);
     if (!this.showForm) this.resetForm();
   }
 
   resetForm(): void {
+    console.log('🔹 Resetting form');
     this.convocationForm.reset({
       statut: 'Convoqué',
       equipe: this.equipeUser
@@ -256,10 +260,9 @@ export class Convocations implements OnInit {
   }
 
   updateFormJoueur(): void {
-    const joueurString = this.joueursSelectionnes
-      .map(j => `${j.prenom} ${j.nom}`)
-      .join(', ');
+    const joueurString = this.joueursSelectionnes.map(j => `${j.prenom} ${j.nom}`).join(', ');
     this.convocationForm.patchValue({ joueur: joueurString });
+    console.log('🔹 Updated form joueur:', joueurString);
   }
 
   getInitials(joueur: Joueur): string {
@@ -268,183 +271,109 @@ export class Convocations implements OnInit {
 
   /* =========================
      MODALS COMPOSITION
-  ========================= */
+  ========================== */
 
-  openCompoModal(): void {
-    this.showCompoChoiceModal = true;
-  }
-
-  closeCompoChoiceModal(): void {
-    this.showCompoChoiceModal = false;
-  }
-
-  openColumnCompo(): void {
-    this.showCompoChoiceModal = false;
-    this.showColumnCompo = true;
-  }
-
-  closeColumnCompo(): void {
-    this.showColumnCompo = false;
-  }
-
-  openFieldCompo(): void {
-    this.showCompoChoiceModal = false;
-    this.showFieldCompo = true;
-  }
-
-  closeFieldCompo(): void {
-    this.showFieldCompo = false;
-  }
-
-  switchToFieldMode(): void {
-    this.closeColumnCompo();
-    this.openFieldCompo();
-  }
-
-  switchToColumnMode(): void {
-    this.closeFieldCompo();
-    this.openColumnCompo();
-  }
+  openCompoModal(): void { this.showCompoChoiceModal = true; }
+  closeCompoChoiceModal(): void { this.showCompoChoiceModal = false; }
+  openColumnCompo(): void { this.showCompoChoiceModal = false; this.showColumnCompo = true; }
+  closeColumnCompo(): void { this.showColumnCompo = false; }
+  openFieldCompo(): void { this.showCompoChoiceModal = false; this.showFieldCompo = true; }
+  closeFieldCompo(): void { this.showFieldCompo = false; }
+  switchToFieldMode(): void { this.closeColumnCompo(); this.openFieldCompo(); }
+  switchToColumnMode(): void { this.closeFieldCompo(); this.openColumnCompo(); }
 
   /* =========================
      DRAG & DROP - COLONNE
-  ========================= */
+  ========================== */
 
   onDragStart(event: DragEvent, joueur: Joueur): void {
     if (event.dataTransfer) {
-      // CORRECTION : Créer une copie profonde pour éviter les mutations
       const joueurCopy = JSON.stringify(joueur);
       event.dataTransfer.setData('application/json', joueurCopy);
-      event.dataTransfer.setData('text/plain', joueurCopy); // Fallback
+      event.dataTransfer.setData('text/plain', joueurCopy);
       event.dataTransfer.effectAllowed = 'move';
-      
-      // Ajouter une classe visuelle
       const target = event.target as HTMLElement;
       target.classList.add('dragging');
+      console.log('🔹 Drag start joueur:', joueur);
     }
   }
 
   onDragEnd(event: DragEvent): void {
     const target = event.target as HTMLElement;
     target.classList.remove('dragging');
+    console.log('🔹 Drag end');
   }
 
-  onDragOver(event: DragEvent): void {
-    event.preventDefault();
-    if (event.dataTransfer) {
-      event.dataTransfer.dropEffect = 'move';
-    }
-  }
-
-  onDragEnter(event: DragEvent): void {
-    event.preventDefault();
-    const target = event.currentTarget as HTMLElement;
-    target.classList.add('drag-over');
-  }
-
-  onDragLeave(event: DragEvent): void {
-    const target = event.currentTarget as HTMLElement;
-    target.classList.remove('drag-over');
-  }
+  onDragOver(event: DragEvent): void { event.preventDefault(); if (event.dataTransfer) event.dataTransfer.dropEffect = 'move'; }
+  onDragEnter(event: DragEvent): void { event.preventDefault(); (event.currentTarget as HTMLElement).classList.add('drag-over'); }
+  onDragLeave(event: DragEvent): void { (event.currentTarget as HTMLElement).classList.remove('drag-over'); }
 
   onDrop(event: DragEvent): void {
     event.preventDefault();
     const target = event.currentTarget as HTMLElement;
     target.classList.remove('drag-over');
-    
     const data = event.dataTransfer?.getData('application/json') || event.dataTransfer?.getData('text/plain');
-    if (data) {
-      try {
-        const joueur: Joueur = JSON.parse(data);
-        this.ajouterJoueur(joueur);
-      } catch (e) {
-        console.error('Erreur parsing JSON:', e);
-      }
-    }
+    if (!data) return;
+    try {
+      const joueur: Joueur = JSON.parse(data);
+      console.log('🔹 Drop joueur:', joueur);
+      this.ajouterJoueur(joueur);
+    } catch (e) { console.error('❌ Error parsing dropped joueur:', e); }
   }
 
   ajouterJoueur(joueur: Joueur): void {
-    // CORRECTION : Vérifier si déjà présent et créer une copie
     if (!this.joueursSelectionnes.find(j => j.key === joueur.key)) {
-      // Créer une nouvelle instance pour éviter les références partagées
-      const newJoueur: Joueur = {
-        ...joueur,
-        positionField: undefined,
-        positionIndex: undefined
-      };
+      const newJoueur: Joueur = { ...joueur, positionField: undefined, positionIndex: undefined };
       this.joueursSelectionnes.push(newJoueur);
       this.updateFormJoueur();
+      console.log('✅ Joueur added:', newJoueur);
     }
   }
 
   retirerJoueur(joueur: Joueur): void {
     this.joueursSelectionnes = this.joueursSelectionnes.filter(j => j.key !== joueur.key);
     this.updateFormJoueur();
+    console.log('✅ Joueur removed:', joueur);
   }
 
-  validateCompo(): void {
-    this.closeColumnCompo();
-  }
+  validateCompo(): void { this.closeColumnCompo(); }
 
   /* =========================
      DRAG & DROP - TERRAIN
-  ========================= */
+  ========================== */
 
   onDropToField(event: DragEvent, position: string, index: number): void {
     event.preventDefault();
-    event.stopPropagation();
-    
     const target = event.currentTarget as HTMLElement;
     target.classList.remove('drag-over');
-    
     const data = event.dataTransfer?.getData('application/json') || event.dataTransfer?.getData('text/plain');
     if (!data) return;
 
     try {
       const draggedJoueur: Joueur = JSON.parse(data);
-      
-      // CORRECTION : Vérifier si un joueur occupe déjà cette position
       const existingJoueur = this.getJoueurAtPosition(position, index);
-      
-      // CORRECTION : Retirer le joueur de sa position précédente s'il existe
+
       this.joueursSelectionnes = this.joueursSelectionnes.filter(j => j.key !== draggedJoueur.key);
-      
-      // Si un joueur occupe déjà cette position, le retirer
       if (existingJoueur && existingJoueur.key !== draggedJoueur.key) {
         this.joueursSelectionnes = this.joueursSelectionnes.filter(j => j.key !== existingJoueur.key);
       }
-      
-      // CORRECTION : Créer une nouvelle instance avec les propriétés de position
-      const newJoueur: Joueur = {
-        ...draggedJoueur,
-        positionField: position as any,
-        positionIndex: index
-      };
-      
+
+      const newJoueur: Joueur = { ...draggedJoueur, positionField: position as any, positionIndex: index };
       this.joueursSelectionnes.push(newJoueur);
       this.updateFormJoueur();
-      
-    } catch (e) {
-      console.error('Erreur lors du drop sur le terrain:', e);
-    }
+      console.log('✅ Joueur placed on field:', newJoueur);
+
+    } catch (e) { console.error('❌ Error dropping joueur to field:', e); }
   }
 
   ajouterJoueurField(joueur: Joueur): void {
-    // CORRECTION : Toujours créer une copie pour éviter les mutations
     const existingIndex = this.joueursSelectionnes.findIndex(j => j.key === joueur.key);
-    
-    if (existingIndex >= 0) {
-      // Mettre à jour la position si déjà présent
-      this.joueursSelectionnes[existingIndex] = { ...joueur };
-    } else {
-      this.joueursSelectionnes.push({ ...joueur });
-    }
+    if (existingIndex >= 0) this.joueursSelectionnes[existingIndex] = { ...joueur };
+    else this.joueursSelectionnes.push({ ...joueur });
     this.updateFormJoueur();
   }
 
-  retirerJoueurField(joueur: Joueur): void {
-    this.retirerJoueur(joueur);
-  }
+  retirerJoueurField(joueur: Joueur): void { this.retirerJoueur(joueur); }
 
   onDragStartFromField(event: DragEvent, joueur: Joueur): void {
     if (event.dataTransfer) {
@@ -452,125 +381,78 @@ export class Convocations implements OnInit {
       event.dataTransfer.setData('application/json', joueurCopy);
       event.dataTransfer.setData('text/plain', joueurCopy);
       event.dataTransfer.effectAllowed = 'move';
-      
       const target = event.target as HTMLElement;
       target.classList.add('dragging');
+      console.log('🔹 Drag start from field:', joueur);
     }
   }
 
   getJoueurAtPosition(position: string, index: number): Joueur | undefined {
-    return this.joueursSelectionnes.find(j => 
-      j.positionField === position && j.positionIndex === index
-    );
+    return this.joueursSelectionnes.find(j => j.positionField === position && j.positionIndex === index);
   }
 
   getAvailableJoueurs(): Joueur[] {
-    // CORRECTION : Retourner seulement les joueurs qui ne sont PAS déjà sélectionnés
-    return this.joueursEquipe.filter(j => 
-      !this.joueursSelectionnes.some(js => js.key === j.key)
-    );
+    return this.joueursEquipe.filter(j => !this.joueursSelectionnes.some(js => js.key === j.key));
   }
 
   countByPosition(position: string): number {
     return this.joueursSelectionnes.filter(j => j.positionField === position).length;
   }
 
-  getRange(n: number): number[] {
-    return Array.from({ length: n }, (_, i) => i);
-  }
+  getRange(n: number): number[] { return Array.from({ length: n }, (_, i) => i); }
 
   onFormationChange(formationId: string): void {
+    console.log('🔹 Formation changed to:', formationId);
     this.selectedFormation = formationId;
-    // CORRECTION : Réinitialiser les positions mais garder les joueurs sélectionnés
-    this.joueursSelectionnes = this.joueursSelectionnes.map(j => ({
-      ...j,
-      positionField: undefined,
-      positionIndex: undefined
-    }));
+    this.joueursSelectionnes = this.joueursSelectionnes.map(j => ({ ...j, positionField: undefined, positionIndex: undefined }));
     this.updateFormJoueur();
   }
 
-  resetField(): void {
-    this.joueursSelectionnes = [];
-    this.updateFormJoueur();
-  }
+  resetField(): void { this.joueursSelectionnes = []; this.updateFormJoueur(); }
 
   autoFillFormation(): void {
     const available = this.getAvailableJoueurs();
     const formation = this.currentFormation;
-    
-    // CORRECTION : Créer des copies des joueurs pour éviter les mutations
     let index = 0;
     const newSelections = [...this.joueursSelectionnes];
-    
-    // Fonction utilitaire pour ajouter un joueur à une position
+
     const addToPosition = (position: string, posIndex: number) => {
       if (index >= available.length) return false;
-      
       const joueur = available[index];
-      // Vérifier si le joueur n'est pas déjà dans la sélection
       if (!newSelections.find(j => j.key === joueur.key)) {
-        newSelections.push({
-          ...joueur,
-          positionField: position as any,
-          positionIndex: posIndex
-        });
-        index++;
-        return true;
+        newSelections.push({ ...joueur, positionField: position as any, positionIndex: posIndex });
+        index++; return true;
       }
-      index++;
-      return false;
+      index++; return false;
     };
-    
-    // Gardien
+
     addToPosition('gardien', 0);
-    
-    // Défenseurs
-    for (let i = 0; i < formation.defense; i++) {
-      addToPosition('defenseur', i);
-    }
-    
-    // Milieux
-    for (let i = 0; i < formation.midfield; i++) {
-      addToPosition('milieu', i);
-    }
-    
-    // Attaquants
-    for (let i = 0; i < formation.attack; i++) {
-      addToPosition('attaquant', i);
-    }
-    
+    for (let i = 0; i < formation.defense; i++) addToPosition('defenseur', i);
+    for (let i = 0; i < formation.midfield; i++) addToPosition('milieu', i);
+    for (let i = 0; i < formation.attack; i++) addToPosition('attaquant', i);
+
     this.joueursSelectionnes = newSelections;
     this.updateFormJoueur();
+    console.log('✅ Auto-fill formation completed');
   }
 
-  validateFieldCompo(): void {
-    this.closeFieldCompo();
-  }
+  validateFieldCompo(): void { this.closeFieldCompo(); }
 
-  // CORRECTION : Nouvelle méthode pour vérifier si une position est occupée
   isPositionOccupied(position: string, index: number): boolean {
-    return this.joueursSelectionnes.some(j => 
-      j.positionField === position && j.positionIndex === index
-    );
+    return this.joueursSelectionnes.some(j => j.positionField === position && j.positionIndex === index);
   }
 
-  // CORRECTION : Méthode pour échanger deux joueurs sur le terrain
   swapJoueurs(joueur1: Joueur, position2: string, index2: number): void {
     const joueur2 = this.getJoueurAtPosition(position2, index2);
-    
     if (!joueur2) return;
-    
-    // Échanger les positions
     const tempPos = joueur1.positionField;
     const tempIndex = joueur1.positionIndex;
-    
     joueur1.positionField = joueur2.positionField;
     joueur1.positionIndex = joueur2.positionIndex;
-    
     joueur2.positionField = tempPos;
     joueur2.positionIndex = tempIndex;
-    
     this.updateFormJoueur();
+    console.log('🔹 Swapped joueurs:', joueur1, joueur2);
   }
+
 }
