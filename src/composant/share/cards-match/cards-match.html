@@ -177,269 +177,282 @@
             </div>
 
 
-            <!-- Grille des Matchs -->
-            <div class="px-4 sm:px-6 lg:px-8 xl:px-12 pb-12 ml-5">
-                <div class="max-w-[1800px] mx-auto">
+            <!-- Grille des Matchs - Responsive Fluide -->
+<div class="px-4 sm:px-6 lg:px-8 xl:px-12 pb-12 ml-5">
+    <div class="w-full mx-auto">
 
-                    <!-- État Chargement -->
-                    <div *ngIf="loading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                        <div *ngFor="let i of [1,2,3,4,5,6]"
-                            class="rounded-2xl overflow-hidden animate-pulse h-72 shadow-lg"
-                            [style.background]="themeService.Backgroundprincipal">
-                            <div class="h-36 opacity-20" [style.background]="themeService.Bordernormal"></div>
-                            <div class="p-6 space-y-4">
-                                <div class="h-5 rounded w-2/3 opacity-20"
-                                    [style.background]="themeService.Bordernormal"></div>
-                                <div class="h-4 rounded w-1/2 opacity-20"
-                                    [style.background]="themeService.Bordernormal"></div>
-                                <div class="flex justify-between mt-6">
-                                    <div class="h-12 rounded w-28 opacity-20"
-                                        [style.background]="themeService.Bordernormal"></div>
-                                    <div class="h-12 rounded w-28 opacity-20"
-                                        [style.background]="themeService.Bordernormal"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- État Vide -->
-                    <div *ngIf="!loading && matchsFiltres.length === 0"
-                        class="flex flex-col items-center justify-center py-24 px-4 text-center">
-                        <div class="relative mb-8">
-                            <div class="w-32 h-32 rounded-full flex items-center justify-center shadow-xl"
-                                [style.background]="themeService.Backgroundprincipal">
-                                <i class="fas fa-search text-6xl opacity-30"
-                                    [style.color]="themeService.Textsecondaire"></i>
-                            </div>
-                            <div class="absolute -bottom-2 -right-2 w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
-                                [style.background]="themeService.accent">
-                                <i class="fas fa-slash text-white text-lg transform rotate-45"></i>
-                            </div>
-                        </div>
-                        <h3 class="text-3xl font-bold mb-3" [style.color]="themeService.Textprincipal">
-                            Aucun match trouvé
-                        </h3>
-                        <p class="text-lg opacity-60 max-w-md mb-8" [style.color]="themeService.Textsecondaire">
-                            Essayez de modifier vos critères de recherche ou réinitialisez les filtres.
-                        </p>
-                        <button (click)="clearAllFilters()"
-                            class="px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 flex items-center gap-3 text-base shadow-lg"
-                            [style.background]="themeService.primary" [style.color]="'#fff'">
-                            <i class="fas fa-undo-alt"></i>
-                            Réinitialiser les filtres
-                        </button>
-                    </div>
-
-                    <!-- Grille - 3 colonnes max -->
-                    <div *ngIf="!loading && matchsFiltres.length > 0"
-                        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-
-                        <article *ngFor="let match of matchsFiltres; trackBy: trackByMatchId"
-                            class="group relative rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer shadow-lg hover:shadow-2xl"
-                            [style.background]="themeService.Backgroundprincipal"
-                            [style.border]="'1px solid ' + (activeCard === match._id ? themeService.primary + '50' : themeService.Bordernormal + '10')"
-                            [style.transform]="activeCard === match._id ? 'translateY(-8px) scale(1.01)' : 'translateY(0)'"
-                            (mouseenter)="activeCard = match._id ?? null" (mouseleave)="activeCard = null"
-                            (click)="openMatchDetails(match)">
-
-                            <!-- Bandeau Status -->
-                            <div class="absolute top-0 left-0 right-0 h-2 z-10 transition-all duration-300"
-                                [style.background]="getStatutColor(match.statut)"
-                                [style.box-shadow]="activeCard === match._id ? '0 0 20px ' + getStatutColor(match.statut) : 'none'">
-                            </div>
-
-                            <!-- Badge Live -->
-                            <div *ngIf="isLive(match)"
-                                class="absolute top-4 right-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider animate-pulse shadow-lg"
-                                [style.background]="'#ef4444'" [style.color]="'#fff'">
-                                <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
-                                Live
-                            </div>
-
-                            <!-- Header Card -->
-                            <div class="p-6 pb-4">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-md"
-                                            [style.background]="themeService.primary + '15'">
-                                            <i [class]="'fas ' + getCompetitionIcon(match.typeMatch) + ' text-lg'"
-                                                [style.color]="themeService.primary"></i>
-                                        </div>
-                                        <div class="flex flex-col">
-                                            <span class="text-sm font-bold uppercase tracking-wider"
-                                                [style.color]="themeService.Textsecondaire">
-                                                {{ match.typeMatch }}
-                                            </span>
-                                            <span class="text-[10px] opacity-50"
-                                                [style.color]="themeService.Textsecondaire">
-                                                {{ match.categorie }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <span
-                                        class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm"
-                                        [style.background]="getStatutColor(match.statut) + '20'"
-                                        [style.color]="getStatutColor(match.statut)">
-                                        {{ getStatutLabel(match.statut) }}
-                                    </span>
-                                </div>
-
-                                <!-- Date & Heure & Lieu -->
-                                <div class="flex items-center justify-between text-xs font-medium">
-                                    <div class="flex items-center gap-4">
-                                        <div class="flex items-center gap-1.5"
-                                            [style.color]="themeService.Textsecondaire">
-                                            <i class="far fa-calendar"></i>
-                                            <span class="font-semibold">{{ formatDateRelative(match.date) }}</span>
-                                        </div>
-                                        <div class="w-1 h-1 rounded-full opacity-40"
-                                            [style.background]="themeService.Textsecondaire"></div>
-                                        <div class="flex items-center gap-1.5"
-                                            [style.color]="themeService.Textsecondaire">
-                                            <i class="far fa-clock"></i>
-                                            <span>{{ match.heure }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-1.5 max-w-[120px]"
-                                        [style.color]="themeService.Textsecondaire">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        <span class="truncate">{{ match.lieu || 'Stade non défini' }}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Contenu Principal - VS -->
-                            <div class="px-6 py-8 relative">
-                                <!-- VS Background -->
-                                <div
-                                    class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
-                                    <span class="text-[160px] font-black italic"
-                                        [style.color]="themeService.primary">VS</span>
-                                </div>
-
-                                <div class="flex items-center justify-between gap-4 relative z-10">
-                                    <!-- Équipe Domicile -->
-                                    <div class="flex-1 flex flex-col items-center text-center min-w-0">
-                                        <div
-                                            class="relative mb-4 group-hover:scale-110 transition-transform duration-300">
-                                            <div class="absolute inset-0 rounded-full blur-xl opacity-0 transition-opacity duration-300"
-                                                [style.background]="getTeamColor(match.equipeDom || '')"
-                                                [style.opacity]="activeCard === match._id ? '0.4' : '0'"></div>
-                                            <div class="relative w-24 h-24 rounded-full flex items-center justify-center text-2xl font-bold shadow-xl"
-                                                [style.background]="themeService.Backgroundcards"
-                                                [style.border]="'3px solid ' + themeService.Bordernormal + '20'">
-                                                <img *ngIf="match.logoDom" [src]="match.logoDom"
-                                                    class="w-16 h-16 object-contain" [alt]="match.equipeDom">
-                                                <span *ngIf="!match.logoDom" [style.color]="themeService.Textprincipal">
-                                                    {{ match.equipeDom | slice:0:2 | uppercase }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <h3 class="text-base font-bold text-center leading-tight line-clamp-2 min-h-[2.5rem] flex items-center justify-center px-1"
-                                            [style.color]="themeService.Textprincipal">
-                                            {{ match.equipeDom }}
-                                        </h3>
-                                        <span class="text-[10px] mt-2 opacity-50 uppercase tracking-wider font-semibold"
-                                            [style.color]="themeService.Textsecondaire">Domicile</span>
-                                    </div>
-
-                                    <!-- Score / VS -->
-                                    <div class="flex-shrink-0 px-3">
-                                        <div *ngIf="match.scoreDom !== null && match.scoreExt !== null; else vsBlock"
-                                            class="flex items-center gap-2 px-5 py-4 rounded-2xl shadow-inner min-w-[100px] justify-center"
-                                            [style.background]="themeService.Backgroundcards"
-                                            [style.border]="'2px solid ' + themeService.primary + '30'">
-                                            <span class="text-3xl font-black min-w-[2ch] text-center"
-                                                [style.color]="themeService.Textprincipal">{{ match.scoreDom }}</span>
-                                            <span class="text-base font-bold opacity-30">:</span>
-                                            <span class="text-3xl font-black min-w-[2ch] text-center"
-                                                [style.color]="themeService.Textprincipal">{{ match.scoreExt }}</span>
-                                        </div>
-
-                                        <ng-template #vsBlock>
-                                            <div class="text-center py-5 min-w-[100px]">
-                                                <span class="text-5xl font-black italic"
-                                                    [style.color]="themeService.primary">VS</span>
-                                                <div class="text-xs uppercase tracking-widest mt-2 opacity-50 font-bold"
-                                                    [style.color]="themeService.Textsecondaire">À venir</div>
-                                            </div>
-                                        </ng-template>
-                                    </div>
-
-                                    <!-- Équipe Extérieur -->
-                                    <div class="flex-1 flex flex-col items-center text-center min-w-0">
-                                        <div
-                                            class="relative mb-4 group-hover:scale-110 transition-transform duration-300">
-                                            <div class="absolute inset-0 rounded-full blur-xl opacity-0 transition-opacity duration-300"
-                                                [style.background]="getTeamColor(match.equipeExt || '')"
-                                                [style.opacity]="activeCard === match._id ? '0.4' : '0'"></div>
-                                            <div class="relative w-24 h-24 rounded-full flex items-center justify-center text-2xl font-bold shadow-xl"
-                                                [style.background]="themeService.Backgroundcards"
-                                                [style.border]="'3px solid ' + themeService.Bordernormal + '20'">
-                                                <img *ngIf="match.logoExt" [src]="match.logoExt"
-                                                    class="w-16 h-16 object-contain" [alt]="match.equipeExt">
-                                                <span *ngIf="!match.logoExt" [style.color]="themeService.Textprincipal">
-                                                    {{ match.equipeExt | slice:0:2 | uppercase }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <h3 class="text-base font-bold text-center leading-tight line-clamp-2 min-h-[2.5rem] flex items-center justify-center px-1"
-                                            [style.color]="themeService.Textprincipal">
-                                            {{ match.equipeExt }}
-                                        </h3>
-                                        <span class="text-[10px] mt-2 opacity-50 uppercase tracking-wider font-semibold"
-                                            [style.color]="themeService.Textsecondaire">Extérieur</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Footer -->
-                            <div class="px-6 py-4 border-t transition-colors duration-300 flex items-center justify-between"
-                                [style.border-color]="themeService.Bordernormal + '15'"
-                                [style.background]="activeCard === match._id ? themeService.Backgroundcards + '50' : 'transparent'">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm"
-                                        [style.background]="themeService.Bordernormal + '15'"
-                                        [style.color]="themeService.Textsecondaire">
-                                        {{ match.categorie }}
-                                    </span>
-                                </div>
-
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs font-medium" [style.color]="themeService.Textsecondaire">
-                                        Détails
-                                    </span>
-                                    <div class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100 transform translate-x-3 group-hover:translate-x-0 shadow-md"
-                                        [style.background]="themeService.primary + '20'"
-                                        [style.color]="themeService.primary">
-                                        <i class="fas fa-arrow-right text-xs"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Effet Hover Shine -->
-                            <div
-                                class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none overflow-hidden">
-                                <div class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
-                                    [style.background]="'linear-gradient(90deg, transparent, ' + themeService.primary + '08, transparent)'">
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-
-                    <!-- Pagination (si nécessaire) -->
-                    <div *ngIf="matchsFiltres.length >= 12" class="mt-12 text-center">
-                        <button
-                            class="px-8 py-4 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105 inline-flex items-center gap-2 group shadow-lg"
-                            [style.background]="themeService.Backgroundprincipal"
-                            [style.color]="themeService.Textprincipal"
-                            [style.border]="'1px solid ' + themeService.Bordernormal + '30'">
-                            <span>Charger plus de matchs</span>
-                            <i class="fas fa-chevron-down text-xs group-hover:translate-y-1 transition-transform"></i>
-                        </button>
+        <!-- État Chargement - Grille fluide -->
+        <div *ngIf="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+            <div *ngFor="let i of [1,2,3,4,5,6]"
+                class="rounded-2xl overflow-hidden animate-pulse shadow-lg"
+                [style.background]="themeService.Backgroundprincipal"
+                style="height: clamp(280px, 35vw, 400px);">
+                <div class="h-1/2 opacity-20" [style.background]="themeService.Bordernormal"></div>
+                <div class="p-4 sm:p-5 lg:p-6 space-y-3 sm:space-y-4">
+                    <div class="h-4 sm:h-5 rounded w-2/3 opacity-20"
+                        [style.background]="themeService.Bordernormal"></div>
+                    <div class="h-3 sm:h-4 rounded w-1/2 opacity-20"
+                        [style.background]="themeService.Bordernormal"></div>
+                    <div class="flex justify-between mt-4 sm:mt-6">
+                        <div class="h-10 sm:h-12 rounded w-24 sm:w-28 opacity-20"
+                            [style.background]="themeService.Bordernormal"></div>
+                        <div class="h-10 sm:h-12 rounded w-24 sm:w-28 opacity-20"
+                            [style.background]="themeService.Bordernormal"></div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- État Vide -->
+        <div *ngIf="!loading && matchsFiltres.length === 0"
+            class="flex flex-col items-center justify-center py-16 sm:py-20 lg:py-24 px-4 text-center">
+            <div class="relative mb-6 sm:mb-8">
+                <div class="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full flex items-center justify-center shadow-xl"
+                    [style.background]="themeService.Backgroundprincipal">
+                    <i class="fas fa-search text-4xl sm:text-5xl lg:text-6xl opacity-30"
+                        [style.color]="themeService.Textsecondaire"></i>
+                </div>
+                <div class="absolute -bottom-2 -right-2 w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-full flex items-center justify-center shadow-lg"
+                    [style.background]="themeService.accent">
+                    <i class="fas fa-slash text-white text-base sm:text-lg transform rotate-45"></i>
+                </div>
+            </div>
+            <h3 class="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3" [style.color]="themeService.Textprincipal">
+                Aucun match trouvé
+            </h3>
+            <p class="text-base sm:text-lg opacity-60 max-w-md mb-6 sm:mb-8" [style.color]="themeService.Textsecondaire">
+                Essayez de modifier vos critères de recherche ou réinitialisez les filtres.
+            </p>
+            <button (click)="clearAllFilters()"
+                class="px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 flex items-center gap-2 sm:gap-3 text-sm sm:text-base shadow-lg"
+                [style.background]="themeService.primary" [style.color]="'#fff'">
+                <i class="fas fa-undo-alt"></i>
+                Réinitialiser les filtres
+            </button>
+        </div>
+
+        <!-- Grille Fluide - Toujours 3 colonnes max, tailles adaptatives -->
+        <div *ngIf="!loading && matchsFiltres.length > 0"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+
+            <article *ngFor="let match of matchsFiltres; trackBy: trackByMatchId"
+                class="group relative rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer shadow-lg hover:shadow-2xl flex flex-col"
+                [style.background]="themeService.Backgroundprincipal"
+                [style.border]="'1px solid ' + (activeCard === match._id ? themeService.primary + '50' : themeService.Bordernormal + '10')"
+                [style.transform]="activeCard === match._id ? 'translateY(-8px) scale(1.01)' : 'translateY(0)'"
+                (mouseenter)="activeCard = match._id ?? null" (mouseleave)="activeCard = null"
+                (click)="openMatchDetails(match)">
+
+                <!-- Bandeau Status -->
+                <div class="absolute top-0 left-0 right-0 h-1.5 sm:h-2 z-10 transition-all duration-300"
+                    [style.background]="getStatutColor(match.statut)"
+                    [style.box-shadow]="activeCard === match._id ? '0 0 20px ' + getStatutColor(match.statut) : 'none'">
+                </div>
+
+                <!-- Badge Live -->
+                <!-- <div *ngIf="isLive(match)"
+                    class="absolute top-3 sm:top-4 right-3 sm:right-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider animate-pulse shadow-lg"
+                    [style.background]="'#ef4444'" [style.color]="'#fff'">
+                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white animate-ping"></span>
+                    Live
+                </div> -->
+
+                <!-- Header Card -->
+                <div class="p-4 sm:p-5 lg:p-6 pb-3 sm:pb-4">
+                    <div class="flex items-center justify-between mb-3 sm:mb-4">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <div class="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center shadow-md"
+                                [style.background]="themeService.primary + '15'">
+                                <i [class]="'fas ' + getCompetitionIcon(match.typeMatch) + ' text-base sm:text-lg'"
+                                    [style.color]="themeService.primary"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-xs sm:text-sm font-bold uppercase tracking-wider"
+                                    [style.color]="themeService.Textsecondaire">
+                                    {{ match.typeMatch }}
+                                </span>
+                                <span class="text-[9px] sm:text-[10px] opacity-50"
+                                    [style.color]="themeService.Textsecondaire">
+                                    {{ match.categorie }}
+                                </span>
+                            </div>
+                        </div>
+                        <span
+                            class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm"
+                            [style.background]="getStatutColor(match.statut) + '20'"
+                            [style.color]="getStatutColor(match.statut)">
+                            {{ getStatutLabel(match.statut) }}
+                        </span>
+                    </div>
+
+                    <!-- Date & Heure & Lieu -->
+                    <div class="flex items-center justify-between text-[10px] sm:text-xs font-medium">
+                        <div class="flex items-center gap-2 sm:gap-4">
+                            <div class="flex items-center gap-1 sm:gap-1.5"
+                                [style.color]="themeService.Textsecondaire">
+                                <i class="far fa-calendar"></i>
+                                <span class="font-semibold">{{ formatDateRelative(match.date) }}</span>
+                            </div>
+                            <div class="w-1 h-1 rounded-full opacity-40 hidden sm:block"
+                                [style.background]="themeService.Textsecondaire"></div>
+                            <div class="flex items-center gap-1 sm:gap-1.5"
+                                [style.color]="themeService.Textsecondaire">
+                                <i class="far fa-clock"></i>
+                                <span>{{ match.heure }}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1 sm:gap-1.5 max-w-[100px] sm:max-w-[120px]"
+                            [style.color]="themeService.Textsecondaire">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span class="truncate">{{ match.lieu || 'Stade non défini' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenu Principal - VS -->
+<div class="px-3 sm:px-6 py-4 sm:py-6 lg:py-8 relative flex-1 flex items-center">
+    <!-- VS Background -->
+    <div
+        class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
+        <span class="text-[100px] sm:text-[130px] lg:text-[160px] font-black italic"
+            [style.color]="themeService.primary">VS</span>
+    </div>
+
+    <div class="flex items-center justify-between gap-2 sm:gap-4 relative z-10 w-full">
+        <!-- Équipe Domicile -->
+        <div class="flex-1 flex flex-col items-center text-center min-w-0">
+            <div
+                class="relative mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <div class="absolute inset-0 rounded-full blur-xl opacity-0 transition-opacity duration-300"
+                    [style.background]="getTeamColor(match.equipeDom || '')"
+                    [style.opacity]="activeCard === match._id ? '0.4' : '0'"></div>
+                <div class="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full flex items-center justify-center text-lg sm:text-xl lg:text-2xl font-bold shadow-xl"
+                    [style.background]="themeService.Backgroundcards"
+                    [style.border]="'2px sm:3px solid ' + themeService.Bordernormal + '20'">
+                    <img *ngIf="match.logoDom" [src]="match.logoDom"
+                        class="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 object-contain" [alt]="match.equipeDom">
+                    <span *ngIf="!match.logoDom" [style.color]="themeService.Textprincipal">
+                        {{ match.equipeDom | slice:0:2 | uppercase }}
+                    </span>
+                </div>
+            </div>
+            <h3 class="text-sm sm:text-base font-bold text-center leading-tight line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] flex items-center justify-center px-1"
+                [style.color]="themeService.Textprincipal">
+                {{ match.equipeDom }}
+            </h3>
+            <span class="text-[9px] sm:text-[10px] mt-1 sm:mt-2 opacity-50 uppercase tracking-wider font-semibold"
+                [style.color]="themeService.Textsecondaire">Domicile</span>
+        </div>
+
+        <!-- Score / VS -->
+        <div class="flex-shrink-0 px-1 sm:px-3">
+            <div *ngIf="match.scoreDom !== null && match.scoreExt !== null; else vsBlock"
+                class="flex flex-col items-center gap-1 px-3 sm:px-5 py-2 sm:py-4 rounded-2xl shadow-inner min-w-[70px] sm:min-w-[100px] justify-center"
+                [style.background]="themeService.Backgroundcards"
+                [style.border]="'2px solid ' + themeService.primary + '30'">
+                
+                <!-- Scores -->
+                <div class="flex items-center gap-1 sm:gap-2">
+                    <span class="text-xl sm:text-2xl lg:text-3xl font-black min-w-[2ch] text-center"
+                        [style.color]="themeService.Textprincipal">{{ match.scoreDom }}</span>
+                    <span class="text-sm sm:text-base font-bold opacity-30">:</span>
+                    <span class="text-xl sm:text-2xl lg:text-3xl font-black min-w-[2ch] text-center"
+                        [style.color]="themeService.Textprincipal">{{ match.scoreExt }}</span>
+                </div>
+
+                <!-- Minute du match -->
+                <div *ngIf="match.minute"
+                    class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold"
+                    [style.background]="themeService.primary + '20'"
+                    [style.color]="themeService.primary">
+                    {{ match.minute }}'
+                </div>
+            </div>
+
+            <ng-template #vsBlock>
+                <div class="text-center py-3 sm:py-5 min-w-[70px] sm:min-w-[100px]">
+                    <span class="text-3xl sm:text-4xl lg:text-5xl font-black italic"
+                        [style.color]="themeService.primary">VS</span>
+                    <div class="text-[10px] sm:text-xs uppercase tracking-widest mt-1 sm:mt-2 opacity-50 font-bold"
+                        [style.color]="themeService.Textsecondaire">À venir</div>
+                </div>
+            </ng-template>
+        </div>
+
+        <!-- Équipe Extérieur -->
+        <div class="flex-1 flex flex-col items-center text-center min-w-0">
+            <div
+                class="relative mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <div class="absolute inset-0 rounded-full blur-xl opacity-0 transition-opacity duration-300"
+                    [style.background]="getTeamColor(match.equipeExt || '')"
+                    [style.opacity]="activeCard === match._id ? '0.4' : '0'"></div>
+                <div class="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full flex items-center justify-center text-lg sm:text-xl lg:text-2xl font-bold shadow-xl"
+                    [style.background]="themeService.Backgroundcards"
+                    [style.border]="'2px sm:3px solid ' + themeService.Bordernormal + '20'">
+                    <img *ngIf="match.logoExt" [src]="match.logoExt"
+                        class="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 object-contain" [alt]="match.equipeExt">
+                    <span *ngIf="!match.logoExt" [style.color]="themeService.Textprincipal">
+                        {{ match.equipeExt | slice:0:2 | uppercase }}
+                    </span>
+                </div>
+            </div>
+            <h3 class="text-sm sm:text-base font-bold text-center leading-tight line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] flex items-center justify-center px-1"
+                [style.color]="themeService.Textprincipal">
+                {{ match.equipeExt }}
+            </h3>
+            <span class="text-[9px] sm:text-[10px] mt-1 sm:mt-2 opacity-50 uppercase tracking-wider font-semibold"
+                [style.color]="themeService.Textsecondaire">Extérieur</span>
+        </div>
+    </div>
+</div>
+
+                <!-- Footer -->
+                <div class="px-4 sm:px-6 py-3 sm:py-4 border-t transition-colors duration-300 flex items-center justify-between mt-auto"
+                    [style.border-color]="themeService.Bordernormal + '15'"
+                    [style.background]="activeCard === match._id ? themeService.Backgroundcards + '50' : 'transparent'">
+                    <div class="flex items-center gap-2">
+                        <span class="text-[9px] sm:text-[10px] font-bold px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg shadow-sm"
+                            [style.background]="themeService.Bordernormal + '15'"
+                            [style.color]="themeService.Textsecondaire">
+                            {{ match.categorie }}
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] sm:text-xs font-medium hidden sm:inline" [style.color]="themeService.Textsecondaire">
+                            Détails
+                        </span>
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100 transform translate-x-3 group-hover:translate-x-0 shadow-md"
+                            [style.background]="themeService.primary + '20'"
+                            [style.color]="themeService.primary">
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Effet Hover Shine -->
+                <div
+                    class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none overflow-hidden">
+                    <div class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
+                        [style.background]="'linear-gradient(90deg, transparent, ' + themeService.primary + '08, transparent)'">
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Pagination (si nécessaire) -->
+        <div *ngIf="matchsFiltres.length >= 12" class="mt-8 sm:mt-12 text-center">
+            <button
+                class="px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 hover:scale-105 inline-flex items-center gap-2 group shadow-lg"
+                [style.background]="themeService.Backgroundprincipal"
+                [style.color]="themeService.Textprincipal"
+                [style.border]="'1px solid ' + themeService.Bordernormal + '30'">
+                <span>Charger plus de matchs</span>
+                <i class="fas fa-chevron-down text-xs group-hover:translate-y-1 transition-transform"></i>
+            </button>
+        </div>
+    </div>
+</div>
         </main>
     </div>
 

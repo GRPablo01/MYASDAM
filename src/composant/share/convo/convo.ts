@@ -12,7 +12,7 @@ import { Icon3 } from '../../public/icon3/icon3';
   templateUrl: './convo.html',
   styleUrls: ['./convo.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule,Icon3]
+  imports: [FormsModule, CommonModule, HttpClientModule, Icon3]
 })
 export class Convo implements OnInit {
 
@@ -56,38 +56,36 @@ export class Convo implements OnInit {
   loadConvocations(): void {
     console.log('⏳ Chargement des convocations...');
     this.loading = true;
-  
+
     this.convocationService.getConvocations().subscribe({
       next: (data) => {
         console.log('✅ Convocations récupérées depuis l’API :', data);
-  
-        const nomComplet = `${this.prenom} ${this.nom}`.toLowerCase().trim();
-  
+
         this.convocations = data.filter(convo => {
-  
+
           // ✅ Vérifier équipe
           const bonneEquipe = convo.equipe === this.equipe;
-  
+
           // 🧑‍🏫 CAS 1 : ENTRAINEUR → voit toutes les convos de son équipe
           if (this.role === 'entraineur') {
             return bonneEquipe;
           }
-  
+
           // 👤 CAS 2 : JOUEUR → doit être dans la convo
           if (this.role === 'joueur') {
             const joueurDansConvo = convo.joueurs?.some(j =>
-              j.nom.toLowerCase().trim() === nomComplet
+              j.nom.toLowerCase().trim() === this.nom.toLowerCase().trim() &&
+              j.prenom.toLowerCase().trim() === this.prenom.toLowerCase().trim()
             );
-  
             return bonneEquipe && joueurDansConvo;
           }
-  
+
           // 🔒 AUTRES ROLES → rien
           return false;
         });
-  
+
         console.log('🎯 Convocations filtrées :', this.convocations);
-  
+
         this.convo = this.convocations[0];
         this.loading = false;
       },
@@ -100,7 +98,9 @@ export class Convo implements OnInit {
   }
 
   isJoueurConnecte(joueur: Joueur): boolean {
-    return this.role === 'joueur' && joueur.nom === `${this.prenom} ${this.nom}`;
+    return this.role === 'joueur' &&
+      joueur.nom.toLowerCase().trim() === this.nom.toLowerCase().trim() &&
+      joueur.prenom.toLowerCase().trim() === this.prenom.toLowerCase().trim();
   }
 
   changerStatut(joueur: Joueur, statut: "oui" | "non" | "non_repondu") {
@@ -138,18 +138,8 @@ export class Convo implements OnInit {
     return convo.joueurs?.filter(j => j.present === 'non').length || 0;
   }
 
-  getInitials(nom: string): string {
-    if (!nom) return '';
-  
-    const mots = nom.split(' ');
-    
-    if (mots.length === 1) {
-      return mots[0].charAt(0).toUpperCase();
-    }
-  
-    return (
-      mots[0].charAt(0) + mots[mots.length - 1].charAt(0)
-    ).toUpperCase();
+  getInitials(nom: string, prenom: string) {
+    return (prenom?.charAt(0) || '') + (nom?.charAt(0) || '');
   }
 
   aDejaRepondu(joueur: Joueur): boolean {

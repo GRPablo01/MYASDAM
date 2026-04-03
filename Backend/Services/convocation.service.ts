@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 export interface Joueur {
   _id?: string;
   key: string;
+  prenom: string;
   nom: string;
   email?: string; 
   present: 'oui' | 'non' | 'non_repondu';
@@ -19,6 +20,7 @@ export interface Convocation {
   dateMatch: string;
   lieu: string;
   statut?: string;          // si nécessaire
+  isRead?: boolean;
   // 🔹 Propriété locale pour l’affichage
   expanded?: boolean;
 }

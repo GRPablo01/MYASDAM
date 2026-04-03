@@ -131,7 +131,7 @@ function generateEmailHTML(convocation, joueur, isDark = false) {
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
                   <tr>
                     <td style="padding-right:15px;">
-  <img src="http://192.168.1.43:3000/assets/LOGO.png" alt="MyAsdam" width="50" height="50" style="display:block;">
+  <img src="https://www.asdam.fr/nouveau-logo-de-lasdam/" alt="MyAsdam" width="50" height="50" style="display:block;">
 </td>
                     <td style="text-align:left;">
                       <h1 style="color:#FFFFFF; margin:0; font-size:26px; font-weight:700; letter-spacing:2px; text-transform:uppercase;">CONVOCATION</h1>
@@ -282,7 +282,7 @@ function generateEmailHTML(convocation, joueur, isDark = false) {
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin-bottom:10px;">
                   <tr>
                     <td style="padding-right:15px;">
-  <img src="http://192.168.1.43:3000/assets/LOGO.png" alt="MyAsdam" width="50" height="50" style="display:block;">
+  <img src="https://www.asdam.fr/nouveau-logo-de-lasdam/" alt="MyAsdam" width="50" height="50" style="display:block;">
 </td>
                   </tr>
                 </table>
