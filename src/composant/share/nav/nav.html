@@ -1,94 +1,148 @@
-<!-- ================= NAVIGATION RESPONSIVE ================= -->
-
-<!-- ================= DESKTOP ================= -->
-<nav class="hidden custom-desktop:flex justify-end px-6 py-4">
-  <ul class="flex space-x-6 md:space-x-4 sm:space-x-2">
-    <li *ngFor="let link of navLinks; let i = index">
-      <a
-        #rla="routerLinkActive"
-        [routerLink]="link.path"
-        routerLinkActive="font-bold"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="px-3 py-2 rounded-lg transition-all duration-300 flex items-center gap-2"
-        [ngStyle]="getLinkStyle(rla.isActive, i)"
-        (mouseenter)="hoverIndex = i"
-        (mouseleave)="hoverIndex = -1"
-      >
-        <!-- ICON -->
-        <i [class]="link.icon"></i>
-
-        <!-- TEXTE -->
-        {{ link.label }}
-      </a>
-    </li>
-  </ul>
-</nav>
-<!-- ================= TABLETTE + MOBILE ================= -->
-<nav
-  class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-sm custom-desktop:hidden custom-tablet:block"
->
-  <div
-    class="backdrop-blur-xl rounded-full shadow-2xl px-2 py-2"
-    [ngStyle]="{
-      background: themeService.Backgroundcards,
-      border: themeService.Bordernormal
-    }"
-  >
-    <ul class="flex items-center justify-between">
-      <li class="flex-1" *ngFor="let link of navLinks; let i = index">
-        <a
-          #rla="routerLinkActive"
-          [routerLink]="link.path"
-          [routerLinkActiveOptions]="{ exact: true }"
-          routerLinkActive="shadow-lg scale-110"
-          class="group flex flex-col items-center justify-center gap-1 px-2 py-2 rounded-full transition-all duration-300 w-full"
-          [ngStyle]="{
-            background: rla.isActive ? themeService.primary : 'transparent',
-            color: rla.isActive ? '#FFF' : themeService.Iconnormal
-          }"
-        >
-          <div
-            class="w-6 h-6 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+<!-- nav.component.html -->
+<nav class="sticky top-0 z-10 transition-all duration-300 ml-2 hidden min-[1119px]:flex">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+  
+      <!-- MENU PRINCIPAL -->
+      <ul class="flex gap-1 items-center">
+  
+        <li *ngFor="let item of menu; let i = index" class="relative">
+  
+          <!-- Lien principal -->
+          <a
+            [routerLink]="item.link || '#'"
+            (click)="item.children ? toggleMenu(i) : null"
+            class="flex items-center gap-2 cursor-pointer select-none px-4 py-2.5 rounded-xl transition-all duration-200 relative overflow-hidden group"
+            [ngClass]="{
+              'bg-opacity-20': openMenuIndex === i,
+              'scale-105': openMenuIndex === i
+            }"
+            [ngStyle]="{
+              'color': openMenuIndex === i ? themeService.primary : (hoveredIndex === i ? themeService.primary : themeService.Textprincipal),
+              'background-color': openMenuIndex === i ? themeService.secondarySoft : 'transparent'
+            }"
+            (mouseenter)="hoveredIndex = i; item.children ? openMenuIndex = i : null"
+            (mouseleave)="hoveredIndex = -1; !item.children ? null : null"
           >
+            <!-- Effet de ripple/hover -->
+            <span class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+                  [ngStyle]="{'background-color': themeService.primary}"></span>
+  
+            <i *ngIf="item.icon" 
+               [class]="item.icon + ' text-md transition-transform duration-200 group-hover:scale-110'" 
+               [ngStyle]="{'color': hoveredIndex === i || openMenuIndex === i ? themeService.primary : themeService.Iconnormal}">
+            </i>
+            
+            <span class="font-medium text-lg">{{ item.label }}</span> <!-- texte principal plus grand -->
+  
+            <!-- Badge (optionnel) -->
+            <span *ngIf="item.badge" 
+                  class="ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded-full text-white animate-pulse"
+                  [ngStyle]="{'background-color': themeService.accent}">
+              {{ item.badge }}
+            </span>
+  
+            <!-- Flèche animée -->
             <i
-              [class]="link.icon"
-              [ngStyle]="{
-                color: rla.isActive ? '#FFF' : themeService.Iconnormal
-              }"
-              class="text-lg"
+              *ngIf="item.children"
+              class="fas fa-chevron-down ml-1 text-xs transition-all duration-300"
+              [class.rotate-180]="openMenuIndex === i"
+              [class.translate-y-0.5]="openMenuIndex === i"
+              [ngStyle]="{'color': hoveredIndex === i || openMenuIndex === i ? themeService.primary : themeService.Iconnormal}"
             ></i>
-          </div>
-          <span
-            class="text-[10px] font-semibold leading-none transition-all duration-300 max-[380px]:opacity-0 max-[380px]:h-0"
+          </a>
+  
+          <!-- Sous-menu amélioré avec animation -->
+          <div
+            *ngIf="item.children?.length"
+            class="absolute left-0 top-full mt-2 w-56 rounded-2xl overflow-hidden shadow-2xl border transition-all duration-300 origin-top-left"
+            [ngClass]="{
+              'opacity-100 scale-100 translate-y-0': openMenuIndex === i,
+              'opacity-0 scale-95 -translate-y-2 pointer-events-none': openMenuIndex !== i
+            }"
+            [ngStyle]="{
+              'background-color': themeService.Backgroundcards,
+              'border-color': themeService.Border + '30',
+              'box-shadow': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+            }"
+            (mouseenter)="openMenuIndex = i"
+            (mouseleave)="openMenuIndex = -1"
           >
-            {{ link.label }}
-          </span>
-        </a>
-      </li>
-    </ul>
-  </div>
+            <!-- Header du sous-menu -->
+            <div class="px-4 py-3 border-b border-opacity-20" [ngStyle]="{'border-color': themeService.Border}">
+              <span class="text-xs font-semibold uppercase tracking-wider opacity-60" [ngStyle]="{'color': themeService.Textprincipal}">
+                {{ item.label }}
+              </span>
+            </div>
+  
+            <ul class="py-2">
+              <li *ngFor="let child of item.children; let last = last">
+                <a
+                  [routerLink]="child.link"
+                  class="flex items-center gap-3 px-4 py-2.5 mx-2 rounded-xl transition-all duration-200 group relative"
+                  [ngClass]="{
+                    'mb-1': !last
+                  }"
+                  [ngStyle]="{
+                    'color': hoveredChild === child ? '#ffffff' : themeService.Textprincipal,
+                    'background-color': hoveredChild === child ? themeService.primary : 'transparent',
+                    'transform': hoveredChild === child ? 'translateX(4px)' : 'translateX(0)'
+                  }"
+                  (mouseenter)="hoveredChild = child"
+                  (mouseleave)="hoveredChild = null"
+                >
+                  <!-- Indicateur actif -->
+                  <span *ngIf="child.active" 
+                        class="absolute left-0 w-1 h-6 rounded-full transition-all duration-200"
+                        [ngStyle]="{'background-color': hoveredChild === child ? '#ffffff' : themeService.primary}">
+                  </span>
+  
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-200"
+                       [ngStyle]="{
+                         'background-color': hoveredChild === child ? 'rgba(255,255,255,0.2)' : themeService.primarySoft,
+                         'color': hoveredChild === child ? '#ffffff' : themeService.primary
+                       }">
+                    <i *ngIf="child.icon" [class]="child.icon + ' text-sm'"></i>
+                    <i *ngIf="!child.icon" class="fas fa-arrow-right text-xs"></i>
+                  </div>
+  
+                  <div class="flex flex-col">
+                    <span class="font-medium text-sm">{{ child.label }}</span>
+                    <span *ngIf="child.description" 
+                          class="text-xs opacity-70 transition-opacity"
+                          [ngStyle]="{'color': hoveredChild === child ? 'rgba(255,255,255,0.8)' : themeService.Textsecondaire}">
+                      {{ child.description }}
+                    </span>
+                  </div>
+  
+                  <!-- Shortcut key -->
+                  <span *ngIf="child.shortcut" 
+                        class="ml-auto text-[10px] px-1.5 py-0.5 rounded border opacity-50"
+                        [ngStyle]="{
+                          'border-color': hoveredChild === child ? 'rgba(255,255,255,0.3)' : themeService.Border,
+                          'color': hoveredChild === child ? 'rgba(255,255,255,0.8)' : themeService.Textsecondaire
+                        }">
+                    {{ child.shortcut }}
+                  </span>
+                </a>
+              </li>
+            </ul>
+  
+            <!-- Footer du sous-menu -->
+            <div *ngIf="item.footer" 
+                 class="px-4 py-3 border-t border-opacity-20 bg-opacity-50"
+                 [ngStyle]="{'border-color': themeService.Border, 'background-color': themeService.primarySoft}">
+              <a [routerLink]="item.footer.link" 
+                 class="flex items-center gap-2 text-xs font-medium transition-colors"
+                 [ngStyle]="{'color': themeService.primary}">
+                <span>{{ item.footer.label }}</span>
+                <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
+              </a>
+            </div>
+          </div>
+  
+        </li>
+  
+      </ul>
+  
+    </div>
 </nav>
-
-<!-- Pour éviter que le contenu soit caché derrière la nav mobile -->
-<div class="h-20 md:hidden"></div>
-
-<!-- ================= CUSTOM BREAKPOINTS ================= -->
-<style>
-  /* Desktop ≥ 1120px */
-  @media (min-width: 1120px) {
-    .custom-desktop\:block { display: block !important; }
-    .custom-desktop\:flex { display: flex !important; }
-    .custom-desktop\:hidden { display: none !important; }
-  }
-
-  /* Tablette + Mobile 383px à 1119px */
-  @media (min-width: 383px) and (max-width: 1119px) {
-    .custom-tablet\:block { display: block !important; }
-    .custom-tablet\:hidden { display: none !important; }
-  }
-
-  /* Petit mobile < 383px (toujours visible si besoin) */
-  @media (max-width: 382px) {
-    .custom-tablet\:block { display: block !important; }
-  }
-</style>

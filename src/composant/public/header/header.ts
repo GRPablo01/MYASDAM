@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 // Composants standalone
-import { Nav } from '../../share/nav/nav';
+
 import { Profil } from '../../share/profil/profil';
 import { News } from '../../share/news/news';
 import { Theme } from '../../share/theme/theme';
@@ -14,6 +14,7 @@ import { Barre } from '../../share/barre/barre';
 import { Logo } from '../../share/logo/logo';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
 import { Icon3 } from '../icon3/icon3';
+import { Nav } from '../../share/nav/nav';
 
 
 

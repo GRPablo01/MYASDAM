@@ -23,7 +23,7 @@ export class Inscription {
   ngOnInit(): void {
 
     // 🧠 Titre onglet
-    this.titleService.setTitle('MYASDAM | Inscription');
+    this.titleService.setTitle('ASDAM | Inscription');
 
     // ⏳ Petit effet de chargement
     setTimeout(() => {

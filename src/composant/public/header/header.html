@@ -1,29 +1,34 @@
 <app-icon></app-icon>
 
-<header 
-  [ngStyle]="{
-    'background': themeService.Backgroundcards,
-    'color': themeService.Textprincipal,
-    'border-bottom': themeService.Bordernormal
-  }" 
-  class="fixed top-0 left-0 w-full flex items-center px-4 h-16 min-h-[64px] z-50"
->
-  
-  <!-- Bloc Gauche -->
-  <div class="flex items-center gap-3 flex-1 max-[1123px]:flex-none justify-start min-w-0">
+<!-- HEADER -->
+<header class="flex items-center justify-between h-16 px-4" [ngStyle]="{
+  'background': themeService.Backgroundprincipal,
+  'color': themeService.Textprincipal,
+  'border-bottom': themeService.Bordernormal
+}" >
+
+  <!-- ===================== -->
+  <!-- BLOC GAUCHE -->
+  <!-- ===================== -->
+  <div class="flex items-center gap-3 min-w-0 -ml-3">
     <app-logo class="flex-shrink-0"></app-logo>
+
     <app-icon2 class="flex-shrink-0 sm:block max-[525px]:hidden"></app-icon2>
   </div>
 
-  <!-- Centre : Vide mais conserve l'espace -->
-  <div class="flex-shrink-0 mx-4 z-10">
-    <!-- Espace réservé ou autre contenu -->
-  </div>
+  <!-- ===================== -->
+  <!-- BLOC DROIT -->
+  <!-- ===================== -->
+  <div class="flex items-center gap-3 min-w-0">
 
-  <!-- Bloc Droit -->
-  <div class="flex items-center gap-3 flex-1 justify-end min-w-0">
-    <app-nav class="flex-shrink-0 hidden min-[382px]:flex max-[382px]:hidden"></app-nav>
+    <!-- NAV -->
+    <div class="hidden sm:flex items-center">
+      <app-nav></app-nav>
+    </div>
+
+    <!-- PROFIL -->
     <app-profil class="flex-shrink-0"></app-profil>
+
   </div>
 
 </header>

@@ -1,6 +1,7 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { interval, Subscription } from 'rxjs';
 
 import { MatchService, Match } from '../../../../Backend/Services/match.service';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
@@ -13,7 +14,7 @@ import { Icon3 } from '../../public/icon3/icon3';
   templateUrl: './cards-match.html',
   styleUrl: './cards-match.css',
 })
-export class CardsMatch implements OnInit {
+export class CardsMatch implements OnInit, OnDestroy {
   matchs: Match[] = [];
   isDark = false;
   matchsFiltres: Match[] = [];
@@ -46,7 +47,20 @@ export class CardsMatch implements OnInit {
     { label: 'Ce mois', value: 'month', icon: 'fa-calendar' }
   ];
 
+  // Périodes de match pour affichage
+  readonly periodesMatch: { [key: string]: string } = {
+    '1MT': '1ère MT',
+    'MI-TPS': 'Mi-temps',
+    '2MT': '2ème MT',
+    'PROL': 'Prolongation',
+    'TAB': 'Tirs au but',
+    'TER': 'Terminé'
+  };
+
   private touchStartY = 0;
+  private statusUpdateSubscription: Subscription | null = null;
+  private readonly MATCH_DURATION_MINUTES = 90; // Durée standard d'un match (1h30)
+  private readonly STATUS_CHECK_INTERVAL = 60000; // Vérification toutes les minutes
 
   constructor(
     private matchService: MatchService,
@@ -56,6 +70,130 @@ export class CardsMatch implements OnInit {
   ngOnInit(): void {
     this.loadMatchs();
     this.detectColorScheme();
+    this.startStatusUpdates();
+  }
+
+  ngOnDestroy(): void {
+    this.stopStatusUpdates();
+  }
+
+  // ==============================
+  // ⏰ MISE À JOUR AUTOMATIQUE DES STATUTS
+  // ==============================
+
+  private startStatusUpdates(): void {
+    // Vérification immédiate puis toutes les minutes
+    this.updateMatchsStatus();
+    this.statusUpdateSubscription = interval(this.STATUS_CHECK_INTERVAL).subscribe(() => {
+      this.updateMatchsStatus();
+    });
+  }
+
+  private stopStatusUpdates(): void {
+    if (this.statusUpdateSubscription) {
+      this.statusUpdateSubscription.unsubscribe();
+      this.statusUpdateSubscription = null;
+    }
+  }
+
+  private updateMatchsStatus(): void {
+    const now = new Date();
+    let hasChanges = false;
+
+    this.matchs = this.matchs.map(match => {
+      const newStatus = this.calculateMatchStatus(match, now);
+      if (newStatus !== match.statut) {
+        hasChanges = true;
+        console.log(`Statut mis à jour: ${match.equipeDom} vs ${match.equipeExt}: ${match.statut} → ${newStatus}`);
+        return { ...match, statut: newStatus };
+      }
+      return match;
+    });
+
+    // Si des changements ont été détectés, on met à jour les filtres
+    if (hasChanges) {
+      this.appliquerFiltres();
+    }
+  }
+
+  private calculateMatchStatus(match: Match, now: Date): string {
+    // Si le match est reporté ou annulé, on ne change pas le statut
+    if (match.statut === 'Reporté' || match.statut === 'Annulé') {
+      return match.statut;
+    }
+
+    // Si pas de date/heure, on garde le statut actuel ou "À venir" par défaut
+    if (!match.date || !match.heure) {
+      return match.statut || 'À venir';
+    }
+
+    // Construction de la date/heure du match
+    const matchDateTime = this.parseMatchDateTime(match.date, match.heure);
+    if (!matchDateTime) {
+      return match.statut || 'À venir';
+    }
+
+    // Calcul des timestamps
+    const matchStart = matchDateTime.getTime();
+    const matchEnd = matchStart + (this.MATCH_DURATION_MINUTES * 60 * 1000); // +1h30
+    const currentTime = now.getTime();
+
+    // Logique de statut
+    if (currentTime < matchStart) {
+      // Avant l'heure du match : À venir
+      return 'À venir';
+    } else if (currentTime >= matchStart && currentTime <= matchEnd) {
+      // Pendant le match : En cours
+      return 'En cours';
+    } else {
+      // Après la fin du match : Terminé
+      return 'Terminé';
+    }
+  }
+
+  private parseMatchDateTime(date: string, heure: string): Date | null {
+    try {
+      // Format attendu: date = "2024-01-15" ou "15/01/2024", heure = "14:15"
+      let dateObj: Date;
+
+      if (date.includes('/')) {
+        // Format français: DD/MM/YYYY
+        const [day, month, year] = date.split('/').map(Number);
+        const [hours, minutes] = heure.split(':').map(Number);
+        dateObj = new Date(year, month - 1, day, hours, minutes, 0, 0);
+      } else if (date.includes('-')) {
+        // Format ISO: YYYY-MM-DD
+        const [hours, minutes] = heure.split(':').map(Number);
+        dateObj = new Date(date);
+        dateObj.setHours(hours, minutes, 0, 0);
+      } else {
+        return null;
+      }
+
+      return isNaN(dateObj.getTime()) ? null : dateObj;
+    } catch (error) {
+      console.error('Erreur lors du parsing de la date/heure:', error);
+      return null;
+    }
+  }
+
+  // Méthode utilitaire pour formater l'heure d'affichage
+  getHeureAffichage(match: Match): string {
+    if (!match.heure) return '';
+    return match.heure;
+  }
+
+  // Méthode pour savoir si un match démarre bientôt (dans moins de 15 min)
+  isStartingSoon(match: Match): boolean {
+    if (match.statut !== 'À venir' || !match.date || !match.heure) return false;
+    
+    const matchDateTime = this.parseMatchDateTime(match.date, match.heure);
+    if (!matchDateTime) return false;
+
+    const now = new Date();
+    const diffMinutes = (matchDateTime.getTime() - now.getTime()) / (1000 * 60);
+    
+    return diffMinutes > 0 && diffMinutes <= 15;
   }
 
   @HostListener('window:resize')
@@ -75,6 +213,8 @@ export class CardsMatch implements OnInit {
       next: (data) => {
         console.log('Matchs récupérés :', data);
         this.matchs = data;
+        // Mise à jour immédiate des statuts après chargement
+        this.updateMatchsStatus();
         this.appliquerFiltres();
         this.loading = false;
       },
@@ -87,7 +227,107 @@ export class CardsMatch implements OnInit {
     });
   }
 
-  // Méthodes utilitaires
+  // ==============================
+  // ⏱️ GESTION DU TEMPS DE MATCH
+  // ==============================
+
+  // Formater l'affichage de la minute (30', 45+3', MI-TPS, etc.)
+  getMinuteDisplay(match: Match): string {
+    if (!match || match.statut !== 'En cours') return '';
+    
+    // Calcul de la minute en cours basé sur l'heure de début réelle
+    if (match.date && match.heure) {
+      const matchDateTime = this.parseMatchDateTime(match.date, match.heure);
+      if (matchDateTime) {
+        const now = new Date();
+        const diffMinutes = Math.floor((now.getTime() - matchDateTime.getTime()) / (1000 * 60));
+        
+        if (diffMinutes > 0) {
+          if (diffMinutes <= 45) {
+            return `${diffMinutes}'`;
+          } else if (diffMinutes <= 90) {
+            return `${diffMinutes}'`;
+          } else {
+            return `90+${diffMinutes - 90}'`;
+          }
+        }
+      }
+    }
+    
+    // Fallback sur les propriétés existantes
+    if (match.periode && this.periodesMatch[match.periode]) {
+      if (match.periode === 'MI-TPS' || match.periode === 'TER' || 
+          match.periode === 'PROL' || match.periode === 'TAB') {
+        return this.periodesMatch[match.periode];
+      }
+    }
+    
+    const minute = match.minute || 0;
+    
+    // 1ère mi-temps (1-45 + temps additionnel)
+    if (match.periode === '1MT') {
+      if (minute > 45) {
+        return `45+${minute - 45}'`;
+      }
+      return `${minute}'`;
+    }
+    
+    // 2ème mi-temps (46-90 + temps additionnel)
+    if (match.periode === '2MT') {
+      if (minute > 90) {
+        return `90+${minute - 90}'`;
+      }
+      return `${minute}'`;
+    }
+    
+    return `${minute}'`;
+  }
+
+  // Vérifier si le match est en direct (live)
+  isMatchLive(match: Match): boolean {
+    return match.statut === 'En cours' && 
+           match.periode !== 'TER' && 
+           match.periode !== 'MI-TPS';
+  }
+
+  // Obtenir le pourcentage de progression du match (0-100%)
+  getProgressionMatch(match: Match): number {
+    if (match.statut === 'Terminé') return 100;
+    if (match.statut !== 'En cours') return 0;
+    
+    // Calcul basé sur l'heure réelle si disponible
+    if (match.date && match.heure) {
+      const matchDateTime = this.parseMatchDateTime(match.date, match.heure);
+      if (matchDateTime) {
+        const now = new Date();
+        const diffMinutes = Math.floor((now.getTime() - matchDateTime.getTime()) / (1000 * 60));
+        const progress = Math.min((diffMinutes / this.MATCH_DURATION_MINUTES) * 100, 100);
+        return Math.round(progress);
+      }
+    }
+    
+    // Fallback
+    if (!match.minute) return 0;
+    if (match.periode === 'TER') return 100;
+    if (match.periode === 'MI-TPS') return 50;
+    
+    const maxMinutes = 90;
+    const current = Math.min(match.minute || 0, maxMinutes);
+    return Math.round((current / maxMinutes) * 100);
+  }
+
+  // Obtenir la classe CSS pour la barre de progression
+  getProgressClass(match: Match): string {
+    const progress = this.getProgressionMatch(match);
+    if (progress < 30) return 'bg-green-500';
+    if (progress < 70) return 'bg-yellow-500';
+    return 'bg-red-500';
+  }
+
+  // ==============================
+  // 📋 MÉTHODES EXISTANTES (conservées)
+  // ==============================
+
   onSearch(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.filtresActifs.recherche = value;
@@ -157,7 +397,6 @@ export class CardsMatch implements OnInit {
     );
   }
 
-  // Gestion des filtres par statut
   toggleStatut(statut: string): void {
     const index = this.filtresActifs.statuts.indexOf(statut);
     if (index === -1) {
@@ -172,7 +411,6 @@ export class CardsMatch implements OnInit {
 
   setPeriode(periode: string): void {
     this.filtresActifs.periode = periode;
-    // Mettre à jour les filtres actifs visuels
     this.activeFilters = this.activeFilters.filter(f => f.type !== 'periode');
     if (periode !== 'all') {
       const periodeLabel = this.periodes.find(p => p.value === periode)?.label || periode;

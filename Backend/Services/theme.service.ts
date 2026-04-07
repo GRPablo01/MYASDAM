@@ -15,6 +15,7 @@ export class ThemeService {
   
   // 🎨 Couleurs globales
   Backgroundprincipal = '';
+  Headerprincipal = '';
   Backgroundcards = '';
   Textprincipal = '';
   Textsecondaire = '';
@@ -87,6 +88,7 @@ export class ThemeService {
     if (isDark) {
       // 🌙 DARK MODE
       this.Backgroundprincipal = '#121212';
+      this.Headerprincipal = '#181818';
       this.Backgroundcards = '#1E1E1E';
       this.Textprincipal = '#F5F5F5';
       this.Textsecondaire = '#B3B3B3';

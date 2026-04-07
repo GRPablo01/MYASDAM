@@ -13,6 +13,7 @@
 <div
   *ngIf="show"
   role="dialog"
+  aria-modal="true"
   aria-labelledby="cookie-title"
   aria-describedby="cookie-desc"
   class="fixed bottom-0 left-0 right-0 z-[11003] px-4 pb-4 animate-slide-up">
@@ -31,12 +32,16 @@
       <!-- LOGO -->
       <img
         src="assets/LOGO.png"
-        alt="Logo"
+        alt="Logo application"
         class="w-12 h-12 flex-shrink-0 drop-shadow-lg hover:scale-110 transition-transform duration-300"
         loading="lazy"/>
 
       <!-- TEXT -->
       <div class="text-sm leading-relaxed">
+        <p id="cookie-title" class="font-semibold text-base mb-1">
+          Gestion des cookies
+        </p>
+
         <p id="cookie-desc" class="opacity-90">
           Nous utilisons des cookies pour améliorer votre expérience :
           navigation fluide, sécurisée et personnalisée.
@@ -44,7 +49,7 @@
 
         <a
           href="/cookies"
-          class="inline-block mt-2 underline transition-all duration-300 hover:opacity-80 hover:translate-x-1">
+          class="inline-block mt-2 underline transition-all duration-300 hover:opacity-80 hover:translate-x-1 focus:outline-none focus:ring-2 rounded">
           En savoir plus →
         </a>
       </div>
@@ -60,7 +65,7 @@
         class="px-5 py-2.5 rounded-full font-semibold text-white
                transition-all duration-300 transform
                hover:scale-105 hover:shadow-lg
-               active:scale-95">
+               active:scale-95 focus:outline-none focus:ring-2">
         Accepter
       </button>
 
@@ -68,13 +73,13 @@
       <button
         (click)="refuse()"
         [ngStyle]="{
-          'border': themeService.Borderfocus,
+          'border': '1px solid ' + themeService.Borderfocus,
           'color': themeService.Textsecondaire
         }"
         class="px-5 py-2.5 rounded-full font-semibold border
                transition-all duration-300 transform
-               hover:bg-gray-100 hover:border-gray-400
-               active:scale-95">
+               hover:bg-gray-100/20 hover:border-gray-400
+               active:scale-95 focus:outline-none focus:ring-2">
         Refuser
       </button>
 
@@ -110,7 +115,7 @@
     <button 
       (click)="closeNotification()"
       class="flex-shrink-0 w-7 h-7 rounded-full hover:bg-white/20
-             flex items-center justify-center transition group">
+             flex items-center justify-center transition group focus:outline-none">
       <i class="fa-solid fa-xmark text-white/70 group-hover:text-white text-sm"></i>
     </button>
 

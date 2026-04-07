@@ -1,13 +1,28 @@
 <!-- Bouton notifications -->
-<button type="button"
-        (click)="toggleCenter()"
-        (mouseenter)="hoverNotif = true"
-        (mouseleave)="hoverNotif = false"
-        class="w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300"
-        aria-label="Notifications">
-  <i class="fa-solid fa-bell text-xl transition-all duration-500"
-     [ngStyle]="{ 'color': hoverNotif ? themeService.primary : themeService.Iconnormal }"></i>
+<button
+  type="button"
+  (click)="toggleCenter()"
+  (mouseenter)="hoverNotif = true"
+  (mouseleave)="hoverNotif = false"
+  class="w-12 h-12 rounded-full flex items-center justify-center relative transition-all duration-300 hover:scale-110 active:scale-95"
+  aria-label="Notifications"
+>
+  <!-- Cercle hover plus petit -->
+  <span
+    class="absolute w-10 h-10 rounded-full transition-colors duration-300"
+    [ngStyle]="{
+      'background': hoverNotif ? themeService.primary : 'transparent'
+    }"
+  ></span>
+
+  <!-- Icône au-dessus -->
+  <i
+    class="fa-solid fa-bell text-xl relative transition-colors duration-300"
+    [ngStyle]="{ 'color': hoverNotif ? '#ffffff' : themeService.Iconnormal }"
+  ></i>
 </button>
+
+
 
 <!-- Overlay backdrop -->
 <div *ngIf="openCenter" (click)="toggleCenter()"

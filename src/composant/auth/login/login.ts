@@ -18,6 +18,7 @@ export class Login implements OnInit {
   isDarkMode: boolean = false;
   showPassword: boolean = false;
   isHovered = false;
+  isLoading: boolean = false;
   
   // Messages
   message: string | null = null;
@@ -115,6 +116,25 @@ export class Login implements OnInit {
           else this.message = err.error?.message || 'Erreur lors de la connexion';
         }
       });
+  }
+
+  darkenColor(color: string, amount: number): string {
+    // Supprime le # si présent
+    color = color.replace('#', '');
+  
+    // Convertit en nombre
+    const num = parseInt(color, 16);
+  
+    let r = (num >> 16) - amount;
+    let g = ((num >> 8) & 0x00FF) - amount;
+    let b = (num & 0x0000FF) - amount;
+  
+    // Empêche les valeurs négatives
+    r = Math.max(r, 0);
+    g = Math.max(g, 0);
+    b = Math.max(b, 0);
+  
+    return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, '0')}`;
   }
 
   // 🔹 Afficher / masquer le mot de passe

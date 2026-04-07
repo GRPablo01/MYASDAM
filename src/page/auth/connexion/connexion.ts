@@ -23,7 +23,7 @@ export class Connexion {
   ngOnInit(): void {
 
     // 🧠 Titre onglet
-    this.titleService.setTitle('MYASDAM | Connexion');
+    this.titleService.setTitle('ASDAM | Connexion');
 
     // ⏳ Petit effet de chargement
     setTimeout(() => {

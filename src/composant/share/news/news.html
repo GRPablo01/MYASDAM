@@ -2,11 +2,20 @@
   type="button"
   (mouseenter)="hoverNews = true"
   (mouseleave)="hoverNews = false"
-  class="w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300"
+  class="w-12 h-12 rounded-full flex items-center justify-center relative transition-all duration-300 hover:scale-110 active:scale-95"
   aria-label="News"
 >
+  <!-- Cercle hover plus petit -->
+  <span
+    class="absolute w-10 h-10 rounded-full transition-colors duration-300"
+    [ngStyle]="{
+      'background': hoverNews ? themeService.primary : 'transparent'
+    }"
+  ></span>
+
+  <!-- Icône au-dessus -->
   <i
-    class="fa-solid fa-newspaper text-xl transition-all duration-500"
-    [ngStyle]="{ 'color': hoverNews ? themeService.primary : themeService.Iconnormal }"
+    class="fa-solid fa-newspaper text-xl relative transition-colors duration-300"
+    [ngStyle]="{ 'color': hoverNews ? '#ffffff' : themeService.Iconnormal }"
   ></i>
 </button>

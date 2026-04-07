@@ -14,6 +14,7 @@ import { ThemeService } from '../../../../Backend/Services/theme.service';
 export class Cookie implements OnInit {
 
   show = false;
+
   showNotification = false;
   notificationMessage = '';
   notificationProgress: number = 100;
@@ -21,6 +22,7 @@ export class Cookie implements OnInit {
 
   userKey: string | null = null;
   userCookie: string = '';
+  userRole: string = '';
 
   constructor(
     private renderer: Renderer2,
@@ -29,28 +31,46 @@ export class Cookie implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.initUser();
+    this.handleDisplayLogic();
+  }
+
+  // =============================
+  // INIT USER
+  // =============================
+  private initUser(): void {
     const utilisateurString = localStorage.getItem('utilisateur');
 
     if (utilisateurString) {
       const utilisateur = JSON.parse(utilisateurString);
 
       this.userKey = utilisateur.key || null;
-
-      // ✅ IMPORTANT : normalisation
+      this.userRole = (utilisateur.role || '').toLowerCase().trim();
       this.userCookie = (utilisateur.cookie || '').trim();
-
-      // console.log("🍪 Cookie utilisateur :", this.userCookie);
-
-      // ✅ CONDITION PRINCIPALE
-      if (!this.userCookie) {
-        this.delayedShow();
-      } else {
-        this.show = false;
-      }
-
     } else {
-      // console.log("⚠️ Aucun utilisateur → affichage bannière");
+      // invité
+      this.userKey = null;
+      this.userRole = 'guest';
+      this.userCookie = localStorage.getItem('cookie_choice') || '';
+    }
+  }
+
+  // =============================
+  // AFFICHAGE TEMPLATE
+  // =============================
+  private handleDisplayLogic(): void {
+
+    // ❌ super-admin → jamais affiché
+    if (this.userRole === 'super-admin') {
+      this.show = false;
+      return;
+    }
+
+    // ✅ si aucun choix → on affiche
+    if (!this.userCookie) {
       this.delayedShow();
+    } else {
+      this.show = false;
     }
   }
 
@@ -61,6 +81,9 @@ export class Cookie implements OnInit {
     }, 1500);
   }
 
+  // =============================
+  // ACTIONS
+  // =============================
   accept(): void {
     this.updateCookie('accepter');
   }
@@ -71,14 +94,11 @@ export class Cookie implements OnInit {
 
   private updateCookie(value: 'accepter' | 'refuser'): void {
 
-    // ✅ Si pas connecté → fallback local
+    // ✅ utilisateur non connecté → localStorage uniquement
     if (!this.userKey) {
-      console.warn("⚠️ Aucun utilisateur connecté");
-
       this.saveCookieLocal(value);
 
-      this.show = false;
-      this.toggleBodyModal(false);
+      this.closeBanner();
       this.showNotificationMessage(`Cookies ${value} !`);
       return;
     }
@@ -88,30 +108,38 @@ export class Cookie implements OnInit {
     this.http.put(url, { cookie: value }).subscribe({
       next: () => {
         this.saveCookieLocal(value);
-
-        this.show = false;
-        this.toggleBodyModal(false);
+        this.closeBanner();
         this.showNotificationMessage(`Cookies ${value} !`);
       },
       error: err => {
         console.error("❌ Erreur :", err);
-
-        this.show = false;
-        this.toggleBodyModal(false);
+        this.closeBanner();
         this.showNotificationMessage(`Erreur lors du choix des cookies`);
       }
     });
   }
 
-  // ✅ Factorisation propre
-  private saveCookieLocal(value: string) {
+  // =============================
+  // LOCAL STORAGE
+  // =============================
+  private saveCookieLocal(value: string): void {
     const utilisateurString = localStorage.getItem('utilisateur');
 
     if (utilisateurString) {
       const utilisateur = JSON.parse(utilisateurString);
       utilisateur.cookie = value;
       localStorage.setItem('utilisateur', JSON.stringify(utilisateur));
+    } else {
+      localStorage.setItem('cookie_choice', value);
     }
+  }
+
+  // =============================
+  // UI
+  // =============================
+  private closeBanner(): void {
+    this.show = false;
+    this.toggleBodyModal(false);
   }
 
   private toggleBodyModal(active: boolean): void {
@@ -122,7 +150,7 @@ export class Cookie implements OnInit {
     }
   }
 
-  showNotificationMessage(message: string) {
+  showNotificationMessage(message: string): void {
     this.notificationMessage = message;
     this.showNotification = true;
 
