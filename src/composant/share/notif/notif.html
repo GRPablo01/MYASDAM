@@ -34,7 +34,7 @@
 
 <!-- Centre notifications -->
 <div *ngIf="openCenter"
-     class="fixed top-0 right-0 h-full w-full sm:w-96 z-50 overflow-hidden flex flex-col transform transition-transform duration-300 ease-out"
+     class="fixed top-0 right-0 h-full w-full sm:w-96 z-[1903] overflow-hidden flex flex-col transform transition-transform duration-300 ease-out"
      [ngStyle]="{'background-color': isDark ? themeService.Backgroundcards : themeService.Backgroundcards}"
      [class.translate-x-full]="!openCenter"
      [class.translate-x-0]="openCenter"
@@ -44,22 +44,22 @@
 
   <!-- Header -->
   <div class="flex items-center justify-between px-6 py-4 shadow-md shrink-0"
-       [ngStyle]="{'background': isDark ? 'linear-gradient(to right, #C1121F, #FF4D4D)' : 'linear-gradient(to right, #C1121F, #E5383B)', 'color': themeService.Textprincipal}">
+       [ngStyle]="{'background': isDark ? 'linear-gradient(to right, #C1121F, #FF4D4D)' : 'linear-gradient(to right, #C1121F, #E5383B)', 'color': '#FFFFFF'}">
     <div class="flex items-center gap-3">
       <div class="relative">
-        <i class="fa-solid fa-bell text-xl" [ngStyle]="{'color': themeService.Iconnormal}"></i>
+        <i class="fa-solid fa-bell text-xl" [ngStyle]="{'color': '#FFFFFF'}"></i>
         <span *ngIf="convocations.length > 0"
               class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full animate-pulse"
               [ngStyle]="{'background-color': themeService.primary}"></span>
       </div>
       <div>
         <h2 id="notification-title" class="text-lg font-bold">Notifications</h2>
-        <p class="text-xs opacity-90" [ngStyle]="{'color': themeService.Textsecondaire}">{{ convocations.length }} convocation(s)</p>
+        <p class="text-xs opacity-90" [ngStyle]="{'color': '#FFFFFF'}">{{ convocations.length }} convocation(s)</p>
       </div>
     </div>
     <button (click)="toggleCenter()" aria-label="Fermer les notifications"
             class="p-2 rounded-full hover:opacity-80 transition-opacity duration-200 focus:outline-none focus:ring-2 focus:ring-white/50">
-      <i class="fa-solid fa-xmark text-xl" [ngStyle]="{'color': themeService.Iconnormal}"></i>
+      <i class="fa-solid fa-xmark text-xl" [ngStyle]="{'color': '#FFFFFF'}"></i>
     </button>
   </div>
 
@@ -154,8 +154,8 @@
     <ng-template #noConv>
       <div class="flex flex-col items-center justify-center h-full p-8 text-center min-h-[400px]">
         <div class="w-24 h-24 rounded-full flex items-center justify-center mb-4"
-             [ngStyle]="{'background-color': themeService.secondarySoft}">
-          <i class="fa-solid fa-bell-slash text-4xl" [ngStyle]="{'color': themeService.Textsecondaire}"></i>
+             [ngStyle]="{'background-color': themeService.primary}">
+          <i class="fa-solid fa-bell-slash text-4xl" [ngStyle]="{'color': '#FFFFFF'}"></i>
         </div>
         <h3 class="text-lg font-semibold mb-2" [ngStyle]="{'color': themeService.Textprincipal}">Aucune notification</h3>
         <p class="text-sm max-w-xs" [ngStyle]="{'color': themeService.Textsecondaire}">

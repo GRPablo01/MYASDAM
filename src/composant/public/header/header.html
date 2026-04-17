@@ -1,34 +1,55 @@
 <app-icon></app-icon>
 
-<!-- HEADER -->
-<header class="flex items-center justify-between h-16 px-4" [ngStyle]="{
-  'background': themeService.Backgroundprincipal,
-  'color': themeService.Textprincipal,
-  'border-bottom': themeService.Bordernormal
-}" >
 
-  <!-- ===================== -->
-  <!-- BLOC GAUCHE -->
-  <!-- ===================== -->
-  <div class="flex items-center gap-3 min-w-0 -ml-3">
+<header class="fixed top-0 flex items-center justify-between z-[2147483647] h-16 pl-2 pr-4 w-full" 
+  [ngStyle]="{
+    'background': themeService.Backgroundprincipal,
+    'color': themeService.Textprincipal,
+    'border-bottom': themeService.Bordernormal
+  }">
+
+  <app-logo></app-logo>
+  <!-- séparateur -->
+  <div [ngStyle]="{'background':themeService.Textprincipal}" class="hidden sm:block h-6 w-px opacity-30 bg-current"></div>
+
+  <app-nav></app-nav>
+
+  <!-- séparateur -->
+  <div [ngStyle]="{'background':themeService.Textprincipal}" class="hidden sm:block h-6 w-px opacity-30 bg-current"></div>
+  <app-icon2></app-icon2>
+  <app-profil></app-profil>
+
+</header>
+
+<!-- HEADER --
+<header class="fixed top-0 flex items-center justify-between z-[2147483647] h-16 pl-2 pr-4 w-full" 
+  [ngStyle]="{
+    'background': themeService.Backgroundprincipal,
+    'color': themeService.Textprincipal,
+    'border-bottom': themeService.Bordernormal
+  }">
+
+  <!-- ===================== --
+  <!-- BLOC GAUCHE (Logo + Icon2) --
+  <!-- ===================== --
+  <div class="flex items-center gap-[10px] flex-shrink-0 -ml-1">
     <app-logo class="flex-shrink-0"></app-logo>
-
-    <app-icon2 class="flex-shrink-0 sm:block max-[525px]:hidden"></app-icon2>
+    
+    <!-- visible à partir de 526px --
+    <app-icon2 class="flex-shrink-0 hidden min-[526px]:block"></app-icon2>
   </div>
 
-  <!-- ===================== -->
-  <!-- BLOC DROIT -->
-  <!-- ===================== -->
-  <div class="flex items-center gap-3 min-w-0">
+  <!-- ===================== --
+  <!-- BLOC DROIT (Nav + Profil) --
+  <!-- ===================== --
+  <div class="flex items-center gap-0 flex-shrink-0">
+    
+    <!-- NAV - visible à partir de sm (640px) --
+    <app-nav></app-nav>
 
-    <!-- NAV -->
-    <div class="hidden sm:flex items-center">
-      <app-nav></app-nav>
-    </div>
-
-    <!-- PROFIL -->
+    <!-- PROFIL - collé directement à Nav --
     <app-profil class="flex-shrink-0"></app-profil>
 
   </div>
 
-</header>
+</header>-->

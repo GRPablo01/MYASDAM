@@ -4,7 +4,8 @@ import { Icon } from '../../priver/icon/icon';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
 
 interface Role {
-  id: string;
+  id?: string;           // pour rôles classiques
+  ids?: string[];        // pour rôles multiples (admin + superadmin)
   label: string;
   features: string[];
   description: string;
@@ -30,17 +31,20 @@ export class Fonctionalite implements OnInit {
   userRole: string = '';
   selectedRole: Role | null = null;
   showLoginModal: boolean = false;
+  isModalOpen: boolean = false;
+  isHoverClose: boolean = false;
+  hoveredFeature: number | null = null;
 
+  // Définition des rôles
   roles: Role[] = [
     {
       id: 'joueur',
       label: 'Joueur',
       icon: 'fas fa-user',
       features: [
-        'Consulter le calendrier des matchs',
-        'Voir les statistiques personnelles',
-        'Accéder aux feuilles de match',
-        'Communiquer avec l\'équipe'
+        'Consulter le calendrier',
+        'Suivre les résultats de l’équipe',
+        'Accéder à ta convocation'
       ],
       description: 'Accès complet aux fonctionnalités liées à votre participation et progression personnelle.'
     },
@@ -50,9 +54,8 @@ export class Fonctionalite implements OnInit {
       icon: 'fas fa-chess-knight',
       features: [
         'Gérer les compositions d\'équipe',
-        'Analyser les statistiques collectives',
-        'Planifier les entraînements',
-        'Valider les présences'
+        'Organiser les matchs et les entraînements',
+        'Planifier les évents'
       ],
       description: 'Outils avancés pour la gestion tactique et l\'analyse de performance collective.'
     },
@@ -68,18 +71,18 @@ export class Fonctionalite implements OnInit {
       description: 'Consultation des informations publiques sans accès aux données sensibles du club.'
     },
     {
-      id: 'admin',
+      ids: ['admin', 'superadmin'], // <-- Admin et SuperAdmin combinés
       label: 'Administrateur',
       icon: 'fas fa-shield-alt',
-      features: [
-        'Gérer les utilisateurs',
-        'Configurer les paramètres',
-        'Accès aux statistiques globales',
-        'Gestion des droits d\'accès'
-      ],
+      features: ['Accès complet à toutes les fonctionnalités de la plateforme'],
       description: 'Contrôle total sur la plateforme et gestion complète des aspects du club.'
     }
   ];
+
+  // Sélectionner seulement les 3 rôles visibles principaux
+  visibleRoles: Role[] = this.roles
+    .filter(r => !r.ids) // exclure le rôle admin/superadmin
+    .slice(0, 3);
 
   private roleColors: { [key: string]: string } = {
     joueur: '#dc2626',
@@ -99,7 +102,6 @@ export class Fonctionalite implements OnInit {
 
   ngOnInit(): void {
     this.loadUserFromLocalStorage();
-    // ✅ Rien à faire pour le thème → déjà géré dans ThemeService (constructor)
   }
 
   get isLoggedIn(): boolean {
@@ -126,11 +128,6 @@ export class Fonctionalite implements OnInit {
     return this.roleIconsFA[roleId] || 'fas fa-user';
   }
 
-  openRoleModal(role: Role): void {
-    this.selectedRole = role;
-    document.body.style.overflow = 'hidden';
-  }
-
   closeRoleModal(event?: MouseEvent): void {
     if (!event || event.target === event.currentTarget) {
       this.selectedRole = null;
@@ -142,7 +139,38 @@ export class Fonctionalite implements OnInit {
     this.showLoginModal = true;
   }
 
-  requestRoleAccess(role: Role): void {
-    alert(`Demande d'accès envoyée pour le rôle: ${role.label}`);
+  adjustColor(color: string, amount: number = -20): string {
+    let usePound = false;
+  
+    if (color[0] === "#") {
+      color = color.slice(1);
+      usePound = true;
+    }
+  
+    const num = parseInt(color, 16);
+  
+    let r = (num >> 16) + amount;
+    let g = ((num >> 8) & 0x00FF) + amount;
+    let b = (num & 0x0000FF) + amount;
+  
+    r = Math.max(Math.min(255, r), 0);
+    g = Math.max(Math.min(255, g), 0);
+    b = Math.max(Math.min(255, b), 0);
+  
+    return (usePound ? "#" : "") +
+      ((r << 16) | (g << 8) | b)
+        .toString(16)
+        .padStart(6, "0");
+  }
+
+  openRoleModal(role: Role): void {
+    this.selectedRole = role;
+    this.isModalOpen = true; // 🔥 Important pour ouvrir la modal
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Vérifier si l'utilisateur est admin ou superadmin
+  isSuperUser(): boolean {
+    return this.roles.some(r => r.ids?.includes(this.userRole));
   }
 }

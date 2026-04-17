@@ -10,6 +10,8 @@ export interface Match {
   date: string;
   heure?: string;
   lieu?: string;
+  enCours: boolean;
+  compteRebours?: string;
   
   // Gestion du temps du match (90 minutes)
   minute?: number;              // Minute actuelle (0-90+)

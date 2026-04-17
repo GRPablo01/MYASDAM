@@ -1,199 +1,127 @@
 <app-icon></app-icon>
 
-<!-- ============================================
-     FOOTER - FULL WIDTH RESPONSIVE (MOBILE CENTERED)
-     ============================================ -->
-<footer 
-  class="w-full h-318 sm:h-130 -mt-3 relative overflow-hidden"
-  [ngStyle]="{ 'background': themeService.Backgroundcards, 'color': themeService.Textprincipal }"
-  role="contentinfo"
-  aria-label="Pied de page Myasdam"
->
+<footer class="h-auto py-10 px-12.5">
 
-  <!-- BACKGROUND ANIMÉ -->
-  <div class="absolute inset-0 pointer-events-none overflow-hidden">
-    <div class="absolute inset-0 opacity-[0.08]" [ngStyle]="{
-           'background-image': 'linear-gradient(' + themeService.Textsecondaire + ' 1px, transparent 1px), linear-gradient(90deg, ' + themeService.Textsecondaire + ' 1px, transparent 1px)',
-           'background-size': '50px 50px'
-         }">
-    </div>
-  </div>
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start md:items-start">
+    
+    <!-- ================= TEXTE (Gauche) ================= -->
+    <div class="md:col-span-4 flex flex-col items-center md:items-start text-center md:text-left">
+      <!-- Logo -->
+      <div class="flex flex-col sm:flex-row items-center gap-4 group cursor-pointer mb-4" 
+           (mouseenter)="logoHover = true" (mouseleave)="logoHover = false">
 
-  <!-- ================= CONTENT ================= -->
-  <div class="relative z-10 w-full px-6 sm:px-10 lg:px-16 xl:px-24 2xl:px-40 pt-16 pb-12">
-
-    <!-- ================= GRID ================= -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 text-center md:text-left">
-
-      <!-- ================= LOGO + DESC ================= -->
-      <div class="lg:col-span-5 space-y-6 flex flex-col items-center md:items-start">
-
-        <!-- Logo -->
-        <div class="flex flex-col sm:flex-row items-center gap-4 group cursor-pointer"
-             (mouseenter)="logoHover = true"
-             (mouseleave)="logoHover = false">
-
-          <div class="w-16 h-16 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-500 relative overflow-hidden"
-               [ngStyle]="{
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-500 relative overflow-hidden"
+          [ngStyle]="{
                  'background': themeService.primary,
                  'transform': logoHover ? 'rotate(6deg) scale(1.05)' : 'none'
                }">
 
-            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-
-            <img src="{{ themeService.ThemeImage }}" 
-                 class="w-12 h-12 object-contain relative z-10"
-                 alt="Logo MYASDAM" />
-          </div>
-
-          <div>
-            <h2 class="text-2xl sm:text-3xl font-black tracking-tight"
-                [ngStyle]="{ 'color': themeService.primary }">
-              ASDAM
-            </h2>
-            <p class="text-xs uppercase tracking-widest opacity-60"
-               [ngStyle]="{ 'color': themeService.Textsecondaire }">
-              Plateforme officielle
-            </p>
-          </div>
-
+          <img src="{{ themeService.ThemeImage }}" class="w-12 h-12 object-contain relative z-10" alt="Logo MYASDAM" />
         </div>
 
-        <!-- Description -->
-        <p class="text-sm sm:text-base leading-relaxed opacity-80 max-w-md"
-           [ngStyle]="{ 'color': themeService.Textsecondaire }">
-          Rejoignez notre communauté pour suivre vos activités,
-          consulter vos convocations et rester informé des nouveautés.
-        </p>
-
-        <!-- Social -->
-        <div class="flex gap-4 pt-2 flex-wrap justify-center md:justify-start">
-          <a *ngFor="let social of socials"
-             [href]="social.link"
-             target="_blank"
-             rel="noopener noreferrer"
-             class="w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1"
-             [ngStyle]="{ 'background': themeService.secondary }">
-
-            <i [class]="social.icon"
-               [ngStyle]="{ 'color': themeService.primary }"
-               class="text-lg"></i>
-          </a>
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black tracking-tight" [ngStyle]="{ 'color': themeService.primary }">
+            ASDAM
+          </h2>
+          <p class="text-xs uppercase tracking-widest opacity-60" [ngStyle]="{ 'color': themeService.Textsecondaire }">
+            Plateforme officielle
+          </p>
         </div>
-
       </div>
 
-      <!-- ================= LIENS ================= -->
-      <div class="lg:col-span-3 flex flex-col items-center md:items-start">
-
-        <h4 class="font-bold mb-6 text-lg"
-            [ngStyle]="{ 'color': themeService.Textprincipal }">
-          Liens utiles
-        </h4>
-
-        <ul class="space-y-3">
-          <li *ngFor="let link of filteredLinks">
-            <a [href]="link.url"
-               class="group flex items-center justify-center md:justify-start gap-3 transition-all duration-300 hover:translate-x-2"
-               [ngStyle]="{ 'color': themeService.Textsecondaire }">
-
-              <div class="w-2 h-2 rounded-full"
-                   [ngStyle]="{ 'background': themeService.primary }"></div>
-
-              <span class="relative">
-                {{ link.label }}
-                <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
-              </span>
-
-            </a>
-          </li>
-        </ul>
-
-      </div>
-
-      <!-- ================= CONTACT ================= -->
-      <div class="lg:col-span-4 space-y-4 flex flex-col items-center md:items-start">
-
-        <h4 class="font-bold text-lg"
-            [ngStyle]="{ 'color': themeService.Textprincipal }">
-          Contact
-        </h4>
-
-        <!-- Email -->
-        <a href="mailto:contact@monsite.com"
-           class="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:scale-[1.02] w-full max-w-md"
-           [ngStyle]="{
-             'background': themeService.Backgroundcards,
-             'border': themeService.Bordernormal
-           }">
-
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
-               [ngStyle]="{ 'background': themeService.primary }">
-            <i class="fa-solid fa-envelope text-white text-lg"></i>
-          </div>
-
-          <div class="text-center sm:text-left">
-            <p class="text-xs opacity-60 uppercase">Email</p>
-            <p class="font-bold text-sm sm:text-base">contact@monsite.com</p>
-          </div>
-
-        </a>
-
-        <!-- Téléphone -->
-        <a href="tel:+33000000000"
-           class="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:scale-[1.02] w-full max-w-md"
-           [ngStyle]="{
-             'background': themeService.Backgroundcards,
-             'border': themeService.Bordernormal
-           }">
-
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
-               [ngStyle]="{ 'background': themeService.primary }">
-            <i class="fa-solid fa-phone text-white text-lg"></i>
-          </div>
-
-          <div class="text-center sm:text-left">
-            <p class="text-xs opacity-60 uppercase">Téléphone</p>
-            <p class="font-bold text-sm sm:text-base">+33 0 00 00 00 00</p>
-          </div>
-
-        </a>
-
-        <div class="text-sm opacity-70 pt-2 text-center md:text-left"
-             [ngStyle]="{ 'color': themeService.Textsecondaire }">
-          Lun - Ven : <span class="font-semibold">9h00 - 18h00</span>
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- ================= BOTTOM BAR ================= -->
-    <div class="border-t mt-16 pt-8 flex flex-col md:flex-row justify-center md:justify-between items-center gap-6 text-center md:text-left"
-         [ngStyle]="{ 'border-color': themeService.Bordernormal }">
-
-      <p class="text-sm opacity-70">
-        © 2026
-        <span class="font-bold" [ngStyle]="{ 'color': themeService.primary }">
-          MYASDAM
-        </span>
-        — Tous droits réservés
+      <!-- Description -->
+      <p [style.background]="themeService.Backgroundcards"
+   [ngStyle]="{ 'color': themeService.Textsecondaire }"
+   class="text-sm sm:text-base md:text-lg leading-relaxed max-w-md
+       p-4 rounded-xl shadow-inner mb-4
+       transition-all duration-300 text-center md:text-left">
+        Rejoignez notre communauté pour <span class="font-semibold">suivre vos activités</span>,
+        <span class="font-semibold">consulter vos convocations</span> et rester informé des nouveautés.
       </p>
 
-      <div class="flex flex-wrap justify-center gap-6 text-sm">
-        <a *ngFor="let legal of legalLinks"
-           [href]="legal.url"
-           class="relative group"
-           [ngStyle]="{ 'color': themeService.Textsecondaire }">
-
-          {{ legal.label }}
-
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
+      <!-- Social -->
+      <div class="flex gap-4 pt-2 flex-wrap justify-center md:justify-start">
+        <a *ngFor="let social of socials" [href]="social.link" target="_blank" rel="noopener noreferrer"
+          class="w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+          [ngStyle]="{ 
+            'background': themeService.secondary,
+            'border': '2px solid red' 
+          }">
+          <i [class]="social.icon" [ngStyle]="{ 'color': themeService.primary }" class="text-lg"></i>
         </a>
       </div>
-
     </div>
 
-  </div>
+    <!-- ================= LIENS (Centre) ================= -->
+    <div class="md:col-span-4 flex flex-col items-center">
 
+      <h4 class="font-bold mb-6 text-lg" [ngStyle]="{ 'color': themeService.Textprincipal }">
+        Liens utiles
+      </h4>
+
+      <ul class="space-y-3 text-center">
+        <li *ngFor="let link of filteredLinks">
+          <a [href]="link.url"
+            class="group flex items-center justify-center gap-3 transition-all duration-300 hover:translate-x-2"
+            [ngStyle]="{ 'color': themeService.Textsecondaire }">
+
+            <div class="w-2 h-2 rounded-full" [ngStyle]="{ 'background': themeService.primary }"></div>
+
+            <span class="relative">
+              {{ link.label }}
+              <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ================= CONTACT (Droite) ================= -->
+    <div class="md:col-span-4 flex flex-col items-center md:items-end text-center md:text-right">
+
+      <h4 class="font-bold text-lg mb-6" [ngStyle]="{ 'color': themeService.Textprincipal}">
+        Contact
+      </h4>
+
+      <!-- Email -->
+      <a href="mailto:contact@monsite.com"
+        class="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:scale-[1.02] w-full max-w-md justify-center sm:justify-end"
+        [ngStyle]="{
+          'color': themeService.Textprincipal,
+          'background': themeService.Backgroundcards,
+          'border': themeService.Bordernormal
+        }">
+
+        <div class="text-center sm:text-right order-2 sm:order-1">
+          <p class="text-xs opacity-60 uppercase">Email</p>
+          <p class="font-bold text-sm sm:text-base">contact@monsite.com</p>
+        </div>
+
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg order-1 sm:order-2"
+          [ngStyle]="{ 'background': themeService.primary }">
+          <i class="fa-solid fa-envelope text-white text-lg"></i>
+        </div>
+      </a>
+
+      <!-- Téléphone -->
+      <a href="tel:+33000000000"
+        class="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:scale-[1.02] w-full max-w-md justify-center sm:justify-end mt-4"
+        [ngStyle]="{
+          'color': themeService.Textprincipal,
+          'background': themeService.Backgroundcards,
+          'border': themeService.Bordernormal
+        }">
+
+        <div class="text-center sm:text-right order-2 sm:order-1">
+          <p class="text-xs opacity-60 uppercase">Téléphone</p>
+          <p class="font-bold text-sm sm:text-base">+33 0 00 00 00 00</p>
+        </div>
+
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg order-1 sm:order-2"
+          [ngStyle]="{ 'background': themeService.primary }">
+          <i class="fa-solid fa-phone text-white text-lg"></i>
+        </div>
+      </a>
+    </div>
+  </div>
 </footer>

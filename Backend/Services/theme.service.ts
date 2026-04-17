@@ -57,6 +57,11 @@ export class ThemeService {
   BgNon: string = '';
   BorderOui: string = '';
   BorderNon: string = '';
+  BgBleu: string = '';
+  BorderBleu: string = '';
+  BgBleuText: string = '';
+  BgNonText: string = '';
+  BgOuiText: string = '';
 
   constructor() {
     const storedTheme = localStorage.getItem('theme');
@@ -118,10 +123,17 @@ export class ThemeService {
       this.Iconactive = '#C1121F';
 
       this.BgOui      = '#14532d'; // vert foncé
+      this.BorderOui  = '#22c55e'; // vert vif
+      this.BgOuiText  = '#ffffff'; // blanc (lisible sur vert foncé)
+
       this.BgNon      = '#7f1d1d'; // rouge foncé
-      this.BorderOui  = '#22c55e'; // vert vif (reste visible sur sombre)
+      this.BgNonText  = '#ffffff'; // blanc (lisible sur rouge foncé)
       this.BorderNon  = '#ef4444'; // rouge vif
-  
+
+      this.BgBleu     = '#1e3a8a'; // bleu foncé (corrigé)
+      this.BgBleuText = '#ffffff'; // blanc (lisible sur bleu foncé)
+      this.BorderBleu = '#3b82f6'; // bleu vif (corrigé)
+        
       this.Fondboutonprincipal = '#FF4D4D';
       this.Fondboutonsecondaire = '#2A0F12';
   
@@ -133,8 +145,8 @@ export class ThemeService {
   
     } else {
       // ☀️ LIGHT MODE
-      this.Backgroundprincipal = '#F4F6F8';
-      this.Backgroundcards = '#FFFFFF';
+      this.Backgroundprincipal = '#FFFFFF';
+      this.Backgroundcards = '#fffefe';
       this.Textprincipal = '#1A1A1A';
       this.Textsecondaire = '#555555';
   
@@ -157,7 +169,14 @@ export class ThemeService {
       this.BgOui      = '#dcfce7';     // vert très clair
       this.BgNon      = '#fee2e2';     // rouge très clair
       this.BorderOui  = '#22c55e';     // vert vif
-      this.BorderNon  = '#ef4444'; 
+      this.BorderNon  = '#ef4444';     // rouge vif
+
+      this.BgOuiText  = '#14532d';     // vert foncé (lisible sur vert très clair)
+      this.BgNonText  = '#7f1d1d';     // rouge foncé (lisible sur rouge très clair)
+
+      this.BgBleu     = '#dbeafe';     // bleu très clair (cohérent avec les autres)
+      this.BgBleuText = '#1e3a8a';     // bleu foncé (lisible sur bleu très clair)
+      this.BorderBleu = '#3b82f6';     // bleu vif
 
   
       // UI

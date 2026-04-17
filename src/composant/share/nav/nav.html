@@ -1,148 +1,217 @@
-<!-- nav.component.html -->
-<nav class="sticky top-0 z-10 transition-all duration-300 ml-2 hidden min-[1119px]:flex">
-    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-  
-      <!-- MENU PRINCIPAL -->
-      <ul class="flex gap-1 items-center">
-  
-        <li *ngFor="let item of menu; let i = index" class="relative">
-  
-          <!-- Lien principal -->
-          <a
-            [routerLink]="item.link || '#'"
-            (click)="item.children ? toggleMenu(i) : null"
-            class="flex items-center gap-2 cursor-pointer select-none px-4 py-2.5 rounded-xl transition-all duration-200 relative overflow-hidden group"
-            [ngClass]="{
-              'bg-opacity-20': openMenuIndex === i,
-              'scale-105': openMenuIndex === i
-            }"
+<app-icon></app-icon>
+
+<!-- NAV GLOBAL -->
+<nav class="top-0 z-50 transition-all duration-300 relative">
+
+  <!-- ================= DESKTOP ================= -->
+  <div class="hidden min-[1243px]:flex px-6 py-3 justify-between items-center max-w-[1600px] mx-auto">
+
+    <!-- MENU PRINCIPAL -->
+    <ul class="flex gap-1 items-center">
+      <li *ngFor="let item of menu; let i = index" class="relative" [class.mx-auto]="item.isCenter">
+
+        <!-- Lien principal -->
+        <a [routerLink]="item.link"
+           class="flex items-center gap-2 cursor-pointer select-none px-4 py-2.5 rounded-xl transition-all duration-200 relative overflow-hidden group"
+           [ngClass]="{
+             'bg-opacity-20': openMenuIndex === i || item.active,
+             'scale-105': openMenuIndex === i || item.active,
+             'ring-2 ring-offset-2': item.active
+           }"
+           [ngStyle]="{
+             'color': openMenuIndex === i || item.active || hoveredIndex === i ? themeService.primary : themeService.Textprincipal,
+             'background-color': openMenuIndex === i || item.active ? themeService.secondarySoft : 'transparent',
+             'ring-color': item.active ? themeService.primary : 'transparent',
+             'ring-offset-color': themeService.Backgroundprincipal
+           }"
+           (mouseenter)="item.children ? openMenuIndex = i : null"
+           (mouseleave)="hoveredIndex = -1">
+
+          <!-- Effet hover -->
+          <span class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+                [ngStyle]="{'background-color': themeService.primary}">
+          </span>
+
+          <!-- Icône -->
+          <i *ngIf="item.icon" [class]="item.icon + ' text-md transition-transform duration-200 group-hover:scale-110'"
+             [ngStyle]="{
+               'color': openMenuIndex === i || item.active || hoveredIndex === i 
+               ? themeService.primary 
+               : themeService.Iconnormal
+             }">
+          </i>
+
+          <!-- Label -->
+          <span class="font-medium text-lg">{{ item.label }}</span>
+
+          <!-- Badge -->
+          <span *ngIf="item.badge"
+                class="ml-1 px-2 py-0.5 text-[10px] font-bold rounded-full text-white animate-pulse shadow-sm"
+                [ngStyle]="{'background-color': themeService.accent}">
+            {{ item.badge }}
+          </span>
+
+          <!-- Chevron uniquement pour ouvrir le menu -->
+          <i *ngIf="item.children" class="fas fa-chevron-down ml-1 text-xs transition-all duration-300 cursor-pointer"
+            (click)="toggleMenu(i)"
+            [class.rotate-180]="openMenuIndex === i"
             [ngStyle]="{
-              'color': openMenuIndex === i ? themeService.primary : (hoveredIndex === i ? themeService.primary : themeService.Textprincipal),
-              'background-color': openMenuIndex === i ? themeService.secondarySoft : 'transparent'
-            }"
-            (mouseenter)="hoveredIndex = i; item.children ? openMenuIndex = i : null"
-            (mouseleave)="hoveredIndex = -1; !item.children ? null : null"
-          >
-            <!-- Effet de ripple/hover -->
-            <span class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"
-                  [ngStyle]="{'background-color': themeService.primary}"></span>
-  
-            <i *ngIf="item.icon" 
-               [class]="item.icon + ' text-md transition-transform duration-200 group-hover:scale-110'" 
-               [ngStyle]="{'color': hoveredIndex === i || openMenuIndex === i ? themeService.primary : themeService.Iconnormal}">
-            </i>
-            
-            <span class="font-medium text-lg">{{ item.label }}</span> <!-- texte principal plus grand -->
-  
-            <!-- Badge (optionnel) -->
-            <span *ngIf="item.badge" 
-                  class="ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded-full text-white animate-pulse"
-                  [ngStyle]="{'background-color': themeService.accent}">
-              {{ item.badge }}
-            </span>
-  
-            <!-- Flèche animée -->
-            <i
-              *ngIf="item.children"
-              class="fas fa-chevron-down ml-1 text-xs transition-all duration-300"
-              [class.rotate-180]="openMenuIndex === i"
-              [class.translate-y-0.5]="openMenuIndex === i"
-              [ngStyle]="{'color': hoveredIndex === i || openMenuIndex === i ? themeService.primary : themeService.Iconnormal}"
-            ></i>
-          </a>
-  
-          <!-- Sous-menu amélioré avec animation -->
-          <div
-            *ngIf="item.children?.length"
-            class="absolute left-0 top-full mt-2 w-56 rounded-2xl overflow-hidden shadow-2xl border transition-all duration-300 origin-top-left"
-            [ngClass]="{
-              'opacity-100 scale-100 translate-y-0': openMenuIndex === i,
-              'opacity-0 scale-95 -translate-y-2 pointer-events-none': openMenuIndex !== i
-            }"
-            [ngStyle]="{
-              'background-color': themeService.Backgroundcards,
-              'border-color': themeService.Border + '30',
-              'box-shadow': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
-            }"
-            (mouseenter)="openMenuIndex = i"
-            (mouseleave)="openMenuIndex = -1"
-          >
-            <!-- Header du sous-menu -->
-            <div class="px-4 py-3 border-b border-opacity-20" [ngStyle]="{'border-color': themeService.Border}">
-              <span class="text-xs font-semibold uppercase tracking-wider opacity-60" [ngStyle]="{'color': themeService.Textprincipal}">
+              'color': openMenuIndex === i || item.active || hoveredIndex === i 
+              ? themeService.primary 
+              : themeService.Iconnormal
+            }">
+          </i>
+
+          <!-- Shortcut -->
+          <kbd *ngIf="item.shortcut" class="ml-2 px-1.5 py-0.5 text-[10px] font-mono rounded border opacity-60"
+               [ngStyle]="{
+                 'border-color': themeService.Border,
+                 'color': themeService.Textprincipal
+               }">
+            {{ item.shortcut }}
+          </kbd>
+        </a>
+
+        <!-- ================= SOUS-MENU ================= -->
+        <div *ngIf="item.children?.length"
+             class="absolute left-0 top-full mt-3 w-72 rounded-2xl overflow-hidden shadow-2xl border transition-all duration-300 origin-top-left backdrop-blur-sm"
+             [ngClass]="{
+               'opacity-100 scale-100 translate-y-0': openMenuIndex === i,
+               'opacity-0 scale-95 -translate-y-2 pointer-events-none': openMenuIndex !== i
+             }"
+             [ngStyle]="{
+               'background-color': themeService.Backgroundcards,
+               'border-color': themeService.Border + '40'
+             }"
+             (mouseenter)="openMenuIndex = i"
+             (mouseleave)="openMenuIndex = null">
+
+          <!-- Header -->
+          <div class="px-4 py-3 border-b border-opacity-20 flex items-center justify-between"
+               [ngStyle]="{'border-color': themeService.Border}">
+            <div class="flex flex-col">
+              <span class="text-xs font-semibold uppercase opacity-70 tracking-wider"
+                    [ngStyle]="{'color': themeService.Textprincipal}">
                 {{ item.label }}
               </span>
+
+              <span *ngIf="item.description" class="text-[11px] opacity-50 mt-0.5"
+                    [ngStyle]="{'color': themeService.Textprincipal}">
+                {{ item.description }}
+              </span>
             </div>
-  
-            <ul class="py-2">
-              <li *ngFor="let child of item.children; let last = last">
-                <a
-                  [routerLink]="child.link"
-                  class="flex items-center gap-3 px-4 py-2.5 mx-2 rounded-xl transition-all duration-200 group relative"
-                  [ngClass]="{
-                    'mb-1': !last
-                  }"
-                  [ngStyle]="{
-                    'color': hoveredChild === child ? '#ffffff' : themeService.Textprincipal,
-                    'background-color': hoveredChild === child ? themeService.primary : 'transparent',
-                    'transform': hoveredChild === child ? 'translateX(4px)' : 'translateX(0)'
-                  }"
-                  (mouseenter)="hoveredChild = child"
-                  (mouseleave)="hoveredChild = null"
-                >
-                  <!-- Indicateur actif -->
-                  <span *ngIf="child.active" 
-                        class="absolute left-0 w-1 h-6 rounded-full transition-all duration-200"
-                        [ngStyle]="{'background-color': hoveredChild === child ? '#ffffff' : themeService.primary}">
-                  </span>
-  
-                  <div class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-200"
-                       [ngStyle]="{
-                         'background-color': hoveredChild === child ? 'rgba(255,255,255,0.2)' : themeService.primarySoft,
-                         'color': hoveredChild === child ? '#ffffff' : themeService.primary
-                       }">
-                    <i *ngIf="child.icon" [class]="child.icon + ' text-sm'"></i>
-                    <i *ngIf="!child.icon" class="fas fa-arrow-right text-xs"></i>
-                  </div>
-  
-                  <div class="flex flex-col">
-                    <span class="font-medium text-sm">{{ child.label }}</span>
-                    <span *ngIf="child.description" 
-                          class="text-xs opacity-70 transition-opacity"
-                          [ngStyle]="{'color': hoveredChild === child ? 'rgba(255,255,255,0.8)' : themeService.Textsecondaire}">
-                      {{ child.description }}
-                    </span>
-                  </div>
-  
-                  <!-- Shortcut key -->
-                  <span *ngIf="child.shortcut" 
-                        class="ml-auto text-[10px] px-1.5 py-0.5 rounded border opacity-50"
-                        [ngStyle]="{
-                          'border-color': hoveredChild === child ? 'rgba(255,255,255,0.3)' : themeService.Border,
-                          'color': hoveredChild === child ? 'rgba(255,255,255,0.8)' : themeService.Textsecondaire
-                        }">
-                    {{ child.shortcut }}
-                  </span>
-                </a>
-              </li>
-            </ul>
-  
-            <!-- Footer du sous-menu -->
-            <div *ngIf="item.footer" 
-                 class="px-4 py-3 border-t border-opacity-20 bg-opacity-50"
-                 [ngStyle]="{'border-color': themeService.Border, 'background-color': themeService.primarySoft}">
-              <a [routerLink]="item.footer.link" 
-                 class="flex items-center gap-2 text-xs font-medium transition-colors"
-                 [ngStyle]="{'color': themeService.primary}">
-                <span>{{ item.footer.label }}</span>
-                <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
-              </a>
-            </div>
+
+            <i *ngIf="item.icon" [class]="item.icon + ' text-sm opacity-40'"
+               [ngStyle]="{'color': themeService.Iconnormal}"></i>
           </div>
-  
-        </li>
-  
-      </ul>
-  
+
+          <!-- Enfants -->
+          <ul class="py-2">
+            <li *ngFor="let child of item.children; let last = last">
+              <a [routerLink]="child.link"
+                 class="flex items-center gap-3 px-4 py-3 mx-2 rounded-xl transition-all duration-200 group/item"
+                 [ngClass]="{ 'mb-1': !last }"
+                 [ngStyle]="{
+                   'color': hoveredChild === child || child.active ? '#ffffff' : themeService.Textprincipal,
+                   'background-color': hoveredChild === child || child.active ? themeService.primary : 'transparent'
+                 }"
+                 (mouseenter)="hoveredChild = child"
+                 (mouseleave)="hoveredChild = null">
+
+                <!-- Icône -->
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+                     [ngStyle]="{
+                       'background-color': hoveredChild === child || child.active 
+                       ? 'rgba(255,255,255,0.2)' 
+                       : themeService.secondarySoft
+                     }">
+                  <i *ngIf="child.icon" [class]="child.icon + ' text-sm'" [ngStyle]="{
+                       'color': hoveredChild === child || child.active 
+                       ? '#ffffff' 
+                       : themeService.Iconnormal
+                     }"></i>
+
+                  <span *ngIf="!child.icon" class="w-2 h-2 rounded-full"
+                        [ngStyle]="{'background-color': themeService.primary}"></span>
+                </div>
+
+                <!-- Texte -->
+                <div class="flex flex-col flex-1 min-w-0">
+                  <span class="font-medium text-sm truncate">{{ child.label }}</span>
+                  <span *ngIf="child.description" class="text-[11px] opacity-70 truncate"
+                        [ngStyle]="{
+                          'color': hoveredChild === child || child.active 
+                          ? 'rgba(255,255,255,0.8)' 
+                          : themeService.Textprincipal
+                        }">
+                    {{ child.description }}
+                  </span>
+                </div>
+
+                <!-- Badge -->
+                <span *ngIf="child.badge" class="px-1.5 py-0.5 text-[9px] font-bold rounded-full text-white"
+                      [ngStyle]="{'background-color': themeService.accent}">
+                  {{ child.badge }}
+                </span>
+
+              </a>
+            </li>
+          </ul>
+
+          <!-- Footer -->
+          <div *ngIf="item.footer" class="px-4 py-3 border-t border-opacity-20"
+               [ngStyle]="{
+                 'border-color': themeService.Border,
+                 'background-color': themeService.secondarySoft + '30'
+               }">
+            <a [routerLink]="item.footer.link" class="flex items-center gap-2 text-xs font-medium hover:underline"
+               [ngStyle]="{'color': themeService.primary}">
+              <span>{{ item.footer.label }}</span>
+              <i class="fas fa-arrow-right text-[10px]"></i>
+            </a>
+          </div>
+
+        </div>
+
+      </li>
+    </ul>
+
+    <!-- RIGHT -->
+    <div class="flex items-center gap-3">
+      <ng-content select="[nav-right]"></ng-content>
     </div>
+
+  </div>
+</nav>
+
+<!-- navigation-mobile.component.html -->
+<nav class="min-[382px]:flex max-[1243px]:flex min-[1243px]:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+  <div [ngStyle]="{'background': themeService.Backgroundprincipal,'color': themeService.Textprincipal,
+    'border': themeService.primary}"
+    class="backdrop-blur-xl border rounded-full px-6 py-3 flex items-center gap-8 shadow-2xl transition-colors duration-300">
+
+    <ng-container *ngFor="let item of menu; let i = index">
+
+      <!-- Items normaux -->
+      <a *ngIf="!item.isCenter" [routerLink]="item.link"
+        class="group flex flex-col items-center gap-1 transition-all hover:scale-110 duration-200"
+        [style.color]="item.active ? themeService.Textprincipal : themeService.Textsecondaire">
+
+        <i class="fa-solid {{item.icon}} text-2xl transition-colors duration-200"
+          [ngStyle]="{'color':themeService.Textprincipal}" [class.group-hover:text-primary]="!item.active">
+        </i>
+
+        <!-- Texte sous l'icône -->
+        <span class="text-xs font-medium transition-colors duration-200"
+          [ngStyle]="{'color':themeService.Textsecondaire}">{{item.label}}
+        </span>
+
+        <!-- Indicateur actif -->
+        <span *ngIf="item.active" class="w-1.5 h-1.5 rounded-full mt-1 animate-pulse"
+          [ngStyle]="{'color':themeService.primary}">
+        </span>
+      </a>
+    </ng-container>
+
+  </div>
 </nav>

@@ -10,15 +10,26 @@ interface Utilisateur {
   prenom?: string;
   theme?: 'clair' | 'sombre';
 }
-
 interface Evenement {
+  _id?: string;
   titre: string;
-  heure: string;
-  duree: string;
+  description?: string;
+  heureDebut: string;     // Exemple: "12:00"
+  heureFin: string;       // Exemple: "14:00"
+  duree?: string;         // Optionnel si on calcule à partir des heures
   type: 'match' | 'reunion' | 'entrainement' | 'autre';
   jour?: 'aujourdhui' | 'demain';
-  date?: string;
+  date?: string;          // ISO date string
   live?: boolean;
+  lieu?: string;
+  theme?: string;
+  categorie?: string;
+  statut?: 'En cours' | 'Terminé' | 'À venir' | 'Annulé';
+  createdBy?: string;
+  key?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
 }
 
 @Component({
@@ -38,6 +49,29 @@ export class SectionDate1 implements OnInit {
   prenom: string = '';
   initiales: string = '';
   theme: 'clair' | 'sombre' = 'clair';
+  todayDate: Date = new Date(); 
+  isScrolled = false;
+  showAddButton = true;
+  onAddEvent() {
+    // Émettre un événement ou ouvrir un modal
+  }
+
+  currentView: 'day' | 'week' | 'month' | 'agenda' = 'week';
+  todayEventsCount: number = 0;
+  weekEventsCount: number = 0;
+  pendingEventsCount: number = 0;
+  completionRate: number = 0;
+  syncStatus: 'synced' | 'syncing' | 'error' = 'synced';
+  unreadNotifications: number = 0;
+  nextEvent: { title: string; time: string } | null = null;
+  dayProgress: number = 0; // Pourcentage de la journée écoulée
+  
+  // Méthodes à implémenter...
+  changeView(view: string) { }
+  toggleNotifications() { }
+  focusNextEvent() { }
+  navigateHome() { }
+  toggleMobileMenu() { }
 
   currentDate!: Date;
   tomorrowDate!: Date;
@@ -241,8 +275,8 @@ export class SectionDate1 implements OnInit {
     };
   
     // Tri des événements
-    this.aujourdHuiEvents.sort((a, b) => getTimeValue(a.heure ?? '00:00') - getTimeValue(b.heure ?? '00:00'));
-    this.demainEvents.sort((a, b) => getTimeValue(a.heure ?? '00:00') - getTimeValue(b.heure ?? '00:00'));
+    this.aujourdHuiEvents.sort((a, b) => getTimeValue(a.heureDebut ?? '00:00') - getTimeValue(b.heureFin ?? '00:00'));
+    this.demainEvents.sort((a, b) => getTimeValue(a.heureDebut ?? '00:00') - getTimeValue(b.heureFin ?? '00:00'));
   
     // Tri des matchs
     this.aujourdHuiMatchs.sort((a, b) => getTimeValue(a.heure ?? '00:00') - getTimeValue(b.heure ?? '00:00'));

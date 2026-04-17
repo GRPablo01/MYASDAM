@@ -3,6 +3,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
+import { Icon } from "../../priver/icon/icon";
 
 interface NavItem {
   label: string;
@@ -17,12 +18,13 @@ interface NavItem {
     label: string;
     link: string;
   };
+  isCenter?: boolean;
 }
 
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, Icon],
   templateUrl: './nav.html',
   styleUrls: ['./nav.css']
 })
@@ -34,6 +36,7 @@ export class Nav implements OnInit {
   hoveredChild: NavItem | null = null;
 
   activeMenus = { level1: -1, level2: -1, level3: -1 };
+  
 
   // Menu dynamique
   menu: NavItem[] = [];
@@ -44,6 +47,7 @@ export class Nav implements OnInit {
   // Recherche
   searchVisible: boolean = false;
   searchQuery: string = '';
+  isDarkMode: string = '';
 
   constructor(
     public themeService: ThemeService,
@@ -85,13 +89,13 @@ export class Nav implements OnInit {
         {
           label: 'Gestion',
           icon: 'fas fa-users-cog',
-          link: '/superadmin/gestion',
+          link: '/gestion',
           description: 'Administration centrale : membres, contenu sportif et communication',
           children: [
             {
               label: 'Utilisateurs',
               icon: 'fas fa-user-shield',
-              link: '/superadmin/gestion/utilisateurs',
+              link: '/user',
               description: 'Gestion des rôles, permissions et accès utilisateurs',
             },
             {
@@ -114,7 +118,7 @@ export class Nav implements OnInit {
         {
           label: 'Messagerie',
           icon: 'fas fa-envelope',
-          link: '/superadmin/messagerie',
+          link: '/messagerie',
           description: 'Emails internes, discussions et support utilisateurs',
         },
 
@@ -122,7 +126,7 @@ export class Nav implements OnInit {
         {
           label: 'Classement',
           icon: 'fas fa-chart-line',
-          link: '/superadmin/statistiques',
+          link: '/statistiques',
           description: 'Analyse de performance et rapports d\'activité',
         },
 
@@ -130,19 +134,19 @@ export class Nav implements OnInit {
         {
           label: 'Convocation',
           icon: 'fas fa-clipboard-list',
-          link: '/superadmin/planning',
+          link: 'planning',
           description: 'Organisation des séances et rencontres',
           children: [
             {
               label: 'Séances',
               icon: 'fas fa-dumbbell',
-              link: '/superadmin/planning/seances',
+              link: '/seances',
               description: 'Programmation des séances et présences',
             },
             {
               label: 'Rencontres',
               icon: 'fas fa-trophy',
-              link: '/superadmin/planning/rencontres',
+              link: '/rencontres',
               description: 'Gestion des matchs et tournois',
             }
           ]
@@ -157,25 +161,25 @@ export class Nav implements OnInit {
         {
           label: 'Gestion',
           icon: 'fas fa-users-cog',
-          link: '/superadmin/gestion',
+          link: '/gestion',
           description: 'Administration centrale : membres, contenu sportif et communication',
           children: [
             {
               label: 'Utilisateurs',
               icon: 'fas fa-user-shield',
-              link: '/superadmin/gestion/utilisateurs',
+              link: '/user',
               description: 'Gestion des rôles, permissions et accès utilisateurs',
             },
             {
               label: 'Contenu Sportif',
               icon: 'fas fa-futbol',
-              link: '/superadmin/gestion/sport',
+              link: '/sport',
               description: 'Matchs, calendriers, résultats et événements sportifs',
             },
             {
               label: 'Communication',
               icon: 'fas fa-bullhorn',
-              link: '/superadmin/gestion/communication',
+              link: '/communication',
               description: 'Actualités, newsletters et notifications push',
             }
           ]
@@ -186,7 +190,7 @@ export class Nav implements OnInit {
         {
           label: 'Messagerie',
           icon: 'fas fa-envelope',
-          link: '/superadmin/messagerie',
+          link: '/messagerie',
           description: 'Emails internes, discussions et support utilisateurs',
         },
 
@@ -194,7 +198,7 @@ export class Nav implements OnInit {
         {
           label: 'Classement',
           icon: 'fas fa-chart-line',
-          link: '/superadmin/statistiques',
+          link: '/statistiques',
           description: 'Analyse de performance et rapports d\'activité',
         },
 
@@ -202,19 +206,19 @@ export class Nav implements OnInit {
         {
           label: 'Convocation',
           icon: 'fas fa-clipboard-list',
-          link: '/superadmin/planning',
+          link: '/planning',
           description: 'Organisation des séances et rencontres',
           children: [
             {
               label: 'Séances',
               icon: 'fas fa-dumbbell',
-              link: '/superadmin/planning/seances',
+              link: '/seances',
               description: 'Programmation des séances et présences',
             },
             {
               label: 'Rencontres',
               icon: 'fas fa-trophy',
-              link: '/superadmin/planning/rencontres',
+              link: '/rencontres',
               description: 'Gestion des matchs et tournois',
             }
           ]
@@ -228,31 +232,31 @@ export class Nav implements OnInit {
         {
           label: 'Actualités',
           icon: 'fas fa-newspaper',
-          link: '/entraineur/actualites',
+          link: '/actus',
           description: 'Infos du club'
         },
         {
-          label: 'Mon équipe',
+          label: 'Équipe',
           icon: 'fas fa-users',
-          link: '/entraineur/equipe',
+          link: '/equipe',
           description: 'Gestion de l\'équipe',
           children: [
             {
               label: 'Joueurs',
               icon: 'fas fa-user',
-              link: '/entraineur/equipe/joueurs',
+              link: '/joueurs',
               description: 'Liste des joueurs'
             },
             {
               label: 'Effectif disponible',
               icon: 'fas fa-clipboard-list',
-              link: '/entraineur/equipe/disponibles',
+              link: '/disponibles',
               description: 'Joueurs disponibles ce week-end'
             },
             {
               label: 'Statistiques joueurs',
               icon: 'fas fa-chart-bar',
-              link: '/entraineur/equipe/stats',
+              link: '/stats',
               description: 'Performance individuelle'
             }
           ]
@@ -261,19 +265,19 @@ export class Nav implements OnInit {
         {
           label: 'Convocation',
           icon: 'fas fa-clipboard-list',
-          link: '/superadmin/planning',
+          link: '/planning',
           description: 'Organisation des séances et rencontres',
           children: [
             {
               label: 'Séances',
               icon: 'fas fa-dumbbell',
-              link: '/superadmin/planning/seances',
+              link: '/seances',
               description: 'Programmation des séances et présences',
             },
             {
               label: 'Rencontres',
               icon: 'fas fa-trophy',
-              link: '/superadmin/planning/rencontres',
+              link: '/rencontres',
               description: 'Gestion des matchs et tournois',
             }
           ]
@@ -281,15 +285,10 @@ export class Nav implements OnInit {
         {
           label: 'Calendrier',
           icon: 'fas fa-calendar-alt',
-          link: '/entraineur/calendrier',
+          link: '/calendrier',
           description: 'Planning',
         },
-        {
-          label: 'Présences',
-          icon: 'fas fa-clipboard-check',
-          link: '/entraineur/presences',
-          description: 'Feuilles de présence',
-        },
+        
       ],
 
       // ============================================
@@ -299,31 +298,31 @@ export class Nav implements OnInit {
         {
           label: 'Actualités',
           icon: 'fas fa-newspaper',
-          link: '/joueur/actualites',
+          link: '/actus',
           description: 'Infos du club'
         },
         {
-          label: 'Mon équipe',
+          label: 'Équipe',
           icon: 'fas fa-users',
-          link: '/joueur/equipe',
+          link: '/equipe',
           description: 'Mon équipe et coéquipiers',
           children: [
             {
               label: 'Joueurs',
               icon: 'fas fa-user',
-              link: '/joueur/equipe/joueurs',
+              link: '/joueurs',
               description: 'Liste des coéquipiers'
             },
             {
               label: 'Effectif disponible',
               icon: 'fas fa-clipboard-list',
-              link: '/joueur/equipe/disponibles',
+              link: 'disponibles',
               description: 'Joueurs disponibles ce week-end'
             },
             {
               label: 'Mes statistiques',
               icon: 'fas fa-chart-bar',
-              link: '/joueur/equipe/mes-stats',
+              link: '/mes-stats',
               description: 'Mes performances individuelles'
             }
           ]
@@ -331,19 +330,19 @@ export class Nav implements OnInit {
         {
           label: 'Mes convocations',
           icon: 'fas fa-clipboard-list',
-          link: '/joueur/convocations',
+          link: '/convocations',
           description: 'Mes séances et matchs',
           children: [
             {
               label: 'Séances',
               icon: 'fas fa-dumbbell',
-              link: '/joueur/convocations/seances',
+              link: '/seances',
               description: 'Mes séances d\'entraînement'
             },
             {
               label: 'Rencontres',
               icon: 'fas fa-trophy',
-              link: '/joueur/convocations/rencontres',
+              link: '/rencontres',
               description: 'Mes matchs et tournois'
             }
           ]
@@ -351,15 +350,9 @@ export class Nav implements OnInit {
         {
           label: 'Calendrier',
           icon: 'fas fa-calendar-alt',
-          link: '/joueur/calendrier',
+          link: '/calendrier',
           description: 'Mon planning'
         },
-        {
-          label: 'Mes présences',
-          icon: 'fas fa-clipboard-check',
-          link: '/joueur/presences',
-          description: 'Mes feuilles de présence'
-        }
       ],
 
       // ============================================
@@ -369,13 +362,13 @@ export class Nav implements OnInit {
         {
           label: 'Actualités',
           icon: 'fas fa-newspaper',
-          link: '/actualites',
+          link: '/actus',
           description: 'News du club'
         },
         {
           label: 'Matchs',
           icon: 'fas fa-futbol',
-          link: '/matchs',
+          link: '/match',
           description: 'Calendrier des matchs',
         },
         {
@@ -394,10 +387,9 @@ export class Nav implements OnInit {
   }
 
   // 🔹 Toggle sous-menu au clic
-  toggleMenu(index: number): void {
+  toggleMenu(index: number) {
     this.openMenuIndex = this.openMenuIndex === index ? null : index;
   }
-
   // 🔹 Ouvrir un sous-menu au hover (pour desktop)
   onMouseEnter(index: number): void {
     if (window.innerWidth > 768) {
@@ -472,4 +464,11 @@ export class Nav implements OnInit {
   onMenuEnter(): void { }
   onMenuLeave(): void { this.activeMenus.level1 = -1; this.activeMenus.level2 = -1; this.activeMenus.level3 = -1; this.hoveredIndex = -1; }
 
+
+  onMenuClick(item: any, i: number, event: Event) {
+    if (item.children) {
+      event.preventDefault();
+      this.toggleMenu(i);
+    }
+  }
 }
