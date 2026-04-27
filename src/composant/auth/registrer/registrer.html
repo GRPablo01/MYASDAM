@@ -1,866 +1,507 @@
 <app-icon></app-icon>
 
-<!-- =============================== -->
-<!-- PAGE INSCRIPTION ASDAM - UI/UX RESPONSIVE COMPLÈTE -->
-<!-- =============================== -->
-<div class="min-h-screen w-full flex items-center justify-center p-3 sm:p-4 lg:p-6 relative overflow-hidden"
-  [ngStyle]="{'background': Backgroundprincipal, 'color': Textprincipal}">
+<!-- ================================================= -->
+<!-- PAGE INSCRIPTION ASDAM - UI/UX PREMIUM RESPONSIVE -->
+<!-- ================================================= -->
+<section
+  class="relative w-full min-h-screen overflow-hidden flex items-center justify-center px-3 sm:px-4 lg:px-6 py-6"
+  [ngStyle]="{
+    'background': themeservice.Backgroundprincipal,
+    'color': themeservice.Textprincipal
+  }"
+>
 
-  <!-- IMAGE LOGO - Position fixe à droite, moitié visible, opacité faible -->
-  <div class="absolute right-0 top-0 h-full w-[50vw] overflow-hidden pointer-events-none z-[2]">
+  <!-- BG LOGO -->
+  <div class="absolute right-0 top-0 h-full w-[50vw] overflow-hidden pointer-events-none z-[1]">
     <img
       src="assets/LOGO.png"
       alt="Logo"
-      class="h-full w-auto max-w-none object-cover origin-right translate-x-1/2 opacity-25"
-      loading="eager"
-    >
+      class="h-full w-auto max-w-none object-cover origin-right translate-x-1/2 opacity-15"
+    />
   </div>
 
-  <!-- PARTICULES D'AMBIANCE -->
-  <div class="fixed inset-0 z-[1] pointer-events-none overflow-hidden">
-    <div class="absolute top-[15%] left-[10%] w-2 h-2 bg-white/20 rounded-full animate-float-slow"></div>
-    <div class="absolute top-[70%] right-[10%] w-3 h-3 bg-white/10 rounded-full animate-float-medium"></div>
-    <div class="absolute top-[45%] left-[85%] w-1.5 h-1.5 bg-white/25 rounded-full animate-float-fast"></div>
-  </div>
-
-  <!-- CARD PRINCIPALE - Responsive Glassmorphism -->
+  <!-- CARD -->
   <div
-    class="w-full max-w-[380px] sm:max-w-[600px] lg:max-w-[900px] rounded-[20px] sm:rounded-[28px] overflow-hidden relative shadow-[0_20px_60px_-15px_rgba(0,0,0,0.6)] animate-fade-in backdrop-blur-xl my-auto"
+    class="relative z-10 w-full max-w-6xl rounded-[28px] overflow-hidden shadow-[0_25px_70px_-20px_rgba(0,0,0,0.55)] backdrop-blur-xl animate-fade-in-up"
     [ngStyle]="{
-      'background': isDarkMode ? 'rgba(25,25,25,0.92)' : 'rgba(255,255,255,0.96)',
-      'border': isDarkMode ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(255,255,255,0.6)'
-    }">
+      'background': themeservice.Backgroundcards
+    }"
+  >
 
-    <!-- BOUTON TOGGLE THEME -->
-    <button type="button" (click)="toggleTheme()"
-      class="absolute top-3 right-3 sm:top-4 sm:right-4 z-30 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group"
+    <!-- TOGGLE THEME -->
+    <button
+      type="button"
+      (click)="toggleTheme()"
+      class="absolute top-4 right-4 z-50 w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300"
       [ngStyle]="{
-        'background': isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
-        'border': isDarkMode ? '1px solid rgba(255,255,255,0.15)' : '1px solid rgba(0,0,0,0.08)'
-      }" [attr.aria-label]="isDarkMode ? 'Passer en mode clair' : 'Passer en mode sombre'">
-      <div class="relative w-full h-full flex items-center justify-center overflow-hidden rounded-full">
-        <i class="fa-solid fa-sun text-lg absolute transition-all duration-500"
-          [ngClass]="isDarkMode ? 'rotate-0 scale-100 opacity-100' : '-rotate-90 scale-0 opacity-0'"
-          [ngStyle]="{'color': '#FDB813'}"></i>
-        <i class="fa-solid fa-moon text-lg absolute transition-all duration-500"
-          [ngClass]="!isDarkMode ? 'rotate-0 scale-100 opacity-100' : 'rotate-90 scale-0 opacity-0'"
-          [ngStyle]="{'color': '#4B5563'}"></i>
-      </div>
+        'background': themeservice.Backgroundcards1
+      }"
+    >
+      <i
+        class="fa-solid text-base"
+        [ngClass]="themeservice.isDarkMode ? 'fa-sun' : 'fa-moon'"
+        [ngStyle]="{
+          'color': themeservice.Iconnormal
+        }"
+      ></i>
     </button>
 
-    <!-- CONTENU -->
-    <div class="relative z-10 flex flex-col lg:flex-row min-h-[500px] sm:min-h-[550px] lg:min-h-[580px]">
+    <div class="grid lg:grid-cols-[330px_1fr]">
 
-      <!-- SIDEBAR GAUCHE - Progression (Desktop uniquement) -->
-      <div class="hidden lg:flex lg:w-64 xl:w-72 flex-col p-6 border-r border-opacity-10"
-        [ngStyle]="{'border-color': isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}">
+      <!-- ================================= -->
+      <!-- SIDEBAR DESKTOP -->
+      <!-- ================================= -->
+      <aside
+        class="hidden lg:flex flex-col p-8 border-r"
+        [ngStyle]="{
+          'border-color': themeservice.primary + '20',
+          'background': themeservice.Backgroundcards1
+        }"
+      >
 
         <!-- LOGO -->
-        <div class="flex items-center gap-3 mb-8">
-          <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 p-1 backdrop-blur-sm shadow-md"
-            [ngStyle]="{'border': '2px solid ' + Rougeprincipal}">
-            <img src="assets/LOGO.png" alt="Logo ASDAM" class="w-full h-full object-contain">
+        <div class="flex items-center gap-4 mb-10">
+
+          <div
+            class="w-16 h-16 rounded-full p-1"
+            [ngStyle]="{
+              'border': '2px solid ' + themeservice.primary
+            }"
+          >
+            <img src="assets/LOGO.png" class="w-full h-full object-contain" />
           </div>
+
           <div>
-            <h1 [ngStyle]="{'color': Textprincipal}" class="text-xl font-black tracking-tight">ASDAM</h1>
-            <p [ngStyle]="{'color': Textsecondaire}" class="text-xs">Inscription</p>
-          </div>
-        </div>
-
-        <!-- Étapes -->
-        <div class="flex-1 space-y-4">
-          <!-- Étape 1 -->
-          <div class="flex items-center gap-3 cursor-pointer group" (click)="currentStep > 1 ? goToStep(1) : null">
-            <div class="relative flex-shrink-0">
-              <div
-                class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 border-2"
-                [ngStyle]="currentStep === 1 ? {
-                  'background': Rougeprincipal,
-                  'color': '#FFFFFF',
-                  'border-color': Rougeprincipal,
-                  'box-shadow': '0 0 0 3px ' + Rougesoftbackground
-                } : (currentStep > 1 ? {
-                  'background': '#10B981',
-                  'color': '#FFFFFF',
-                  'border-color': '#10B981'
-                } : {
-                  'background': isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
-                  'color': Textsecondaire,
-                  'border-color': isDarkMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)'
-                })">
-                <span *ngIf="currentStep <= 1">1</span>
-                <i *ngIf="currentStep > 1" class="fa-solid fa-check text-xs"></i>
-              </div>
-              <!-- Ligne connecteur -->
-              <div *ngIf="currentStep > 1" class="absolute top-full left-1/2 -translate-x-1/2 w-0.5 h-4 bg-emerald-500">
-              </div>
-            </div>
-            <div class="flex-1 min-w-0">
-              <h4 class="font-bold text-sm transition-colors truncate"
-                [ngStyle]="{'color': currentStep === 1 ? Rougeprincipal : (currentStep > 1 ? '#10B981' : Textsecondaire)}">
-                Identité
-              </h4>
-              <p [ngStyle]="{'color': Textsecondaire}" class="text-xs truncate">Nom et prénom</p>
-            </div>
-          </div>
-
-          <!-- Étape 2 -->
-          <div class="flex items-center gap-3 cursor-pointer group" (click)="currentStep > 2 ? goToStep(2) : null">
-            <div class="relative flex-shrink-0">
-              <div
-                class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 border-2"
-                [ngStyle]="currentStep === 2 ? {
-                  'background': Rougeprincipal,
-                  'color': '#FFFFFF',
-                  'border-color': Rougeprincipal,
-                  'box-shadow': '0 0 0 3px ' + Rougesoftbackground
-                } : (currentStep > 2 ? {
-                  'background': '#10B981',
-                  'color': '#FFFFFF',
-                  'border-color': '#10B981'
-                } : {
-                  'background': isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
-                  'color': Textsecondaire,
-                  'border-color': isDarkMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)'
-                })">
-                <span *ngIf="currentStep <= 2">2</span>
-                <i *ngIf="currentStep > 2" class="fa-solid fa-check text-xs"></i>
-              </div>
-              <div *ngIf="currentStep > 2" class="absolute top-full left-1/2 -translate-x-1/2 w-0.5 h-4 bg-emerald-500">
-              </div>
-            </div>
-            <div class="flex-1 min-w-0">
-              <h4 class="font-bold text-sm transition-colors truncate"
-                [ngStyle]="{'color': currentStep === 2 ? Rougeprincipal : (currentStep > 2 ? '#10B981' : Textsecondaire)}">
-                Connexion
-              </h4>
-              <p [ngStyle]="{'color': Textsecondaire}" class="text-xs truncate">Email & mot de passe</p>
-            </div>
-          </div>
-
-          <!-- Étape 3 -->
-          <div class="flex items-center gap-3 cursor-pointer group" (click)="currentStep > 3 ? goToStep(3) : null">
-            <div class="relative flex-shrink-0">
-              <div
-                class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 border-2"
-                [ngStyle]="currentStep === 3 ? {
-                  'background': Rougeprincipal,
-                  'color': '#FFFFFF',
-                  'border-color': Rougeprincipal,
-                  'box-shadow': '0 0 0 3px ' + Rougesoftbackground
-                } : (currentStep > 3 ? {
-                  'background': '#10B981',
-                  'color': '#FFFFFF',
-                  'border-color': '#10B981'
-                } : {
-                  'background': isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
-                  'color': Textsecondaire,
-                  'border-color': isDarkMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)'
-                })">
-                <span *ngIf="currentStep <= 3">3</span>
-                <i *ngIf="currentStep > 3" class="fa-solid fa-check text-xs"></i>
-              </div>
-              <div *ngIf="currentStep > 3" class="absolute top-full left-1/2 -translate-x-1/2 w-0.5 h-4 bg-emerald-500">
-              </div>
-            </div>
-            <div class="flex-1 min-w-0">
-              <h4 class="font-bold text-sm transition-colors truncate"
-                [ngStyle]="{'color': currentStep === 3 ? Rougeprincipal : (currentStep > 3 ? '#10B981' : Textsecondaire)}">
-                Rôle
-              </h4>
-              <p [ngStyle]="{'color': Textsecondaire}" class="text-xs truncate">Profil équipe</p>
-            </div>
-          </div>
-
-          <!-- Étape 4 -->
-          <div class="flex items-center gap-3">
-            <div class="relative flex-shrink-0">
-              <div
-                class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 border-2"
-                [ngStyle]="currentStep === 4 ? {
-                  'background': 'linear-gradient(135deg, #10B981, #059669)',
-                  'color': '#FFFFFF',
-                  'border-color': '#10B981',
-                  'box-shadow': '0 0 0 3px rgba(16, 185, 129, 0.2)'
-                } : {
-                  'background': isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
-                  'color': Textsecondaire,
-                  'border-color': isDarkMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)'
-                }">
-                4
-              </div>
-            </div>
-            <div class="flex-1 min-w-0">
-              <h4 class="font-bold text-sm transition-colors truncate"
-                [ngStyle]="{'color': currentStep === 4 ? '#10B981' : Textsecondaire}">
-                Finaliser
-              </h4>
-              <p [ngStyle]="{'color': Textsecondaire}" class="text-xs truncate">Dernières préférences</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Info étape -->
-        <div class="mt-auto pt-4 border-t border-opacity-10"
-          [ngStyle]="{'border-color': isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}">
-          <div class="rounded-xl p-3 backdrop-blur-sm"
-            [ngStyle]="{'background': Rougesoftbackground, 'border': '1px solid ' + Rougeprincipal + '30'}">
-            <div class="flex items-center gap-2 mb-1">
-              <i class="fa-solid fa-info-circle text-xs" [ngStyle]="{'color': Rougeprincipal}"></i>
-              <span class="text-xs font-bold" [ngStyle]="{'color': Textprincipal}">Étape {{ currentStep }} sur 4</span>
-            </div>
-            <p class="text-xs leading-relaxed" [ngStyle]="{'color': Textsecondaire}">
-              Complétez toutes les étapes pour rejoindre ASDAM.
+            <h2 class="text-2xl font-black">ASDAM</h2>
+            <p
+              class="text-sm"
+              [ngStyle]="{
+                'color': themeservice.Textsecondaire
+              }"
+            >
+              Inscription
             </p>
           </div>
+
         </div>
-      </div>
 
-      <!-- FORMULAIRE -->
-      <div class="flex-1 p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
+        <!-- ETAPES -->
+        <div class="space-y-5 flex-1">
 
-        <!-- LOGO MOBILE -->
-        <div class="lg:hidden text-center mb-4">
           <div
-            class="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-2 rounded-full overflow-hidden p-1 backdrop-blur-sm shadow-md"
-            [ngStyle]="{'border': '2px solid ' + Rougeprincipal}">
-            <img src="assets/LOGO.png" alt="Logo ASDAM" class="w-full h-full object-contain">
-          </div>
-          <h2 [ngStyle]="{'color': Textprincipal}" class="text-lg sm:text-xl font-black">ASDAM</h2>
-          <p [ngStyle]="{'color': Textsecondaire}" class="text-xs">Inscription</p>
-        </div>
+            *ngFor="let label of stepLabels; let i = index"
+            class="flex items-center gap-4"
+          >
 
-        <!-- Indicateur mobile -->
-        <div class="lg:hidden flex justify-center mb-4">
-          <div class="flex items-center gap-2 rounded-full px-3 py-1.5 backdrop-blur-sm"
-            [ngStyle]="{'background': isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}">
-            <span class="text-xs font-bold" [ngStyle]="{'color': Rougeprincipal}">Étape {{ currentStep }}/4</span>
-            <div class="flex gap-1">
-              <div *ngFor="let step of [1,2,3,4]; let i = index"
-                class="w-1.5 h-1.5 rounded-full transition-all duration-300"
-                [ngStyle]="i + 1 === currentStep ? {'background': Rougeprincipal} : (i + 1 < currentStep ? {'background': '#10B981'} : {'background': isDarkMode ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.15)'})">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Header dynamique -->
-        <div class="mb-4 sm:mb-5 text-center lg:text-left">
-          <h3 [ngStyle]="{'color': Textprincipal}" class="text-xl sm:text-2xl lg:text-2xl font-bold mb-1 drop-shadow-sm"
-            [ngSwitch]="currentStep">
-            <span *ngSwitchCase="1">Créez votre identité</span>
-            <span *ngSwitchCase="2">Sécurisez votre compte</span>
-            <span *ngSwitchCase="3">Définissez votre rôle</span>
-            <span *ngSwitchCase="4">Personnalisez votre expérience</span>
-          </h3>
-          <p [ngStyle]="{'color': Textsecondaire}" class="text-xs sm:text-sm" [ngSwitch]="currentStep">
-            <span *ngSwitchCase="1">Commençons par les informations de base</span>
-            <span *ngSwitchCase="2">Protégez votre accès avec un mot de passe sécurisé</span>
-            <span *ngSwitchCase="3">Choisissez votre position dans l'équipe</span>
-            <span *ngSwitchCase="4">Dernières touches avant de rejoindre l'équipe</span>
-          </p>
-        </div>
-
-        <!-- MESSAGE DE NOTIFICATION -->
-        <div *ngIf="message"
-          class="mb-3 p-2.5 rounded-lg text-center text-xs sm:text-sm font-medium animate-slide-down backdrop-blur-sm"
-          [ngClass]="{
-            'bg-emerald-500/20 text-emerald-100 border border-emerald-400/30': messageType === 'success',
-            'bg-rose-500/20 text-rose-100 border border-rose-400/30': messageType === 'error'
-          }">
-          {{ message }}
-        </div>
-
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-3 sm:space-y-4">
-
-          <!-- ÉTAPE 1 : Identité -->
-          <div *ngIf="currentStep === 1" class="space-y-3 animate-fade-in">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <!-- Nom -->
-              <div class="relative group">
-                <div class="absolute left-3 top-1/2 -translate-y-1/2 text-sm z-10 transition-colors duration-300"
-                  [ngStyle]="{'color': isDarkMode ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}">
-                  <i class="fa-solid fa-user"></i>
-                </div>
-                <input type="text" formControlName="nom" placeholder="Nom"
-                  class="w-full h-10 sm:h-11 pl-9 pr-3 rounded-xl text-sm transition-all duration-300 focus:outline-none focus:ring-2 backdrop-blur-sm"
-                  [ngStyle]="isDarkMode ? {
-                    'background': 'rgba(255,255,255,0.06)',
-                    'color': '#FFFFFF',
-                    'border': '1.5px solid rgba(255,255,255,0.12)',
-                    '--tw-ring-color': Rougeprincipal
-                  } : {
-                    'background': 'rgba(255,255,255,0.95)',
-                    'color': '#1F2937',
-                    'border': '1.5px solid rgba(0,0,0,0.06)',
-                    'box-shadow': '0 2px 4px rgba(0,0,0,0.04)',
-                    '--tw-ring-color': Rougeprincipal
-                  }">
-              </div>
-
-              <!-- Prénom -->
-              <div class="relative group">
-                <div class="absolute left-3 top-1/2 -translate-y-1/2 text-sm z-10 transition-colors duration-300"
-                  [ngStyle]="{'color': isDarkMode ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}">
-                  <i class="fa-solid fa-user"></i>
-                </div>
-                <input type="text" formControlName="prenom" placeholder="Prénom"
-                  class="w-full h-10 sm:h-11 pl-9 pr-3 rounded-xl text-sm transition-all duration-300 focus:outline-none focus:ring-2 backdrop-blur-sm"
-                  [ngStyle]="isDarkMode ? {
-                    'background': 'rgba(255,255,255,0.06)',
-                    'color': '#FFFFFF',
-                    'border': '1.5px solid rgba(255,255,255,0.12)',
-                    '--tw-ring-color': Rougeprincipal
-                  } : {
-                    'background': 'rgba(255,255,255,0.95)',
-                    'color': '#1F2937',
-                    'border': '1.5px solid rgba(0,0,0,0.06)',
-                    'box-shadow': '0 2px 4px rgba(0,0,0,0.04)',
-                    '--tw-ring-color': Rougeprincipal
-                  }">
-              </div>
+            <!-- CERCLE -->
+            <div
+              class="w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300"
+              [ngStyle]="
+                currentStep === i + 1
+                  ? {
+                      background: themeservice.primary,
+                      color: '#fff'
+                    }
+                  : currentStep > i + 1
+                  ? {
+                      background: '#10B981',
+                      color: '#fff'
+                    }
+                  : {
+                      background: themeservice.Backgroundcards,
+                      color: themeservice.Textsecondaire
+                    }
+              "
+            >
+              <span *ngIf="currentStep <= i + 1">{{ i + 1 }}</span>
+              <i *ngIf="currentStep > i + 1" class="fa-solid fa-check"></i>
             </div>
 
-            <button type="button" (click)="nextStep()" [disabled]="!isStep1Valid()"
-              class="w-full h-10 sm:h-11 rounded-xl font-semibold text-sm tracking-wide shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 mt-2"
-              [ngStyle]="{
-                'background': isHovered ? Rougehover : Rougeprincipal,
-                'color': '#FFFFFF'
-              }" (mouseenter)="isHovered = true" (mouseleave)="isHovered = false">
-              <span>Continuer</span>
-              <i class="fa-solid fa-arrow-right"></i>
-            </button>
-          </div>
-
-          <!-- ÉTAPE 2 : Connexion -->
-          <div *ngIf="currentStep === 2" class="space-y-3 animate-fade-in">
-            <!-- Email -->
-            <div class="relative group">
-              <div class="absolute left-3 top-1/2 -translate-y-1/2 text-sm z-10 transition-colors duration-300"
-                [ngStyle]="{'color': isDarkMode ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}">
-                <i class="fa-solid fa-envelope"></i>
-              </div>
-              <input type="email" formControlName="email" placeholder="Adresse e-mail"
-                class="w-full h-10 sm:h-11 pl-9 pr-3 rounded-xl text-sm transition-all duration-300 focus:outline-none focus:ring-2 backdrop-blur-sm"
-                [ngStyle]="isDarkMode ? {
-                  'background': 'rgba(255,255,255,0.06)',
-                  'color': '#FFFFFF',
-                  'border': '1.5px solid rgba(255,255,255,0.12)',
-                  '--tw-ring-color': Rougeprincipal
-                } : {
-                  'background': 'rgba(255,255,255,0.95)',
-                  'color': '#1F2937',
-                  'border': '1.5px solid rgba(0,0,0,0.06)',
-                  'box-shadow': '0 2px 4px rgba(0,0,0,0.04)',
-                  '--tw-ring-color': Rougeprincipal
-                }">
-            </div>
-
-            <!-- Mot de passe -->
-            <div class="relative group">
-              <div class="absolute left-3 top-1/2 -translate-y-1/2 text-sm z-10 transition-colors duration-300"
-                [ngStyle]="{'color': isDarkMode ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}">
-                <i class="fa-solid fa-key"></i>
-              </div>
-              <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Mot de passe"
-                class="w-full h-10 sm:h-11 pl-9 pr-10 rounded-xl text-sm transition-all duration-300 focus:outline-none focus:ring-2 backdrop-blur-sm"
-                [ngStyle]="isDarkMode ? {
-                  'background': 'rgba(255,255,255,0.06)',
-                  'color': '#FFFFFF',
-                  'border': '1.5px solid rgba(255,255,255,0.12)',
-                  '--tw-ring-color': Rougeprincipal
-                } : {
-                  'background': 'rgba(255,255,255,0.95)',
-                  'color': '#1F2937',
-                  'border': '1.5px solid rgba(0,0,0,0.06)',
-                  'box-shadow': '0 2px 4px rgba(0,0,0,0.04)',
-                  '--tw-ring-color': Rougeprincipal
-                }">
-              <button type="button" (click)="togglePassword()"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-sm transition-all duration-300 hover:scale-110"
-                [ngClass]="{
-                  'text-white/50 hover:text-white': isDarkMode,
-                  'text-gray-400 hover:text-rose-500': !isDarkMode
-                }">
-                <i class="fa-solid" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
-              </button>
-            </div>
-
-            <!-- Indicateur de force -->
-            <div *ngIf="registerForm.get('password')?.value" class="space-y-1.5 animate-fade-in">
-              <div class="flex gap-1 h-1">
-                <div class="flex-1 rounded-full transition-all duration-500"
-                  [ngStyle]="{'background': getPasswordStrength() >= 1 ? '#EF4444' : (isDarkMode ? 'rgba(255,255,255,0.15)' : '#E5E7EB')}">
-                </div>
-                <div class="flex-1 rounded-full transition-all duration-500"
-                  [ngStyle]="{'background': getPasswordStrength() >= 2 ? '#F59E0B' : (isDarkMode ? 'rgba(255,255,255,0.15)' : '#E5E7EB')}">
-                </div>
-                <div class="flex-1 rounded-full transition-all duration-500"
-                  [ngStyle]="{'background': getPasswordStrength() >= 3 ? '#10B981' : (isDarkMode ? 'rgba(255,255,255,0.15)' : '#E5E7EB')}">
-                </div>
-                <div class="flex-1 rounded-full transition-all duration-500"
-                  [ngStyle]="{'background': getPasswordStrength() >= 4 ? '#059669' : (isDarkMode ? 'rgba(255,255,255,0.15)' : '#E5E7EB')}">
-                </div>
-              </div>
-              <p [ngStyle]="{'color': Textsecondaire}" class="text-xs text-right">{{ getPasswordStrengthText() }}</p>
-            </div>
-
-            <div class="flex gap-2 pt-1">
-              <button type="button" (click)="prevStep()"
-                class="flex-1 h-10 sm:h-11 rounded-xl font-semibold text-sm transition-all duration-300 hover:shadow-md"
+            <!-- TEXT -->
+            <div>
+              <p class="font-semibold">{{ label }}</p>
+              <p
+                class="text-xs"
                 [ngStyle]="{
-                  'background': isDarkMode ? 'rgba(255,255,255,0.08)' : '#F3F4F6',
-                  'color': Textprincipal,
-                  'border': isDarkMode ? '1px solid rgba(255,255,255,0.12)' : '1px solid #E5E7EB'
-                }">
-                <i class="fa-solid fa-arrow-left mr-1"></i>
-                Retour
-              </button>
-              <button type="button" (click)="nextStep()" [disabled]="!isStep2Valid()"
-                class="flex-1 h-10 sm:h-11 rounded-xl font-semibold text-sm tracking-wide shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
-                [ngStyle]="{
-                  'background': Rougeprincipal,
-                  'color': '#FFFFFF'
-                }">
-                <span>Continuer</span>
-                <i class="fa-solid fa-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- ÉTAPE 3 : Rôle -->
-          <div *ngIf="currentStep === 3" class="space-y-3 animate-fade-in">
-            <!-- Sélection du rôle -->
-            <div class="relative group">
-              <div class="absolute left-3 top-1/2 -translate-y-1/2 text-sm z-10 transition-colors duration-300"
-                [ngStyle]="{'color': isDarkMode ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}">
-                <i class="fa-solid fa-id-badge"></i>
-              </div>
-              <select formControlName="role" (change)="onRoleChange()"
-                class="w-full h-10 sm:h-11 pl-9 pr-10 rounded-xl text-sm transition-all duration-300 focus:outline-none focus:ring-2 backdrop-blur-sm appearance-none cursor-pointer"
-                [ngStyle]="isDarkMode ? {
-                  'background': 'rgba(255,255,255,0.06)',
-                  'color': '#FFFFFF',
-                  'border': '1.5px solid rgba(255,255,255,0.12)',
-                  '--tw-ring-color': Rougeprincipal
-                } : {
-                  'background': 'rgba(255,255,255,0.95)',
-                  'color': '#1F2937',
-                  'border': '1.5px solid rgba(0,0,0,0.06)',
-                  'box-shadow': '0 2px 4px rgba(0,0,0,0.04)',
-                  '--tw-ring-color': Rougeprincipal
-                }">
-                <option value="" disabled selected>Sélectionnez votre rôle</option>
-                <option *ngFor="let r of roles" [value]="r">{{ r | titlecase }}</option>
-              </select>
-              <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-xs"
-                [ngStyle]="{'color': isDarkMode ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}">
-                <i class="fa-solid fa-chevron-down"></i>
-              </div>
-            </div>
-
-            <!-- Sélection de l'équipe (sauf invité) -->
-            <div class="relative group animate-fade-in-up"
-              *ngIf="registerForm.get('role')?.value !== 'invité' && registerForm.get('role')?.value">
-              <div class="absolute left-3 top-1/2 -translate-y-1/2 text-sm z-10 transition-colors duration-300"
-                [ngStyle]="{'color': isDarkMode ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}">
-                <i class="fa-solid fa-users"></i>
-              </div>
-              <select formControlName="equipe"
-                class="w-full h-10 sm:h-11 pl-9 pr-10 rounded-xl text-sm transition-all duration-300 focus:outline-none focus:ring-2 backdrop-blur-sm appearance-none cursor-pointer"
-                [ngStyle]="isDarkMode ? {
-                  'background': 'rgba(255,255,255,0.06)',
-                  'color': '#FFFFFF',
-                  'border': '1.5px solid rgba(255,255,255,0.12)',
-                  '--tw-ring-color': Rougeprincipal
-                } : {
-                  'background': 'rgba(255,255,255,0.95)',
-                  'color': '#1F2937',
-                  'border': '1.5px solid rgba(0,0,0,0.06)',
-                  'box-shadow': '0 2px 4px rgba(0,0,0,0.04)',
-                  '--tw-ring-color': Rougeprincipal
-                }">
-                <option value="" disabled selected>Choisissez votre équipe</option>
-                <option *ngFor="let eq of equipes" [value]="eq">{{ eq }}</option>
-              </select>
-              <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-xs"
-                [ngStyle]="{'color': isDarkMode ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}">
-                <i class="fa-solid fa-chevron-down"></i>
-              </div>
-            </div>
-
-            <!-- Code d'accès -->
-            <div class="relative group animate-fade-in-up"
-              *ngIf="registerForm.get('role')?.value !== 'invité' && registerForm.get('role')?.value">
-              <div class="absolute left-3 top-1/2 -translate-y-1/2 text-sm z-10 transition-colors duration-300"
-                [ngStyle]="{'color': isDarkMode ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}">
-                <i class="fa-solid fa-lock"></i>
-              </div>
-              <input type="text" formControlName="codeAcces" placeholder="Code d'accès"
-                class="w-full h-10 sm:h-11 pl-9 pr-3 rounded-xl text-sm transition-all duration-300 focus:outline-none focus:ring-2 backdrop-blur-sm"
-                [ngStyle]="isDarkMode ? {
-                  'background': 'rgba(255,255,255,0.06)',
-                  'color': '#FFFFFF',
-                  'border': '1.5px solid rgba(255,255,255,0.12)',
-                  '--tw-ring-color': Rougeprincipal
-                } : {
-                  'background': 'rgba(255,255,255,0.95)',
-                  'color': '#1F2937',
-                  'border': '1.5px solid rgba(0,0,0,0.06)',
-                  'box-shadow': '0 2px 4px rgba(0,0,0,0.04)',
-                  '--tw-ring-color': Rougeprincipal
-                }">
-              <p *ngIf="registerForm.get('codeAcces')?.touched && !isCodeValid()"
-                class="text-rose-400 text-xs mt-1 ml-1 flex items-center gap-1">
-                <i class="fa-solid fa-circle-exclamation text-[10px]"></i>
-                Code d'accès incorrect
+                  'color': themeservice.Textsecondaire
+                }"
+              >
+                Étape {{ i + 1 }}
               </p>
             </div>
 
-            <div class="flex gap-2 pt-1">
-              <button type="button" (click)="prevStep()"
-                class="flex-1 h-10 sm:h-11 rounded-xl font-semibold text-sm transition-all duration-300 hover:shadow-md"
-                [ngStyle]="{
-                  'background': isDarkMode ? 'rgba(255,255,255,0.08)' : '#F3F4F6',
-                  'color': Textprincipal,
-                  'border': isDarkMode ? '1px solid rgba(255,255,255,0.12)' : '1px solid #E5E7EB'
-                }">
-                <i class="fa-solid fa-arrow-left mr-1"></i>
-                Retour
-              </button>
-              <button type="button" (click)="nextStep()" [disabled]="!isStep3Valid()"
-                class="flex-1 h-10 sm:h-11 rounded-xl font-semibold text-sm tracking-wide shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
-                [ngStyle]="{
-                  'background': Rougeprincipal,
-                  'color': '#FFFFFF'
-                }">
-                <span>Continuer</span>
-                <i class="fa-solid fa-arrow-right"></i>
-              </button>
-            </div>
           </div>
 
-          <!-- ÉTAPE 4 : Finalisation -->
-          <div *ngIf="currentStep === 4" class="space-y-3 animate-fade-in">
-            <!-- Club -->
-            <div class="relative group">
-              <div class="absolute left-3 top-1/2 -translate-y-1/2 text-sm z-10 transition-colors duration-300"
-                [ngStyle]="{'color': isDarkMode ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}">
-                <i class="fa-solid fa-shield-halved"></i>
-              </div>
-              <input type="text" formControlName="club" placeholder="Club"
-                class="w-full h-10 sm:h-11 pl-9 pr-3 rounded-xl text-sm transition-all duration-300 focus:outline-none focus:ring-2 backdrop-blur-sm"
-                [ngStyle]="isDarkMode ? {
-                  'background': 'rgba(255,255,255,0.06)',
-                  'color': '#FFFFFF',
-                  'border': '1.5px solid rgba(255,255,255,0.12)',
-                  '--tw-ring-color': Rougeprincipal
-                } : {
-                  'background': 'rgba(255,255,255,0.95)',
-                  'color': '#1F2937',
-                  'border': '1.5px solid rgba(0,0,0,0.06)',
-                  'box-shadow': '0 2px 4px rgba(0,0,0,0.04)',
-                  '--tw-ring-color': Rougeprincipal
-                }">
-            </div>
+        </div>
 
-            
+        <!-- BOX INFO -->
+        <div
+          class="mt-8 p-5 rounded-2xl border"
+          [ngStyle]="{
+            'background': themeservice.Backgroundcards,
+            'border-color': themeservice.primary + '20'
+          }"
+        >
+          <p class="font-bold mb-1">
+            Progression {{ currentStep }}/4
+          </p>
 
-            <div class="flex gap-2 pt-1">
-              <button type="button" (click)="prevStep()"
-                class="flex-1 h-10 sm:h-11 rounded-xl font-semibold text-sm transition-all duration-300 hover:shadow-md"
-                [ngStyle]="{
-                  'background': isDarkMode ? 'rgba(255,255,255,0.08)' : '#F3F4F6',
-                  'color': Textprincipal,
-                  'border': isDarkMode ? '1px solid rgba(255,255,255,0.12)' : '1px solid #E5E7EB'
-                }">
-                <i class="fa-solid fa-arrow-left mr-1"></i>
-                Retour
-              </button>
-              <button type="submit" [disabled]="registerForm.invalid || isSubmitting"
-                class="flex-1 h-10 sm:h-11 rounded-xl font-semibold text-sm tracking-wide shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 relative overflow-hidden"
-                [ngStyle]="{
-                  'background': 'linear-gradient(135deg, #10B981, #059669)',
-                  'color': '#FFFFFF'
-                }">
-                <span *ngIf="!isSubmitting" class="flex items-center gap-1">
-                  <i class="fa-solid fa-check text-xs"></i>
-                  Créer mon compte
-                </span>
-                <span *ngIf="isSubmitting" class="flex items-center gap-1">
-                  <i class="fa-solid fa-circle-notch fa-spin text-xs"></i>
-                  Création...
-                </span>
-              </button>
-            </div>
+          <div class="w-full h-2 rounded-full overflow-hidden bg-black/10 mt-3">
+            <div
+              class="h-full rounded-full transition-all duration-500"
+              [ngStyle]="{
+                'background': themeservice.primary,
+                'width': (currentStep * 25) + '%'
+              }"
+            ></div>
           </div>
 
-          <!-- Lien connexion -->
-          <a routerLink="/connexion"
-            class="flex items-center justify-center gap-2 w-full py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-95 border-2"
+          <p
+            class="text-xs mt-3"
             [ngStyle]="{
-            'border-color': Rougeprincipal,
-            'color': Rougeprincipal,
-            'background': 'transparent'
-          }">
-            <span>Déjà un compte</span>
-            <i class="fa-solid fa-user-plus"></i>
+              'color': themeservice.Textsecondaire
+            }"
+          >
+            Complétez toutes les étapes pour rejoindre le club.
+          </p>
+        </div>
+
+      </aside>
+
+      <!-- ================================= -->
+      <!-- FORMULAIRE -->
+      <!-- ================================= -->
+      <div class="p-5 sm:p-7 lg:p-10">
+
+        <!-- MOBILE HEADER -->
+        <div class="lg:hidden text-center mb-6">
+          <img src="assets/LOGO.png" class="w-16 h-16 mx-auto mb-2" />
+          <h2 class="text-2xl font-black">ASDAM</h2>
+          <p
+            class="text-sm"
+            [ngStyle]="{
+              'color': themeservice.Textsecondaire
+            }"
+          >
+            Étape {{ currentStep }}/4
+          </p>
+        </div>
+
+        <!-- TITRE -->
+        <div class="mb-6">
+          <h1 class="text-3xl sm:text-4xl font-black mb-2">
+            Créer un compte
+          </h1>
+
+          <p
+            class="text-sm sm:text-base"
+            [ngStyle]="{
+              'color': themeservice.Textsecondaire
+            }"
+          >
+            Rejoignez l'équipe ASDAM en quelques étapes.
+          </p>
+        </div>
+
+        <!-- MESSAGE -->
+        <div
+          *ngIf="message"
+          class="mb-5 p-4 rounded-2xl text-sm font-semibold border animate-slide-down"
+          [ngStyle]="messageType === 'success'
+            ? {
+                background: themeservice.BgOui,
+                color: themeservice.BgOuiText,
+                borderColor: themeservice.BorderOui
+              }
+            : {
+                background: themeservice.BgNon,
+                color: themeservice.BgNonText,
+                borderColor: themeservice.BorderNon
+              }"
+        >
+          {{ message }}
+        </div>
+
+        <!-- FORM -->
+        <form
+          [formGroup]="registerForm"
+          (ngSubmit)="onSubmit()"
+          class="space-y-5"
+        >
+
+          <!-- STEP 1 -->
+          <div *ngIf="currentStep === 1" class="space-y-4">
+
+            <div class="grid sm:grid-cols-2 gap-4">
+
+              <input
+                type="text"
+                formControlName="nom"
+                placeholder="Nom"
+                class="h-12 rounded-2xl px-4 border outline-none"
+                [ngStyle]="{
+                  'background': themeservice.Backgroundcards1,
+                  'border-color': themeservice.primary
+                }"
+              />
+
+              <input
+                type="text"
+                formControlName="prenom"
+                placeholder="Prénom"
+                class="h-12 rounded-2xl px-4 border outline-none"
+                [ngStyle]="{
+                  'background': themeservice.Backgroundcards1,
+                  'border-color': themeservice.primary
+                }"
+              />
+
+            </div>
+
+            <button
+              type="button"
+              (click)="nextStep()"
+              [disabled]="!isStep1Valid()"
+              class="w-full h-12 rounded-2xl font-bold text-white hover:scale-[1.02] transition-all disabled:opacity-50"
+              [ngStyle]="{
+                'background': themeservice.primary
+              }"
+            >
+              Continuer
+            </button>
+
+          </div>
+
+          <!-- STEP 2 -->
+          <div *ngIf="currentStep === 2" class="space-y-4">
+
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="Adresse e-mail"
+              class="w-full h-12 rounded-2xl px-4 border outline-none"
+              [ngStyle]="{
+                'background': themeservice.Backgroundcards1,
+                'border-color': themeservice.primary
+              }"
+            />
+
+            <div class="relative">
+
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="password"
+                placeholder="Mot de passe"
+                class="w-full h-12 rounded-2xl px-4 pr-12 border outline-none"
+                [ngStyle]="{
+                  'background': themeservice.Backgroundcards1,
+                  'border-color': themeservice.primary
+                }"
+              />
+
+              <button
+                type="button"
+                (click)="togglePassword()"
+                class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg"
+                [ngStyle]="{
+                  'background': themeservice.primary,
+                  'color': '#fff'
+                }"
+              >
+                <i
+                  class="fa-solid"
+                  [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+                ></i>
+              </button>
+
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+
+              <button
+                type="button"
+                (click)="prevStep()"
+                class="h-12 rounded-2xl font-semibold"
+                [ngStyle]="{
+                  'background': themeservice.Backgroundcards1
+                }"
+              >
+                Retour
+              </button>
+
+              <button
+                type="button"
+                (click)="nextStep()"
+                class="h-12 rounded-2xl font-bold text-white"
+                [ngStyle]="{
+                  'background': themeservice.primary
+                }"
+              >
+                Continuer
+              </button>
+
+            </div>
+
+          </div>
+
+          <!-- STEP 3 -->
+          <div *ngIf="currentStep === 3" class="space-y-4">
+
+            <select
+              formControlName="role"
+              class="w-full h-12 rounded-2xl px-4 border outline-none"
+              [ngStyle]="{
+                'background': themeservice.Backgroundcards1,
+                'border-color': themeservice.primary
+              }"
+            >
+              <option *ngFor="let role of roles" [value]="role">
+                {{ role }}
+              </option>
+            </select>
+
+            <select
+              formControlName="equipe"
+              class="w-full h-12 rounded-2xl px-4 border outline-none"
+              [ngStyle]="{
+                'background': themeservice.Backgroundcards1,
+                'border-color': themeservice.primary
+              }"
+            >
+              <option value="">Équipe</option>
+              <option *ngFor="let equipe of equipes" [value]="equipe">
+                {{ equipe }}
+              </option>
+            </select>
+
+            <input
+              type="text"
+              formControlName="codeAcces"
+              placeholder="Code accès"
+              class="w-full h-12 rounded-2xl px-4 border outline-none"
+              [ngStyle]="{
+                'background': themeservice.Backgroundcards1,
+                'border-color': themeservice.primary
+              }"
+            />
+
+            <div class="grid grid-cols-2 gap-3">
+
+              <button
+                type="button"
+                (click)="prevStep()"
+                class="h-12 rounded-2xl font-semibold"
+                [ngStyle]="{
+                  'background': themeservice.Backgroundcards1
+                }"
+              >
+                Retour
+              </button>
+
+              <button
+                type="button"
+                (click)="nextStep()"
+                class="h-12 rounded-2xl font-bold text-white"
+                [ngStyle]="{
+                  'background': themeservice.primary
+                }"
+              >
+                Continuer
+              </button>
+
+            </div>
+
+          </div>
+
+          <!-- STEP 4 -->
+          <div *ngIf="currentStep === 4" class="space-y-4">
+
+            <input
+              type="text"
+              formControlName="club"
+              placeholder="Club"
+              class="w-full h-12 rounded-2xl px-4 border outline-none"
+              [ngStyle]="{
+                'background': themeservice.Backgroundcards1,
+                'border-color': themeservice.primary
+              }"
+            />
+
+            <div class="grid grid-cols-2 gap-3">
+
+              <button
+                type="button"
+                (click)="prevStep()"
+                class="h-12 rounded-2xl font-semibold"
+                [ngStyle]="{
+                  'background': themeservice.Backgroundcards1
+                }"
+              >
+                Retour
+              </button>
+
+              <button
+                type="submit"
+                class="h-12 rounded-2xl font-bold text-white"
+                [ngStyle]="{
+                  'background': '#10B981'
+                }"
+              >
+                {{ isSubmitting ? 'Création...' : 'Créer mon compte' }}
+              </button>
+
+            </div>
+
+          </div>
+
+          <!-- LOGIN -->
+          <a
+            routerLink="/connexion"
+            class="w-full h-12 rounded-2xl border-2 flex items-center justify-center font-semibold transition-all hover:scale-[1.02]"
+            [ngStyle]="{
+              'border': '2px dashed ' + themeservice.primary,
+              'color': themeservice.Textprincipal
+            }"
+          >
+            Déjà un compte
           </a>
 
-          <!-- Footer -->
-          <div class="text-center pt-1">
-            <p [ngStyle]="{'color': Textsecondaire}" class="text-[10px] opacity-60">
-              © 2026 ASDAM. Tous droits réservés.
-            </p>
-          </div>
-
         </form>
+
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- STYLES CSS PERSONNALISÉS -->
 <style>
-  /* Animations */
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
+@keyframes fade-in-up {
+  from { opacity:0; transform:translateY(25px); }
+  to { opacity:1; transform:translateY(0); }
+}
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+@keyframes slide-down {
+  from { opacity:0; transform:translateY(-10px); }
+  to { opacity:1; transform:translateY(0); }
+}
 
-  @keyframes fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(15px);
-    }
+.animate-fade-in-up{
+  animation:fade-in-up .6s ease forwards;
+}
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+.animate-slide-down{
+  animation:slide-down .4s ease forwards;
+}
 
-  @keyframes slide-down {
-    from {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
+.backdrop-blur-xl{
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes subtle-zoom {
-
-    0%,
-    100% {
-      transform: scale(1.05);
-    }
-
-    50% {
-      transform: scale(1.1);
-    }
-  }
-
-  @keyframes float-slow {
-
-    0%,
-    100% {
-      transform: translateY(0) translateX(0);
-      opacity: 0.15;
-    }
-
-    50% {
-      transform: translateY(-12px) translateX(6px);
-      opacity: 0.3;
-    }
-  }
-
-  @keyframes float-medium {
-
-    0%,
-    100% {
-      transform: translateY(0) translateX(0);
-      opacity: 0.1;
-    }
-
-    50% {
-      transform: translateY(-18px) translateX(-8px);
-      opacity: 0.2;
-    }
-  }
-
-  @keyframes float-fast {
-
-    0%,
-    100% {
-      transform: translateY(0) translateX(0);
-      opacity: 0.15;
-    }
-
-    50% {
-      transform: translateY(-8px) translateX(4px);
-      opacity: 0.35;
-    }
-  }
-
-  /* Classes utilitaires */
-  .animate-fade-in {
-    animation: fade-in 0.4s ease-out forwards;
-  }
-
-  .animate-fade-in-up {
-    animation: fade-in-up 0.5s ease-out forwards;
-  }
-
-  .animate-slide-down {
-    animation: slide-down 0.3s ease-out forwards;
-  }
-
-  .animate-subtle-zoom {
-    animation: subtle-zoom 25s ease-in-out infinite;
-  }
-
-  .animate-float-slow {
-    animation: float-slow 10s ease-in-out infinite;
-  }
-
-  .animate-float-medium {
-    animation: float-medium 7s ease-in-out infinite;
-  }
-
-  .animate-float-fast {
-    animation: float-fast 5s ease-in-out infinite;
-  }
-
-  /* Glassmorphism */
-  .backdrop-blur-xl {
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-
-  .backdrop-blur-sm {
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-
-  /* Focus visible pour accessibilité */
-  button:focus-visible,
-  a:focus-visible,
-  input:focus-visible,
-  select:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-  }
-
-  /* Suppression outline par défaut */
-  input:focus,
-  select:focus {
-    outline: none;
-  }
-
-  /* Scrollbar personnalisée */
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 3px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.25);
-  }
-
-  /* Très petits écrans */
-  @media (max-width: 360px) {
-    .max-w-\[380px\] {
-      max-width: 100%;
-      margin: 0 0.25rem;
-    }
-
-    .p-4 {
-      padding: 0.75rem;
-    }
-  }
-
-  /* Hauteur d'écran réduite */
-  @media (max-height: 700px) and (orientation: landscape) {
-    .min-h-screen {
-      min-height: auto;
-      padding-top: 0.5rem;
-      padding-bottom: 0.5rem;
-    }
-
-    .my-auto {
-      margin: 0 auto;
-    }
-
-    .min-h-\[500px\] {
-      min-height: auto;
-    }
-  }
-
-  /* Tablette */
-  @media (min-width: 640px) and (max-width: 1023px) {
-    .max-w-\[600px\] {
-      max-width: 90%;
-    }
-  }
-
-  /* Desktop */
-  @media (min-width: 1024px) {
-    .lg\:w-64 {
-      width: 16rem;
-    }
-
-    .xl\:w-72 {
-      width: 18rem;
-    }
-  }
-
-  /* Mode sombre système */
-  @media (prefers-color-scheme: dark) {
-    .dark-mode-enhanced {
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    }
-  }
-
-  /* Réduction des animations */
-  @media (prefers-reduced-motion: reduce) {
-
-    .animate-fade-in,
-    .animate-fade-in-up,
-    .animate-slide-down,
-    .animate-subtle-zoom,
-    .animate-float-slow,
-    .animate-float-medium,
-    .animate-float-fast {
-      animation: none;
-    }
-  }
-
-  /* Style des selects */
-  select {
-    background-image: none;
-  }
-
-  select option {
-    background: #1F2937;
-    color: white;
-  }
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible{
+  outline:2px solid currentColor;
+  outline-offset:2px;
+}
 </style>
