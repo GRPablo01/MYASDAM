@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
@@ -15,153 +15,166 @@ export class Cookie implements OnInit {
 
   show = false;
 
+  userKey: string | null = null;
+  userRole = '';
+  userCookie = '';
+  userNom = '';
+  userPrenom = '';
+
   showNotification = false;
   notificationMessage = '';
-  notificationProgress: number = 100;
-  private notificationInterval: any;
 
-  userKey: string | null = null;
-  userCookie: string = '';
-  userRole: string = '';
+  private alreadyHandled = false;
 
   constructor(
-    private renderer: Renderer2,
     private http: HttpClient,
     public themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
+    console.log('🍪 Cookie INIT');
+
     this.initUser();
-    this.handleDisplayLogic();
+    this.checkDisplay();
   }
 
-  // =============================
+  // =========================
   // INIT USER
-  // =============================
+  // =========================
   private initUser(): void {
-    const utilisateurString = localStorage.getItem('utilisateur');
 
-    if (utilisateurString) {
-      const utilisateur = JSON.parse(utilisateurString);
+    const data = localStorage.getItem('utilisateur');
 
-      this.userKey = utilisateur.key || null;
-      this.userRole = (utilisateur.role || '').toLowerCase().trim();
-      this.userCookie = (utilisateur.cookie || '').trim();
+    if (data) {
+      const user = JSON.parse(data);
+
+      this.userKey = user.key || null;
+      this.userRole = (user.role || '').toLowerCase().trim();
+
+      this.userNom = user.nom || '';
+      this.userPrenom = user.prenom || '';
+
+      // 🔥 PRIORITÉ ABSOLUE : localStorage cookie
+      const localCookie = localStorage.getItem('cookie_choice');
+
+      this.userCookie = (localCookie || '').trim();
+
+      console.log('👤 USER INIT:', {
+        key: this.userKey,
+        role: this.userRole,
+        cookie: this.userCookie
+      });
+
     } else {
-      // invité
       this.userKey = null;
       this.userRole = 'guest';
-      this.userCookie = localStorage.getItem('cookie_choice') || '';
+      this.userNom = '';
+      this.userPrenom = '';
+      this.userCookie = '';
     }
   }
 
-  // =============================
-  // AFFICHAGE TEMPLATE
-  // =============================
-  private handleDisplayLogic(): void {
+  // =========================
+  // DISPLAY LOGIC (FIXÉ)
+  // =========================
+  private checkDisplay(): void {
 
-    // ❌ super-admin → jamais affiché
-    if (this.userRole === 'super-admin') {
+    if (this.alreadyHandled) return;
+    this.alreadyHandled = true;
+
+    // ❌ super-admin jamais affiché
+    if (this.userRole === 'super-admin') return;
+
+    // 🔥 PRIORITÉ ABSOLUE LOCAL STORAGE
+    const cookie = localStorage.getItem('cookie_choice');
+
+    if (cookie === 'accepter' || cookie === 'refuser') {
+      console.log('✔ Cookie déjà choisi (localStorage) → pas d’affichage');
       this.show = false;
       return;
     }
 
-    // ✅ si aucun choix → on affiche
-    if (!this.userCookie) {
-      this.delayedShow();
-    } else {
+    // fallback mémoire
+    if (this.userCookie === 'accepter' || this.userCookie === 'refuser') {
+      console.log('✔ Cookie déjà choisi (memory) → pas d’affichage');
       this.show = false;
+      return;
     }
-  }
 
-  private delayedShow(): void {
+    // 🍪 afficher banner
+    console.log('🍪 Affichage banner cookie');
+
     setTimeout(() => {
       this.show = true;
-      this.toggleBodyModal(true);
-    }, 1500);
+      document.body.classList.add('modal-open');
+    }, 1200);
   }
 
-  // =============================
+  // =========================
   // ACTIONS
-  // =============================
+  // =========================
   accept(): void {
-    this.updateCookie('accepter');
+    this.saveChoice('accepter');
   }
 
   refuse(): void {
-    this.updateCookie('refuser');
+    this.saveChoice('refuser');
   }
 
-  private updateCookie(value: 'accepter' | 'refuser'): void {
+  private saveChoice(value: 'accepter' | 'refuser'): void {
 
-    // ✅ utilisateur non connecté → localStorage uniquement
     if (!this.userKey) {
-      this.saveCookieLocal(value);
-
-      this.closeBanner();
-      this.showNotificationMessage(`Cookies ${value} !`);
+      this.close();
+      this.notify('Connexion requise');
       return;
     }
 
     const url = `http://localhost:3000/api/user/cookie/${this.userKey}`;
 
     this.http.put(url, { cookie: value }).subscribe({
-      next: () => {
-        this.saveCookieLocal(value);
-        this.closeBanner();
-        this.showNotificationMessage(`Cookies ${value} !`);
+      next: (res) => {
+
+        console.log('✅ COOKIE SAVED:', res);
+
+        // 🔥 sync state
+        this.userCookie = value;
+
+        // 💾 IMPORTANT : persist localStorage
+        localStorage.setItem('cookie_choice', value);
+
+        // 🧹 UI cleanup
+        this.close();
+        this.notify(`Cookies ${value}`);
+
       },
-      error: err => {
-        console.error("❌ Erreur :", err);
-        this.closeBanner();
-        this.showNotificationMessage(`Erreur lors du choix des cookies`);
+
+      error: (err) => {
+        console.error('❌ ERROR COOKIE:', err);
+
+        this.close();
+        this.notify('Erreur serveur');
       }
     });
   }
 
-  // =============================
-  // LOCAL STORAGE
-  // =============================
-  private saveCookieLocal(value: string): void {
-    const utilisateurString = localStorage.getItem('utilisateur');
-
-    if (utilisateurString) {
-      const utilisateur = JSON.parse(utilisateurString);
-      utilisateur.cookie = value;
-      localStorage.setItem('utilisateur', JSON.stringify(utilisateur));
-    } else {
-      localStorage.setItem('cookie_choice', value);
-    }
-  }
-
-  // =============================
+  // =========================
   // UI
-  // =============================
-  private closeBanner(): void {
+  // =========================
+  close(): void {
     this.show = false;
-    this.toggleBodyModal(false);
+    document.body.classList.remove('modal-open');
   }
 
-  private toggleBodyModal(active: boolean): void {
-    if (active) {
-      document.body.classList.add('modal-open');
-    } else {
-      document.body.classList.remove('modal-open');
-    }
-  }
-
-  showNotificationMessage(message: string): void {
-    this.notificationMessage = message;
+  notify(msg: string): void {
+    this.notificationMessage = msg;
     this.showNotification = true;
 
     setTimeout(() => {
       this.showNotification = false;
-    }, 5000);
+    }, 4000);
   }
 
   closeNotification(): void {
     this.showNotification = false;
-    clearInterval(this.notificationInterval);
-    this.notificationProgress = 100;
   }
 }

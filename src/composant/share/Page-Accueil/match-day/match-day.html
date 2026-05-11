@@ -1,0 +1,467 @@
+<app-icon></app-icon>
+
+<section class="w-full" [ngStyle]="{'color':themeService.Textprincipal}">
+
+  <main class="relative z-10 w-full">
+
+    <section class="w-full max-w-7xl mx-auto">
+
+      <!-- ═════════ PAS DE MATCH À VENIR ═════════ -->
+      <div *ngIf="matchs.length === 0" class="relative rounded-3xl overflow-hidden transition-all p-8 sm:p-12 lg:p-16 flex flex-col items-center justify-center text-center gap-6"
+        [ngStyle]="{
+          'background': themeService.Backgroundcards,
+          'border': '2px solid ' + themeService.primary,
+          'min-height': '400px'
+        }">
+    
+        <!-- Icône / Illustration -->
+        <div class="relative">
+          <div class="absolute -inset-8 bg-red-600/10 blur-3xl rounded-full"></div>
+          <div [ngStyle]="{'background': themeService.primary}"
+            class="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full flex items-center justify-center shadow-2xl">
+            <i class="fa-solid fa-calendar-xmark text-white text-4xl sm:text-5xl"></i>
+          </div>
+        </div>
+    
+        <!-- Titre -->
+        <div>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black uppercase italic tracking-widest leading-none mb-3">
+            AUCUN MATCH
+          </h1>
+          <div class="inline-flex items-center gap-3">
+            <div class="h-[1px] w-8 bg-gradient-to-r from-transparent to-red-500/50"></div>
+            <span [ngStyle]="{'color':themeService.primary}"
+              class="text-[10px] font-semibold tracking-[0.35em] uppercase">
+              Prochainement
+            </span>
+            <div class="h-[1px] w-8 bg-gradient-to-l from-transparent to-red-500/50"></div>
+          </div>
+        </div>
+    
+        <!-- Message -->
+        <p class="text-sm sm:text-base opacity-60 max-w-md leading-relaxed"
+          [ngStyle]="{'color': themeService.Textprincipal}">
+          Aucun match n'est programmé pour le moment.<br>
+          Reviens plus tard pour découvrir les prochaines rencontres.
+        </p>
+    
+        <!-- Decorative corners -->
+        <div [ngStyle]="{'border-color': themeService.primary}"
+          class="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 opacity-40"></div>
+        <div [ngStyle]="{'border-color': themeService.primary}"
+          class="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 opacity-40"></div>
+        <div [ngStyle]="{'border-color': themeService.primary}"
+          class="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 opacity-40"></div>
+        <div [ngStyle]="{'border-color': themeService.primary}"
+          class="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 opacity-40"></div>
+    
+      </div>
+    
+      <!-- ═════════ CARROUSEL : UNE SEULE CARD À LA FOIS ═════════ -->
+      <ng-container *ngIf="matchs.length > 0">
+        <ng-container *ngFor="let match of matchs; let i = index">
+          <div *ngIf="i === currentIndex"
+            class="relative rounded-3xl overflow-hidden transition-all"
+            [ngStyle]="{
+              'background': themeService.GlassBackground,
+              'border-color': themeService.GlassBorder,
+              'box-shadow': '0 2px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.1) inset',
+              'backdrop-filter': 'blur(20px) saturate(180%)',
+              '-webkit-backdrop-filter': 'blur(20px) saturate(180%)',
+              'focus-ring-color': themeService.Textprincipal
+            }">
+
+            <!-- ═══ NAV FLÈCHES (DANS LA CARD, affichées uniquement si matchs.length > 1) ═══ -->
+            <div *ngIf="matchs.length > 1" class="absolute top-4 right-4 flex items-center gap-2 z-20">
+
+              <!-- LEFT -->
+              <button (click)="prevMatch()"
+                class="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110" [ngStyle]="{
+                  'background': themeService.GlassBackground,
+                  'border-color': themeService.GlassBorder,
+                  'box-shadow': '0 2px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.1) inset',
+                  'backdrop-filter': 'blur(20px) saturate(180%)',
+                  '-webkit-backdrop-filter': 'blur(20px) saturate(180%)',
+                  'focus-ring-color': themeService.Textprincipal
+                }" [disabled]="currentIndex === 0" [style.opacity]="currentIndex === 0 ? 0.4 : 1">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+
+              <!-- RIGHT -->
+              <button (click)="nextMatch()"
+                class="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                [ngStyle]="{
+                  'background': themeService.GlassBackground,
+                  'border-color': themeService.GlassBorder,
+                  'box-shadow': '0 2px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.1) inset',
+                  'backdrop-filter': 'blur(20px) saturate(180%)',
+                  '-webkit-backdrop-filter': 'blur(20px) saturate(180%)',
+                  'focus-ring-color': themeService.Textprincipal
+                }" [disabled]="currentIndex === matchs.length - 1"
+                [style.opacity]="currentIndex === matchs.length - 1 ? 0.4 : 1">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+
+            </div>
+
+            <div class="p-4 sm:p-6 lg:p-10 flex flex-col gap-8">
+
+              <!-- ═════════ TITLE ═════════ -->
+              <div class="text-center">
+
+                <div class="inline-flex items-center gap-3 mb-2">
+
+                  <div class="h-[1px] w-10 bg-gradient-to-r from-transparent to-red-500/50"></div>
+
+                  <span [ngStyle]="{'color':themeService.primary}"
+                    class="text-[10px] font-semibold tracking-[0.35em] uppercase">
+                    Prochain Match
+                  </span>
+
+                  <div class="h-[1px] w-10 bg-gradient-to-l from-transparent to-red-500/50"></div>
+
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl lg:text-7xl font-black uppercase italic tracking-widest leading-none">
+                  MATCHDAY
+                </h1>
+
+              </div>
+
+              <!-- ═════════ LOGOS + VS (FORCÉ EN LIGNE) ═════════ -->
+              <div class="flex flex-row items-center justify-center gap-6 sm:gap-10">
+
+                <!-- TEAM A -->
+                <div class="flex flex-col items-center text-center min-w-0">
+
+                  <span [ngStyle]="{'color':themeService.primary}" class="text-[10px] uppercase tracking-[0.3em]">
+                    Domicile
+                  </span>
+
+                  <div [ngStyle]="{'border':'2px solid ' + themeService.primary}"
+                    class="mt-3 w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-2xl overflow-hidden flex-shrink-0">
+
+                    <img [src]="match.logoDom || 'assets/LOGO.png'" class="w-full h-full object-cover" />
+
+                  </div>
+
+                  <span class="mt-2 font-bold uppercase text-sm sm:text-lg truncate max-w-[120px] sm:max-w-[160px] lg:max-w-[200px]" [title]="match.equipeDom">
+                    {{ match.equipeDom }}
+                  </span>
+
+                </div>
+
+                <!-- VS -->
+                <div class="relative flex items-center justify-center flex-shrink-0">
+
+                  <div class="absolute -inset-6 bg-red-600/10 blur-2xl rounded-full"></div>
+
+                  <div [ngStyle]="{'background':themeService.primary}"
+                    class="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full flex items-center justify-center">
+
+                    <span class="text-white text-2xl sm:text-3xl font-black italic">
+                      VS
+                    </span>
+
+                  </div>
+
+                </div>
+
+                <!-- TEAM B -->
+                <div class="flex flex-col items-center text-center min-w-0">
+
+                  <span [ngStyle]="{'color':themeService.primary}" class="text-[10px] uppercase tracking-[0.3em]">
+                    Extérieur
+                  </span>
+
+                  <div [ngStyle]="{'border':'2px solid ' + themeService.primary}"
+                    class="mt-3 w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-2xl overflow-hidden flex-shrink-0">
+
+                    <img [src]="match.logoExt || 'assets/LOGO.png'" class="w-full h-full object-cover" />
+
+                  </div>
+
+                  <span class="mt-2 font-bold uppercase text-sm sm:text-lg truncate max-w-[120px] sm:max-w-[160px] lg:max-w-[200px]" [title]="match.equipeExt">
+                    {{ match.equipeExt }}
+                  </span>
+
+                </div>
+
+              </div>
+
+              <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+
+                <!-- ═════════ DATE BLOCK ═════════ -->
+                <div class="flex justify-center">
+                  <div
+                    class="relative glass-panel-strong rounded-2xl px-5 sm:px-8 py-4 text-center transition-shadow duration-300">
+
+                    <div class="flex items-center justify-center gap-4 sm:gap-6">
+
+                      <!-- Jour de la semaine -->
+                      <div class="text-right">
+                        <h2 [ngStyle]="{'color': themeService.primary}"
+                          class="text-xl sm:text-3xl font-bold uppercase leading-none tracking-tight truncate max-w-[120px] sm:max-w-[160px]">
+                          {{ (match.date | date:'EEEE':'':'fr') | uppercase }}
+                        </h2>
+                        <h2 [ngStyle]="{
+                            '-webkit-text-stroke': '1.5px' + themeService.Textprincipal,
+                            'color': 'transparent'
+                          }" class="text-xl sm:text-3xl font-bold uppercase leading-none tracking-tight truncate max-w-[120px] sm:max-w-[160px]">
+                          {{ (match.date | date:'EEEE':'':'fr') | uppercase }}
+                        </h2>
+                      </div>
+
+                      <!-- Séparateur vertical -->
+                      <div
+                        [ngStyle]="{'background': 'linear-gradient(to bottom, transparent, ' + themeService.primary + ', transparent)'}"
+                        class="w-[2px] h-12 sm:h-16 opacity-60 flex-shrink-0"></div>
+
+                      <!-- Jour + Mois -->
+                      <div class="text-left">
+                        <h3 [ngStyle]="{'color': themeService.primary}"
+                          class="text-4xl sm:text-6xl font-black leading-none tabular-nums">
+                          {{ match.date | date:'dd' }}
+                        </h3>
+                        <h4 class="text-sm sm:text-base uppercase tracking-[0.2em] font-semibold mt-1 truncate max-w-[100px] sm:max-w-[140px]">
+                          {{ match.date | date:'MMMM':'':'fr' }}
+                        </h4>
+                      </div>
+
+                    </div>
+
+                    <!-- Decorative corners dynamiques -->
+                    <div [ngStyle]="{'border-color': themeService.primary}"
+                      class="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 opacity-80"></div>
+                    <div [ngStyle]="{'border-color': themeService.primary}"
+                      class="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 opacity-80"></div>
+                    <div [ngStyle]="{'border-color': themeService.primary}"
+                      class="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 opacity-80"></div>
+                    <div [ngStyle]="{'border-color': themeService.primary}"
+                      class="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 opacity-80"></div>
+                  </div>
+                </div>
+
+                <!-- 🔥 BOUTON INFOS AMÉLIORÉ -->
+                <div class="flex justify-center">
+                  <button (click)="toggleInfos(match)" [ngStyle]="{
+                    'background': themeService.primary,
+                    'color':'#FFFFFF',
+                    'border-color': themeService.GlassBorder,
+                    'box-shadow': '0 2px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.1) inset',
+                    'backdrop-filter': 'blur(20px) saturate(180%)',
+                    '-webkit-backdrop-filter': 'blur(20px) saturate(180%)',
+                    'focus-ring-color': themeService.Textprincipal
+                  }"
+                    class="group px-6 py-3 rounded-xl font-semibold hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2 relative"
+                    [attr.aria-expanded]="match.showInfos" aria-label="Voir les informations du match">
+
+                    <span>Voir les infos</span>
+
+                    <!-- Icône chevron animée -->
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
+                      [class.rotate-180]="match.showInfos" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                      stroke-width="2.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+
+                    <!-- Indicateur visuel d'état -->
+                    <span *ngIf="match.showInfos"
+                      class="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full animate-pulse"
+                      [ngStyle]="{'box-shadow': '0 0 8px ' + themeService.primary}"></span>
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- 🔥 DRAWER AMÉLIORÉ -->
+            <div
+              class="absolute left-0 bottom-0 w-full z-30 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+              [ngClass]="match.showInfos ? 'translate-y-0' : 'translate-y-full'">
+
+              <div [ngStyle]="{
+                'background': themeService.Backgroundcards,
+                'border-color': themeService.GlassBorder,
+                'box-shadow': '0 2px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.1) inset',
+                'backdrop-filter': 'blur(20px) saturate(180%)',
+                '-webkit-backdrop-filter': 'blur(20px) saturate(180%)',
+                'focus-ring-color': themeService.Textprincipal
+              }" class="rounded-t-[2rem] p-6 relative max-h-[85vh] overflow-y-auto">
+
+                <!-- Handle -->
+                <div class="flex justify-center mb-4">
+                  <div [ngStyle]="{'background':themeService.primary}" class="w-12 h-1.5 rounded-full"></div>
+                </div>
+
+                <!-- CLOSE BUTTON -->
+                <button (click)="toggleInfos(match)"
+                  class="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 group"
+                  [ngStyle]="{
+                    'background': themeService.GlassBackground,
+                    'border-color': themeService.GlassBorder,
+                    'box-shadow': '0 2px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.1) inset',
+                    'backdrop-filter': 'blur(20px) saturate(180%)',
+                    '-webkit-backdrop-filter': 'blur(20px) saturate(180%)',
+                    'focus-ring-color': themeService.Textprincipal
+                  }">
+
+                  <i class="fa-solid fa-xmark text-lg transition-transform duration-200 group-hover:rotate-90"
+                    [ngStyle]="{'color': themeService.Textprincipal}">
+                  </i>
+                </button>
+
+                <!-- HEADER -->
+                <div class="mb-6 pr-12">
+                  <h3 class="text-lg font-bold mb-1" [ngStyle]="{'color': themeService.Textprincipal}">
+                    Détails du match
+                  </h3>
+                  <p class="text-sm opacity-60" [ngStyle]="{'color': themeService.Textprincipal}">
+                    Informations complémentaires
+                  </p>
+                </div>
+
+                <!-- GRID -->
+                <div class="grid grid-cols-2 gap-4">
+
+                  <!-- COLONNE GAUCHE -->
+                  <div class="flex flex-col gap-4">
+
+                    <!-- LIEU -->
+                    <div
+                      class="rounded-2xl p-4 flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                      [ngStyle]="{
+                        'background': themeService.GlassBackground,
+                        'border-color': themeService.GlassBorder,
+                        'box-shadow': '0 2px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.1) inset',
+                        'backdrop-filter': 'blur(20px) saturate(180%)',
+                        '-webkit-backdrop-filter': 'blur(20px) saturate(180%)',
+                        'focus-ring-color': themeService.Textprincipal
+                      }">
+
+                      <div
+                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                        <i class="fa-solid fa-location-dot text-white text-lg"></i>
+                      </div>
+
+                      <div class="min-w-0">
+                        <p class="text-xs opacity-60 uppercase tracking-wider"
+                          [ngStyle]="{'color': themeService.Textprincipal}">
+                          Lieu
+                        </p>
+                        <p class="font-bold text-sm truncate" [ngStyle]="{'color': themeService.Textprincipal}" [title]="match.lieu || 'Non défini'">
+                          {{ match.lieu || 'Non défini' }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- TYPE -->
+                    <div
+                      class="rounded-2xl p-4 flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                      [ngStyle]="{
+                        'background': themeService.GlassBackground,
+                        'border-color': themeService.GlassBorder,
+                        'box-shadow': '0 2px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.1) inset',
+                        'backdrop-filter': 'blur(20px) saturate(180%)',
+                        '-webkit-backdrop-filter': 'blur(20px) saturate(180%)',
+                        'focus-ring-color': themeService.Textprincipal
+                      }">
+
+                      <div
+                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-lg flex-shrink-0">
+                        <i class="fa-solid fa-futbol text-white text-lg"></i>
+                      </div>
+
+                      <div class="min-w-0">
+                        <p class="text-xs opacity-60 uppercase tracking-wider"
+                          [ngStyle]="{'color': themeService.Textprincipal}">
+                          Type
+                        </p>
+                        <p class="font-bold text-sm truncate" [ngStyle]="{'color': themeService.Textprincipal}" [title]="match.typeMatch || '---'">
+                          {{ match.typeMatch || '---' }}
+                        </p>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- COLONNE DROITE -->
+                  <div class="flex flex-col gap-4">
+
+                    <!-- CATÉGORIE -->
+                    <div
+                      class="rounded-2xl p-4 flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                      [ngStyle]="{
+                        'background': themeService.GlassBackground,
+                        'border-color': themeService.GlassBorder,
+                        'box-shadow': '0 2px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.1) inset',
+                        'backdrop-filter': 'blur(20px) saturate(180%)',
+                        '-webkit-backdrop-filter': 'blur(20px) saturate(180%)',
+                        'focus-ring-color': themeService.Textprincipal
+                      }">
+
+                      <div
+                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                        <i class="fa-solid fa-layer-group text-white text-lg"></i>
+                      </div>
+
+                      <div class="min-w-0">
+                        <p class="text-xs opacity-60 uppercase tracking-wider"
+                          [ngStyle]="{'color': themeService.Textprincipal}">
+                          Catégorie
+                        </p>
+                        <p class="font-bold text-sm truncate" [ngStyle]="{'color': themeService.Textprincipal}" [title]="match.categorie || '---'">
+                          {{ match.categorie || '---' }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- STATUT -->
+                    <div
+                      class="rounded-2xl p-4 flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                      [ngStyle]="{
+                        'background': themeService.GlassBackground,
+                        'border-color': themeService.GlassBorder,
+                        'box-shadow': '0 2px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.1) inset',
+                        'backdrop-filter': 'blur(20px) saturate(180%)',
+                        '-webkit-backdrop-filter': 'blur(20px) saturate(180%)',
+                        'focus-ring-color': themeService.Textprincipal
+                      }">
+
+                      <!-- ICON + COULEUR -->
+                      <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
+                        [ngClass]="getStatutClass(match.statut)">
+
+                        <i class="fa-solid text-white text-lg" [ngClass]="getStatutIcon(match.statut)">
+                        </i>
+                      </div>
+
+                      <!-- TEXTE -->
+                      <div class="min-w-0">
+                        <p class="text-xs opacity-60 uppercase tracking-wider"
+                          [ngStyle]="{'color': themeService.Textprincipal}">
+                          Statut
+                        </p>
+
+                        <p class="font-bold text-sm truncate" [ngStyle]="{'color': themeService.Textprincipal}" [title]="match.statut || 'Inconnu'">
+                          {{ match.statut || 'Inconnu' }}
+                        </p>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    
+    </section>
+
+  </main>
+
+</section>

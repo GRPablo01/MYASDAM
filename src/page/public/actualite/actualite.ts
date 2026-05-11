@@ -5,14 +5,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { Header } from "../../../composant/public/header/header";
 import { FormsModule } from '@angular/forms';
 import { Footer } from "../../../composant/share/footer/footer";
-import { Fonctionalite } from "../../../composant/share/fonctionalite/fonctionalite";
-import { SectionDate1 } from '../../../composant/share/section-date1/section-date1';
-import { Cookie } from '../../../composant/priver/cookie/cookie';
-import { Welcome } from '../../../composant/share/welcome/welcome';
-import { Barre } from '../../../composant/share/barre/barre';
+
+
 import { ThemeService } from '../../../../Backend/Services/theme.service';
 import { Mobile } from "../../../composant/share/mobile/mobile";
-import { BarreScroll } from '../../../composant/share/barre-scroll/barre-scroll';
 import { Actus } from '../../../composant/share/actus/actus';
 import { Icon3 } from '../../../composant/public/icon3/icon3';
 

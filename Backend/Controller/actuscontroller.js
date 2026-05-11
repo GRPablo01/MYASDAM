@@ -97,10 +97,10 @@ exports.updateActu = async (req, res) => {
       return res.status(404).json({ message: 'Actu non trouvée' });
     }
 
-    actu.titre = titre || actu.titre;
-    actu.auteur = auteur || actu.auteur;
-    actu.saison = saison || actu.saison;
-    actu.description = description || actu.description;
+    actu.titre = titre ?? actu.titre;
+    actu.auteur = auteur ?? actu.auteur;
+    actu.saison = saison ?? actu.saison;
+    actu.description = description ?? actu.description;
 
     if (req.file) {
       actu.image = req.file.filename;
@@ -121,6 +121,7 @@ exports.updateActu = async (req, res) => {
     });
   }
 };
+
 
 // ==============================
 // 🗑️ Supprimer une actu

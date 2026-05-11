@@ -1,97 +1,113 @@
-const Event = require('../Schema/Event'); // Assure-toi que le chemin est correct
-const crypto = require('crypto'); // pour générer la clé unique si besoin
+const Event = require('../Schema/Event');
+const crypto = require('crypto');
 
-// Créer un événement
+// ================= CREATE =================
 exports.createEvent = async (req, res) => {
   try {
-    const { titre, description, date, lieu, heureDebut, heureFin, theme, categorie, statut, createdBy } = req.body;
-
-    if (!titre || !date || !createdBy || !categorie) {
-      return res.status(400).json({ message: "Titre, date, créateur et catégorie sont obligatoires" });
-    }
-
-    // Générer une clé unique pour l'événement
-    const keyUnique = crypto.randomBytes(8).toString('hex');
-
-    const newEvent = new Event({
+    const {
       titre,
       description,
       date,
       lieu,
       heureDebut,
       heureFin,
-      theme,       // Nouveau champ theme/type
-      categorie,   // Catégorie U6, U7, etc.
+      theme,
+      categorie,
       statut,
+      createdBy
+    } = req.body;
+
+    if (!titre || !date || !createdBy || !categorie) {
+      return res.status(400).json({
+        message: "Titre, date, créateur et catégorie sont obligatoires"
+      });
+    }
+
+    const event = new Event({
+      titre,
+      description,
+      date,
+      lieu,
+      heureDebut,
+      heureFin,
+      theme,
+      categorie,
+      statut: statut || "actif",
       createdBy,
-      key: keyUnique
+      key: crypto.randomBytes(8).toString('hex')
     });
 
-    await newEvent.save();
+    const saved = await event.save();
+    return res.status(201).json(saved);
 
-    res.status(201).json(newEvent);
   } catch (err) {
-    console.error('Erreur création événement:', err);
-    res.status(500).json({ message: "Erreur serveur", error: err.message });
+    console.error(err);
+    return res.status(500).json({ message: "Erreur serveur" });
   }
 };
 
-// Récupérer tous les events
+// ================= GET ALL =================
 exports.getEvents = async (req, res) => {
   try {
     const events = await Event.find().sort({ date: 1 });
-    res.status(200).json(events);
+    return res.status(200).json(events);
   } catch (err) {
-    console.error('Erreur récupération événements:', err);
-    res.status(500).json({ message: "Erreur serveur", error: err.message });
+    return res.status(500).json({ message: "Erreur serveur" });
   }
 };
 
-// Supprimer un event
-exports.deleteEvent = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deletedEvent = await Event.findByIdAndDelete(id);
-
-    if (!deletedEvent) return res.status(404).json({ message: "Événement non trouvé" });
-
-    res.status(200).json({ message: "Événement supprimé", event: deletedEvent });
-  } catch (err) {
-    console.error('Erreur suppression événement:', err);
-    res.status(500).json({ message: "Erreur serveur", error: err.message });
-  }
-};
-
-// Récupérer un événement par ID
-exports.getEventById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const event = await Event.findById(id);
-    if (!event) return res.status(404).json({ message: "Événement non trouvé" });
-    res.status(200).json(event);
-  } catch (err) {
-    console.error('Erreur récupération événement par ID:', err);
-    res.status(500).json({ message: "Erreur serveur", error: err.message });
-  }
-};
-
-// Mettre à jour un événement
+// ================= UPDATE =================
 exports.updateEvent = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { titre, description, date, lieu, heureDebut, heureFin, theme, categorie, statut } = req.body;
 
-    const updatedEvent = await Event.findByIdAndUpdate(
-      id,
-      { titre, description, date, lieu, heureDebut, heureFin, theme, categorie, statut },
-      { new: true, runValidators: true }
+    const updated = await Event.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          titre: req.body.titre,
+          description: req.body.description,
+          date: req.body.date,
+          lieu: req.body.lieu,
+          heureDebut: req.body.heureDebut,
+          heureFin: req.body.heureFin,
+          theme: req.body.theme,
+          categorie: req.body.categorie,
+          statut: req.body.statut
+        }
+      },
+      {
+        new: true,
+        runValidators: true
+      }
     );
 
-    if (!updatedEvent) return res.status(404).json({ message: "Événement non trouvé" });
+    if (!updated) {
+      return res.status(404).json({ message: "Événement non trouvé" });
+    }
 
-    res.status(200).json(updatedEvent);
+    return res.status(200).json(updated);
+
   } catch (err) {
-    console.error('Erreur mise à jour événement:', err);
-    res.status(500).json({ message: "Erreur serveur", error: err.message });
+    console.error(err);
+    return res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+// ================= DELETE =================
+exports.deleteEvent = async (req, res) => {
+  try {
+    const deleted = await Event.findByIdAndDelete(req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Événement non trouvé" });
+    }
+
+    return res.status(200).json({
+      message: "Événement supprimé",
+      event: deleted
+    });
+
+  } catch (err) {
+    return res.status(500).json({ message: "Erreur serveur" });
   }
 };

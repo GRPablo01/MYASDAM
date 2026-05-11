@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Icon } from '../../priver/icon/icon';
 import { FormsModule } from '@angular/forms';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
+import { RouterLink } from '@angular/router';
 
 interface Social {
   label: string;
@@ -26,7 +27,7 @@ interface Utilisateur {
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, Icon, FormsModule],
+  imports: [CommonModule, Icon, FormsModule,RouterLink],
   templateUrl: './footer.html',
   styleUrls: ['./footer.css'],
 })
@@ -45,6 +46,8 @@ export class Footer implements OnInit {
   utilisateur: Utilisateur | null = null;
   isLoggedIn = false;
 
+  currentYear: number = new Date().getFullYear();
+
   nom = '';
   prenom = '';
   initiales = '';
@@ -52,6 +55,11 @@ export class Footer implements OnInit {
   theme: 'clair' | 'sombre' = 'clair';
 
   logoHover = false;
+  isHoverCgu = false;
+  isHoverMentions = false;
+  isHoverConfidentialite = false;
+  isHoverCookies = false;
+  isHoverContact = false;
 
   // ===============================
   // LIENS
@@ -140,4 +148,15 @@ export class Footer implements OnInit {
 
   onMouseEnter() { this.logoHover = true; }
   onMouseLeave() { this.logoHover = false; }
+
+
+  hoveredItem: string | null = null;
+
+  footerLinks = [
+    { name: 'cgu', label: 'CGU', link: '/cgu' },
+    { name: 'mentions', label: 'Mentions légales', link: '/mentions-legales' },
+    { name: 'confidentialite', label: 'Confidentialité', link: '/confidentialite' },
+    { name: 'cookies', label: 'Cookies', link: '/cookies' },
+    { name: 'contact', label: 'Contact', link: '/contact' }
+  ];
 }

@@ -1,180 +1,500 @@
-<!-- Bouton notifications -->
+<!-- ========================================= -->
+<!-- 🔔 BOUTON NOTIFICATIONS -->
+<!-- ========================================= -->
 <button
   type="button"
   (click)="toggleCenter()"
   (mouseenter)="hoverNotif = true"
   (mouseleave)="hoverNotif = false"
-  class="w-12 h-12 rounded-full flex items-center justify-center relative transition-all duration-300 hover:scale-110 active:scale-95"
+  class="w-10 h-10 rounded-full flex items-center justify-center relative transition-all duration-300 hover:scale-110 active:scale-95"
   aria-label="Notifications"
+  [ngStyle]="{
+    'background': themeService.GlassBackground,
+    'border': '1px solid ' + themeService.GlassBorder,
+    'backdrop-filter': 'blur(22px) saturate(180%)',
+    '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+    'box-shadow': '0 10px 30px rgba(0,0,0,0.08)'
+  }"
 >
-  <!-- Cercle hover plus petit -->
+  <!-- Hover circle -->
   <span
-    class="absolute w-10 h-10 rounded-full transition-colors duration-300"
+    class="absolute inset-0 rounded-full transition-all duration-300"
     [ngStyle]="{
       'background': hoverNotif ? themeService.primary : 'transparent'
     }"
   ></span>
 
-  <!-- Icône au-dessus -->
+  <!-- Icon -->
   <i
-    class="fa-solid fa-bell text-xl relative transition-colors duration-300"
-    [ngStyle]="{ 'color': hoverNotif ? '#ffffff' : themeService.Iconnormal }"
+    class="fa-solid fa-bell text-xl relative z-10 transition-colors duration-300"
+    [ngStyle]="{
+      'color': hoverNotif ? '#ffffff' : themeService.Iconnormal
+    }"
   ></i>
 </button>
 
+<!-- ========================================= -->
+<!-- 🌑 OVERLAY -->
+<!-- ========================================= -->
+<div
+  *ngIf="openCenter"
+  (click)="toggleCenter()"
+  class="fixed inset-0 z-[1900] transition-all duration-300 backdrop-blur-sm"
+  [ngStyle]="{
+    'background-color': 'rgba(0,0,0,0.45)'
+  }"
+></div>
 
+<!-- ========================================= -->
+<!-- 🔔 CENTRE NOTIFICATIONS -->
+<!-- ========================================= -->
+<div
+  *ngIf="openCenter"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="notification-title"
 
-<!-- Overlay backdrop -->
-<div *ngIf="openCenter" (click)="toggleCenter()"
-     class="fixed inset-0 z-40 transition-opacity duration-300"
-     [ngStyle]="{'background-color': isDark ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.4)'}"
-     [class.opacity-0]="!openCenter"
-     [class.pointer-events-none]="!openCenter">
-</div>
+  class="
+    fixed z-[2147483648]
+    flex flex-col overflow-hidden
+    transition-all duration-300 ease-out
 
-<!-- Centre notifications -->
-<div *ngIf="openCenter"
-     class="fixed top-0 right-0 h-full w-full sm:w-96 z-[1903] overflow-hidden flex flex-col transform transition-transform duration-300 ease-out"
-     [ngStyle]="{'background-color': isDark ? themeService.Backgroundcards : themeService.Backgroundcards}"
-     [class.translate-x-full]="!openCenter"
-     [class.translate-x-0]="openCenter"
-     role="dialog"
-     aria-modal="true"
-     aria-labelledby="notification-title">
+    bottom-0 left-0 right-0
+    w-full h-[88vh]
+    rounded-t-[2rem]
 
-  <!-- Header -->
-  <div class="flex items-center justify-between px-6 py-4 shadow-md shrink-0"
-       [ngStyle]="{'background': isDark ? 'linear-gradient(to right, #C1121F, #FF4D4D)' : 'linear-gradient(to right, #C1121F, #E5383B)', 'color': '#FFFFFF'}">
-    <div class="flex items-center gap-3">
-      <div class="relative">
-        <i class="fa-solid fa-bell text-xl" [ngStyle]="{'color': '#FFFFFF'}"></i>
-        <span *ngIf="convocations.length > 0"
-              class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full animate-pulse"
-              [ngStyle]="{'background-color': themeService.primary}"></span>
-      </div>
-      <div>
-        <h2 id="notification-title" class="text-lg font-bold">Notifications</h2>
-        <p class="text-xs opacity-90" [ngStyle]="{'color': '#FFFFFF'}">{{ convocations.length }} convocation(s)</p>
-      </div>
-    </div>
-    <button (click)="toggleCenter()" aria-label="Fermer les notifications"
-            class="p-2 rounded-full hover:opacity-80 transition-opacity duration-200 focus:outline-none focus:ring-2 focus:ring-white/50">
-      <i class="fa-solid fa-xmark text-xl" [ngStyle]="{'color': '#FFFFFF'}"></i>
-    </button>
+    sm:top-0 sm:right-0 sm:left-auto
+    sm:h-full sm:w-[420px]
+    sm:rounded-none
+  "
+
+  [ngStyle]="{
+    'background-color': themeService.Backgroundcards,
+    'box-shadow': isDark
+      ? '0 20px 60px rgba(0,0,0,0.45)'
+      : '0 20px 60px rgba(0,0,0,0.12)'
+  }"
+
+  [class.translate-y-full]="!openCenter"
+  [class.translate-y-0]="openCenter"
+
+  [class.sm\:translate-x-full]="!openCenter"
+  [class.sm\:translate-x-0]="openCenter"
+>
+
+  <!-- ========================================= -->
+  <!-- 📱 BARRE MOBILE -->
+  <!-- ========================================= -->
+  <div class="sm:hidden flex justify-center pt-3 pb-1 shrink-0">
+    <div
+      class="w-14 h-1.5 rounded-full"
+      [ngStyle]="{
+        'background-color': isDark ? '#6b7280' : '#d1d5db'
+      }"
+    ></div>
   </div>
 
-  <!-- Contenu scrollable -->
-  <div class="flex-1 overflow-y-auto" [ngStyle]="{'background-color': isDark ? themeService.Backgroundprincipal : themeService.Backgroundprincipal}">
-    <ng-container *ngIf="convocations.length > 0; else noConv">
-      <div class="p-4 space-y-3">
-        <div *ngFor="let conv of convocations" class="group rounded-xl shadow-sm border overflow-hidden transition-all duration-200"
-             [ngStyle]="{
-               'border-left-width': '4px',
-               'border-left-color': getBorderColor(conv),
-               'background-color': isDark ? themeService.Backgroundcards : themeService.Backgroundcards
-             }">
+  <!-- ========================================= -->
+  <!-- 🔴 HEADER -->
+  <!-- ========================================= -->
+  <div
+    class="flex items-center justify-between px-5 py-4 shrink-0"
+    [ngStyle]="{
+      'background': isDark
+        ? 'linear-gradient(to right, #C1121F, #FF4D4D)'
+        : 'linear-gradient(to right, #C1121F, #E5383B)',
+      'color': '#FFFFFF'
+    }"
+  >
 
-          <!-- En-tête de la convocation -->
-          <div class="p-4 cursor-pointer" (click)="toggleExpand(conv.key)">
-            <div class="flex items-start justify-between gap-3">
-              <div class="flex-1">
-                <div class="flex items-center gap-2 mb-1">
-                  <span class="px-2 py-0.5 text-xs font-semibold rounded-full"
-                        [ngStyle]="{'background-color': themeService.secondarySoft, 'color': themeService.primary}">
-                    Match
-                  </span>
-                  <span class="text-xs" [ngStyle]="{'color': themeService.Textsecondaire}">{{ conv.dateMatch | date:'EEE d MMM, HH:mm' }}</span>
-                </div>
-                <h3 class="font-bold text-lg leading-tight" [ngStyle]="{'color': themeService.Textprincipal}">{{ conv.match }}</h3>
-                <div class="flex items-center gap-4 mt-2 text-sm" [ngStyle]="{'color': themeService.Textsecondaire}">
-                  <span class="flex items-center gap-1"><i class="fa-solid fa-shield-halved"></i> {{ conv.equipe }}</span>
-                  <span class="flex items-center gap-1"><i class="fa-solid fa-location-dot"></i> {{ conv.lieu }}</span>
-                </div>
-              </div>
+    <!-- Left -->
+    <div class="flex items-center gap-3 min-w-0">
 
-              <div class="flex flex-col items-end gap-2">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
-                     [ngStyle]="{
-                       'background-color': getBgColor(conv),
-                       'color': getTextColor(conv)
-                     }">
-                  {{ getConfirmationRate(conv) }}%
-                </div>
-                <i class="fa-solid fa-chevron-down transition-transform duration-200 text-gray-400"
-                   [class.rotate-180]="expandedConvocation === conv.key"></i>
-              </div>
-            </div>
-          </div>
+      <div class="relative shrink-0">
+        <i class="fa-solid fa-bell text-xl text-white"></i>
 
-          <!-- Liste des joueurs -->
-          <div class="border-t overflow-hidden transition-all duration-300"
-               [class.max-h-0]="expandedConvocation !== conv.key"
-               [class.max-h-96]="expandedConvocation === conv.key"
-               [ngStyle]="{'border-color': themeService.Bordernormal}">
-            <div class="p-4 space-y-2">
-              <p class="text-xs font-semibold uppercase tracking-wider mb-2" [ngStyle]="{'color': themeService.Textsecondaire}">
-                Réponses des joueurs
-              </p>
-              <div *ngFor="let joueur of conv.joueurs" class="flex items-center justify-between py-2 px-3 rounded-lg"
-                   [ngStyle]="{'background-color': isDark ? themeService.Backgroundcards : themeService.Backgroundcards}">
-                <div class="flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                       [ngStyle]="{
-                         'background-color': joueur.present === 'oui' ? themeService.BgOui :
-                                             joueur.present === 'non' ? themeService.BgNon : '#9ca3af',
-                         'color': joueur.present === 'oui' ? themeService.BorderOui :
-                                  joueur.present === 'non' ? themeService.BorderNon : themeService.Textsecondaire
-                       }">
-                    {{ getInitials(joueur.nom, joueur.prenom) }}
-                  </div>
-                  <span class="font-medium text-sm" [ngStyle]="{'color': themeService.Textprincipal}">{{ joueur.prenom }} {{ joueur.nom }}</span>
-                </div>
-                <span class="px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1"
-                      [ngStyle]="{
-                        'background-color': joueur.present === 'oui' ? themeService.BgOui :
-                                            joueur.present === 'non' ? themeService.BgNon : '#d1d5db',
-                        'color': joueur.present === 'oui' ? themeService.BorderOui :
-                                 joueur.present === 'non' ? themeService.BorderNon : themeService.Textsecondaire
-                      }">
-                  <i class="fa-solid"
-                     [class.fa-check]="joueur.present === 'oui'"
-                     [class.fa-xmark]="joueur.present === 'non'"
-                     [class.fa-question]="joueur.present === 'non_repondu'"></i>
-                  {{ getStatusLabel(joueur.present) }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-        </div>
+        <span
+          *ngIf="convocations.length > 0"
+          class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full animate-pulse"
+          [ngStyle]="{
+            'background-color': '#ffffff'
+          }"
+        ></span>
       </div>
-    </ng-container>
 
-    <!-- État vide -->
-    <ng-template #noConv>
-      <div class="flex flex-col items-center justify-center h-full p-8 text-center min-h-[400px]">
-        <div class="w-24 h-24 rounded-full flex items-center justify-center mb-4"
-             [ngStyle]="{'background-color': themeService.primary}">
-          <i class="fa-solid fa-bell-slash text-4xl" [ngStyle]="{'color': '#FFFFFF'}"></i>
-        </div>
-        <h3 class="text-lg font-semibold mb-2" [ngStyle]="{'color': themeService.Textprincipal}">Aucune notification</h3>
-        <p class="text-sm max-w-xs" [ngStyle]="{'color': themeService.Textsecondaire}">
-          Vous n'avez pas de convocations en attente. Les nouvelles notifications apparaîtront ici.
+      <div class="min-w-0">
+        <h2
+          id="notification-title"
+          class="text-lg font-bold truncate"
+        >
+          Notifications
+        </h2>
+
+        <p class="text-xs opacity-90 truncate">
+          {{ convocations.length }} convocation(s)
         </p>
       </div>
-    </ng-template>
-  </div>
+    </div>
 
-  <!-- Footer -->
-  <div *ngIf="convocations.length > 0" class="px-6 py-3 shrink-0"
-       [ngStyle]="{'background-color': isDark ? themeService.Backgroundcards : themeService.Backgroundcards, 'border-top': themeService.Bordernormal}">
-    <button class="w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-200"
-            [ngStyle]="{
-              'background-color': themeService.Fondboutonprincipal,
-              'color': '#ffffff'
-            }"
-            (click)="markAllAsRead()">
-      Marquer tout comme lu
+    <!-- Close -->
+    <button
+      (click)="toggleCenter()"
+      aria-label="Fermer les notifications"
+      class="
+        w-10 h-10 rounded-full
+        flex items-center justify-center
+        transition-all duration-200
+        hover:bg-white/10
+        active:scale-95
+      "
+    >
+      <i class="fa-solid fa-xmark text-xl text-white"></i>
     </button>
   </div>
+
+  <!-- ========================================= -->
+  <!-- 📜 CONTENU -->
+  <!-- ========================================= -->
+  <div
+    class="flex-1 overflow-y-auto"
+    [ngStyle]="{
+      'background-color': themeService.Backgroundprincipal
+    }"
+  >
+
+    <!-- LISTE -->
+    <ng-container *ngIf="convocations.length > 0; else noConv">
+
+      <div class="p-4 space-y-4">
+
+        <!-- CARD -->
+        <div
+          *ngFor="let conv of convocations"
+          class="
+            rounded-2xl
+            overflow-hidden
+            transition-all duration-300
+            border
+          "
+
+          [ngStyle]="{
+            'background-color': themeService.Backgroundcards,
+            'border-color': themeService.Bordernormal,
+            'border-left-width': '4px',
+            'border-left-color': getBorderColor(conv),
+            'box-shadow': isDark
+              ? '0 4px 18px rgba(0,0,0,0.18)'
+              : '0 4px 18px rgba(0,0,0,0.06)'
+          }"
+        >
+
+          <!-- HEADER CARD -->
+          <div
+            class="p-4 cursor-pointer"
+            (click)="toggleExpand(conv.key)"
+          >
+
+            <div class="flex items-start justify-between gap-3">
+
+              <!-- LEFT -->
+              <div class="flex-1 min-w-0">
+
+                <!-- TAG -->
+                <div class="flex flex-wrap items-center gap-2 mb-2">
+
+                  <span
+                    class="px-2 py-1 text-xs font-semibold rounded-full"
+                    [ngStyle]="{
+                      'background-color': themeService.secondarySoft,
+                      'color': themeService.primary
+                    }"
+                  >
+                    Match
+                  </span>
+
+                  <span
+                    class="text-xs"
+                    [ngStyle]="{
+                      'color': themeService.Textsecondaire
+                    }"
+                  >
+                    {{ conv.dateMatch | date:'EEE d MMM, HH:mm' }}
+                  </span>
+
+                </div>
+
+                <!-- TITLE -->
+                <h3
+                  class="font-bold text-base sm:text-lg leading-tight break-words"
+                  [ngStyle]="{
+                    'color': themeService.Textprincipal
+                  }"
+                >
+                  {{ conv.match }}
+                </h3>
+
+                <!-- INFOS -->
+                <div
+                  class="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 mt-3 text-sm"
+                  [ngStyle]="{
+                    'color': themeService.Textsecondaire
+                  }"
+                >
+
+                  <span class="flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    {{ conv.equipe }}
+                  </span>
+
+                  <span class="flex items-center gap-2">
+                    <i class="fa-solid fa-location-dot"></i>
+                    {{ conv.lieu }}
+                  </span>
+
+                </div>
+
+              </div>
+
+              <!-- RIGHT -->
+              <div class="flex flex-col items-end gap-3 shrink-0">
+
+                <!-- POURCENTAGE -->
+                <div
+                  class="w-11 h-11 rounded-full flex items-center justify-center text-xs font-bold"
+                  [ngStyle]="{
+                    'background-color': getBgColor(conv),
+                    'color': getTextColor(conv)
+                  }"
+                >
+                  {{ getConfirmationRate(conv) }}%
+                </div>
+
+                <!-- CHEVRON -->
+                <i
+                  class="fa-solid fa-chevron-down transition-transform duration-300"
+                  [class.rotate-180]="expandedConvocation === conv.key"
+                  [ngStyle]="{
+                    'color': themeService.Textsecondaire
+                  }"
+                ></i>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- ========================================= -->
+          <!-- 👥 JOUEURS -->
+          <!-- ========================================= -->
+          <div
+            class="
+              overflow-hidden
+              transition-all duration-300
+              border-t
+            "
+
+            [class.max-h-0]="expandedConvocation !== conv.key"
+            [class.max-h-[600px]]="expandedConvocation === conv.key"
+
+            [ngStyle]="{
+              'border-color': themeService.Bordernormal
+            }"
+          >
+
+            <div class="p-4 space-y-2">
+
+              <p
+                class="text-xs font-semibold uppercase tracking-wider mb-3"
+                [ngStyle]="{
+                  'color': themeService.Textsecondaire
+                }"
+              >
+                Réponses des joueurs
+              </p>
+
+              <!-- JOUEUR -->
+              <div
+                *ngFor="let joueur of conv.joueurs"
+                class="
+                  flex items-center justify-between gap-3
+                  py-3 px-3 rounded-xl
+                  transition-all duration-200
+                "
+
+                [ngStyle]="{
+                  'background-color': isDark
+                    ? themeService.Backgroundcards1
+                    : themeService.Backgroundcards1
+                }"
+              >
+
+                <!-- LEFT -->
+                <div class="flex items-center gap-3 min-w-0">
+
+                  <!-- AVATAR -->
+                  <div
+                    class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+
+                    [ngStyle]="{
+                      'background-color':
+                        joueur.present === 'oui'
+                          ? themeService.BgOui
+                          : joueur.present === 'non'
+                          ? themeService.BgNon
+                          : '#9ca3af',
+
+                      'color':
+                        joueur.present === 'oui'
+                          ? themeService.BorderOui
+                          : joueur.present === 'non'
+                          ? themeService.BorderNon
+                          : '#ffffff'
+                    }"
+                  >
+                    {{ getInitials(joueur.nom, joueur.prenom) }}
+                  </div>
+
+                  <!-- NOM -->
+                  <span
+                    class="font-medium text-sm truncate"
+                    [ngStyle]="{
+                      'color': themeService.Textprincipal
+                    }"
+                  >
+                    {{ joueur.prenom }} {{ joueur.nom }}
+                  </span>
+
+                </div>
+
+                <!-- STATUS -->
+                <span
+                  class="
+                    px-2 py-1 rounded-full
+                    text-xs font-semibold
+                    flex items-center gap-1
+                    shrink-0
+                  "
+
+                  [ngStyle]="{
+                    'background-color':
+                      joueur.present === 'oui'
+                        ? themeService.BgOui
+                        : joueur.present === 'non'
+                        ? themeService.BgNon
+                        : '#d1d5db',
+
+                    'color':
+                      joueur.present === 'oui'
+                        ? themeService.BorderOui
+                        : joueur.present === 'non'
+                        ? themeService.BorderNon
+                        : themeService.Textsecondaire
+                  }"
+                >
+
+                  <i
+                    class="fa-solid"
+                    [class.fa-check]="joueur.present === 'oui'"
+                    [class.fa-xmark]="joueur.present === 'non'"
+                    [class.fa-question]="joueur.present === 'non_repondu'"
+                  ></i>
+
+                  {{ getStatusLabel(joueur.present) }}
+
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+
+    <!-- ========================================= -->
+    <!-- 📭 EMPTY -->
+    <!-- ========================================= -->
+    <ng-template #noConv>
+
+      <div
+        class="
+          flex flex-col items-center justify-center
+          h-full text-center p-8
+          min-h-[420px]
+        "
+      >
+
+        <div
+          class="w-24 h-24 rounded-full flex items-center justify-center mb-5"
+          [ngStyle]="{
+            'background-color': themeService.primary
+          }"
+        >
+          <i class="fa-solid fa-bell-slash text-4xl text-white"></i>
+        </div>
+
+        <h3
+          class="text-lg font-bold mb-2"
+          [ngStyle]="{
+            'color': themeService.Textprincipal
+          }"
+        >
+          Aucune notification
+        </h3>
+
+        <p
+          class="text-sm max-w-xs leading-relaxed"
+          [ngStyle]="{
+            'color': themeService.Textsecondaire
+          }"
+        >
+          Vous n'avez pas encore de convocations.
+          Les nouvelles notifications apparaîtront ici.
+        </p>
+
+      </div>
+
+    </ng-template>
+
+  </div>
+
+  <!-- ========================================= -->
+  <!-- FOOTER -->
+  <!-- ========================================= -->
+  <div
+    *ngIf="convocations.length > 0"
+    class="px-5 py-4 shrink-0 border-t"
+
+    [ngStyle]="{
+      'background-color': themeService.Backgroundcards,
+      'border-color': themeService.Bordernormal
+    }"
+  >
+
+    <button
+      class="
+        w-full py-3 px-4 rounded-xl
+        text-sm font-semibold
+        transition-all duration-300
+        hover:scale-[1.01]
+        active:scale-[0.99]
+      "
+
+      [ngStyle]="{
+        'background-color': themeService.Fondboutonprincipal,
+        'color': '#ffffff'
+      }"
+
+      (click)="markAllAsRead()"
+    >
+      Marquer tout comme lu
+    </button>
+
+  </div>
+
 </div>

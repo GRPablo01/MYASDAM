@@ -5,16 +5,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { Header } from "../../../composant/public/header/header";
 import { FormsModule } from '@angular/forms';
 import { Footer } from "../../../composant/share/footer/footer";
-import { Fonctionalite } from "../../../composant/share/fonctionalite/fonctionalite";
-import { SectionDate1 } from '../../../composant/share/section-date1/section-date1';
-import { Cookie } from '../../../composant/priver/cookie/cookie';
-import { Welcome } from '../../../composant/share/welcome/welcome';
 import { Barre } from '../../../composant/share/barre/barre';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
 import { Mobile } from "../../../composant/share/mobile/mobile";
 import { BarreScroll } from '../../../composant/share/barre-scroll/barre-scroll';
-import { Teste } from '../../../composant/teste/teste';
-import { User } from '../../../composant/share/user/user';
+import { User } from '../../../composant/share/page-Utilisateur/user/user';
+
 
 
 @Component({
@@ -26,14 +22,9 @@ import { User } from '../../../composant/share/user/user';
     Header,
     FormsModule,
     Footer,
-    Fonctionalite,
-    SectionDate1,
-    Cookie,
-    Welcome,
     Barre,
     Mobile,
     BarreScroll,
-    Teste,
     User
 ],
   templateUrl: './utilisateur.html',

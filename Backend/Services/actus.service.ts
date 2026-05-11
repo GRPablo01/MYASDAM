@@ -57,7 +57,14 @@ export class ActusService {
   deleteActu(key: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${key}`);
   }
-  
+
+  // ===============================
+  // ✏️ Modifier une actu
+  // ===============================
+  updateActu(key: string, data: Actu): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${key}`, data);
+  }
+    
 
 
   // Angular service

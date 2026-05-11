@@ -26,4 +26,8 @@ const upload = multer({ storage });
 router.post('/', upload.single('image'), actusController.creerActus);
 router.get('/', actusController.getActus);
 
+router.put('/:key', upload.single('image'), actusController.updateActu);
+
+router.delete('/:key', actusController.deleteActu);
+
 module.exports = router;

@@ -5,16 +5,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { Header } from "../../../composant/public/header/header";
 import { FormsModule } from '@angular/forms';
 import { Footer } from "../../../composant/share/footer/footer";
-import { Fonctionalite } from "../../../composant/share/fonctionalite/fonctionalite";
-import { SectionDate1 } from '../../../composant/share/section-date1/section-date1';
-import { Cookie } from '../../../composant/priver/cookie/cookie';
-import { Welcome } from '../../../composant/share/welcome/welcome';
+
 import { Barre } from '../../../composant/share/barre/barre';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
 import { Mobile } from "../../../composant/share/mobile/mobile";
 import { BarreScroll } from '../../../composant/share/barre-scroll/barre-scroll';
-import { Teste } from '../../../composant/teste/teste';
-import { Gest } from '../../../composant/share/gest/gest';
+import { Gest } from '../../../composant/share/Page-Gestion/gest/gest';
+
 
 
 @Component({
@@ -26,14 +23,9 @@ import { Gest } from '../../../composant/share/gest/gest';
     Header,
     FormsModule,
     Footer,
-    Fonctionalite,
-    SectionDate1,
-    Cookie,
-    Welcome,
     Barre,
     Mobile,
     BarreScroll,
-    Teste,
     Gest,
 ],
   templateUrl: './gestion.html',

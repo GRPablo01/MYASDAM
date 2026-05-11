@@ -1,24 +1,27 @@
 <app-icon></app-icon>
 
-<!-- =============================== -->
-<!-- PAGE CONNEXION ASDAM - UI/UX RESPONSIVE COMPLÈTE -->
-<!-- =============================== -->
-<section class="relative w-full min-h-screen overflow-hidden flex items-center justify-center"
-  [ngStyle]="{'background': themeservice.Backgroundprincipal,'color':themeservice.Textprincipal}">
+<section class="relative w-full min-h-screen flex items-center justify-center overflow-hidden py-3 sm:py-4">
 
-  <!-- IMAGE LOGO - Position fixe à droite, moitié visible, opacité faible -->
-  <div class="absolute right-0 top-0 h-full w-[50vw] overflow-hidden pointer-events-none z-[2]">
-    <img src="assets/LOGO.png" alt="Logo"
-      class="h-full w-auto max-w-none object-cover origin-right translate-x-1/2 opacity-25" loading="eager">
+  <!-- BLOC IMAGE -->
+  <div>
+    <!-- IMAGE DE FOND -->
+    <img src="assets/imagefonctionalite.jpg" alt="Image de fond"
+      class="absolute inset-0 w-full h-full object-cover blur-sm scale-110" />
+
+    <!-- OVERLAY (optionnel mais recommandé pour lisibilité) -->
+    <div [ngStyle]="{'background':themeservice.Backgroundprincipal + '15'}" class="absolute inset-0"></div>
   </div>
 
-  <!-- CARD PRINCIPALE - Glassmorphism Responsive -->
-  <div [ngStyle]="{'background':themeservice.Backgroundcards}"
-    class="relative z-10 w-full max-w-[420px] rounded-[24px] sm:rounded-[28px] overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.6)] animate-fade-in-up backdrop-blur-xl mx-3 sm:mx-4 my-auto">
+  <!-- CARD PRINCIPALE - Glassmorphism Sport Responsive -->
+  <div [ngStyle]="{'background': themeservice.Backgroundcards}"
+    class="relative z-10 w-full max-w-[420px] max-h-[calc(100vh-1.5rem)] sm:max-h-[calc(100vh-2rem)] rounded-[24px] sm:rounded-[28px] overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.6)] animate-fade-in-up backdrop-blur-xl mx-3 sm:mx-4 my-3 sm:my-4 border border-white/10 flex flex-col">
+
+    <!-- Bandeau sportif en haut -->
+    <div class="h-2 w-full shrink-0" [ngStyle]="{'background': 'linear-gradient(90deg, ' + themeservice.primary + ', ' + themeservice.secondary + ')'}"></div>
 
     <button type="button" (click)="toggleTheme()"
-      class="absolute top-3 right-3 sm:top-4 sm:right-4 z-30 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group"
-      [ngStyle]="{'background':themeservice.Backgroundcards1}"
+      class="absolute top-5 right-4 sm:top-6 sm:right-5 z-30 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group"
+      [ngStyle]="{'background': themeservice.Backgroundcards1}"
       [attr.aria-label]="isDarkMode ? 'Passer en mode clair' : 'Passer en mode sombre'">
       <div class="relative w-full h-full flex items-center justify-center overflow-hidden rounded-full">
         <i class="fa-solid fa-sun text-lg absolute transition-all duration-500"
@@ -30,69 +33,71 @@
       </div>
     </button>
 
-    <!-- CONTENU COMPACT ET RESPONSIVE -->
-    <div class="relative z-10 p-5 sm:p-6 lg:p-8">
+    <!-- CONTENU COMPACT ET RESPONSIVE - Scrollable si trop grand -->
+    <div class="relative z-10 p-4 sm:p-5 lg:p-6 overflow-y-auto">
 
       <!-- HEADER : LOGO + TITRE -->
-      <div class="flex flex-col items-center gap-2 sm:gap-3 mb-4 sm:mb-6 animate-slide-down">
+      <div class="flex flex-col items-center gap-2 sm:gap-3 mb-3 sm:mb-4 animate-slide-down">
 
-        <!-- LOGO ASDAM -->
+        <!-- LOGO FOOTBALL -->
         <div class="relative">
-          <div class="absolute inset-0 rounded-full"></div>
-          <div class="relative w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden p-1">
-            <img src="assets/LOGO.png" alt="Logo ASDAM" class="w-full h-full object-contain">
+          <div class="absolute inset-0 rounded-full blur-xl opacity-30"></div>
+          <div class="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden p-1.5">
+            <img src="assets/LOGO.png" alt="Logo Football" class="w-full h-full object-contain">
           </div>
         </div>
 
         <!-- TITRE -->
         <div class="text-center">
-          <h1 [ngStyle]="{'color':themeservice.Textprincipal}"
-            class="text-3xl sm:text-4xl font-black tracking-tight drop-shadow-lg">
+          <h1 [ngStyle]="{'color': themeservice.Textprincipal}"
+            class="text-2xl sm:text-3xl font-black tracking-tight drop-shadow-lg uppercase italic">
             ASDAM
           </h1>
-          <div class="h-1 w-12 sm:w-16 mx-auto rounded-full mt-1" [ngStyle]="{'background': themeservice.primary}">
+          <div class="flex items-center justify-center gap-2 mt-1.5">
+            <div class="h-1 w-8 rounded-full" [ngStyle]="{'background': themeservice.primary}"></div>
+            <i class="fa-solid fa-futbol text-xs opacity-50" [ngStyle]="{'color': themeservice.primary}"></i>
+            <div class="h-1 w-8 rounded-full" [ngStyle]="{'background': themeservice.primary}"></div>
           </div>
         </div>
       </div>
 
       <!-- SOUS-TITRE -->
-      <div class="text-center mb-4 sm:mb-5">
-        <h2 [ngStyle]="{'color':themeservice.Textprincipal}"
-          class="text-lg sm:text-xl font-semibold mb-1 drop-shadow-sm">
+      <div class="text-center mb-3 sm:mb-4">
+        <h2 [ngStyle]="{'color': themeservice.Textprincipal}"
+          class="text-base sm:text-lg font-bold mb-1 drop-shadow-sm uppercase tracking-wide">
           Connexion
         </h2>
-        <p [ngStyle]="{'color':themeservice.Textsecondaire}" class="text-xs sm:text-sm leading-relaxed px-2 opacity-90">
-          Accédez à votre espace personnel
+        <p [ngStyle]="{'color': themeservice.Textsecondaire}" class="text-xs sm:text-sm leading-relaxed px-2 opacity-90">
+          Accédez à votre espace joueur et suivez vos matchs
         </p>
       </div>
 
       <!-- MESSAGE DE NOTIFICATION -->
       <div *ngIf="message"
-        class="mb-4 p-3 rounded-xl text-center text-xs sm:text-sm font-medium animate-slide-down backdrop-blur-sm flex items-center justify-center gap-2 border"
+        class="mb-3 p-2.5 rounded-xl text-center text-xs sm:text-sm font-medium animate-slide-down backdrop-blur-sm flex items-center justify-center gap-2 border"
         [ngStyle]="{
-        'background': messageType === 'success' ? themeservice.BgOui : themeservice.BgNon,
-        'color': messageType === 'success' ? themeservice.BgOuiText : themeservice.BgNonText,
-        'border-color': messageType === 'success' ? themeservice.BorderOui : themeservice.BorderNon
-      }">
+          'background': messageType === 'success' ? themeservice.BgOui : themeservice.BgNon,
+          'color': messageType === 'success' ? themeservice.BgOuiText : themeservice.BgNonText,
+          'border-color': messageType === 'success' ? themeservice.BorderOui : themeservice.BorderNon
+        }">
         <i class="fa-solid" [class.fa-check-circle]="messageType === 'success'"
           [class.fa-exclamation-circle]="messageType === 'error'">
         </i>
-
         {{ message }}
       </div>
 
       <!-- FORMULAIRE COMPACT -->
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-3 sm:space-y-4">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-2.5 sm:space-y-3">
 
         <!-- ================= 
           CHAMP EMAIL LABEL + INPUT
         ================= -->
-        <div class="w-full space-y-2">
+        <div class="w-full space-y-1.5">
 
           <!-- Label -->
-          <label for="email" class="block text-sm sm:text-base font-semibold ml-1 transition-all duration-300"
+          <label for="email" class="block text-xs sm:text-sm font-bold ml-1 transition-all duration-300 uppercase tracking-wider"
             [ngStyle]="{ 'color': themeservice.Textprincipal }">
-            Adresse e-mail
+            <i class="fa-solid fa-envelope mr-1 text-[10px] opacity-70"></i> Adresse e-mail
           </label>
 
           <!-- Champ -->
@@ -104,30 +109,29 @@
               [ngStyle]="{
                 'background': themeservice.primary,
                 'color': '#FFFFFF',
-                'border': '1px solid ' + themeservice.primary
+                'border': '2px solid ' + themeservice.primary
               }">
-              <i class="fa-solid fa-envelope text-sm"></i>
+              <i class="fa-solid fa-at text-xs"></i>
             </div>
 
             <!-- Input -->
             <input id="email" type="email" formControlName="email" placeholder="Entrez votre e-mail"
               autocomplete="email"
-              class="w-full h-12 sm:h-13 pl-13 pr-12 rounded-2xl text-sm sm:text-base font-medium transition-all duration-300 hover:shadow-md placeholder:opacity-60"
+              class="w-full h-11 sm:h-12 pl-13 pr-11 rounded-2xl text-sm sm:text-base font-medium transition-all duration-300 hover:shadow-md placeholder:opacity-60 focus:ring-2 focus:ring-offset-1"
               [ngStyle]="{
                 'background': themeservice.Backgroundcards1,
                 'color': themeservice.Textprincipal,
-                'border': '1px solid ' + themeservice.primary
+                'border': '2px solid ' + themeservice.primary
               }" />
 
             <!-- Validation -->
-            <div class="absolute right-3 top-1/2 -translate-y-1/2 transition-all duration-300" [ngClass]="loginForm.get('email')?.valid && loginForm.get('email')?.touched 
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 transition-all duration-300" 
+              [ngClass]="loginForm.get('email')?.valid && loginForm.get('email')?.touched 
                 ? 'opacity-100 scale-100 rotate-0' 
                 : 'opacity-0 scale-50 rotate-90'">
-
-              <div class="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center shadow-md">
-                <i class="fa-solid fa-check text-white text-xs"></i>
+              <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shadow-md">
+                <i class="fa-solid fa-check text-white text-[10px]"></i>
               </div>
-
             </div>
 
           </div>
@@ -137,18 +141,16 @@
         <!-- ================= 
           CHAMP MOT DE PASSE UI/UX AMÉLIORÉ
         ================= -->
-        <div class="w-full space-y-2">
+        <div class="w-full space-y-1.5">
 
           <!-- Label -->
-          <label for="password" class="block text-sm sm:text-base font-semibold ml-1 transition-all duration-300"
+          <label for="password" class="block text-xs sm:text-sm font-bold ml-1 transition-all duration-300 uppercase tracking-wider"
             [ngStyle]="{ 'color': themeservice.Textprincipal }">
-            Mot de passe
+            <i class="fa-solid fa-lock mr-1 text-[10px] opacity-70"></i> Mot de passe
           </label>
 
           <!-- Champ -->
           <div class="relative group">
-
-            
 
             <!-- Icône gauche -->
             <div
@@ -156,34 +158,32 @@
               [ngStyle]="{
                 'background': themeservice.primary,
                 'color': '#FFFFFF',
-                'border': '1px solid ' + themeservice.primary
+                'border': '2px solid ' + themeservice.primary
               }">
-              <i class="fa-solid fa-lock text-sm"></i>
+              <i class="fa-solid fa-key text-xs"></i>
             </div>
 
             <!-- Input -->
             <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
               placeholder="Entrez votre mot de passe" autocomplete="current-password"
-              class="w-full h-12 sm:h-13 pl-13 pr-14 rounded-2xl text-sm sm:text-base font-medium transition-all duration-300 hover:shadow-md placeholder:opacity-60"
+              class="w-full h-11 sm:h-12 pl-13 pr-13 rounded-2xl text-sm sm:text-base font-medium transition-all duration-300 hover:shadow-md placeholder:opacity-60 focus:ring-2 focus:ring-offset-1"
               [ngStyle]="{
-        'background': themeservice.Backgroundcards1,
-        'color': themeservice.Textprincipal,
-        'border': '1px solid ' + themeservice.primary
-      }" />
+                'background': themeservice.Backgroundcards1,
+                'color': themeservice.Textprincipal,
+                'border': '2px solid ' + themeservice.primary
+              }" />
 
             <!-- Bouton afficher / masquer -->
             <button type="button" (click)="togglePassword()"
               class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm"
               [ngStyle]="{
-        'background': themeservice.primary,
-        'color': '#FFFFFF',
-        'border': '1px solid ' + themeservice.primary
-      }">
-
-              <i class="fa-solid text-sm transition-all duration-300" [class.fa-eye]="!showPassword"
+                'background': themeservice.primary,
+                'color': '#FFFFFF',
+                'border': '2px solid ' + themeservice.primary
+              }">
+              <i class="fa-solid text-xs transition-all duration-300" [class.fa-eye]="!showPassword"
                 [class.fa-eye-slash]="showPassword">
               </i>
-
             </button>
 
           </div>
@@ -192,7 +192,7 @@
 
         <!-- BOUTON CONNEXION -->
         <button type="submit" [disabled]="loginForm.invalid || isLoading"
-          class="relative w-full h-11 sm:h-12 rounded-xl font-semibold text-sm sm:text-base tracking-wide shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none overflow-hidden group mt-2"
+          class="relative w-full h-11 sm:h-12 rounded-xl font-bold text-sm sm:text-base tracking-wide shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none overflow-hidden group mt-1.5 uppercase"
           (mouseenter)="isHovered = true" (mouseleave)="isHovered = false" [ngStyle]="{
             'background': themeservice.primary,
             'color': '#FFFFFF'
@@ -204,7 +204,7 @@
 
           <!-- Contenu -->
           <span class="relative z-10 flex items-center justify-center gap-2">
-            <span *ngIf="!isLoading">Se connecter</span>
+            <span *ngIf="!isLoading">Entrer sur le terrain</span>
             <i *ngIf="isLoading" class="fa-solid fa-circle-notch fa-spin"></i>
             <i *ngIf="!isLoading"
               class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
@@ -212,13 +212,12 @@
         </button>
 
         <!-- SÉPARATEUR -->
-        <div class="relative my-3 sm:my-4">
+        <div class="relative my-2 sm:my-3">
           <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-opacity-20" [ngStyle]="{'border-color': isDarkMode ? 'white' : 'black'}">
-            </div>
+            <div class="w-full border-t-2 border-opacity-30" [ngStyle]="{'border-color': themeservice.primary}"></div>
           </div>
           <div class="relative flex justify-center text-xs">
-            <span class="px-2 backdrop-blur-xl" [ngStyle]="{
+            <span class="px-3 backdrop-blur-xl font-bold uppercase tracking-widest" [ngStyle]="{
               'background': themeservice.Backgroundcards,
               'color': themeservice.Textsecondaire
             }">ou</span>
@@ -226,27 +225,27 @@
         </div>
 
         <!-- LIEN INSCRIPTION - Style bouton secondaire -->
-        <a routerLink="/inscription"
-          class="flex items-center justify-center gap-2 w-full  py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-95 border-2"
+        <a routerLink="/accueil"
+          class="flex items-center justify-center gap-2 w-full py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 hover:scale-[1.02] active:scale-95 border-2 uppercase tracking-wide"
           [ngStyle]="{
-            'border':'3px dashed'+ themeservice.primary,
+            'border': '2px dashed ' + themeservice.primary,
             'color': themeservice.Textprincipal
-            
           }">
-          <span>Créer un compte</span>
+          <span>Rejoindre l'équipe</span>
           <i class="fa-solid fa-user-plus"></i>
         </a>
 
         <!-- Footer sécurité -->
-        <div class="text-center mt-4 pt-3 border-t border-opacity-10"
+        <div class="text-center mt-3 pt-2 border-t border-opacity-10"
           [ngStyle]="{'border-color': isDarkMode ? 'white' : 'black'}">
-          <div class="flex items-center justify-center gap-1.5 mb-1">
+          <div class="flex items-center justify-center gap-2 mb-1">
             <i class="fa-solid fa-shield-halved text-[10px]" [ngStyle]="{'color': themeservice.Textsecondaire}"></i>
-            <span class="text-[10px] sm:text-xs" [ngStyle]="{'color': themeservice.Textsecondaire}">Connexion sécurisée
-              SSL</span>
+            <span class="text-[10px] sm:text-xs font-medium uppercase tracking-wider" [ngStyle]="{'color': themeservice.Textsecondaire}">
+              Connexion sécurisée SSL
+            </span>
           </div>
-          <p class="text-[10px]" [ngStyle]="{'color': themeservice.Textsecondaire}">
-            © 2026 ASDAM. Tous droits réservés.
+          <p class="text-[10px] font-medium" [ngStyle]="{'color': themeservice.Textsecondaire}">
+            © 2026 ASDAM Football. Tous droits réservés.
           </p>
         </div>
 
@@ -300,13 +299,13 @@
 
     0%,
     100% {
-      transform: translateY(0) translateX(0);
-      opacity: 0.2;
+      transform: translateY(0) translateX(0) rotate(0deg);
+      opacity: 0.15;
     }
 
     50% {
-      transform: translateY(-15px) translateX(8px);
-      opacity: 0.4;
+      transform: translateY(-20px) translateX(10px) rotate(15deg);
+      opacity: 0.25;
     }
   }
 
@@ -314,13 +313,13 @@
 
     0%,
     100% {
-      transform: translateY(0) translateX(0);
+      transform: translateY(0) translateX(0) rotate(0deg);
       opacity: 0.1;
     }
 
     50% {
-      transform: translateY(-20px) translateX(-10px);
-      opacity: 0.25;
+      transform: translateY(-25px) translateX(-15px) rotate(-10deg);
+      opacity: 0.2;
     }
   }
 
@@ -354,11 +353,11 @@
 
   /* Classes utilitaires */
   .animate-fade-in-up {
-    animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   .animate-slide-down {
-    animation: slide-down 0.4s ease-out forwards;
+    animation: slide-down 0.5s ease-out forwards;
   }
 
   .animate-subtle-zoom {
@@ -366,11 +365,11 @@
   }
 
   .animate-float-slow {
-    animation: float-slow 10s ease-in-out infinite;
+    animation: float-slow 12s ease-in-out infinite;
   }
 
   .animate-float-medium {
-    animation: float-medium 7s ease-in-out infinite;
+    animation: float-medium 8s ease-in-out infinite;
   }
 
   .animate-float-fast {
@@ -423,18 +422,36 @@
     animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
   }
 
+  /* Scrollbar stylisée pour la card */
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
+
   /* Très petits écrans */
   @media (max-width: 360px) {
     .max-w-\[420px\] {
       max-width: 100%;
     }
 
-    .p-5 {
-      padding: 1rem;
+    .p-4 {
+      padding: 0.75rem;
     }
 
-    .text-3xl {
-      font-size: 1.75rem;
+    .text-2xl {
+      font-size: 1.5rem;
     }
   }
 
@@ -442,8 +459,24 @@
   @media (max-height: 700px) and (orientation: landscape) {
     section {
       min-height: auto;
-      padding-top: 1rem;
-      padding-bottom: 1rem;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+  }
+
+  /* Très petites hauteurs - réductions supplémentaires */
+  @media (max-height: 600px) {
+    .w-16 {
+      width: 3rem;
+      height: 3rem;
+    }
+    
+    .text-2xl {
+      font-size: 1.25rem;
+    }
+    
+    .space-y-1\.5 > * + * {
+      margin-top: 0.375rem;
     }
   }
 

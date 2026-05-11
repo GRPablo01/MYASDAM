@@ -1,11 +1,11 @@
 <app-icon></app-icon>
 
 <header
-  class="fixed top-0 z-[2147483647] h-16 w-full flex items-center justify-between px-10"
+  class="fixed top-0 z-[2147483630] h-16 w-full flex items-center justify-between px-3 sm:px-5"
   [ngStyle]="{
     'background': themeService.Backgroundprincipal,
     'color': themeService.Textprincipal,
-    'border-bottom': themeService.Bordernormal
+    'border-bottom': '1px solid' + themeService.Bordernormal
   }"
 >
 
@@ -26,7 +26,7 @@
     ></div>
 
     <!-- NAVIGATION (rapprochée) -->
-    <div class="hidden md:flex items-center -ml-5">
+    <div class="items-center -ml-5">
       <app-nav></app-nav>
     </div>
 

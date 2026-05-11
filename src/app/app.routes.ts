@@ -11,6 +11,7 @@ import { COOKIES } from '../page/public/cookies/cookies';
 import { Convocations } from '../page/public/convocations/convocations';
 import { Gestion } from '../page/public/gestion/gestion';
 import { Utilisateur } from '../page/public/utilisateur/utilisateur';
+import { Contenue } from '../page/public/contenue/contenue';
 
 
 
@@ -33,6 +34,7 @@ export const routes: Routes = [
     { path: 'convo', component: Convocations },
     { path: 'gestion', component: Gestion},
     { path: 'user', component: Utilisateur},
+    { path: 'cont', component: Contenue},
     
 
 ];

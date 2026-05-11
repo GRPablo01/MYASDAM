@@ -203,9 +203,14 @@
 </nav>
 
 <!-- navigation-mobile.component.html -->
-<nav class="min-[382px]:flex max-[1243px]:flex min-[1243px]:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-  <div [ngStyle]="{'background': themeService.Backgroundprincipal,'color': themeService.Textprincipal,
-    'border': themeService.primary}"
+<nav class="min-[382px]:flex max-[1243px]:flex min-[1243px]:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[2147483630]">
+  <div [ngStyle]="{
+    'background': themeService.GlassBackground,
+    'border': '2px solid ' + themeService.GlassBorder,
+    'backdrop-filter': 'blur(22px) saturate(180%)',
+    '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+    'box-shadow': '0 10px 30px rgba(0,0,0,0.08)'
+  }"
     class="backdrop-blur-xl border rounded-full px-6 py-3 flex items-center gap-8 shadow-2xl transition-colors duration-300">
 
     <ng-container *ngFor="let item of menu; let i = index">

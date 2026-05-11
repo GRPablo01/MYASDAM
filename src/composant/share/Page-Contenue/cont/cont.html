@@ -1,0 +1,136 @@
+<section class="h-auto mt-9">
+
+    <!-- ================= HEADER / NAVBAR ================= -->
+    <header class="top-0 z-50">
+
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-center">
+
+            <!-- Navigation Desktop -->
+            <nav class="hidden md:flex items-center gap-2 rounded-2xl p-2" [ngStyle]="{
+                'background': themeService.GlassBackground,
+                'border': '1px solid ' + themeService.GlassBorder,
+                'box-shadow': themeService.GlassShadow,
+                'backdrop-filter': 'blur(18px)'
+                }">
+
+                <!-- MATCHS -->
+                <button (click)="activeTab = 'matchs'" [ngStyle]="{
+            'color': activeTab === 'matchs'
+            ? themeService.Iconactive
+            : themeService.Iconnormal
+        }" [class.bg-white/40]="activeTab === 'matchs'"
+                    class="px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 hover:bg-white/30">
+                    <i class="fa-solid fa-futbol"></i>
+                    Matchs
+                </button>
+
+                <!-- EVENTS -->
+                <button (click)="activeTab = 'events'" [ngStyle]="{
+            'color': activeTab === 'events'
+            ? themeService.Iconactive
+            : themeService.Iconnormal
+        }" [class.bg-white/40]="activeTab === 'events'"
+                    class="px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 hover:bg-white/30">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    Events
+                </button>
+
+                <!-- ACTUS -->
+                <button (click)="activeTab = 'actus'" [ngStyle]="{
+            'color': activeTab === 'actus'
+            ? themeService.Iconactive
+            : themeService.Iconnormal
+        }" [class.bg-white/40]="activeTab === 'actus'"
+                    class="px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 hover:bg-white/30">
+                    <i class="fa-solid fa-newspaper"></i>
+                    Actus
+                </button>
+
+                <!-- CONVOCATIONS -->
+                <button (click)="activeTab = 'convocations'" [ngStyle]="{
+            'color': activeTab === 'convocations'
+            ? themeService.Iconactive
+            : themeService.Iconnormal
+        }" [class.bg-white/40]="activeTab === 'convocations'"
+                    class="px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 hover:bg-white/30">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    Convocations
+                </button>
+
+                <!-- ÉQUIPES -->
+                <button (click)="activeTab = 'equipes'" [ngStyle]="{
+            'color': activeTab === 'equipes'
+            ? themeService.Iconactive
+            : themeService.Iconnormal
+        }" [class.bg-white/40]="activeTab === 'equipes'"
+                    class="px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 hover:bg-white/30">
+                    <i class="fa-solid fa-users"></i>
+                    Équipes
+                </button>
+
+            </nav>
+        </div>
+
+        <!-- MOBILE -->
+        <div class="md:hidden border-t border-black/5 overflow-x-auto" [ngStyle]="{
+        'background': themeService.Backgroundcards
+        }">
+
+            <div class="flex justify-center gap-2 p-2 min-w-max">
+
+                <button (click)="activeTab = 'matchs'"
+                    [ngStyle]="{ color: activeTab === 'matchs' ? themeService.Iconactive : themeService.Iconnormal }"
+                    class="px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-black/5">
+                    <i class="fa-solid fa-futbol"></i>
+                </button>
+
+                <button (click)="activeTab = 'events'"
+                    [ngStyle]="{ color: activeTab === 'events' ? themeService.Iconactive : themeService.Iconnormal }"
+                    class="px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-black/5">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </button>
+
+                <button (click)="activeTab = 'actus'"
+                    [ngStyle]="{ color: activeTab === 'actus' ? themeService.Iconactive : themeService.Iconnormal }"
+                    class="px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-black/5">
+                    <i class="fa-solid fa-newspaper"></i>
+                </button>
+
+                <button (click)="activeTab = 'convocations'"
+                    [ngStyle]="{ color: activeTab === 'convocations' ? themeService.Iconactive : themeService.Iconnormal }"
+                    class="px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-black/5">
+                    <i class="fa-solid fa-bullhorn"></i>
+                </button>
+
+                <button (click)="activeTab = 'equipes'"
+                    [ngStyle]="{ color: activeTab === 'equipes' ? themeService.Iconactive : themeService.Iconnormal }"
+                    class="px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-black/5">
+                    <i class="fa-solid fa-users"></i>
+                </button>
+
+            </div>
+        </div>
+
+    </header>
+
+    <!-- <section *ngIf="activeTab === 'matchs'">
+        <app-gestion-match></app-gestion-match>
+    </section>
+
+     <section *ngIf="activeTab === 'events'">
+        <app-gestion-event></app-gestion-event>
+    </section>
+
+    <section *ngIf="activeTab === 'actus'">
+        <app-gestion-actus></app-gestion-actus>
+    </section>
+
+    <section *ngIf="activeTab === 'convocations'">
+        <app-gestion-convoque></app-gestion-convoque>
+    </section> -->
+
+    <section *ngIf="activeTab === 'equipes'">
+       <app-gestion-equipe></app-gestion-equipe>
+    </section>
+
+</section>

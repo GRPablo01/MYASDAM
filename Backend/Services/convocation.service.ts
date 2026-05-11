@@ -50,4 +50,12 @@ export class ConvocationService {
       { present }
     );
   }
+
+  updateConvocationByKey(id: string, data: any) {
+    return this.http.put(`http://localhost:3000/api/convocation/${id}`, data);
+  }
+  
+  deleteConvocationByKey(id: string) {
+    return this.http.delete(`http://localhost:3000/api/convocation/${id}`);
+  }
 }

@@ -1,0 +1,344 @@
+<!-- page Gestion -->
+<section class="mt-16 px-5 py-5 sm:py-10 sm:px-10">
+
+    <!-- ===================================================== -->
+    <!-- HEADER -->
+    <!-- ===================================================== -->
+    <div [ngStyle]="{
+        'background': themeService.GlassBackground,
+        'border': '2px solid ' + themeService.GlassBorder,
+        'backdrop-filter': 'blur(22px) saturate(180%)',
+        '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+        'box-shadow': '0 10px 30px rgba(0,0,0,0.08)',
+        'color':themeService.Textprincipal
+      }" class="relative overflow-hidden rounded-3xl border px-5 py-5 md:px-7 md:py-6 shadow-xl backdrop-blur-xl">
+
+        <!-- CONTENT -->
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+
+            <!-- LEFT -->
+            <div class="flex items-center gap-4">
+
+                <!-- ICON -->
+                <div [ngStyle]="{'background':themeService.primary}"
+                    class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg border">
+
+                    <i class="fa-solid fa-shield-halved text-xl text-white"></i>
+
+                </div>
+
+                <!-- TEXT -->
+                <div>
+
+                    <h1 class="text-2xl md:text-3xl font-black tracking-tight" [ngStyle]="{
+                'color': themeService.Textprincipal
+              }">
+
+                        Centre de Gestion
+
+                    </h1>
+
+                    <p class="mt-1 text-sm md:text-base leading-relaxed max-w-xl" [ngStyle]="{
+                'color': themeService.Textsecondaire
+              }">
+
+                        Gérez les matchs, convocations et utilisateurs du club.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- CARDS DESKTOP -->
+    <!-- ===================================================== -->
+    <div class="hidden lg:grid grid-cols-3 gap-6 mt-8">
+
+        <!-- CARD -->
+        <div class="group relative overflow-hidden rounded-3xl min-h-[420px] border transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+            [ngStyle]="{
+        'border': '2px solid ' + themeService.GlassBorder
+        }">
+
+            <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1400&auto=format&fit=crop"
+                alt="Utilisateurs"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10"></div>
+
+            <div class="relative z-10 h-full flex flex-col justify-between p-6">
+
+                <div>
+                    <div [ngStyle]="{'background':themeService.primary}"
+                        class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl">
+
+                        <i class="fa-solid fa-users text-white text-xl"></i>
+
+                    </div>
+                </div>
+
+                <div>
+
+                    <h2 class="text-3xl font-black text-white mb-3">
+                        Utilisateurs
+                    </h2>
+
+                    <p class="text-sm leading-relaxed text-white/80">
+                        Gérez les joueurs, administrateurs et membres du club facilement.
+                    </p>
+
+                    <a routerLink="/user">
+                        <button [ngStyle]="{'background':themeService.primary}"
+                            class="mt-6 px-5 py-3 rounded-2xl text-white font-semibold shadow-lg transition-all duration-300 hover:scale-105">
+
+                            Gérer les utilisateurs
+
+                        </button>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="group relative overflow-hidden rounded-3xl min-h-[420px] border transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+            [ngStyle]="{
+        'border': '2px solid ' + themeService.GlassBorder
+        }">
+
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1400&auto=format&fit=crop"
+                alt="Contenue"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10"></div>
+
+            <div class="relative z-10 h-full flex flex-col justify-between p-6">
+
+                <div>
+                    <div [ngStyle]="{'background':themeService.primary}"
+                        class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl">
+
+                        <i class="fa-solid fa-folder-open text-white text-xl"></i>
+
+                    </div>
+                </div>
+
+                <div>
+
+                    <h2 class="text-3xl font-black text-white mb-3">
+                        Contenue
+                    </h2>
+
+                    <p class="text-sm leading-relaxed text-white/80">
+                        Gérez les actus, match et contenus du club.
+                    </p>
+
+                    <a routerLink="/cont"><button [ngStyle]="{'background':themeService.primary}"
+                        class="mt-6 px-5 py-3 rounded-2xl text-white font-semibold shadow-lg transition-all duration-300 hover:scale-105">
+
+                        Gérer le contenue
+
+                    </button></a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="group relative overflow-hidden rounded-3xl min-h-[420px] border transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+            [ngStyle]="{
+        'border': '2px solid ' + themeService.GlassBorder
+        }">
+
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1400&auto=format&fit=crop"
+                alt="Communication"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10"></div>
+
+            <div class="relative z-10 h-full flex flex-col justify-between p-6">
+
+                <div>
+                    <div [ngStyle]="{'background':themeService.primary}"
+                        class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl">
+
+                        <i class="fa-solid fa-comments text-white text-xl"></i>
+
+                    </div>
+                </div>
+
+                <div>
+
+                    <h2 class="text-3xl font-black text-white mb-3">
+                        Communication
+                    </h2>
+
+                    <p class="text-sm leading-relaxed text-white/80">
+                        Gérer les messages et communiquer du club.
+                    </p>
+
+                    <button [ngStyle]="{'background':themeService.primary}"
+                        class="mt-6 px-5 py-3 rounded-2xl text-white font-semibold shadow-lg transition-all duration-300 hover:scale-105">
+
+                        Gérer la communication
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- CARDS MOBILE / TABLET -->
+    <!-- ===================================================== -->
+    <div class="flex lg:hidden flex-col gap-5 mt-8">
+
+        <!-- CARD MOBILE -->
+        <div class="relative overflow-hidden rounded-3xl h-52 border" [ngStyle]="{
+        'border': '2px solid ' + themeService.GlassBorder
+        }">
+
+            <!-- IMAGE -->
+            <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1400&auto=format&fit=crop"
+                class="absolute inset-0 w-full h-full object-cover">
+
+            <!-- OVERLAY -->
+            <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
+
+            <!-- CONTENT -->
+            <div class="relative z-10 h-full flex items-center justify-between px-5">
+
+                <!-- LEFT -->
+                <div class="max-w-[70%]">
+
+                    <div [ngStyle]="{'background':themeService.primary}"
+                        class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+
+                        <i class="fa-solid fa-users text-white"></i>
+
+                    </div>
+
+                    <h2 class="text-2xl font-black text-white">
+                        Utilisateurs
+                    </h2>
+
+                    <p class="text-sm text-white/80 mt-2">
+                        Gérez les joueurs, administrateurs et membres du club facilement.
+                    </p>
+
+                </div>
+
+                <!-- BUTTON -->
+                <a routerLink="/user">
+                    <button [ngStyle]="{'background':themeService.primary}"
+                        class="px-4 py-3 rounded-2xl text-white shadow-lg">
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- CARD MOBILE -->
+        <div class="relative overflow-hidden rounded-3xl h-52 border" [ngStyle]="{
+        'border': '2px solid ' + themeService.GlassBorder
+        }">
+
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1400&auto=format&fit=crop"
+                class="absolute inset-0 w-full h-full object-cover">
+
+            <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
+
+            <div class="relative z-10 h-full flex items-center justify-between px-5">
+
+                <div class="max-w-[70%]">
+
+                    <div [ngStyle]="{'background':themeService.primary}"
+                        class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+
+                        <i class="fa-solid fa-folder-open text-white"></i>
+
+                    </div>
+
+                    <h2 class="text-2xl font-black text-white">
+                        Contenue
+                    </h2>
+
+                    <p class="text-sm text-white/80 mt-2">
+                        Gérez les actus, match et contenus du club.
+                    </p>
+
+                </div>
+
+                <a routerLink="/cont"><button [ngStyle]="{'background':themeService.primary}"
+                    class="px-4 py-3 rounded-2xl text-white shadow-lg">
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button></a>
+
+            </div>
+
+        </div>
+
+        <!-- CARD MOBILE -->
+        <div class="relative overflow-hidden rounded-3xl h-52 border" [ngStyle]="{
+        'border': '2px solid ' + themeService.GlassBorder
+        }">
+
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1400&auto=format&fit=crop"
+                class="absolute inset-0 w-full h-full object-cover">
+
+            <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
+
+            <div class="relative z-10 h-full flex items-center justify-between px-5">
+
+                <div class="max-w-[70%]">
+
+                    <div [ngStyle]="{'background':themeService.primary}"
+                        class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+
+                        <i class="fa-solid fa-comments text-white"></i>
+
+                    </div>
+
+                    <h2 class="text-2xl font-black text-white">
+                        Communication
+                    </h2>
+
+                    <p class="text-sm text-white/80 mt-2">
+                        Gérer les messages et communiquer du club.
+                    </p>
+
+                </div>
+
+                <button [ngStyle]="{'background':themeService.primary}"
+                    class="px-4 py-3 rounded-2xl text-white shadow-lg">
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

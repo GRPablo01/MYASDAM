@@ -1,507 +1,845 @@
 <app-icon></app-icon>
 
-<!-- ================================================= -->
-<!-- PAGE INSCRIPTION ASDAM - UI/UX PREMIUM RESPONSIVE -->
-<!-- ================================================= -->
-<section
-  class="relative w-full min-h-screen overflow-hidden flex items-center justify-center px-3 sm:px-4 lg:px-6 py-6"
-  [ngStyle]="{
-    'background': themeservice.Backgroundprincipal,
-    'color': themeservice.Textprincipal
-  }"
->
+<section class="relative w-full min-h-screen flex items-center justify-center overflow-hidden py-4">
 
-  <!-- BG LOGO -->
-  <div class="absolute right-0 top-0 h-full w-[50vw] overflow-hidden pointer-events-none z-[1]">
+  <!-- BACKGROUND -->
+  <div>
     <img
-      src="assets/LOGO.png"
-      alt="Logo"
-      class="h-full w-auto max-w-none object-cover origin-right translate-x-1/2 opacity-15"
+      src="assets/imagefonctionalite.jpg"
+      alt="Image de fond"
+      class="absolute inset-0 w-full h-full object-cover blur-sm scale-110 animate-subtle-zoom"
     />
+
+    <div
+      class="absolute inset-0"
+      [ngStyle]="{
+        'background': themeservice.Backgroundprincipal + '15'
+      }"
+    ></div>
   </div>
 
   <!-- CARD -->
   <div
-    class="relative z-10 w-full max-w-6xl rounded-[28px] overflow-hidden shadow-[0_25px_70px_-20px_rgba(0,0,0,0.55)] backdrop-blur-xl animate-fade-in-up"
     [ngStyle]="{
       'background': themeservice.Backgroundcards
     }"
+    class="relative z-10 w-full max-w-[460px] rounded-[30px] overflow-hidden border border-white/10 backdrop-blur-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.6)] mx-4 animate-fade-in-up"
   >
 
-    <!-- TOGGLE THEME -->
+    <!-- TOP BAR -->
+    <div
+      class="h-2 w-full"
+      [ngStyle]="{
+        'background':
+          'linear-gradient(90deg,' +
+          themeservice.primary +
+          ',' +
+          themeservice.secondary +
+          ')'
+      }"
+    ></div>
+
+    <!-- THEME -->
     <button
       type="button"
       (click)="toggleTheme()"
-      class="absolute top-4 right-4 z-50 w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300"
+      class="absolute top-5 right-5 z-30 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
       [ngStyle]="{
         'background': themeservice.Backgroundcards1
       }"
     >
+
       <i
-        class="fa-solid text-base"
-        [ngClass]="themeservice.isDarkMode ? 'fa-sun' : 'fa-moon'"
+        class="fa-solid text-lg transition-all duration-500"
+        [ngClass]="themeservice.isDarkMode ? 'fa-sun rotate-180' : 'fa-moon'"
         [ngStyle]="{
           'color': themeservice.Iconnormal
         }"
       ></i>
+
     </button>
 
-    <div class="grid lg:grid-cols-[330px_1fr]">
+    <!-- CONTENT -->
+    <div class="relative z-10 px-5 sm:px-7 py-6 sm:py-7 overflow-y-auto max-h-[calc(100vh-2rem)]">
 
-      <!-- ================================= -->
-      <!-- SIDEBAR DESKTOP -->
-      <!-- ================================= -->
-      <aside
-        class="hidden lg:flex flex-col p-8 border-r"
+      <!-- HEADER -->
+      <div class="flex flex-col items-center text-center mb-1 animate-slide-down">
+
+        <!-- LOGO -->
+        <div class="relative mb-4">
+
+
+          <div class="relative w-20 h-20 rounded-full overflow-hidden p-1.5">
+
+            <img
+              src="assets/LOGO.png"
+              alt="Logo"
+              class="w-full h-full object-contain"
+            />
+
+          </div>
+
+        </div>
+
+        <!-- TITLE -->
+        <h1
+          class="text-3xl font-black uppercase italic tracking-tight"
+          [ngStyle]="{
+            'color': themeservice.Textprincipal
+          }"
+        >
+          ASDAM
+        </h1>
+
+        <div class="flex items-center justify-center gap-2 mt-2">
+
+          <div
+            class="h-1 w-8 rounded-full"
+            [ngStyle]="{
+              'background': themeservice.primary
+            }"
+          ></div>
+
+          <i
+            class="fa-solid fa-futbol text-xs opacity-60"
+            [ngStyle]="{
+              'color': themeservice.primary
+            }"
+          ></i>
+
+          <div
+            class="h-1 w-8 rounded-full"
+            [ngStyle]="{
+              'background': themeservice.primary
+            }"
+          ></div>
+
+        </div>
+
+      </div>
+
+      <!-- STEPS -->
+      <div class="flex items-center justify-center gap-2 mb-2">
+
+        <div
+          *ngFor="let step of [1,2,3,4]; let i = index"
+          class="flex items-center"
+        >
+
+          <!-- STEP -->
+          <div
+            class="relative w-11 h-11 rounded-full flex items-center justify-center text-sm font-black transition-all duration-300 border-2"
+            [ngStyle]="
+              currentStep === step
+                ? {
+                    background: themeservice.primary,
+                    color: '#fff',
+                    borderColor: themeservice.primary,
+                    transform: 'scale(1.08)'
+                  }
+                : currentStep > step
+                ? {
+                    background: '#10B981',
+                    color: '#fff',
+                    borderColor: '#10B981'
+                  }
+                : {
+                    background: themeservice.Backgroundcards1,
+                    color: themeservice.Textsecondaire,
+                    borderColor: themeservice.primary + '40'
+                  }
+            "
+          >
+
+            <span *ngIf="currentStep <= step">
+              {{ step }}
+            </span>
+
+            <i
+              *ngIf="currentStep > step"
+              class="fa-solid fa-check"
+            ></i>
+
+          </div>
+
+          <!-- LINE -->
+          <div
+            *ngIf="i !== 3"
+            class="w-7 h-[3px] rounded-full mx-1"
+            [ngStyle]="
+              currentStep > step
+                ? {
+                    background: themeservice.primary
+                  }
+                : {
+                    background: themeservice.primary + '30'
+                  }
+            "
+          ></div>
+
+        </div>
+
+      </div>
+
+      <!-- TITLE -->
+      <div class="text-center mb-3">
+
+        <h2
+          class="text-2xl sm:text-3xl font-black uppercase tracking-tight"
+          [ngStyle]="{
+            'color': themeservice.Textprincipal
+          }"
+        >
+          Créer un compte
+        </h2>
+
+        <p
+          class="mt-2 text-sm leading-relaxed"
+          [ngStyle]="{
+            'color': themeservice.Textsecondaire
+          }"
+        >
+          Étape {{ currentStep }}/4 • Rejoignez l'équipe ASDAM
+        </p>
+
+      </div>
+
+      <!-- MESSAGE -->
+      <div
+        *ngIf="message"
+        class="mb-5 p-3 rounded-2xl text-sm font-medium border animate-slide-down flex items-center justify-center gap-2"
         [ngStyle]="{
-          'border-color': themeservice.primary + '20',
-          'background': themeservice.Backgroundcards1
+          'background':
+            messageType === 'success'
+              ? themeservice.BgOui
+              : themeservice.BgNon,
+
+          'color':
+            messageType === 'success'
+              ? themeservice.BgOuiText
+              : themeservice.BgNonText,
+
+          'border-color':
+            messageType === 'success'
+              ? themeservice.BorderOui
+              : themeservice.BorderNon
         }"
       >
 
-        <!-- LOGO -->
-        <div class="flex items-center gap-4 mb-10">
+        <i
+          class="fa-solid"
+          [class.fa-circle-check]="messageType === 'success'"
+          [class.fa-circle-exclamation]="messageType === 'error'"
+        ></i>
 
-          <div
-            class="w-16 h-16 rounded-full p-1"
-            [ngStyle]="{
-              'border': '2px solid ' + themeservice.primary
-            }"
-          >
-            <img src="assets/LOGO.png" class="w-full h-full object-contain" />
-          </div>
+        {{ message }}
 
-          <div>
-            <h2 class="text-2xl font-black">ASDAM</h2>
-            <p
-              class="text-sm"
+      </div>
+
+      <!-- FORM -->
+      <form
+        [formGroup]="registerForm"
+        (ngSubmit)="onSubmit()"
+        class="space-y-1"
+      >
+
+        <!-- ================================================= -->
+        <!-- STEP 1 -->
+        <!-- ================================================= -->
+        <div *ngIf="currentStep === 1" class="space-y-4 animate-fade-step">
+
+          <!-- NOM -->
+          <div class="space-y-1.5">
+
+            <label
+              class="block text-xs font-bold uppercase tracking-wider ml-1"
               [ngStyle]="{
-                'color': themeservice.Textsecondaire
+                'color': themeservice.Textprincipal
               }"
             >
-              Inscription
-            </p>
-          </div>
+              Nom
+            </label>
 
-        </div>
+            <div class="relative">
 
-        <!-- ETAPES -->
-        <div class="space-y-5 flex-1">
-
-          <div
-            *ngFor="let label of stepLabels; let i = index"
-            class="flex items-center gap-4"
-          >
-
-            <!-- CERCLE -->
-            <div
-              class="w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300"
-              [ngStyle]="
-                currentStep === i + 1
-                  ? {
-                      background: themeservice.primary,
-                      color: '#fff'
-                    }
-                  : currentStep > i + 1
-                  ? {
-                      background: '#10B981',
-                      color: '#fff'
-                    }
-                  : {
-                      background: themeservice.Backgroundcards,
-                      color: themeservice.Textsecondaire
-                    }
-              "
-            >
-              <span *ngIf="currentStep <= i + 1">{{ i + 1 }}</span>
-              <i *ngIf="currentStep > i + 1" class="fa-solid fa-check"></i>
-            </div>
-
-            <!-- TEXT -->
-            <div>
-              <p class="font-semibold">{{ label }}</p>
-              <p
-                class="text-xs"
+              <div
+                class="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center"
                 [ngStyle]="{
-                  'color': themeservice.Textsecondaire
+                  'background': themeservice.primary,
+                  'color': '#fff'
                 }"
               >
-                Étape {{ i + 1 }}
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-
-        <!-- BOX INFO -->
-        <div
-          class="mt-8 p-5 rounded-2xl border"
-          [ngStyle]="{
-            'background': themeservice.Backgroundcards,
-            'border-color': themeservice.primary + '20'
-          }"
-        >
-          <p class="font-bold mb-1">
-            Progression {{ currentStep }}/4
-          </p>
-
-          <div class="w-full h-2 rounded-full overflow-hidden bg-black/10 mt-3">
-            <div
-              class="h-full rounded-full transition-all duration-500"
-              [ngStyle]="{
-                'background': themeservice.primary,
-                'width': (currentStep * 25) + '%'
-              }"
-            ></div>
-          </div>
-
-          <p
-            class="text-xs mt-3"
-            [ngStyle]="{
-              'color': themeservice.Textsecondaire
-            }"
-          >
-            Complétez toutes les étapes pour rejoindre le club.
-          </p>
-        </div>
-
-      </aside>
-
-      <!-- ================================= -->
-      <!-- FORMULAIRE -->
-      <!-- ================================= -->
-      <div class="p-5 sm:p-7 lg:p-10">
-
-        <!-- MOBILE HEADER -->
-        <div class="lg:hidden text-center mb-6">
-          <img src="assets/LOGO.png" class="w-16 h-16 mx-auto mb-2" />
-          <h2 class="text-2xl font-black">ASDAM</h2>
-          <p
-            class="text-sm"
-            [ngStyle]="{
-              'color': themeservice.Textsecondaire
-            }"
-          >
-            Étape {{ currentStep }}/4
-          </p>
-        </div>
-
-        <!-- TITRE -->
-        <div class="mb-6">
-          <h1 class="text-3xl sm:text-4xl font-black mb-2">
-            Créer un compte
-          </h1>
-
-          <p
-            class="text-sm sm:text-base"
-            [ngStyle]="{
-              'color': themeservice.Textsecondaire
-            }"
-          >
-            Rejoignez l'équipe ASDAM en quelques étapes.
-          </p>
-        </div>
-
-        <!-- MESSAGE -->
-        <div
-          *ngIf="message"
-          class="mb-5 p-4 rounded-2xl text-sm font-semibold border animate-slide-down"
-          [ngStyle]="messageType === 'success'
-            ? {
-                background: themeservice.BgOui,
-                color: themeservice.BgOuiText,
-                borderColor: themeservice.BorderOui
-              }
-            : {
-                background: themeservice.BgNon,
-                color: themeservice.BgNonText,
-                borderColor: themeservice.BorderNon
-              }"
-        >
-          {{ message }}
-        </div>
-
-        <!-- FORM -->
-        <form
-          [formGroup]="registerForm"
-          (ngSubmit)="onSubmit()"
-          class="space-y-5"
-        >
-
-          <!-- STEP 1 -->
-          <div *ngIf="currentStep === 1" class="space-y-4">
-
-            <div class="grid sm:grid-cols-2 gap-4">
+                <i class="fa-solid fa-user text-xs"></i>
+              </div>
 
               <input
                 type="text"
                 formControlName="nom"
-                placeholder="Nom"
-                class="h-12 rounded-2xl px-4 border outline-none"
+                placeholder="Votre nom"
+                class="w-full h-12 rounded-2xl pl-13 pr-4 text-sm border-2 transition-all duration-300"
                 [ngStyle]="{
                   'background': themeservice.Backgroundcards1,
-                  'border-color': themeservice.primary
-                }"
-              />
-
-              <input
-                type="text"
-                formControlName="prenom"
-                placeholder="Prénom"
-                class="h-12 rounded-2xl px-4 border outline-none"
-                [ngStyle]="{
-                  'background': themeservice.Backgroundcards1,
-                  'border-color': themeservice.primary
+                  'border-color': themeservice.primary,
+                  'color': themeservice.Textprincipal
                 }"
               />
 
             </div>
 
-            <button
-              type="button"
-              (click)="nextStep()"
-              [disabled]="!isStep1Valid()"
-              class="w-full h-12 rounded-2xl font-bold text-white hover:scale-[1.02] transition-all disabled:opacity-50"
+          </div>
+
+          <!-- PRENOM -->
+          <div class="space-y-1.5">
+
+            <label
+              class="block text-xs font-bold uppercase tracking-wider ml-1"
               [ngStyle]="{
-                'background': themeservice.primary
+                'color': themeservice.Textprincipal
               }"
             >
-              Continuer
-            </button>
+              Prénom
+            </label>
+
+            <div class="relative">
+
+              <div
+                class="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center"
+                [ngStyle]="{
+                  'background': themeservice.primary,
+                  'color': '#fff'
+                }"
+              >
+                <i class="fa-solid fa-id-card text-xs"></i>
+              </div>
+
+              <input
+                type="text"
+                formControlName="prenom"
+                placeholder="Votre prénom"
+                class="w-full h-12 rounded-2xl pl-13 pr-4 text-sm border-2 transition-all duration-300"
+                [ngStyle]="{
+                  'background': themeservice.Backgroundcards1,
+                  'border-color': themeservice.primary,
+                  'color': themeservice.Textprincipal
+                }"
+              />
+
+            </div>
 
           </div>
 
-          <!-- STEP 2 -->
-          <div *ngIf="currentStep === 2" class="space-y-4">
+        </div>
 
-            <input
-              type="email"
-              formControlName="email"
-              placeholder="Adresse e-mail"
-              class="w-full h-12 rounded-2xl px-4 border outline-none"
+        <!-- ================================================= -->
+        <!-- STEP 2 -->
+        <!-- ================================================= -->
+        <div *ngIf="currentStep === 2" class="space-y-4 animate-fade-step">
+
+          <!-- EMAIL -->
+          <div class="space-y-1.5">
+
+            <label
+              class="block text-xs font-bold uppercase tracking-wider ml-1"
               [ngStyle]="{
-                'background': themeservice.Backgroundcards1,
-                'border-color': themeservice.primary
+                'color': themeservice.Textprincipal
               }"
-            />
+            >
+              Adresse e-mail
+            </label>
 
             <div class="relative">
+
+              <div
+                class="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center"
+                [ngStyle]="{
+                  'background': themeservice.primary,
+                  'color': '#fff'
+                }"
+              >
+                <i class="fa-solid fa-at text-xs"></i>
+              </div>
+
+              <input
+                type="email"
+                formControlName="email"
+                placeholder="Votre e-mail"
+                class="w-full h-12 rounded-2xl pl-13 pr-4 text-sm border-2"
+                [ngStyle]="{
+                  'background': themeservice.Backgroundcards1,
+                  'border-color': themeservice.primary,
+                  'color': themeservice.Textprincipal
+                }"
+              />
+
+            </div>
+
+          </div>
+
+          <!-- PASSWORD -->
+          <div class="space-y-1.5">
+
+            <label
+              class="block text-xs font-bold uppercase tracking-wider ml-1"
+              [ngStyle]="{
+                'color': themeservice.Textprincipal
+              }"
+            >
+              Mot de passe
+            </label>
+
+            <div class="relative">
+
+              <div
+                class="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center"
+                [ngStyle]="{
+                  'background': themeservice.primary,
+                  'color': '#fff'
+                }"
+              >
+                <i class="fa-solid fa-lock text-xs"></i>
+              </div>
 
               <input
                 [type]="showPassword ? 'text' : 'password'"
                 formControlName="password"
-                placeholder="Mot de passe"
-                class="w-full h-12 rounded-2xl px-4 pr-12 border outline-none"
+                placeholder="Votre mot de passe"
+                class="w-full h-12 rounded-2xl pl-13 pr-13 text-sm border-2"
                 [ngStyle]="{
                   'background': themeservice.Backgroundcards1,
-                  'border-color': themeservice.primary
+                  'border-color': themeservice.primary,
+                  'color': themeservice.Textprincipal
                 }"
               />
 
               <button
                 type="button"
                 (click)="togglePassword()"
-                class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg"
+                class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center"
                 [ngStyle]="{
                   'background': themeservice.primary,
                   'color': '#fff'
                 }"
               >
                 <i
-                  class="fa-solid"
+                  class="fa-solid text-xs"
                   [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
                 ></i>
               </button>
 
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-
-              <button
-                type="button"
-                (click)="prevStep()"
-                class="h-12 rounded-2xl font-semibold"
-                [ngStyle]="{
-                  'background': themeservice.Backgroundcards1
-                }"
-              >
-                Retour
-              </button>
-
-              <button
-                type="button"
-                (click)="nextStep()"
-                class="h-12 rounded-2xl font-bold text-white"
-                [ngStyle]="{
-                  'background': themeservice.primary
-                }"
-              >
-                Continuer
-              </button>
-
-            </div>
-
           </div>
 
-          <!-- STEP 3 -->
-          <div *ngIf="currentStep === 3" class="space-y-4">
+        </div>
 
-            <select
-              formControlName="role"
-              class="w-full h-12 rounded-2xl px-4 border outline-none"
-              [ngStyle]="{
-                'background': themeservice.Backgroundcards1,
-                'border-color': themeservice.primary
-              }"
-            >
-              <option *ngFor="let role of roles" [value]="role">
-                {{ role }}
-              </option>
-            </select>
+        <!-- ================================================= -->
+        <!-- STEP 3 -->
+        <!-- ================================================= -->
+        <div *ngIf="currentStep === 3" class="space-y-4 animate-fade-step">
 
-            <select
-              formControlName="equipe"
-              class="w-full h-12 rounded-2xl px-4 border outline-none"
-              [ngStyle]="{
-                'background': themeservice.Backgroundcards1,
-                'border-color': themeservice.primary
-              }"
-            >
-              <option value="">Équipe</option>
-              <option *ngFor="let equipe of equipes" [value]="equipe">
-                {{ equipe }}
-              </option>
-            </select>
-
-            <input
-              type="text"
-              formControlName="codeAcces"
-              placeholder="Code accès"
-              class="w-full h-12 rounded-2xl px-4 border outline-none"
-              [ngStyle]="{
-                'background': themeservice.Backgroundcards1,
-                'border-color': themeservice.primary
-              }"
-            />
-
-            <div class="grid grid-cols-2 gap-3">
-
-              <button
-                type="button"
-                (click)="prevStep()"
-                class="h-12 rounded-2xl font-semibold"
-                [ngStyle]="{
-                  'background': themeservice.Backgroundcards1
-                }"
-              >
-                Retour
-              </button>
-
-              <button
-                type="button"
-                (click)="nextStep()"
-                class="h-12 rounded-2xl font-bold text-white"
-                [ngStyle]="{
-                  'background': themeservice.primary
-                }"
-              >
-                Continuer
-              </button>
-
-            </div>
-
-          </div>
-
-          <!-- STEP 4 -->
-          <div *ngIf="currentStep === 4" class="space-y-4">
-
-            <input
-              type="text"
-              formControlName="club"
-              placeholder="Club"
-              class="w-full h-12 rounded-2xl px-4 border outline-none"
-              [ngStyle]="{
-                'background': themeservice.Backgroundcards1,
-                'border-color': themeservice.primary
-              }"
-            />
-
-            <div class="grid grid-cols-2 gap-3">
-
-              <button
-                type="button"
-                (click)="prevStep()"
-                class="h-12 rounded-2xl font-semibold"
-                [ngStyle]="{
-                  'background': themeservice.Backgroundcards1
-                }"
-              >
-                Retour
-              </button>
-
-              <button
-                type="submit"
-                class="h-12 rounded-2xl font-bold text-white"
-                [ngStyle]="{
-                  'background': '#10B981'
-                }"
-              >
-                {{ isSubmitting ? 'Création...' : 'Créer mon compte' }}
-              </button>
-
-            </div>
-
-          </div>
-
-          <!-- LOGIN -->
-          <a
-            routerLink="/connexion"
-            class="w-full h-12 rounded-2xl border-2 flex items-center justify-center font-semibold transition-all hover:scale-[1.02]"
+          <select
+            formControlName="role"
+            class="w-full h-12 rounded-2xl px-4 border-2"
             [ngStyle]="{
-              'border': '2px dashed ' + themeservice.primary,
+              'background': themeservice.Backgroundcards1,
+              'border-color': themeservice.primary,
               'color': themeservice.Textprincipal
             }"
           >
-            Déjà un compte
-          </a>
+            <option *ngFor="let role of roles" [value]="role">
+              {{ role }}
+            </option>
+          </select>
 
-        </form>
+          <select
+            formControlName="equipe"
+            class="w-full h-12 rounded-2xl px-4 border-2"
+            [ngStyle]="{
+              'background': themeservice.Backgroundcards1,
+              'border-color': themeservice.primary,
+              'color': themeservice.Textprincipal
+            }"
+          >
+            <option value="">Équipe</option>
 
-      </div>
+            <option *ngFor="let equipe of equipes" [value]="equipe">
+              {{ equipe }}
+            </option>
+
+          </select>
+
+        </div>
+
+        <!-- ================================================= -->
+        <!-- STEP 4 -->
+        <!-- ================================================= -->
+        <div *ngIf="currentStep === 4" class="space-y-4 animate-fade-step">
+
+          <input
+            type="text"
+            formControlName="club"
+            placeholder="Nom du club"
+            class="w-full h-12 rounded-2xl px-4 border-2"
+            [ngStyle]="{
+              'background': themeservice.Backgroundcards1,
+              'border-color': themeservice.primary,
+              'color': themeservice.Textprincipal
+            }"
+          />
+
+        </div>
+
+        <!-- NAVIGATION -->
+        <div class="grid grid-cols-2 gap-3 pt-2">
+
+          <!-- BACK -->
+          <button
+            *ngIf="currentStep > 1"
+            type="button"
+            (click)="prevStep()"
+            class="h-12 rounded-2xl font-bold transition-all duration-300 hover:scale-[1.02]"
+            [ngStyle]="{
+              'background': themeservice.Backgroundcards1,
+              'color': themeservice.Textprincipal
+            }"
+          >
+            Retour
+          </button>
+
+          <!-- EMPTY -->
+          <div *ngIf="currentStep === 1"></div>
+
+          <!-- NEXT -->
+          <button
+            *ngIf="currentStep < 4"
+            type="button"
+            (click)="nextStep()"
+            class="h-12 rounded-2xl font-bold text-white transition-all duration-300 hover:scale-[1.02]"
+            [ngStyle]="{
+              'background': themeservice.primary
+            }"
+          >
+            Continuer
+          </button>
+
+          <!-- SUBMIT -->
+          <button
+            *ngIf="currentStep === 4"
+            type="submit"
+            [disabled]="isSubmitting"
+            class="h-12 rounded-2xl font-bold text-white transition-all duration-300 hover:scale-[1.02]"
+            [ngStyle]="{
+              'background': '#10B981'
+            }"
+          >
+
+            <span *ngIf="!isSubmitting">
+              Créer le compte
+            </span>
+
+            <i
+              *ngIf="isSubmitting"
+              class="fa-solid fa-circle-notch fa-spin"
+            ></i>
+
+          </button>
+
+        </div>
+
+        <!-- LOGIN -->
+        <a
+          routerLink="/connexion"
+          class="flex items-center justify-center gap-2 w-full py-3 rounded-2xl border-2 border-dashed text-sm font-bold uppercase tracking-wide transition-all duration-300 hover:scale-[1.02]"
+          [ngStyle]="{
+            'border-color': themeservice.primary,
+            'color': themeservice.Textprincipal
+          }"
+        >
+
+          <span>Déjà un compte</span>
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+
+        </a>
+
+        <!-- FOOTER -->
+        <div
+          class="text-center pt-4 mt-3 border-t border-white/10"
+        >
+
+          <div class="flex items-center justify-center gap-2 mb-1">
+
+            <i
+              class="fa-solid fa-shield-halved text-[10px]"
+              [ngStyle]="{
+                'color': themeservice.Textsecondaire
+              }"
+            ></i>
+
+            <span
+              class="text-[10px] uppercase tracking-wider"
+              [ngStyle]="{
+                'color': themeservice.Textsecondaire
+              }"
+            >
+              Inscription sécurisée SSL
+            </span>
+
+          </div>
+
+          <p
+            class="text-[10px]"
+            [ngStyle]="{
+              'color': themeservice.Textsecondaire
+            }"
+          >
+            © 2026 ASDAM
+          </p>
+
+        </div>
+
+      </form>
+
     </div>
+
   </div>
+
 </section>
 
+<!-- STYLES CSS PERSONNALISÉS -->
 <style>
-@keyframes fade-in-up {
-  from { opacity:0; transform:translateY(25px); }
-  to { opacity:1; transform:translateY(0); }
-}
+  /* Animations */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
 
-@keyframes slide-down {
-  from { opacity:0; transform:translateY(-10px); }
-  to { opacity:1; transform:translateY(0); }
-}
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
-.animate-fade-in-up{
-  animation:fade-in-up .6s ease forwards;
-}
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
 
-.animate-slide-down{
-  animation:slide-down .4s ease forwards;
-}
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
-.backdrop-blur-xl{
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
+  @keyframes subtle-zoom {
 
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible{
-  outline:2px solid currentColor;
-  outline-offset:2px;
-}
+    0%,
+    100% {
+      transform: scale(1.05);
+    }
+
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes float-slow {
+
+    0%,
+    100% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+      opacity: 0.15;
+    }
+
+    50% {
+      transform: translateY(-20px) translateX(10px) rotate(15deg);
+      opacity: 0.25;
+    }
+  }
+
+  @keyframes float-medium {
+
+    0%,
+    100% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+      opacity: 0.1;
+    }
+
+    50% {
+      transform: translateY(-25px) translateX(-15px) rotate(-10deg);
+      opacity: 0.2;
+    }
+  }
+
+  @keyframes float-fast {
+
+    0%,
+    100% {
+      transform: translateY(0) translateX(0);
+      opacity: 0.2;
+    }
+
+    50% {
+      transform: translateY(-10px) translateX(5px);
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes pulse-slow {
+
+    0%,
+    100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.5;
+      transform: scale(1.05);
+    }
+  }
+
+  /* Classes utilitaires */
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-slide-down {
+    animation: slide-down 0.5s ease-out forwards;
+  }
+
+  .animate-subtle-zoom {
+    animation: subtle-zoom 25s ease-in-out infinite;
+  }
+
+  .animate-float-slow {
+    animation: float-slow 12s ease-in-out infinite;
+  }
+
+  .animate-float-medium {
+    animation: float-medium 8s ease-in-out infinite;
+  }
+
+  .animate-float-fast {
+    animation: float-fast 5s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
+  }
+
+  /* Glassmorphism */
+  .backdrop-blur-xl {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Focus visible pour accessibilité */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  /* Animation de secousse pour erreurs */
+  @keyframes shake {
+
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+      transform: translateX(-3px);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+      transform: translateX(3px);
+    }
+  }
+
+  .shake {
+    animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+  }
+
+  /* Scrollbar stylisée pour la card */
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  /* Très petits écrans */
+  @media (max-width: 360px) {
+    .max-w-\[420px\] {
+      max-width: 100%;
+    }
+
+    .p-4 {
+      padding: 0.75rem;
+    }
+
+    .text-2xl {
+      font-size: 1.5rem;
+    }
+  }
+
+  /* Hauteur d'écran réduite */
+  @media (max-height: 700px) and (orientation: landscape) {
+    section {
+      min-height: auto;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+  }
+
+  /* Très petites hauteurs - réductions supplémentaires */
+  @media (max-height: 600px) {
+    .w-16 {
+      width: 3rem;
+      height: 3rem;
+    }
+    
+    .text-2xl {
+      font-size: 1.25rem;
+    }
+    
+    .space-y-1\.5 > * + * {
+      margin-top: 0.375rem;
+    }
+  }
+
+  /* Réduction des animations si demandé */
+  @media (prefers-reduced-motion: reduce) {
+
+    .animate-fade-in-up,
+    .animate-slide-down,
+    .animate-subtle-zoom,
+    .animate-float-slow,
+    .animate-float-medium,
+    .animate-float-fast,
+    .animate-pulse-slow {
+      animation: none;
+    }
+  }
 </style>

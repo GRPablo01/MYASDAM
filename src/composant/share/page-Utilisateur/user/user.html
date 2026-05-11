@@ -1,0 +1,725 @@
+<!-- page Utilisateur -->
+<section class="mt-16 px-5 py-5 sm:py-10 sm:px-10">
+
+    <!-- ===================================================== -->
+    <!-- HEADER -->
+    <!-- ===================================================== -->
+    <div [ngStyle]="{
+        'background': themeService.GlassBackground,
+        'border': '2px solid ' + themeService.GlassBorder,
+        'backdrop-filter': 'blur(22px) saturate(180%)',
+        '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+        'box-shadow': '0 10px 30px rgba(0,0,0,0.08)',
+        'color':themeService.Textprincipal
+      }" class="relative overflow-hidden rounded-3xl border px-5 py-5 md:px-7 md:py-6 shadow-xl backdrop-blur-xl">
+
+        <!-- CONTENT -->
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+
+            <!-- LEFT -->
+            <div class="flex items-center gap-4">
+
+                <!-- ICON -->
+                <div [ngStyle]="{'background':themeService.primary}"
+                    class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg border">
+
+                    <i class="fa-solid fa-shield-halved text-xl text-white"></i>
+
+                </div>
+
+                <!-- TEXT -->
+                <div>
+
+                    <h1 class="text-2xl md:text-3xl font-black tracking-tight" [ngStyle]="{
+                'color': themeService.Textprincipal
+              }">
+
+                        Centre de Utilisateur
+
+                    </h1>
+
+                    <!-- DESCRIPTION -->
+                    <p class="mt-4 text-sm md:text-lg leading-relaxed max-w-2xl" [ngStyle]="{
+        'color': themeService.Textsecondaire
+    }">
+
+                        Gérez les utilisateurs, les rôles, les accès et les permissions
+                        du club depuis une interface moderne, rapide et sécurisée.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- FILTER -->
+    <!-- ===================================================== -->
+    <div class="flex justify-between items-center mt-6 mb-4">
+
+        <div>
+            <h2 class="text-xl font-black" [ngStyle]="{ 'color': themeService.Textprincipal }">
+                Filtrer les utilisateurs
+            </h2>
+        </div>
+
+        <div class="relative">
+
+            <!-- BUTTON -->
+            <button (click)="toggleDropdown()" class="px-5 py-3 rounded-2xl shadow-lg flex items-center gap-2"
+                [ngStyle]="{
+          'background': themeService.primary,
+          'color': '#fff'
+        }">
+
+                <i class="fa-solid fa-filter"></i>
+
+                <span>{{ selectedFilter }}</span>
+
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+
+            </button>
+
+            <!-- BACKDROP (optionnel mais PRO UX) -->
+            <div *ngIf="isDropdownOpen" class="fixed inset-0 z-40" (click)="closeDropdown()">
+            </div>
+
+            <!-- DROPDOWN -->
+            <div *ngIf="isDropdownOpen"
+                class="absolute right-0 mt-3 w-56 rounded-2xl shadow-2xl z-50 overflow-hidden border" [ngStyle]="{
+          'background': themeService.Backgroundcards,
+          'border': themeService.GlassBorder,
+          'color': themeService.Textprincipal
+        }">
+
+                <button (click)="setFilter('all'); closeDropdown()"
+                    class="w-full px-4 py-3 text-left hover:bg-white/10">
+                    Tous
+                </button>
+
+                <button (click)="setFilter('user'); closeDropdown()"
+                    class="w-full px-4 py-3 text-left hover:bg-white/10">
+                    Joueurs
+                </button>
+
+                <button (click)="setFilter('entraineur'); closeDropdown()"
+                    class="w-full px-4 py-3 text-left hover:bg-white/10">
+                    Coach
+                </button>
+
+                <button (click)="setFilter('admin'); closeDropdown()"
+                    class="w-full px-4 py-3 text-left hover:bg-white/10">
+                    Admin
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- USERS DESKTOP -->
+    <!-- ===================================================== -->
+    <div *ngIf="!loading && viewMode === 'grid'"
+    class="hidden lg:grid lg:grid-cols-3 xl:grid-cols-4 gap-7 mt-8">
+
+    <!-- USER CARD -->
+    <div *ngFor="let user of paginatedUsers"
+        class="group relative overflow-hidden rounded-3xl min-h-[420px] border transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+        [ngStyle]="{
+        'border': '2px solid ' + themeService.GlassBorder
+        }">
+
+        <!-- IMAGE BACKGROUND STYLE -->
+        <div class="absolute inset-0">
+
+            <div class="absolute inset-0 transition-transform duration-700 group-hover:scale-110"
+                [ngStyle]="{
+            'background':
+            'linear-gradient(180deg,' +
+            getRoleColor(user) +
+            ' 0%,' +
+            themeService.Backgroundcards +
+            ' 100%)'
+        }">
+            </div>
+
+            <div class="absolute inset-0 bg-black/50"></div>
+
+        </div>
+
+        <!-- CONTENT -->
+        <div class="relative z-10 h-full flex flex-col justify-between p-6">
+
+            <!-- TOP ICON -->
+            <div>
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl"
+                    [ngStyle]="{'background': themeService.primary}">
+
+                    <i class="fa-solid fa-user text-white text-xl"></i>
+
+                </div>
+            </div>
+
+            <!-- INFO -->
+            <div>
+
+                <h2 class="text-3xl font-black text-white mb-2">
+                    {{ user.prenom }} {{ user.nom }}
+                </h2>
+
+                <p class="text-sm text-white/80">
+                    {{ user.email }}
+                </p>
+
+                <span class="inline-block mt-3 px-4 py-2 rounded-2xl text-xs font-bold text-white"
+                    [ngStyle]="{'background': getRoleColor(user)}">
+
+                    {{ getRoleLabel(user.role) }}
+
+                </span>
+
+                <p class="text-sm text-white/70 mt-4">
+                    Gestion rapide des permissions et accès utilisateur.
+                </p>
+
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="flex gap-3 mt-6">
+
+                <!-- VIEW -->
+                <button (click)="openModal(user,'view')"
+                    class="w-12 h-12 rounded-2xl flex items-center justify-center bg-blue-500 hover:scale-105 transition">
+
+                    <i class="fa-solid fa-eye text-white"></i>
+
+                </button>
+
+                <!-- EDIT -->
+                <button (click)="openModal(user,'edit')"
+                    class="w-12 h-12 rounded-2xl flex items-center justify-center bg-yellow-500 hover:scale-105 transition">
+
+                    <i class="fa-solid fa-pen text-white"></i>
+
+                </button>
+
+                <!-- DELETE -->
+                <button (click)="openModal(user,'delete')"
+                    class="w-12 h-12 rounded-2xl flex items-center justify-center bg-red-500 hover:scale-105 transition">
+
+                    <i class="fa-solid fa-trash text-white"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- USERS MOBILE / TABLET -->
+    <!-- ===================================================== -->
+    <div *ngIf="!loading && viewMode === 'grid'"
+    class="flex lg:hidden flex-col gap-5 mt-8">
+
+    <!-- USER MOBILE CARD -->
+    <div *ngFor="let user of paginatedUsers"
+        class="relative overflow-hidden rounded-3xl h-52 border"
+        [ngStyle]="{
+        'border': '2px solid ' + themeService.GlassBorder
+        }">
+
+        <!-- IMAGE -->
+        <div class="absolute inset-0"
+            [ngStyle]="{
+            'background':
+            'linear-gradient(90deg,' +
+            getRoleColor(user) +
+            ' 0%, transparent 100%)'
+        }">
+        </div>
+
+        <div class="absolute inset-0 bg-black/60"></div>
+
+        <!-- CONTENT -->
+        <div class="relative z-10 h-full flex items-center justify-between px-5">
+
+            <!-- LEFT -->
+            <div class="max-w-[70%]">
+
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3"
+                    [ngStyle]="{'background': themeService.primary}">
+
+                    <i class="fa-solid fa-user text-white"></i>
+
+                </div>
+
+                <h2 class="text-xl font-black text-white">
+                    {{ user.prenom }} {{ user.nom }}
+                </h2>
+
+                <p class="text-sm text-white/80">
+                    {{ user.email }}
+                </p>
+
+                <span class="inline-block mt-2 px-3 py-1 text-xs rounded-full text-white"
+                    [ngStyle]="{'background': getRoleColor(user)}">
+
+                    {{ getRoleLabel(user.role) }}
+
+                </span>
+
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="flex flex-col gap-2">
+
+                <button (click)="openModal(user,'view')"
+                    class="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center">
+                    <i class="fa-solid fa-eye text-white"></i>
+                </button>
+
+                <button (click)="openModal(user,'edit')"
+                    class="w-10 h-10 rounded-xl bg-yellow-500 flex items-center justify-center">
+                    <i class="fa-solid fa-pen text-white"></i>
+                </button>
+
+                <button (click)="openModal(user,'delete')"
+                    class="w-10 h-10 rounded-xl bg-red-500 flex items-center justify-center">
+                    <i class="fa-solid fa-trash text-white"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- PAGINATION -->
+    <!-- ===================================================== -->
+    <div *ngIf="totalPages > 1"
+        class="flex items-center justify-center gap-3 mt-10 flex-wrap">
+
+        <!-- PREV -->
+        <button
+            (click)="previousPage()"
+            [disabled]="currentPage === 1"
+            class="px-4 py-2 rounded-2xl text-white transition disabled:opacity-40"
+            [ngStyle]="{'background': themeService.primary}">
+
+            <i class="fa-solid fa-chevron-left"></i>
+
+        </button>
+
+        <!-- PAGES -->
+        <button
+            *ngFor="let page of pages"
+            (click)="goToPage(page)"
+            class="w-11 h-11 rounded-2xl font-bold transition"
+            [ngClass]="{
+            'text-white scale-110 shadow-lg': currentPage === page,
+            'bg-white/10 text-white hover:bg-white/20': currentPage !== page
+            }"
+            [ngStyle]="currentPage === page
+            ? {'background': themeService.primary}
+            : {}">
+
+            {{ page }}
+
+        </button>
+
+        <!-- NEXT -->
+        <button
+            (click)="nextPage()"
+            [disabled]="currentPage === totalPages"
+            class="px-4 py-2 rounded-2xl text-white transition disabled:opacity-40"
+            [ngStyle]="{'background': themeService.primary}">
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </button>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- Modal VIEW - UX/UI Split Layout avec Image -->
+    <!-- ===================================================== -->
+    <div *ngIf="showModal && modalMode === 'view'"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fadeIn"
+    (click)="closeModal()">
+
+    <div (click)="$event.stopPropagation()"
+        class="w-[92%] max-w-2xl rounded-3xl overflow-hidden shadow-2xl transform transition-all duration-300 scale-100 animate-slideUp"
+        [ngStyle]="{
+            'background': themeService.Backgroundcards,
+            'color': themeService.Textprincipal
+        }">
+
+        <div class="flex flex-col md:flex-row">
+
+            <!-- IMAGE -->
+            <div class="hidden md:block md:w-2/5 relative overflow-hidden min-h-[420px]">
+
+                <img src="assets/LOGO.png"
+                    [alt]="'Photo de ' + selectedUser?.prenom + ' ' + selectedUser?.nom"
+                    class="absolute inset-0 w-full h-full object-cover" />
+
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+
+                    <h3 class="text-xl font-bold">
+                        {{ selectedUser?.prenom }} {{ selectedUser?.nom }}
+                    </h3>
+
+                    <span class="mt-2 inline-block px-3 py-1 rounded-full text-xs bg-white/20">
+                        <i class="fa-solid fa-shield-halved mr-1"></i>
+                        {{ selectedUser?.role }}
+                    </span>
+
+                    <div class="mt-3 flex items-center gap-2 text-xs opacity-90">
+                        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                        Actif
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- CONTENT -->
+            <div class="w-full md:w-3/5 p-6 md:p-8 flex flex-col">
+
+                <!-- HEADER -->
+                <h2 class="text-2xl font-black flex items-center gap-2">
+                    <i class="fa-solid fa-user-circle"></i>
+                    Profil utilisateur
+                </h2>
+
+                <p class="text-sm opacity-60 mt-1">
+                    Informations détaillées
+                </p>
+
+                <!-- INFOS -->
+                <div class="space-y-3 mt-6 flex-1">
+
+                    <!-- PRENOM -->
+                    <div class="p-3 rounded-2xl flex items-center gap-3"
+                        [ngStyle]="{ 'background': themeService.GlassBackground }">
+                        <i class="fa-solid fa-user text-blue-500"></i>
+                        <span>{{ selectedUser?.prenom }}</span>
+                    </div>
+
+                    <!-- NOM -->
+                    <div class="p-3 rounded-2xl flex items-center gap-3"
+                        [ngStyle]="{ 'background': themeService.GlassBackground }">
+                        <i class="fa-solid fa-user-pen text-purple-500"></i>
+                        <span>{{ selectedUser?.nom }}</span>
+                    </div>
+
+                    <!-- EMAIL -->
+                    <div class="p-3 rounded-2xl flex items-center gap-3"
+                        [ngStyle]="{ 'background': themeService.GlassBackground }">
+                        <i class="fa-solid fa-envelope text-red-500"></i>
+                        <span>{{ selectedUser?.email }}</span>
+                    </div>
+
+                    <!-- ROLE -->
+                    <div class="p-3 rounded-2xl flex items-center gap-3"
+                        [ngStyle]="{ 'background': themeService.GlassBackground }">
+                        <i class="fa-solid fa-id-badge text-green-500"></i>
+                        <span>{{ selectedUser?.role }}</span>
+                    </div>
+
+                </div>
+
+                <!-- BUTTON -->
+                <button (click)="closeModal()"
+                    class="mt-6 w-full py-3 rounded-2xl font-bold flex items-center justify-center gap-2 transition hover:opacity-90"
+                    [ngStyle]="{
+                        'background': themeService.primary,
+                        'color': '#fff'
+                    }">
+
+                    <i class="fa-solid fa-xmark"></i>
+                    Fermer
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- Modal EDIT - UX/UI Split Layout -->
+    <!-- ===================================================== -->
+    <div *ngIf="showModal && modalMode === 'edit'"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fadeIn"
+    (click)="closeModal()">
+
+    <div (click)="$event.stopPropagation()"
+        class="w-[92%] max-w-2xl rounded-3xl overflow-hidden shadow-2xl transform transition-all duration-300 animate-slideUp"
+        [ngStyle]="{
+            'background': themeService.Backgroundcards,
+            'color': themeService.Textprincipal
+        }">
+
+        <div class="flex flex-col md:flex-row">
+
+            <!-- IMAGE -->
+            <div class="hidden md:block md:w-2/5 relative min-h-[480px]">
+
+                <img src="assets/LOGO.png"
+                    class="absolute inset-0 w-full h-full object-cover" />
+
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+
+                    <h3 class="text-lg font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-user-pen"></i>
+                        {{ editForm?.prenom }} {{ editForm?.nom }}
+                    </h3>
+
+                    <span class="mt-2 inline-flex items-center gap-2 text-xs bg-white/20 px-3 py-1 rounded-full">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        {{ editForm?.role }}
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- FORM -->
+            <div class="w-full md:w-3/5 p-6 md:p-8">
+
+                <!-- TITLE -->
+                <h2 class="text-2xl font-black flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-blue-500"></i>
+                    Modifier utilisateur
+                </h2>
+
+                <p class="text-sm opacity-60 mt-1">
+                    Mettre à jour les informations du profil
+                </p>
+
+                <!-- FIELDS -->
+                <div class="space-y-4 mt-6">
+
+                    <!-- PRENOM -->
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-blue-500"></i>
+                        <input [(ngModel)]="editForm.prenom"
+                            placeholder="Prénom"
+                            class="w-full pl-10 p-3 rounded-2xl outline-none"
+                            [ngStyle]="{ 'background': themeService.GlassBackground }">
+                    </div>
+
+                    <!-- NOM -->
+                    <div class="relative">
+                        <i class="fa-solid fa-user-pen absolute left-3 top-1/2 -translate-y-1/2 text-purple-500"></i>
+                        <input [(ngModel)]="editForm.nom"
+                            placeholder="Nom"
+                            class="w-full pl-10 p-3 rounded-2xl outline-none"
+                            [ngStyle]="{ 'background': themeService.GlassBackground }">
+                    </div>
+
+                    <!-- EMAIL -->
+                    <div class="relative">
+                        <i class="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-red-500"></i>
+                        <input [(ngModel)]="editForm.email"
+                            placeholder="Email"
+                            class="w-full pl-10 p-3 rounded-2xl outline-none"
+                            [ngStyle]="{ 'background': themeService.GlassBackground }">
+                    </div>
+
+                    <!-- ROLE -->
+                    <div class="relative">
+                        <i class="fa-solid fa-id-badge absolute left-3 top-1/2 -translate-y-1/2 text-green-500"></i>
+                        <select [(ngModel)]="editForm.role"
+                            class="w-full pl-10 p-3 rounded-2xl outline-none"
+                            [ngStyle]="{ 'background': themeService.GlassBackground }">
+
+                            <option value="joueur">Joueur</option>
+                            <option value="entraineur">Entraîneur</option>
+                            <option value="admin">Admin</option>
+
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="flex gap-3 mt-6">
+
+                    <button (click)="closeModal()"
+                        class="flex-1 py-3 rounded-2xl flex items-center justify-center gap-2 transition hover:opacity-80"
+                        [ngStyle]="{ 'background': themeService.GlassBackground }">
+
+                        <i class="fa-solid fa-xmark"></i>
+                        Annuler
+                    </button>
+
+                    <button (click)="saveUser()"
+                        class="flex-1 py-3 rounded-2xl text-white flex items-center justify-center gap-2 transition hover:opacity-90"
+                        [ngStyle]="{ 'background': themeService.primary }">
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Sauvegarder
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- Modal DELETE - UX/UI Danger -->
+    <!-- ===================================================== -->
+    <div *ngIf="showModal && modalMode === 'delete'"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fadeIn"
+    (click)="closeModal()">
+
+    <div (click)="$event.stopPropagation()"
+        class="w-[92%] max-w-2xl rounded-3xl overflow-hidden shadow-2xl transform transition-all duration-300 animate-slideUp"
+        [ngStyle]="{
+            'background': themeService.Backgroundcards,
+            'color': themeService.Textprincipal
+        }">
+
+        <div class="flex flex-col md:flex-row">
+
+            <!-- IMAGE -->
+            <div class="hidden md:block md:w-2/5 relative min-h-[380px]">
+
+                <img src="assets/LOGO.png"
+                    class="absolute inset-0 w-full h-full object-cover" />
+
+                <div class="absolute inset-0 bg-gradient-to-t from-red-900/90 via-red-900/40 to-black/30"></div>
+
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+
+                    <h3 class="text-lg font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-user-slash"></i>
+                        {{ selectedUser?.prenom }} {{ selectedUser?.nom }}
+                    </h3>
+
+                    <span class="mt-2 inline-flex items-center gap-2 text-xs bg-white/20 px-3 py-1 rounded-full">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        {{ selectedUser?.role }}
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- CONTENT -->
+            <div class="w-full md:w-3/5 p-6 md:p-8 text-center">
+
+                <!-- TITLE -->
+                <h2 class="text-2xl font-black text-red-500 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-trash"></i>
+                    Supprimer utilisateur ?
+                </h2>
+
+                <p class="text-sm opacity-70 mt-2">
+                    Cette action est <span class="font-bold text-red-500">irréversible</span>
+                </p>
+
+                <!-- USER INFO -->
+                <div class="mt-5 p-4 rounded-2xl bg-red-500/10 text-left space-y-2">
+
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-envelope text-red-500"></i>
+                        <span>{{ selectedUser?.email }}</span>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-id-badge text-red-500"></i>
+                        <span>{{ selectedUser?.role }}</span>
+                    </div>
+
+                </div>
+
+                <!-- WARNING BOX -->
+                <div class="mt-5 p-3 rounded-2xl bg-red-500/20 text-red-600 text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation animate-pulse"></i>
+                    Suppression définitive du compte
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="flex gap-3 mt-6">
+
+                    <button (click)="closeModal()"
+                        class="flex-1 py-3 rounded-2xl flex items-center justify-center gap-2 transition hover:opacity-80"
+                        [ngStyle]="{ 'background': themeService.GlassBackground }">
+
+                        <i class="fa-solid fa-xmark"></i>
+                        Annuler
+                    </button>
+
+                    <button (click)="deleteUser()" [disabled]="!selectedUser"
+                        class="flex-1 py-3 rounded-2xl bg-red-600 text-white flex items-center justify-center gap-2 transition hover:bg-red-700">
+
+                        <i class="fa-solid fa-trash-can"></i>
+                        Supprimer
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- TOAST NOTIFICATION -->
+    <!-- ============================= -->
+    <div
+    *ngIf="showNotification"
+    class="fixed top-20 right-4 z-[12000] animate-slide-from-right">
+
+    <div class="relative flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl
+                backdrop-blur-md bg-emerald-500/95 border border-emerald-400/30
+                min-w-[300px] max-w-[400px] overflow-hidden">
+
+    <!-- ICON -->
+    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+        <i class="fa-solid fa-circle-check text-white text-xl"></i>
+    </div>
+
+    <!-- TEXT -->
+    <div class="flex-1 min-w-0">
+        <p class="text-white font-semibold text-sm">Succès</p>
+        <p class="text-white/90 text-sm truncate">
+        {{ notificationMessage }}
+        </p>
+    </div>
+
+    <!-- CLOSE -->
+    <button (click)="closeNotification()"
+        class="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center">
+        <i class="fa-solid fa-xmark text-white/70 text-sm"></i>
+    </button>
+
+    </div>
+    </div>
+</section>

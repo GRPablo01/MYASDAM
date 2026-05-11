@@ -383,7 +383,7 @@ export class Nav implements OnInit {
     // 🔹 Menu final selon rôle (fallback sur invite si rôle inconnu)
     this.menu = roleMenu[this.role] || roleMenu['invite'];
 
-    console.log(`[MyAsdam] Menu généré pour le rôle: ${this.role} (${this.menu.length} items)`);
+    // console.log(`[MyAsdam] Menu généré pour le rôle: ${this.role} (${this.menu.length} items)`);
   }
 
   // 🔹 Toggle sous-menu au clic

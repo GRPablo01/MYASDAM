@@ -1,0 +1,544 @@
+<!-- ===================================================== -->
+<!-- SECTION ROLES PREMIUM UI/UX RESPONSIVE -->
+<!-- DESKTOP + MOBILE SEPARÉS -->
+<!-- ===================================================== -->
+
+<section class="relative w-full py-5 px-5 sm:py-10 sm:px-10  overflow-hidden">
+
+  <!-- ===================================================== -->
+  <!-- BACKGROUND -->
+  <!-- ===================================================== -->
+
+  <div class="absolute inset-0 pointer-events-none overflow-hidden">
+
+    <!-- TOP GLOW -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full blur-3xl opacity-20"
+      [ngStyle]="{
+        'background':
+        'radial-gradient(circle,' +
+        themeService.primary +
+        '40 0%, transparent 70%)'
+      }">
+    </div>
+
+    <!-- BOTTOM GLOW -->
+    <div class="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl opacity-10" [ngStyle]="{
+        'background':
+        'radial-gradient(circle,' +
+        themeService.secondary +
+        '50 0%, transparent 70%)'
+      }">
+    </div>
+
+    <!-- GRID -->
+    <div class="absolute inset-0 opacity-[0.03]" style="
+      background-image:
+      linear-gradient(to right, white 1px, transparent 1px),
+      linear-gradient(to bottom, white 1px, transparent 1px);
+      background-size: 50px 50px;">
+    </div>
+
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- HEADER -->
+  <!-- ===================================================== -->
+
+  <div class="relative z-10 text-center justify-center mb-14">
+
+    <!-- BADGE -->
+    <div
+      class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-[0.2em] mb-6 border backdrop-blur-xl"
+      [ngStyle]="{
+        'background': themeService.GlassBackground,
+        'border': '2px solid ' + themeService.GlassBorder,
+        'backdrop-filter': 'blur(22px) saturate(180%)',
+        '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+        'box-shadow': '0 10px 30px rgba(0,0,0,0.08)',
+        'color':themeService.Textprincipal,
+      }">
+
+      <div class="w-2 h-2 rounded-full" [ngStyle]="{
+          'background': themeService.primary
+        }">
+      </div>
+
+      Gestion des rôles
+
+    </div>
+
+    <!-- TITLE -->
+    <h1 class="text-4xl sm:text-5xl lg:text-6xl items-center justify-center font-black tracking-tight leading-tight mb-2 sm:mb-5" [ngStyle]="{
+        'color': themeService.Textprincipal
+      }">
+
+      Choisissez votre
+
+      <span>
+
+        expérience
+
+      </span>
+
+    </h1>
+
+    <!-- DESCRIPTION -->
+    <p class="max-w-2xl mx-auto mb-2 md:mb-5 text-base sm:text-lg leading-relaxed" [ngStyle]="{
+        'color': themeService.Textsecondaire
+      }">
+
+      Accédez à des fonctionnalités adaptées à votre profil
+      avec une expérience moderne, fluide et immersive.
+
+    </p>
+
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- DESKTOP / LAPTOP -->
+  <!-- ===================================================== -->
+
+  <div class="relative z-10 hidden lg:grid grid-cols-2 xl:grid-cols-4 gap-8">
+
+    <!-- CARD -->
+    <button *ngFor="let role of roles; let i = index" (click)="openRoleModal(role)"
+      class="group relative overflow-hidden rounded-[32px] border transition-all duration-700 text-left p-7 backdrop-blur-2xl hover:-translate-y-3 hover:scale-[1.02] active:scale-[0.98]"
+      [ngStyle]="{
+        'background':
+          isLoggedIn && userRole === role.id
+          ? 'linear-gradient(145deg,' +
+              themeService.Backgroundcards +
+              'ee 0%,' +
+              adjustColor(themeService.Backgroundcards, -8) +
+              'ee 100%)'
+          : themeService.GlassBackground,
+      
+       
+        'border':
+          isLoggedIn && userRole === role.id
+          ? '2px solid ' + getRoleColor(role.id)
+          : '2px solid ' + themeService.GlassBorder,
+      
+       
+        'backdrop-filter': 'blur(22px) saturate(180%)',
+        '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+      
+        
+        'box-shadow':
+          isLoggedIn && userRole === role.id
+          ? '0 0 0 1px ' + getRoleColor(role.id) + '50, 0 20px 50px -15px ' + getRoleColor(role.id) + '35'
+          : '0 10px 30px rgba(0,0,0,0.08)',
+      
+       
+        'animation-delay': (i * 120) + 'ms'
+      }">
+
+      <!-- HOVER -->
+      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700" [ngStyle]="{
+          'background':
+          'radial-gradient(circle at top left,' +
+          getRoleColor(role.id ?? '') +
+          '25 0%, transparent 60%)'
+        }">
+      </div>
+
+      <!-- ACTIVE -->
+      <div *ngIf="isLoggedIn && userRole === role.id" class="absolute inset-0 rounded-[32px] pointer-events-none"
+        [ngStyle]="{
+          'border': '2px solid ' + getRoleColor(role.id),
+          'box-shadow': '0 0 30px ' + getRoleColor(role.id) + '50'
+        }">
+      </div>
+
+      <!-- TOP -->
+      <div class="relative flex items-start justify-between mb-8 z-10">
+
+        <!-- ICON -->
+        <div class="relative">
+
+          <div
+            class="absolute inset-0 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-all duration-700 scale-150"
+            [ngStyle]="{
+              'background': getRoleColor(role.id ?? '') + '50'
+            }">
+          </div>
+
+          <div
+            class="relative w-20 h-20 rounded-3xl flex items-center justify-center text-3xl transition-all duration-700 group-hover:rotate-6 group-hover:scale-110"
+            [ngStyle]="{
+
+              'background':
+              'linear-gradient(135deg,' +
+              getRoleColor(role.id ?? '') +
+              '25 0%,' +
+              getRoleColor(role.id ?? '') +
+              '10 100%)',
+
+              'border':
+              '1px solid ' +
+              getRoleColor(role.id ?? '') +
+              '30',
+
+              'color':
+              getRoleColor(role.id ?? '')
+            }">
+
+            <i [class]="getRoleIcon(role.id ?? '')"></i>
+
+          </div>
+
+        </div>
+
+        <!-- ACTIVE BADGE -->
+        <div *ngIf="isLoggedIn && userRole === role.id"
+          class="px-4 py-2 rounded-full text-[11px] font-black uppercase tracking-[0.18em] flex items-center gap-2 shadow-xl animate-pulse"
+          [ngStyle]="{
+            'background':
+            'linear-gradient(135deg,' +
+            getRoleColor(role.id) +
+            ' 0%,' +
+            adjustColor(getRoleColor(role.id), -15) +
+            ' 100%)',
+
+            'color': '#ffffff'
+          }">
+
+          <div class="w-2 h-2 rounded-full bg-white"></div>
+
+          Actif
+
+        </div>
+
+      </div>
+
+      <!-- CONTENT -->
+      <div class="relative z-10">
+
+        <h2 class="text-2xl font-black mb-3 tracking-tight leading-tight" [ngStyle]="{
+            'color': themeService.Textprincipal
+          }">
+
+          {{ role.label }}
+
+        </h2>
+
+        <p class="text-sm leading-7 mb-7 min-h-[90px]" [ngStyle]="{
+            'color': themeService.Textsecondaire
+          }">
+
+          {{ role.description }}
+
+        </p>
+
+        <!-- FEATURES -->
+        <div class="space-y-3 mb-8">
+
+          <div *ngFor="let feature of role.features | slice:0:3" class="flex items-center gap-3 text-sm font-medium">
+
+            <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" [ngStyle]="{
+                'background': getRoleColor(role.id ?? '') + '20',
+                'color': getRoleColor(role.id ?? '')
+              }">
+
+              <i class="fas fa-check text-[10px]"></i>
+
+            </div>
+
+            <span [ngStyle]="{
+                'color': themeService.Textsecondaire
+              }">
+
+              {{ feature }}
+
+            </span>
+
+          </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="flex items-center justify-between mt-8">
+
+          <div class="flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-bold" [ngStyle]="{
+              'background': getRoleColor(role.id ?? '') + '15',
+              'border': '1px solid ' + getRoleColor(role.id ?? '') + '25',
+              'color': getRoleColor(role.id ?? '')
+            }">
+
+            <i class="fas fa-shield-alt"></i>
+
+            {{ role.features.length }} fonctionnalités
+
+          </div>
+        </div>
+
+      </div>
+
+    </button>
+
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- MOBILE / TABLET -->
+  <!-- ===================================================== -->
+
+  <div class="relative z-10 flex flex-col gap-5 lg:hidden">
+
+    <!-- MOBILE CARD -->
+    <button *ngFor="let role of roles let i = index" (click)="openRoleModal(role)"
+      class="group relative overflow-hidden rounded-[28px] border p-2 backdrop-blur-2xl transition-all duration-500 active:scale-[0.98]"
+      [ngStyle]="{
+        'background':
+          isLoggedIn && userRole === role.id
+          ? 'linear-gradient(145deg,' +
+              themeService.Backgroundcards +
+              'ee 0%,' +
+              adjustColor(themeService.Backgroundcards, -8) +
+              'ee 100%)'
+          : themeService.GlassBackground,
+    
+        'border':
+          isLoggedIn && userRole === role.id
+          ? '2px solid ' + getRoleColor(role.id)
+          : '2px solid ' + themeService.GlassBorder,
+    
+        'backdrop-filter': 'blur(22px) saturate(180%)',
+        '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+    
+        'box-shadow':
+          isLoggedIn && userRole === role.id
+          ? '0 0 0 1px ' + getRoleColor(role.id) + '50, 0 20px 50px -15px ' + getRoleColor(role.id) + '35'
+          : '0 10px 30px rgba(0,0,0,0.08)',
+  
+        'animation-delay': (i * 120) + 'ms'
+      }">
+
+      <!-- MOBILE TOP -->
+      <div class="flex items-center gap-4 mb-2">
+
+        <!-- ICON -->
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0" [ngStyle]="{
+
+          'background':
+          'linear-gradient(135deg,' +
+          getRoleColor(role.id ?? '') +
+          '25 0%,' +
+          getRoleColor(role.id ?? '') +
+          '10 100%)',
+
+          'border':
+          '1px solid ' +
+          getRoleColor(role.id ?? '') +
+          '30',
+
+          'color':
+          getRoleColor(role.id ?? '')
+        }">
+
+          <i [class]="getRoleIcon(role.id ?? '')"></i>
+
+        </div>
+
+        <!-- INFO -->
+        <div class="flex-1 min-w-0">
+
+          <div class="flex items-center gap-2 flex-wrap">
+
+            <h2 class="text-xl font-black truncate" [ngStyle]="{
+              'color': themeService.Textprincipal
+            }">
+
+              {{ role.label }}
+
+            </h2>
+
+            <!-- ACTIVE -->
+            <div *ngIf="isLoggedIn && userRole === role.id"
+              class="px-2 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.12em]" [ngStyle]="{
+              'background': getRoleColor(role.id),
+              'color': '#ffffff'
+            }">
+
+              Actif
+
+            </div>
+
+          </div>
+
+          <p class="text-sm mt-1 line-clamp-2" [ngStyle]="{
+            'color': themeService.Textsecondaire
+          }">
+
+            {{ role.description }}
+
+          </p>
+
+        </div>
+
+        <!-- ARROW -->
+        <div class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0" [ngStyle]="{
+
+          'background':
+          'linear-gradient(135deg,' +
+          getRoleColor(role.id ?? '') +
+          ' 0%,' +
+          adjustColor(getRoleColor(role.id ?? ''), -20) +
+          ' 100%)',
+
+          'color': '#ffffff'
+        }">
+
+          <i class="fas fa-arrow-right text-sm"></i>
+
+        </div>
+
+      </div>
+
+      <!-- ===================================================== -->
+      <!-- FEATURES BUTTON -->
+      <!-- ===================================================== -->
+
+      <div class="flex justify-between items-center gap-3">
+
+        <!-- MINI PREVIEW -->
+        <div class="flex items-center gap-2 overflow-hidden">
+
+          <div *ngFor="let feature of role.features | slice:0:2"
+            class="px-3 py-2 rounded-xl text-[11px] font-semibold truncate max-w-[110px]" [ngStyle]="{
+            'background': getRoleColor(role.id ?? '') + '15',
+            'border': '1px solid ' + getRoleColor(role.id ?? '') + '20',
+            'color': getRoleColor(role.id ?? '')
+          }">
+
+            {{ feature }}
+
+          </div>
+
+        </div>
+
+        <!-- OPEN POPUP -->
+        <button type="button" (click)="toggleFeaturePopup(role.id ?? null); $event.stopPropagation()"
+          class="flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-bold transition-all duration-300 active:scale-95"
+          [ngStyle]="{
+          'background':
+          'linear-gradient(135deg,' +
+          getRoleColor(role.id ?? '') +
+          ' 0%,' +
+          adjustColor(getRoleColor(role.id ?? ''), -15) +
+          ' 100%)',
+
+          'color': '#ffffff'
+        }">
+
+          <i class="fas fa-layer-group"></i>
+
+          Voir +
+
+        </button>
+
+      </div>
+
+      <!-- ===================================================== -->
+      <!-- FEATURES POPUP -->
+      <!-- ===================================================== -->
+
+      <div *ngIf="openedFeaturePopup === role.id" (click)="$event.stopPropagation()"
+        class="mt-5 p-5 rounded-3xl border backdrop-blur-2xl animate-fadeIn" [ngStyle]="{
+
+        'background':
+        'linear-gradient(145deg,' +
+        adjustColor(themeService.Backgroundcards, 4) +
+        'f5 0%,' +
+        themeService.Backgroundcards +
+        'f0 100%)',
+
+        'border-color':
+        getRoleColor(role.id ?? '') + '30'
+      }">
+
+        <!-- HEADER -->
+        <div class="flex items-center justify-between mb-4">
+
+          <div class="flex items-center gap-3">
+
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center" [ngStyle]="{
+              'background': getRoleColor(role.id ?? '') + '20',
+              'color': getRoleColor(role.id ?? '')
+            }">
+
+              <i class="fas fa-star"></i>
+
+            </div>
+
+            <div>
+
+              <h3 class="text-sm font-black" [ngStyle]="{
+                'color': themeService.Textprincipal
+              }">
+
+                Fonctionnalités
+
+              </h3>
+
+              <p class="text-xs" [ngStyle]="{
+                'color': themeService.Textsecondaire
+              }">
+
+                {{ role.features.length }} disponibles
+
+              </p>
+
+            </div>
+
+          </div>
+
+          <!-- CLOSE -->
+          <button type="button" (click)="toggleFeaturePopup(null)"
+            class="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300" [ngStyle]="{
+            'background': themeService.GlassBackground,
+            'color': themeService.Textprincipal
+          }">
+
+            <i class="fas fa-times text-sm"></i>
+
+          </button>
+
+        </div>
+
+        <!-- FEATURES LIST -->
+        <div class="flex flex-col gap-3">
+
+          <div *ngFor="let feature of role.features" class="flex items-center gap-3 p-3 rounded-2xl border" [ngStyle]="{
+            'background': getRoleColor(role.id ?? '') + '08',
+            'border-color': getRoleColor(role.id ?? '') + '15'
+          }">
+
+            <!-- ICON -->
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" [ngStyle]="{
+              'background': getRoleColor(role.id ?? '') + '20',
+              'color': getRoleColor(role.id ?? '')
+            }">
+
+              <i class="fas fa-check"></i>
+
+            </div>
+
+            <!-- TEXT -->
+            <p class="text-sm font-medium leading-relaxed" [ngStyle]="{
+              'color': themeService.Textprincipal
+            }">
+
+              {{ feature }}
+
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </button>
+
+  </div>
+</section>

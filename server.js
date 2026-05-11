@@ -72,6 +72,8 @@ const eventRoutes = require('./Backend/Routes/event.Routes');
 const actusRoutes = require('./Backend/Routes/actus.Routes');
 const userRoutes = require('./Backend/Routes/auth.Routes'); // nouvelle route /users
 const convocationRoutes = require('./Backend/Routes/convocation.routes');
+const userRoutes1 = require('./Backend/Routes/user.Routes');
+
 
 // ==============================
 // 🧭 Routes API
@@ -81,8 +83,9 @@ app.use('/api/matchs', matchRoutes);
 app.use('/api/equipes', equipeRoutes); // <-- route équipe complète
 app.use('/api/events', eventRoutes);
 app.use('/api/actus', actusRoutes);
-app.use('/api/user', userRoutes);   // /api/users
+app.use('/api/auth/users', userRoutes);   // /api/users
 app.use('/api/convocation', convocationRoutes);
+app.use('/api/users', userRoutes1);
 
 // ==============================
 // 🏠 Routes de test

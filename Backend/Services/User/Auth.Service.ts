@@ -74,5 +74,17 @@ export class AuthService {
       followKey
     });
   }
-  
+
+  // ==========================
+  // UPDATE USER
+  // ==========================
+  updateUser(id: string, data: any): Observable<any> {
+    return this.http.put(`http://localhost:3000/api/users/${id}`, data);
+  }
+
+  deleteUser(id: string) {
+    console.log('📡 HTTP DELETE CALL:', id);
+    return this.http.delete(`http://localhost:3000/api/users/${id}`);
+  }
+    
 }

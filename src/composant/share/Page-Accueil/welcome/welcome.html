@@ -1,0 +1,144 @@
+<section
+    class="h-auto mt-16 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-12 py-5 px-5 sm:py-10 sm:px-10">
+
+    <!-- ================= MOBILE TOP ACTIONS ================= -->
+    <div
+        class="fixed top-16 left-1 z-50 p-2 rounded-full hidden [@media(min-width:382px)_and_(max-width:781px)]:flex"
+        [ngStyle]="{
+            'background': themeService.GlassBackground,
+            'border': '2px solid ' + themeService.GlassBorder,
+            'backdrop-filter': 'blur(22px) saturate(180%)',
+            '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+            'box-shadow': '0 10px 30px rgba(0,0,0,0.08)'
+        }">
+
+        <app-icon3 class="block"></app-icon3>
+    </div>
+
+    <!-- ================= CONTENU GAUCHE ================= -->
+    <div
+        class="flex flex-col gap-6 max-w-2xl w-full 
+               items-start text-left
+               [@media(min-width:382px)_and_(max-width:781px)]:items-center
+               [@media(min-width:382px)_and_(max-width:781px)]:text-center">
+
+        <!-- Badge -->
+        <div [ngStyle]="{
+            'background': themeService.GlassBackground,
+            'border': '2px solid ' + themeService.GlassBorder,
+            'backdrop-filter': 'blur(22px) saturate(180%)',
+            '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+            'box-shadow': '0 10px 30px rgba(0,0,0,0.08)',
+            'color':themeService.Textprincipal,
+          }"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl backdrop-blur-md w-fit border">
+
+            <i [ngStyle]="{'color': themeService.primary}"
+                class="fa-solid fa-futbol text-sm">
+            </i>
+
+            <span class="text-xs font-light tracking-[0.25em] uppercase">
+                ASDAM Platform
+            </span>
+        </div>
+
+        <!-- TITLE -->
+        <h1 [ngStyle]="{'color': themeService.Textprincipal}"
+            class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl 
+                   font-black uppercase leading-[1.05]
+                   [@media(min-width:382px)_and_(max-width:781px)]:max-w-[95%]">
+
+            L'application officielle de
+
+            <span [ngStyle]="{'color': themeService.primary}">
+                l'ASDAM
+            </span>
+        </h1>
+
+        <!-- DESCRIPTION -->
+        <p [ngStyle]="{
+            'background': themeService.GlassBackground,
+            'border-color': themeService.GlassBorder,
+            'color': themeService.Textprincipal,
+            'box-shadow': '0 2px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.1) inset',
+            'backdrop-filter': 'blur(20px) saturate(180%)',
+            '-webkit-backdrop-filter': 'blur(20px) saturate(180%)'
+        }"
+            class="text-base md:text-lg leading-relaxed 
+                   max-w-xl p-4 md:p-6 rounded-2xl 
+                   backdrop-blur-md border
+                   [@media(min-width:382px)_and_(max-width:781px)]:text-center">
+
+            Suivez en temps réel les matchs de l'ASDAM, consultez les rencontres
+            à venir et les matchs en direct.
+            Les joueurs peuvent également accéder à leurs convocations pour chaque
+            match directement depuis l'application, dans une interface simple,
+            moderne et dédiée au club.
+        </p>
+
+        <!-- BUTTONS -->
+        <div
+            class="flex gap-4 flex-wrap mt-2
+                   justify-start
+                   [@media(min-width:382px)_and_(max-width:781px)]:justify-center
+                   [@media(min-width:382px)_and_(max-width:781px)]:w-full">
+
+            <!-- BTN MATCH -->
+            <button
+                class="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold shadow-lg
+                       transition-all duration-200 hover:scale-[1.04] active:scale-95 cursor-pointer"
+
+                [ngStyle]="{
+                    'background': themeService.primary,
+                    'color': '#FFFFFF',
+                    'border': '1px solid ' + themeService.BorderNon
+                }">
+
+                <i class="fa-solid fa-futbol transition-colors duration-200"
+                    [ngStyle]="{
+                        'color': iconMatchHover ? themeService.primaryHover : '#FFFFFF'
+                    }"
+                    (mouseenter)="iconMatchHover = true"
+                    (mouseleave)="iconMatchHover = false">
+                </i>
+
+                Voir les matchs
+            </button>
+
+            <!-- BTN EXPLORE -->
+            <button
+                class="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold
+                       backdrop-blur-md transition-all duration-200
+                       hover:scale-[1.04] active:scale-95 cursor-pointer"
+
+                [ngStyle]="{
+                    'background': themeService.Backgroundcards1,
+                    'color': themeService.Textprincipal,
+                    'border': '1px solid ' + themeService.Backgroundcards2
+                }">
+
+                <i class="fa-solid fa-compass transition-colors duration-200"
+                    [ngStyle]="{
+                        'color': iconExploreHover
+                            ? themeService.Iconhover
+                            : themeService.Iconnormal
+                    }"
+                    (mouseenter)="iconExploreHover = true"
+                    (mouseleave)="iconExploreHover = false">
+                </i>
+
+                Explorer
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= MATCHDAY (DROITE) ================= -->
+    <div
+        class="w-full lg:w-auto flex-shrink-0
+               flex justify-center
+               [@media(min-width:382px)_and_(max-width:781px)]:w-full">
+
+        <app-match-day></app-match-day>
+    </div>
+
+</section>

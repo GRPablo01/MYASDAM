@@ -3,7 +3,7 @@
 <!-- ============================= -->
 <div
   *ngIf="show"
-  class="fixed inset-0 z-[11002] bg-black/60 backdrop-blur-sm animate-fade-in"
+  class="fixed inset-0 z-[2147483648] bg-black/60 backdrop-blur-sm animate-fade-in"
   aria-hidden="true">
 </div>
 
@@ -16,14 +16,17 @@
   aria-modal="true"
   aria-labelledby="cookie-title"
   aria-describedby="cookie-desc"
-  class="fixed bottom-0 left-0 right-0 z-[11003] px-4 pb-4 animate-slide-up">
+  class="fixed bottom-0 left-0 right-0 z-[2147483649] px-4 pb-4 animate-slide-up">
 
   <div
-    [ngStyle]="{
-      'background': themeService.Backgroundcards,
-      'color': themeService.Textprincipal,
-      'border': '1px solid ' + themeService.Bordernormal + '20'
-    }"
+  [ngStyle]="{
+    'background': themeService.GlassBackground,
+    'border': '2px solid ' + themeService.GlassBorder,
+    'backdrop-filter': 'blur(22px) saturate(180%)',
+    '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+    'box-shadow': '0 10px 30px rgba(0,0,0,0.08)',
+    'color':themeService.Textprincipal
+  }"
     class="w-full max-w-4xl mx-auto rounded-2xl shadow-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6 transition-all duration-300">
 
     <!-- LEFT CONTENT -->
@@ -118,13 +121,6 @@
              flex items-center justify-center transition group focus:outline-none">
       <i class="fa-solid fa-xmark text-white/70 group-hover:text-white text-sm"></i>
     </button>
-
-    <!-- PROGRESS BAR -->
-    <div 
-      class="absolute bottom-0 left-0 h-1 bg-white/40 transition-all duration-100"
-      [style.width.%]="notificationProgress">
-    </div>
-
   </div>
 </div>
 

@@ -394,9 +394,9 @@ exports.getAllConvocations = async (req, res) => {
 // ============================
 // GET BY KEY
 // ============================
-exports.getConvocationByKey = async (req, res) => {
+exports.getConvocationById = async (req, res) => {
   try {
-    const convocation = await Convocation.findOne({ key: req.params.key });
+    const convocation = await Convocation.findById(req.params.id);
 
     if (!convocation) {
       return res.status(404).json({ message: 'Non trouvée' });
@@ -411,15 +411,19 @@ exports.getConvocationByKey = async (req, res) => {
 // ============================
 // UPDATE
 // ============================
-exports.updateConvocationByKey = async (req, res) => {
+exports.updateConvocationById = async (req, res) => {
   try {
-    const convocation = await Convocation.findOneAndUpdate(
-      { key: req.params.key },
+    const updated = await Convocation.findByIdAndUpdate(
+      req.params.id,
       req.body,
       { new: true }
     );
 
-    res.json(convocation);
+    if (!updated) {
+      return res.status(404).json({ message: 'Convocation introuvable' });
+    }
+
+    res.json(updated);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -428,9 +432,14 @@ exports.updateConvocationByKey = async (req, res) => {
 // ============================
 // DELETE
 // ============================
-exports.deleteConvocationByKey = async (req, res) => {
+exports.deleteConvocationById = async (req, res) => {
   try {
-    await Convocation.findOneAndDelete({ key: req.params.key });
+    const deleted = await Convocation.findByIdAndDelete(req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: 'Convocation introuvable' });
+    }
+
     res.json({ message: 'Supprimée' });
   } catch (error) {
     res.status(500).json({ message: error.message });
