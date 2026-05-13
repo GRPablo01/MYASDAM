@@ -1,0 +1,355 @@
+<app-icon></app-icon>
+
+<section class="flex h-200 mt-16 font-sans overflow-hidden">
+
+    <!-- ========================= -->
+    <!-- LISTE USERS -->
+    <!-- ========================= -->
+    <div class="w-80 overflow-y-auto backdrop-blur-xl mt-5 ml-5 mb-5 rounded-2xl" [ngStyle]="{
+        background: themeService.Backgroundcards,
+        border: '2px solid ' + themeService.GlassBorder,
+        backdropFilter: 'blur(22px) saturate(180%)',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
+        color: themeService.Textprincipal
+        }">
+
+        <!-- HEADER -->
+        <div class="sticky top-0 z-10 p-4 border-b" [style.background]="themeService.Backgroundcards">
+
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold">Messages</h3>
+
+                <span class="text-xs px-2 py-1 rounded-full border">
+                    {{ selectedUsers?.length || 0 }}
+                </span>
+            </div>
+
+            <input type="text" [(ngModel)]="searchText" (input)="filterUsers()" placeholder="Rechercher..."
+                class="w-full p-2 rounded-lg text-sm outline-none" [style.background]="themeService.Backgroundcards2"
+                [style.color]="themeService.Textprincipal" />
+        </div>
+
+        <!-- SEARCH -->
+        <div *ngIf="searchText && filteredUsers.length" class="p-2 space-y-1">
+
+            <div *ngFor="let u of filteredUsers"
+                class="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:scale-[1.01]"
+                [style.background]="themeService.Backgroundcards1" (click)="selectUser(u); addUser(u)">
+
+                <div class="w-9 h-9 flex items-center justify-center rounded-full font-bold"
+                    [style.background]="themeService.Backgroundcards2">
+                    {{ u.prenom?.[0] }}{{ u.nom?.[0] }}
+                </div>
+
+                <div class="flex-1 text-sm">
+                    {{ u.prenom }} {{ u.nom }}
+                    <div class="text-xs opacity-70">{{ u.role }}</div>
+                </div>
+
+                <i class="fa-solid fa-plus text-green-500"></i>
+            </div>
+        </div>
+
+        <!-- LISTE -->
+        <div class="p-2 space-y-2">
+
+            <p *ngIf="!selectedUsers?.length" class="text-center text-xs opacity-60 mt-10">
+                Aucun utilisateur
+            </p>
+
+            <div *ngFor="let u of selectedUsers" class="flex items-center gap-3 p-2 rounded-lg cursor-pointer relative"
+                [style.background]="themeService.Backgroundcards1" (click)="selectUser(u)">
+
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold"
+                    [style.background]="themeService.Backgroundcards2">
+                    {{ u.prenom?.[0] }}{{ u.nom?.[0] }}
+                </div>
+
+                <div class="flex-1 text-sm">
+                    {{ u.prenom }} {{ u.nom }}
+                </div>
+
+                <button (click)="removeUser(u, $event)">
+                    <i class="fa-solid fa-trash text-red-500"></i>
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- CHAT - PREMIUM GLASSMORPHISM -->
+    <!-- ========================= -->
+    <div class="flex flex-col flex-1 relative mt-5 ml-5 mr-5 mb-5 rounded-2xl overflow-hidden" [ngStyle]="{
+    'background': themeService.Backgroundcards,
+    'border': '1px solid ' + themeService.GlassBorder,
+    'backdropFilter': 'blur(24px) saturate(180%)',
+    'WebkitBackdropFilter': 'blur(24px) saturate(180%)',
+    'boxShadow': themeService.GlassShadow,
+    'color': themeService.Textprincipal
+    }">
+
+        <!-- HEADER CHAT -->
+        <div *ngIf="selectedUser" class="flex items-center gap-4 p-5 relative z-10"
+            [ngStyle]="{'background':themeService.Backgroundcards1}"
+            [style.border-bottom]="'1px solid ' + themeService.GlassBorder" [style.backdrop-filter]="'blur(20px)'">
+
+            <div class="relative">
+                <div class="w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm text-white shadow-lg transition-transform duration-300 hover:scale-110"
+                    [style.background]="'linear-gradient(135deg, ' + themeService.primary + ', ' + themeService.primary + ')'"
+                    [style.box-shadow]="'0 4px 15px ' + themeService.convocationPrimary + '66'">
+                    {{ selectedUser?.prenom?.charAt(0) }}{{ selectedUser?.nom?.charAt(0) }}
+                </div>
+                <!-- Online indicator -->
+                <div class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2"
+                    [style.background]="themeService.convocationPrimary"
+                    [style.border-color]="themeService.Backgroundcards">
+                </div>
+            </div>
+
+            <div class="flex-1 min-w-0">
+                <p class="font-semibold text-sm truncate">
+                    {{ selectedUser?.prenom }} {{ selectedUser?.nom }}
+                </p>
+                <div class="flex items-center gap-1.5 mt-0.5">
+                    <span class="w-1.5 h-1.5 rounded-full animate-pulse"
+                        [style.background]="themeService.convocationPrimary">
+                    </span>
+                    <p class="text-xs font-medium truncate" [style.color]="themeService.Textsecondaire">
+                        {{ selectedUser?.role }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MESSAGES -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-4 relative z-0 scroll-smooth" #scrollContainer>
+
+            <!-- Empty state -->
+            <div *ngIf="!messages?.length" class="flex flex-col items-center justify-center py-12 opacity-60">
+                <p [ngStyle]="{'color':themeService.Textprincipal}" class="text-sm">Aucun message</p>
+            </div>
+
+            <!-- ========================= -->
+            <!-- MESSAGES LIST -->
+            <!-- ========================= -->
+            <div *ngFor="let msg of messages; let last = last" class="flex w-full animate-fade-in"
+                [ngClass]="isMyMessage(msg) ? 'justify-end' : 'justify-start'">
+
+                <!-- ===================== -->
+                <!-- MESSAGE REÇU -->
+                <!-- ===================== -->
+                <ng-container *ngIf="!isMyMessage(msg)">
+                    <div class="flex items-end gap-2 max-w-[75%]">
+
+                        <!-- Avatar -->
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                            [style.background]="'linear-gradient(135deg, ' + themeService.secondaryHover + ', ' + themeService.secondaryHover + ')'">
+                            {{ msg.expediteur?.prenom?.charAt(0) }}{{ msg.expediteur?.nom?.charAt(0) }}
+                        </div>
+
+                        <!-- Bubble -->
+                        <div class="flex flex-col">
+
+                            <!-- INFOS DEBUG / COMPLETES -->
+                            <div class="text-[10px] opacity-70 mb-1">
+                                <div>{{ msg.expediteur?.prenom }} {{ msg.expediteur?.nom }}</div>
+                            </div>
+
+                            <!-- MESSAGE -->
+                            <div class="px-4 py-2.5 rounded-2xl" [style.background]="themeService.Backgroundcards1"
+                                [style.color]="themeService.Textprincipal">
+
+                                <p class="text-sm">{{ msg.texte }}</p>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- ===================== -->
+                <!-- MESSAGE ENVOYÉ -->
+                <!-- ===================== -->
+                <ng-container *ngIf="isMyMessage(msg)">
+                    <div class="flex items-end gap-2 max-w-[75%] flex-row-reverse">
+
+                        <!-- Avatar -->
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                            [style.background]="'linear-gradient(135deg, ' + themeService.primary + ', ' + themeService.primary + ')'">
+                            {{ msg.expediteur?.prenom?.charAt(0) }}{{ msg.expediteur?.nom?.charAt(0) }}
+                        </div>
+
+                        <!-- Bubble -->
+                        <div class="flex flex-col items-end">
+
+                            <!-- INFOS DEBUG / COMPLETES -->
+                            <div class="text-[10px] opacity-70 mb-1 text-right">
+
+                                <div>{{ msg.expediteur?.prenom }} {{ msg.expediteur?.nom }}</div>
+
+                            </div>
+
+                            <!-- MESSAGE -->
+                            <div class="px-4 py-2.5 rounded-2xl "
+                                [ngStyle]="{'background':themeService.Backgroundcards1,'color':themeService.Textprincipal}">
+
+                                <p class="text-sm">{{ msg.texte }}</p>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </ng-container>
+
+            </div>
+
+            <div #scrollAnchor></div>
+
+        </div>
+
+        <!-- INPUT -->
+        <div *ngIf="selectedUser" class="p-4 relative z-10" [style.background]="themeService.Backgroundcards1"
+            [style.border-top]="'1px solid ' + themeService.GlassBorder" [style.backdrop-filter]="'blur(20px)'">
+
+            <div class="flex items-end gap-3 max-w-4xl mx-auto">
+
+                <!-- Attachment button -->
+                <button class="p-3 rounded-xl transition-all duration-200 flex-shrink-0 self-end mb-0.5"
+                    [style.color]="themeService.Textsecondaire" [style.background]="'transparent'"
+                    (mouseenter)="setBtnHover($event, themeService.Backgroundcards2, themeService.Textprincipal)"
+                    (mouseleave)="setBtnHover($event, 'transparent', themeService.Textsecondaire)">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                    </svg>
+                </button>
+
+                <!-- Input wrapper with focus ring -->
+                <div class="flex-1 relative">
+                    <textarea [(ngModel)]="newMessage" rows="1" placeholder="Écrire un message..."
+                        class="w-full px-5 py-3.5 rounded-2xl text-sm resize-none outline-none transition-all duration-200 max-h-32"
+                        [style.background]="themeService.Backgroundcards2"
+                        [style.border]="'1px solid ' + themeService.GlassBorder"
+                        [style.color]="themeService.Textprincipal"
+                        [style.--placeholder-color]="themeService.Textsecondaire" (keydown.enter)="onEnter($event)"
+                        (focus)="onInputFocus($event)" (blur)="onInputBlur($event)" (input)="autoResize($event)">
+        </textarea>
+                </div>
+
+                <!-- Send button -->
+                <button (click)="sendMessage()" [disabled]="!newMessage?.trim()"
+                    class="p-3.5 rounded-xl text-white transition-all duration-200 flex-shrink-0 self-end hover:scale-105 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    [style.background]="'linear-gradient(135deg, ' + themeService.primary + ', ' + themeService.primary + ')'"
+                    [style.box-shadow]="newMessage?.trim() ? '0 4px 15px ' + themeService.convocationPrimary + '66' : 'none'">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                </button>
+
+            </div>
+
+            <p class="text-center text-[10px] mt-2 opacity-60" [style.color]="themeService.Textsecondaire">
+                Appuyez sur Entrée pour envoyer, Maj+Entrée pour un saut de ligne
+            </p>
+
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div *ngIf="!selectedUser" class="flex flex-col items-center justify-center flex-1 relative z-0">
+
+            <!-- Decorative animated circle -->
+            <div class="w-28 h-28 rounded-full flex items-center justify-center mb-6 animate-pulse"
+                [style.background]="themeService.Backgroundcards2">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    [style.color]="themeService.Textsecondaire">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+            </div>
+
+            <p class="text-lg font-semibold mb-2" [style.color]="themeService.Textprincipal">
+                Sélectionnez un utilisateur
+            </p>
+            <p class="text-sm opacity-70" [style.color]="themeService.Textsecondaire">
+                Choisissez une conversation pour commencer à discuter
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ============================= -->
+<!-- TOAST NOTIFICATION -->
+<!-- ============================= -->
+<div *ngIf="showNotification" class="fixed top-20 right-4 z-[12000] animate-slide-from-right">
+
+    <div class="relative flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl
+            backdrop-blur-md bg-emerald-500/95 border border-emerald-400/30
+            min-w-[300px] max-w-[400px] overflow-hidden">
+
+        <!-- ICON -->
+        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+            <i class="fa-solid fa-circle-check text-white text-xl animate-icon-pop"></i>
+        </div>
+
+        <!-- TEXT -->
+        <div class="flex-1 min-w-0">
+            <p class="text-white font-semibold text-sm">Succès</p>
+            <p class="text-white/90 text-sm truncate">
+                {{ notificationMessage }}
+            </p>
+        </div>
+
+        <!-- CLOSE -->
+        <button (click)="closeNotification()" class="flex-shrink-0 w-7 h-7 rounded-full hover:bg-white/20
+            flex items-center justify-center transition group focus:outline-none">
+
+            <i class="fa-solid fa-xmark text-white/70 group-hover:text-white text-sm"></i>
+
+        </button>
+    </div>
+</div>
+
+<!-- Add this to your global styles or component styles -->
+<style>
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Custom scrollbar for dark theme */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+</style>

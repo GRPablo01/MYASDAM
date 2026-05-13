@@ -359,6 +359,68 @@
     </div>
 
     <!-- ===================================================== -->
+    <!-- PAGINATION -->
+    <!-- ===================================================== -->
+
+    <div *ngIf="!loading && totalPages > 1"
+        class="flex items-center justify-center gap-4 mt-10 mb-4">
+        
+            <!-- PREV -->
+            <button
+            (click)="prevPage()"
+            [disabled]="currentPage === 1"
+            class="group px-5 h-12 rounded-2xl flex items-center gap-3 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+            [ngStyle]="{
+            'background': themeService.GlassBackground,
+            'border': '1px solid ' + themeService.GlassBorder,
+            'color': themeService.Textprincipal,
+            'backdrop-filter': 'blur(20px)'
+            }">
+        
+                <i class="fa-solid fa-chevron-left"></i>
+        
+                <span class="hidden sm:block font-bold">
+                    Précédent
+                </span>
+        
+            </button>
+        
+            <!-- PAGE -->
+            <div
+            class="min-w-[70px] h-12 px-5 rounded-2xl flex items-center justify-center font-black text-sm"
+            [ngStyle]="{
+            'background': 'linear-gradient(to right,' + themeService.primary + ',' + themeService.primaryHover + ')',
+            'color': '#fff',
+            'box-shadow': '0 10px 25px rgba(0,0,0,0.25)'
+            }">
+        
+                {{ currentPage }} / {{ totalPages }}
+        
+            </div>
+        
+            <!-- NEXT -->
+            <button
+            (click)="nextPage()"
+            [disabled]="currentPage === totalPages"
+            class="group px-5 h-12 rounded-2xl flex items-center gap-3 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+            [ngStyle]="{
+            'background': themeService.GlassBackground,
+            'border': '1px solid ' + themeService.GlassBorder,
+            'color': themeService.Textprincipal,
+            'backdrop-filter': 'blur(20px)'
+            }">
+        
+                <span class="hidden sm:block font-bold">
+                    Suivant
+                </span>
+        
+                <i class="fa-solid fa-chevron-right"></i>
+        
+            </button>
+        
+    </div>
+
+    <!-- ===================================================== -->
     <!-- EMPTY -->
     <!-- ===================================================== -->
     <div *ngIf="!loading && events?.length === 0" class="text-center mt-20 flex flex-col items-center">

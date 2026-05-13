@@ -16,16 +16,18 @@ const userSchema = new mongoose.Schema({
 
   role: { 
     type: String, 
-    enum: ['joueur', 'entraineur', 'admin', 'invité'], 
+    enum: ['joueur', 'entraineur', 'admin', 'invité','superadmin'], 
     default: 'joueur' 
   },
 
   club: { type: String, default: '' },
 
-  theme: { 
-    type: String, 
-    enum: ['sombre', 'clair'], 
-    default: 'clair' 
+  // =========================
+  // CONTACTS
+  // =========================
+  contact: {
+    type: [String],
+    default: []
   },
 
   // 🔐 Code d'accès (pas pour invité)
@@ -41,7 +43,7 @@ const userSchema = new mongoose.Schema({
     enum: [
       'U6','U7','U8','U9','U10','U11',
       'U12','U13','U13F','U18','U23',
-      'SeniorA','SeniorB','SeniorD'
+      'SeniorA','SeniorB','SeniorD','ALL'
     ],
     required: function() {
       return this.role === 'joueur' || this.role === 'entraineur';

@@ -101,9 +101,14 @@ export class Login implements OnInit {
           role: res.user.role,
           equipe: res.user.equipe,
           status: res.user.status,
-          cookie: res.user.cookie || ''
+          cookie: res.user.cookie || '',
+        
+          // 🔥 gestion propre du tableau
+          contact: Array.isArray(res.user.contact)
+            ? res.user.contact
+            : [res.user.contact]
         };
-
+        
         localStorage.setItem('token', res.token);
         localStorage.setItem(
           'utilisateur',

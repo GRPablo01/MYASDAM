@@ -24,7 +24,7 @@
 
            [ngStyle]="{
              'color': (hoveredIndex === i || item.active) ? themeService.primary : themeService.Textprincipal,
-             'background-color': (hoveredIndex === i || item.active) ? themeService.secondarySoft : 'transparent',
+             'background-color': (hoveredIndex === i || item.active) ? themeService.primarySoft : 'transparent',
              'ring-color': item.active ? themeService.primary : 'transparent',
              'ring-offset-color': themeService.Backgroundprincipal
            }">
@@ -137,7 +137,7 @@
                      [ngStyle]="{
                        'background-color': hoveredChild === child || child.active 
                        ? 'rgba(255,255,255,0.2)' 
-                       : themeService.secondarySoft
+                       : themeService.primarySoft
                      }">
                   <i *ngIf="child.icon"
                      [class]="child.icon + ' text-sm'"

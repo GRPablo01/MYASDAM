@@ -24,72 +24,220 @@ function generateKey() {
 // =========================
 exports.registerUser = async (req, res) => {
   try {
+
     let {
       nom, prenom, email, password,
       role, poste, numeroMaillot, club,
       theme, equipe, codeAcces, key,
       status, compte, compteDesactiveTime,
-      notification, cookie
+      notification, cookie,
+
+      // =========================
+      // CONTACT
+      // =========================
+      contact
+
     } = req.body;
 
-    // Valeurs par défaut compatibles avec ton schema
+    // =========================
+    // VALEURS PAR DÉFAUT
+    // =========================
     poste = poste || undefined;
     numeroMaillot = numeroMaillot || undefined;
     club = club || '';
-    theme = ['clair','sombre'].includes(theme) ? theme : 'clair';
-    status = ['En ligne','Ne pas deranger','Absent'].includes(status) ? status : 'En ligne';
-    compte = ['actif','désactivé','supprimé'].includes(compte) ? compte : 'actif';
-    compteDesactiveTime = compteDesactiveTime || '';
-    cookie = ['accepter','refuser'].includes(cookie) ? cookie : 'refuser';
-    notification = Array.isArray(notification) ? notification : [];
+
+    theme = ['clair','sombre'].includes(theme)
+      ? theme
+      : 'clair';
+
+    status = [
+      'En ligne',
+      'Ne pas deranger',
+      'Absent'
+    ].includes(status)
+      ? status
+      : 'En ligne';
+
+    compte = [
+      'actif',
+      'désactivé',
+      'supprimé'
+    ].includes(compte)
+      ? compte
+      : 'actif';
+
+    compteDesactiveTime =
+      compteDesactiveTime || '';
+
+    cookie = [
+      'accepter',
+      'refuser'
+    ].includes(cookie)
+      ? cookie
+      : 'refuser';
+
+    notification = Array.isArray(notification)
+      ? notification
+      : [];
+
+    // =========================
+    // CONTACT TABLEAU
+    // =========================
+    contact = Array.isArray(contact)
+      ? contact
+      : [];
 
     key = key || generateKey();
 
-    // Vérifier si email existe déjà
-    const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: 'Email déjà utilisé' });
+    // =========================
+    // EMAIL EXISTE ?
+    // =========================
+    const existingUser =
+      await User.findOne({ email });
 
-    // 🔥 Règles métiers selon rôle
+    if (existingUser) {
+
+      return res.status(400).json({
+        message: 'Email déjà utilisé'
+      });
+    }
+
+    // =========================
+    // RÈGLES MÉTIERS
+    // =========================
     if (role === 'invité') {
+
       equipe = undefined;
       codeAcces = undefined;
     }
+
     if (role === 'admin') {
+
       equipe = 'ALL';
-      if (!codeAcces) return res.status(400).json({ message: 'Code d\'accès obligatoire pour admin' });
-    }
-    if (role === 'joueur' || role === 'entraineur') {
-      if (!equipe) return res.status(400).json({ message: `L'équipe est obligatoire pour ${role}` });
-      if (!codeAcces) return res.status(400).json({ message: `Code d'accès obligatoire pour ${role}` });
+
+      if (!codeAcces) {
+
+        return res.status(400).json({
+          message:
+            'Code d\'accès obligatoire pour admin'
+        });
+      }
     }
 
-    // Création utilisateur
+    if (
+      role === 'joueur' ||
+      role === 'entraineur'
+    ) {
+
+      if (!equipe) {
+
+        return res.status(400).json({
+          message:
+            `L'équipe est obligatoire pour ${role}`
+        });
+      }
+
+      if (!codeAcces) {
+
+        return res.status(400).json({
+          message:
+            `Code d'accès obligatoire pour ${role}`
+        });
+      }
+    }
+
+    // =========================
+    // CRÉATION USER
+    // =========================
     const user = new User({
-      nom, prenom, email, password,
-      role, poste, numeroMaillot, club,
-      theme, equipe, codeAcces, key,
-      status, compte, compteDesactiveTime,
-      notification, cookie
+
+      nom,
+      prenom,
+      email,
+      password,
+
+      role,
+      poste,
+      numeroMaillot,
+      club,
+
+      theme,
+      equipe,
+      codeAcces,
+      key,
+
+      status,
+      compte,
+      compteDesactiveTime,
+
+      notification,
+      cookie,
+
+      // =========================
+      // CONTACT
+      // =========================
+      contact
     });
 
     await user.save();
 
+    // =========================
+    // RESPONSE
+    // =========================
     res.status(201).json({
-      message: 'Utilisateur créé avec succès',
+
+      message:
+        'Utilisateur créé avec succès',
+
       userId: user._id,
+
       key,
+
       compte,
+
       compteDesactiveTime,
-      cookie
+
+      cookie,
+
+      contact
     });
 
   } catch (error) {
-    console.error('[REGISTER ERROR]', error);
+
+    console.error(
+      '[REGISTER ERROR]',
+      error
+    );
+
     if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(e => e.message);
-      return res.status(400).json({ message: 'Validation échouée', errors: messages });
+
+      const messages =
+        Object.values(error.errors)
+        .map(e => e.message);
+
+      return res.status(400).json({
+
+        message:
+          'Validation échouée',
+
+        errors: messages
+      });
     }
-    if (error.code === 11000) return res.status(400).json({ message: 'Email ou key déjà utilisé' });
-    res.status(500).json({ message: 'Erreur serveur', error: error.message });
+
+    if (error.code === 11000) {
+
+      return res.status(400).json({
+
+        message:
+          'Email ou key déjà utilisé'
+      });
+    }
+
+    res.status(500).json({
+
+      message: 'Erreur serveur',
+
+      error: error.message
+    });
   }
 };

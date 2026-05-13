@@ -433,61 +433,87 @@
         </div>
 
         <!-- ================================================= -->
-        <!-- STEP 3 -->
-        <!-- ================================================= -->
-        <div *ngIf="currentStep === 3" class="space-y-4 animate-fade-step">
+<!-- STEP 3 -->
+<!-- ================================================= -->
+<div *ngIf="currentStep === 3" class="space-y-4 animate-fade-step">
 
-          <select
-            formControlName="role"
-            class="w-full h-12 rounded-2xl px-4 border-2"
-            [ngStyle]="{
-              'background': themeservice.Backgroundcards1,
-              'border-color': themeservice.primary,
-              'color': themeservice.Textprincipal
-            }"
-          >
-            <option *ngFor="let role of roles" [value]="role">
-              {{ role }}
-            </option>
-          </select>
+  <!-- NOM DU CLUB -->
+  <input
+    type="text"
+    formControlName="club"
+    placeholder="Nom du club"
+    class="w-full h-12 rounded-2xl px-4 border-2 transition-all duration-300"
+    [ngStyle]="{
+      'background': themeservice.Backgroundcards1,
+      'border-color': themeservice.primary,
+      'color': themeservice.Textprincipal
+    }"
+  />
 
-          <select
-            formControlName="equipe"
-            class="w-full h-12 rounded-2xl px-4 border-2"
-            [ngStyle]="{
-              'background': themeservice.Backgroundcards1,
-              'border-color': themeservice.primary,
-              'color': themeservice.Textprincipal
-            }"
-          >
-            <option value="">Équipe</option>
+  <!-- EQUIPE -->
+  <select
+    formControlName="equipe"
+    class="w-full h-12 rounded-2xl px-4 border-2 transition-all duration-300"
+    [ngStyle]="{
+      'background': themeservice.Backgroundcards1,
+      'border-color': themeservice.primary,
+      'color': themeservice.Textprincipal
+    }"
+  >
 
-            <option *ngFor="let equipe of equipes" [value]="equipe">
-              {{ equipe }}
-            </option>
+    <option value="">Choisir une équipe</option>
 
-          </select>
+    <option *ngFor="let equipe of equipes" [value]="equipe">
+      {{ equipe }}
+    </option>
 
-        </div>
+  </select>
 
-        <!-- ================================================= -->
-        <!-- STEP 4 -->
-        <!-- ================================================= -->
-        <div *ngIf="currentStep === 4" class="space-y-4 animate-fade-step">
+</div>
 
-          <input
-            type="text"
-            formControlName="club"
-            placeholder="Nom du club"
-            class="w-full h-12 rounded-2xl px-4 border-2"
-            [ngStyle]="{
-              'background': themeservice.Backgroundcards1,
-              'border-color': themeservice.primary,
-              'color': themeservice.Textprincipal
-            }"
-          />
+<!-- ================================================= -->
+<!-- STEP 4 -->
+<!-- ================================================= -->
+<div *ngIf="currentStep === 4" class="space-y-4 animate-fade-step">
 
-        </div>
+  <!-- ROLE -->
+  <select
+    formControlName="role"
+    class="w-full h-12 rounded-2xl px-4 border-2 transition-all duration-300"
+    [ngStyle]="{
+      'background': themeservice.Backgroundcards1,
+      'border-color': themeservice.primary,
+      'color': themeservice.Textprincipal
+    }"
+  >
+
+    <option value="">Choisir un rôle</option>
+
+    <option *ngFor="let role of roles" [value]="role">
+      {{ role }}
+    </option>
+
+  </select>
+
+  <!-- CODE D'ACCES -->
+  <input
+    *ngIf="
+      registerForm.get('role')?.value === 'joueur' ||
+      registerForm.get('role')?.value === 'entraineur' ||
+      registerForm.get('role')?.value === 'admin'
+    "
+    type="text"
+    formControlName="codeAcces"
+    placeholder="Code d'accès"
+    class="w-full h-12 rounded-2xl px-4 border-2 transition-all duration-300"
+    [ngStyle]="{
+      'background': themeservice.Backgroundcards1,
+      'border-color': themeservice.primary,
+      'color': themeservice.Textprincipal
+    }"
+  />
+
+</div>
 
         <!-- NAVIGATION -->
         <div class="grid grid-cols-2 gap-3 pt-2">

@@ -12,6 +12,8 @@ import { Convocations } from '../page/public/convocations/convocations';
 import { Gestion } from '../page/public/gestion/gestion';
 import { Utilisateur } from '../page/public/utilisateur/utilisateur';
 import { Contenue } from '../page/public/contenue/contenue';
+import { Communiquer } from '../page/public/communiquer/communiquer';
+import { Messagerie } from '../page/public/messagerie/messagerie';
 
 
 
@@ -35,6 +37,8 @@ export const routes: Routes = [
     { path: 'gestion', component: Gestion},
     { path: 'user', component: Utilisateur},
     { path: 'cont', component: Contenue},
+    { path: 'commun', component: Communiquer},
+    { path: 'message', component: Messagerie},
     
 
 ];

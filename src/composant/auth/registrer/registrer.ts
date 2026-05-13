@@ -305,7 +305,7 @@ export class Registrer implements OnInit {
         this.currentStep = 1;
 
         setTimeout(() => {
-          this.router.navigate(['/connexion']);
+          this.router.navigate(['/accueil']);
         }, 1500);
       },
 

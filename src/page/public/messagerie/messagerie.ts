@@ -5,14 +5,20 @@ import { HttpClientModule } from '@angular/common/http';
 import { Header } from "../../../composant/public/header/header";
 import { FormsModule } from '@angular/forms';
 import { Footer } from "../../../composant/share/footer/footer";
+import { Cookie } from '../../../composant/priver/cookie/cookie';
+import { Barre } from '../../../composant/share/barre/barre';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
 import { Mobile } from "../../../composant/share/mobile/mobile";
-import { Cont } from '../../../composant/share/Page-Contenue/cont/cont';
+import { BarreScroll } from '../../../composant/share/barre-scroll/barre-scroll';
+import { Fonctionalite } from '../../../composant/share/Page-Accueil/fonctionalite/fonctionalite';
+import { SectionDate1 } from '../../../composant/share/Page-Accueil/section-date1/section-date1';
+import { Welcome } from '../../../composant/share/Page-Accueil/welcome/welcome';
+import { Message } from '../../../composant/share/Page-Message/message/message';
 
 
 
 @Component({
-  selector: 'app-contenue',
+  selector: 'app-messagerie',
   standalone: true,
   imports: [
     CommonModule,
@@ -21,12 +27,12 @@ import { Cont } from '../../../composant/share/Page-Contenue/cont/cont';
     FormsModule,
     Footer,
     Mobile,
-    Cont
-  ],
-  templateUrl: './contenue.html',
-  styleUrls: ['./contenue.css'],
+    Message
+],
+  templateUrl: './messagerie.html',
+  styleUrls: ['./messagerie.css'],
 })
-export class Contenue implements OnInit {
+export class Messagerie implements OnInit {
 
   isLoaded: boolean = false;
   isLoggedIn: boolean = false;
@@ -38,7 +44,7 @@ export class Contenue implements OnInit {
 
   ngOnInit(): void {
     // 🧠 Titre de la page
-    this.titleService.setTitle('ASDAM | Contenue');
+    this.titleService.setTitle('ASDAM | Messagerie');
 
     // 👤 Vérification de la connexion utilisateur
     const utilisateurString = localStorage.getItem('utilisateur');

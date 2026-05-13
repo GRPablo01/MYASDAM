@@ -21,10 +21,10 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/myasdam';
 // ✅ Middleware CORS
 // ==============================
 app.use(cors({
-  origin: 'http://localhost:4200', // <-- ton frontend Angular
+  origin: 'http://localhost:4200',
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-user'],
-  credentials: true               // <-- utile si JWT ou cookies
+  credentials: true
 }));
 
 // ==============================
@@ -37,10 +37,12 @@ app.use(express.urlencoded({ extended: true }));
 // 📁 Dossier uploads
 // ==============================
 const uploadDir = path.join(__dirname, 'uploads');
+
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
   console.log(`📂 Dossier uploads créé : ${uploadDir}`);
 }
+
 app.use('/uploads', express.static(uploadDir));
 
 // ==============================
@@ -50,13 +52,14 @@ const storage = multer.diskStorage({
   destination: (_, __, cb) => cb(null, uploadDir),
   filename: (_, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
 });
+
 const upload = multer({ storage });
 
 // ==============================
 // 🌍 Connexion MongoDB
 // ==============================
 mongoose.connect(MONGO_URI)
-  .then(() => console.log(`✅ Connexion à MongoDB réussie sur ${MONGO_URI}`))
+  .then(() => console.log(`✅ MongoDB connecté : ${MONGO_URI}`))
   .catch(err => {
     console.error('❌ Erreur MongoDB :', err.message);
     process.exit(1);
@@ -67,31 +70,40 @@ mongoose.connect(MONGO_URI)
 // ==============================
 const authRoutes = require('./Backend/Routes/auth.Routes');
 const matchRoutes = require('./Backend/Routes/match.Routes');
-const equipeRoutes = require('./Backend/Routes/equipe.Routes'); // <-- décommenter si besoin
+const equipeRoutes = require('./Backend/Routes/equipe.Routes');
 const eventRoutes = require('./Backend/Routes/event.Routes');
 const actusRoutes = require('./Backend/Routes/actus.Routes');
-const userRoutes = require('./Backend/Routes/auth.Routes'); // nouvelle route /users
+const userRoutes = require('./Backend/Routes/user.Routes');
 const convocationRoutes = require('./Backend/Routes/convocation.routes');
-const userRoutes1 = require('./Backend/Routes/user.Routes');
-
+const messageRoutes = require('./Backend/Routes/message.Routes');
+const contactRoutes = require('./Backend/Routes/contact.Routes');
 
 // ==============================
 // 🧭 Routes API
 // ==============================
 app.use('/api/auth', authRoutes);
 app.use('/api/matchs', matchRoutes);
-app.use('/api/equipes', equipeRoutes); // <-- route équipe complète
+app.use('/api/equipes', equipeRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/actus', actusRoutes);
-app.use('/api/auth/users', userRoutes);   // /api/users
+
+// 👇 USERS (IMPORTANT : centralisé ici)
+app.use('/api/users', userRoutes);
+
 app.use('/api/convocation', convocationRoutes);
-app.use('/api/users', userRoutes1);
+app.use('/api/messages', messageRoutes);
+app.use('/api/contact', contactRoutes);
 
 // ==============================
 // 🏠 Routes de test
 // ==============================
-app.get('/', (_, res) => res.send('✅ Serveur ASDAM opérationnel !'));
-app.get('/api', (_, res) => res.json({ message: 'Bienvenue sur l’API ASDAM !' }));
+app.get('/', (_, res) => {
+  res.send('✅ Serveur ASDAM opérationnel !');
+});
+
+app.get('/api', (_, res) => {
+  res.json({ message: 'Bienvenue sur l’API ASDAM !' });
+});
 
 // ==============================
 // 🚀 Lancement serveur

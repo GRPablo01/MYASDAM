@@ -37,6 +37,12 @@ export class GestionEvent implements OnInit {
 
   ngOnInit(): void {
     this.loadEvents();
+
+    this.updateItemsPerPage();
+
+    window.addEventListener('resize', () => {
+      this.updateItemsPerPage();
+    });
   }
 
   // ================= LOAD =================
@@ -150,4 +156,124 @@ export class GestionEvent implements OnInit {
   trackById(index: number, item: any): string {
     return item._id;
   }
+
+   // =====================================================
+// PAGINATION RESPONSIVE
+// =====================================================
+
+currentPage = 1;
+
+itemsPerPage = 8;
+
+
+
+// =====================================================
+// RESPONSIVE ITEMS
+// =====================================================
+
+updateItemsPerPage(): void {
+
+  const width = window.innerWidth;
+
+  // DESKTOP XL = 4 x 2
+  if (width >= 1280) {
+
+    this.itemsPerPage = 8;
+
+  }
+
+  // LAPTOP = 3 x 2
+  else if (width >= 1024) {
+
+    this.itemsPerPage = 6;
+
+  }
+
+  // TABLETTE = 2 x 2
+  else if (width >= 768) {
+
+    this.itemsPerPage = 4;
+
+  }
+
+  // MOBILE = 1 x 4
+  else {
+
+    this.itemsPerPage = 4;
+
+  }
+
+}
+
+// =====================================================
+// MATCHS PAGINÉS
+// =====================================================
+
+get matchsPagines() {
+
+  const start = (this.currentPage - 1) * this.itemsPerPage;
+
+  return this.events.slice(
+    start,
+    start + this.itemsPerPage
+  );
+
+}
+
+// =====================================================
+// TOTAL PAGES
+// =====================================================
+
+get totalPages(): number {
+
+  return Math.ceil(
+    this.events.length / this.itemsPerPage
+  );
+
+}
+
+// =====================================================
+// NEXT
+// =====================================================
+
+nextPage(): void {
+
+  if (this.currentPage < this.totalPages) {
+
+    this.currentPage++;
+
+    this.scrollTop();
+
+  }
+
+}
+
+// =====================================================
+// PREV
+// =====================================================
+
+prevPage(): void {
+
+  if (this.currentPage > 1) {
+
+    this.currentPage--;
+
+    this.scrollTop();
+
+  }
+
+}
+
+// =====================================================
+// SCROLL TOP
+// =====================================================
+
+scrollTop(): void {
+
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+
+}
 }

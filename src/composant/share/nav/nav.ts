@@ -80,10 +80,6 @@ export class Nav implements OnInit {
       // SUPERADMIN - Gestion complète du club
       // Navigation principale avec 4 sections
       // ============================================
-      // ============================================
-      // SUPERADMIN - Gestion complète du club
-      // Navigation principale avec 4 sections
-      // ============================================
       superadmin: [
         // Gestion
         {
@@ -101,14 +97,14 @@ export class Nav implements OnInit {
             {
               label: 'Contenu Sportif',
               icon: 'fas fa-futbol',
-              link: '/superadmin/gestion/sport',
+              link: '/cont',
               description: 'Matchs, calendriers, résultats et événements sportifs',
             },
             {
               label: 'Communication',
               icon: 'fas fa-bullhorn',
-              link: '/superadmin/gestion/communication',
-              description: 'Actualités, newsletters et notifications push',
+              link: '/commun',
+              description: 'Messages, Communiquer',
             }
           ]
 
@@ -118,7 +114,7 @@ export class Nav implements OnInit {
         {
           label: 'Messagerie',
           icon: 'fas fa-envelope',
-          link: '/messagerie',
+          link: '/message',
           description: 'Emails internes, discussions et support utilisateurs',
         },
 
@@ -134,7 +130,7 @@ export class Nav implements OnInit {
         {
           label: 'Convocation',
           icon: 'fas fa-clipboard-list',
-          link: 'planning',
+          link: '/convoque',
           description: 'Organisation des séances et rencontres',
           children: [
             {
@@ -173,14 +169,14 @@ export class Nav implements OnInit {
             {
               label: 'Contenu Sportif',
               icon: 'fas fa-futbol',
-              link: '/sport',
+              link: '/cont',
               description: 'Matchs, calendriers, résultats et événements sportifs',
             },
             {
               label: 'Communication',
               icon: 'fas fa-bullhorn',
-              link: '/communication',
-              description: 'Actualités, newsletters et notifications push',
+              link: '/commun',
+              description: 'Messages, Communiquer',
             }
           ]
 
@@ -190,7 +186,7 @@ export class Nav implements OnInit {
         {
           label: 'Messagerie',
           icon: 'fas fa-envelope',
-          link: '/messagerie',
+          link: '/message',
           description: 'Emails internes, discussions et support utilisateurs',
         },
 

@@ -32,7 +32,7 @@ export class Cookie implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('🍪 Cookie INIT');
+    // console.log('🍪 Cookie INIT');
 
     this.initUser();
     this.checkDisplay();
@@ -59,11 +59,11 @@ export class Cookie implements OnInit {
 
       this.userCookie = (localCookie || '').trim();
 
-      console.log('👤 USER INIT:', {
-        key: this.userKey,
-        role: this.userRole,
-        cookie: this.userCookie
-      });
+      // console.log('👤 USER INIT:', {
+      //   key: this.userKey,
+      //   role: this.userRole,
+      //   cookie: this.userCookie
+      // });
 
     } else {
       this.userKey = null;
@@ -89,20 +89,20 @@ export class Cookie implements OnInit {
     const cookie = localStorage.getItem('cookie_choice');
 
     if (cookie === 'accepter' || cookie === 'refuser') {
-      console.log('✔ Cookie déjà choisi (localStorage) → pas d’affichage');
+      // console.log('✔ Cookie déjà choisi (localStorage) → pas d’affichage');
       this.show = false;
       return;
     }
 
     // fallback mémoire
     if (this.userCookie === 'accepter' || this.userCookie === 'refuser') {
-      console.log('✔ Cookie déjà choisi (memory) → pas d’affichage');
+      // console.log('✔ Cookie déjà choisi (memory) → pas d’affichage');
       this.show = false;
       return;
     }
 
     // 🍪 afficher banner
-    console.log('🍪 Affichage banner cookie');
+    // console.log('🍪 Affichage banner cookie');
 
     setTimeout(() => {
       this.show = true;
@@ -129,12 +129,12 @@ export class Cookie implements OnInit {
       return;
     }
 
-    const url = `http://localhost:3000/api/user/cookie/${this.userKey}`;
+    const url = `http://localhost:3000/api/auth/cookie/${this.userKey}`;
 
     this.http.put(url, { cookie: value }).subscribe({
       next: (res) => {
 
-        console.log('✅ COOKIE SAVED:', res);
+        // console.log('✅ COOKIE SAVED:', res);
 
         // 🔥 sync state
         this.userCookie = value;

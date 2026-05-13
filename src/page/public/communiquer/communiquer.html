@@ -1,0 +1,50 @@
+<app-mobile></app-mobile>
+
+<!-- ================= LOADER ================= -->
+<div *ngIf="!isLoaded"
+     class="fixed inset-0 flex items-center justify-center z-[2] bg-black/60 backdrop-blur-sm transition-all duration-300">
+  <div class="animate-pulse text-lg font-bold text-white tracking-wider">
+    Chargement...
+  </div>
+</div>
+
+<!-- ================= PAGE ================= -->
+<div [ngStyle]="{'background':themeService.Backgroundprincipal}" class="actus-container min-h-screen transition-colors duration-500 relative">
+
+  <!-- BACKGROUND ANIMÉ - Grille technique (TOUJOURS EN DERNIER PLAN) -->
+  <div class="fixed inset-0 pointer-events-none z-[1]">
+    <div class="w-full h-full opacity-[0.08]" 
+         [ngStyle]="{
+           'background-image': 'linear-gradient(' + themeService.Textsecondaire + ' 1px, transparent 1px), linear-gradient(90deg, ' + themeService.Textsecondaire + ' 1px, transparent 1px)',
+           'background-size': '50px 50px'
+         }"
+         style="animation: gridPulse 4s ease-in-out infinite;">
+    </div>
+  </div>
+
+  <!-- Contenu principal (TOUJOURS AU-DESSUS) -->
+  <div class="relative z-[10] min-h-screen">
+    <app-header></app-header>
+    <app-commun></app-commun>
+    <app-footer></app-footer>
+  </div>
+
+</div>
+
+<style>
+/* Animation subtile pour la grille */
+@keyframes gridPulse {
+  0%, 100% { opacity: 0.05; }
+  50% { opacity: 0.12; }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Assure que le conteneur prend bien toute la hauteur */
+.actus-container {
+  display: flex;
+  flex-direction: column;
+}
+</style>
