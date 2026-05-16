@@ -5,14 +5,20 @@ import { HttpClientModule } from '@angular/common/http';
 import { Header } from "../../../composant/public/header/header";
 import { FormsModule } from '@angular/forms';
 import { Footer } from "../../../composant/share/footer/footer";
+import { Cookie } from '../../../composant/priver/cookie/cookie';
+import { Barre } from '../../../composant/share/barre/barre';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
-import { Dash } from '../../../composant/share/Page-Dash/dash/dash';
-import { Mobile } from '../../../composant/share/mobile/mobile';
+import { Mobile } from "../../../composant/share/mobile/mobile";
+import { BarreScroll } from '../../../composant/share/barre-scroll/barre-scroll';
+import { Fonctionalite } from '../../../composant/share/Page-Accueil/fonctionalite/fonctionalite';
+import { SectionDate1 } from '../../../composant/share/Page-Accueil/section-date1/section-date1';
+import { Welcome } from '../../../composant/share/Page-Accueil/welcome/welcome';
+import { Classe } from '../../../composant/share/Page-Classement/classe/classe';
 
 
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-classement',
   standalone: true,
   imports: [
     CommonModule,
@@ -20,14 +26,13 @@ import { Mobile } from '../../../composant/share/mobile/mobile';
     Header,
     FormsModule,
     Footer,
-    Dash,
     Mobile,
-    
-  ],
-  templateUrl: './dashboard.html',
-  styleUrls: ['./dashboard.css'],
+    Classe
+],
+  templateUrl: './classement.html',
+  styleUrls: ['./classement.css'],
 })
-export class Dashboard implements OnInit {
+export class Classement implements OnInit {
 
   isLoaded: boolean = false;
   isLoggedIn: boolean = false;
@@ -39,7 +44,7 @@ export class Dashboard implements OnInit {
 
   ngOnInit(): void {
     // 🧠 Titre de la page
-    this.titleService.setTitle('ASDAM | Accueil');
+    this.titleService.setTitle('ASDAM | Classement');
 
     // 👤 Vérification de la connexion utilisateur
     const utilisateurString = localStorage.getItem('utilisateur');

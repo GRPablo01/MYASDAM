@@ -1,0 +1,75 @@
+<!-- =========================
+      CONTAINER FULL WIDTH
+========================= -->
+<div class="h-auto mb-5">
+
+  <!-- GRID RESPONSIVE FULL WIDTH -->
+  <div class="flex mx-auto items-center justify-center" [ngClass]="gridClass">
+
+    <ng-container *ngFor="let item of paginatedItems">
+
+      <app-ajouter-equipe *ngIf="item === 'team'"></app-ajouter-equipe>
+      <app-creer-match *ngIf="item === 'match'"></app-creer-match>
+      <app-creer-event *ngIf="item === 'event'"></app-creer-event>
+      <app-creer-actus *ngIf="item === 'actus'"></app-creer-actus>
+      <app-convocations *ngIf="item === 'convocation'"></app-convocations>
+
+    </ng-container>
+
+  </div>
+
+ <!-- =========================
+        PAGINATION FULL WIDTH CENTRÉE
+========================= -->
+<div class="w-full flex justify-center items-center mt-6 pb-4">
+
+<!-- CONTAINER CENTRAL -->
+<div class="flex items-center justify-center gap-4 px-6 py-3 rounded-lg"
+[ngStyle]="{
+  'background': themeService.GlassBackground,
+  'border': '2px solid ' + themeService.GlassBorder,
+  'backdrop-filter': 'blur(22px) saturate(180%)',
+  '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+  'box-shadow': '0 10px 30px rgba(0,0,0,0.08)',
+  'color':themeService.Textprincipal
+}">
+
+  <!-- PREV -->
+  <button
+    class="px-4 py-2 rounded-lg transition flex items-center justify-center"
+    [ngStyle]="{
+      'background': themeService.primary,
+      'color': '#FFFFFF',
+      'filter': isHover ? 'brightness(0.85)' : 'brightness(1)'
+    }"
+    (mouseenter)="isHover = true"
+    (mouseleave)="isHover = false"
+    (click)="prevPage()">
+    Prev
+  </button>
+
+  <!-- PAGE INDICATOR -->
+  <span
+    class="font-medium px-3 flex items-center justify-center"
+    [ngStyle]="{'color': themeService.primary}">
+    Page {{ currentPage + 1 }} / {{ totalPages }}
+  </span>
+
+  <!-- NEXT -->
+  <button
+    class="px-4 py-2 rounded-lg transition flex items-center justify-center"
+    [ngStyle]="{
+      'background': themeService.primary,
+      'color': '#FFFFFF',
+      'filter': isNextHover ? 'brightness(0.85)' : 'brightness(1)'
+    }"
+    (mouseenter)="isNextHover = true"
+    (mouseleave)="isNextHover = false"
+    (click)="nextPage()">
+    Next
+  </button>
+
+</div>
+</div>
+
+</div>

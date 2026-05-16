@@ -29,53 +29,46 @@ function generateKey() {
 // ==============================
 const createMatch = async (req, res) => {
   try {
-    const { 
-      date, 
-      heure, 
-      lieu, 
-      equipeDom, 
-      logoDom, 
-      equipeExt, 
-      logoExt, 
-      typeMatch, 
-      categorie 
+    const {
+      date,
+      heure,
+      lieu,
+      equipeDom,
+      logoDom,
+      equipeExt,
+      logoExt,
+      typeMatch,
+      categorie
     } = req.body;
 
-    // 🔐 Génération clé UNIQUE
+    // 🔐 KEY SAFE
     let keyUnique;
     let existe = true;
 
     while (existe) {
       keyUnique = generateKey();
       const matchExistant = await Match.findOne({ key: keyUnique });
-      if (!matchExistant) {
-        existe = false;
-      }
+      if (!matchExistant) existe = false;
     }
 
-    // ✅ Détermination domicile / extérieur
-    let localisationMatch = 'Exterieur';
-
-    if (lieu && stadesDomicile.includes(lieu.toLowerCase())) {
-      localisationMatch = 'Domicile';
-    }
-
-    const nouveauMatch = new Match({ 
-      date, 
-      heure, 
-      lieu, 
-      equipeDom, 
-      logoDom, 
-      equipeExt, 
-      logoExt, 
-      typeMatch, 
+    // 🧠 SAFE VALUES (IMPORTANT)
+    const nouveauMatch = new Match({
+      date,
+      heure,
+      lieu,
+      equipeDom,
+      logoDom: logoDom?.trim() || null,
+      equipeExt,
+      logoExt: logoExt?.trim() || null,
+      typeMatch,
       categorie,
       scoreDom: 0,
       scoreExt: 0,
       statut: 'À venir',
-      localisationMatch,
+      localisationMatch: stadesDomicile.includes((lieu || '').toLowerCase())
+        ? 'Domicile'
+        : 'Exterieur',
       key: keyUnique,
-      // Initialisation du temps
       minute: 0,
       periode: null,
       tempsAdditionnel: 0
@@ -83,14 +76,17 @@ const createMatch = async (req, res) => {
 
     await nouveauMatch.save();
 
-    res.status(201).json({ 
-      message: 'Match créé avec succès', 
-      match: nouveauMatch 
+    return res.status(201).json({
+      message: 'Match créé avec succès',
+      match: nouveauMatch
     });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Erreur lors de la création du match' });
+    console.error("💥 CREATE MATCH ERROR :", error);
+    return res.status(500).json({
+      message: 'Erreur lors de la création du match',
+      error: error.message
+    });
   }
 };
 

@@ -34,8 +34,8 @@
                shadow-md ring-2 ring-white/30 transition-transform duration-300 group-hover:scale-110"
         [ngStyle]="{'background': getRoleGradient(role)}">
 
-        <ng-container *ngIf="role === 'super admin'; else normalUser">
-          <i class="fa-solid fa-crown text-[10px]"></i>
+        <ng-container *ngIf="role === 'superadmin'; else normalUser">
+          <i class="fa-solid fa-crown text-[15px]"></i>
         </ng-container>
 
         <ng-template #normalUser>
@@ -98,7 +98,7 @@
             [ngStyle]="{'background': getRoleGradient(role)}">
 
             <ng-container *ngIf="role === 'superadmin'; else normalBig">
-              <i class="fa-solid fa-crown text-sm"></i>
+              <i class="fa-solid fa-crown text-[15px]"></i>
             </ng-container>
 
             <ng-template #normalBig>
@@ -160,18 +160,18 @@
 
         </a>
 
-        <!-- USERS -->
-        <a routerLink="/users" class="menu-item group flex items-center gap-2">
+        <!-- LOGS SYSTEME -->
+        <a routerLink="/logs" class="menu-item group flex items-center gap-2">
 
-          <i class="fa-solid fa-users icon"
+          <i class="fa-solid fa-clipboard-list icon"
             [ngStyle]="{
-              'color': themeService.teamPrimary,
-              'background-color': themeService.teamPrimarySoft
+              'color': themeService.primary,
+              'background-color': themeService.primarySoft
             }">
           </i>
 
-          <span [ngStyle]="{'color': themeService.teamPrimary}">
-            Utilisateurs
+          <span [ngStyle]="{'color': themeService.primary}">
+            Logs système
           </span>
 
         </a>
@@ -192,10 +192,10 @@
 
         </a>
 
-        <!-- EVENTS / MATCHS -->
-        <a routerLink="/matchs" class="menu-item group flex items-center gap-2">
+        <!-- PLANNING -->
+        <a routerLink="/planning" class="menu-item group flex items-center gap-2">
 
-          <i class="fa-solid fa-futbol icon"
+          <i class="fa-solid fa-calendar-days icon"
             [ngStyle]="{
               'color': themeService.eventPrimary,
               'background-color': themeService.eventPrimarySoft
@@ -203,7 +203,7 @@
           </i>
 
           <span [ngStyle]="{'color': themeService.eventPrimary}">
-            Événements
+            Planning
           </span>
 
         </a>

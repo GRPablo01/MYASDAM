@@ -1,0 +1,944 @@
+<!-- ============================================ -->
+<!-- SECTION AJOUTER EQUIPE PREMIUM UI/UX -->
+<!-- DESKTOP + MOBILE SEPARÉS -->
+<!-- ============================================ -->
+<section class="relative w-full py-5 px-5 sm:py-10 sm:px-10 overflow-hidden">
+
+  <!-- ===================================================== -->
+  <!-- DESKTOP / LAPTOP -->
+  <!-- ===================================================== -->
+
+  <div class="relative z-10 hidden lg:flex justify-center">
+
+    <section
+      class="relative w-80 h-96 rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 hover:scale-105">
+      <!-- IMAGE -->
+      <img src="assets/ImageMatch.png"
+        class="absolute inset-0 w-full h-full object-cover transition-transform duration-700" />
+
+      <!-- ICON -->
+      <div [ngStyle]="{
+        'background': themeService.GlassBackground,
+        'border': '2px solid ' + themeService.GlassBorder,
+        'backdrop-filter': 'blur(22px) saturate(180%)',
+        '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+        'box-shadow': '0 10px 30px rgba(0,0,0,0.08)',
+        'color':themeService.Textprincipal
+      }" class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full ">
+        <i [ngStyle]="{'color':themeService.primary}" class="fa-regular fa-futbol"></i>
+      </div>
+
+      <!-- TEXT CENTER -->
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="rounded-xl px-5 py-4 text-center max-w-[80%] backdrop-blur-md" [ngStyle]="{
+            'background': themeService.GlassBackground,
+            'border': '2px solid ' + themeService.GlassBorder,
+            'color': themeService.Textprincipal
+          }">
+          <h3 class="text-lg font-bold mb-1">Créer un match</h3>
+          <p class="text-sm"> Créer facilement un match pour le club</p>
+        </div>
+      </div>
+
+      <!-- BUTTON -->
+      <div (click)="toggleMatchForm()" class="absolute bottom-4 left-1/2 -translate-x-1/2 w-[85%]">
+        <button
+          class="w-full px-5 py-3 rounded-2xl font-medium flex items-center justify-center transition-all hover:scale-105"
+          [ngStyle]="{
+            'background': themeService.primary,
+            'color': '#fff'
+          }">
+          <i class="fa-solid fa-plus mr-2"></i>
+          Nouveau match
+        </button>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- MOBILE / TABLET (VERSION HORIZONTALE) -->
+  <!-- ===================================================== -->
+
+  <div class="relative z-10 flex lg:hidden">
+
+    <section [ngStyle]="{
+      'background': themeService.GlassBackground,
+      'border': '2px solid ' + themeService.GlassBorder,
+      'backdrop-filter': 'blur(22px) saturate(180%)',
+      '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+      'box-shadow': '0 10px 30px rgba(0,0,0,0.08)',
+      'color':themeService.Textprincipal
+    }" class="relative w-full h-40 rounded-2xl overflow-hidden shadow-xl flex items-center gap-4 p-3">
+
+      <!-- IMAGE -->
+      <div class="w-32 h-full rounded-xl overflow-hidden flex-shrink-0">
+        <img src="assets/ImageMatch.png" class="w-full h-full object-cover" />
+      </div>
+
+      <!-- CONTENT -->
+      <div class="flex-1">
+
+        <h3 class="text-base font-bold" [ngStyle]="{
+          'color': themeService.Textprincipal
+        }">
+          Créer un match
+        </h3>
+
+        <p class="text-xs mt-1" [ngStyle]="{
+          'color': themeService.Textsecondaire
+        }">
+          Créer facilement un match pour le club
+        </p>
+
+        <!-- BUTTON -->
+        <button (click)="toggleMatchForm()" class="mt-3 w-full py-2 rounded-xl text-sm font-medium" [ngStyle]="{
+            'background': themeService.primary,
+            'color': '#fff'
+          }">
+          <i class="fa-solid fa-plus mr-2"></i>
+          Nouveau match
+        </button>
+
+      </div>
+
+      <!-- ICON -->
+      <div
+        class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-white text-sm">
+        <i class="fa-solid fa-user-plus"></i>
+      </div>
+
+    </section>
+
+  </div>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- MODAL FULL RESPONSIVE - PREMIUM GLASSMORPHISM UI/UX -->
+<!-- ===================================================== -->
+<div *ngIf="showMatchForm" role="dialog" aria-modal="true" aria-labelledby="modal-title"
+  class="fixed inset-0 z-[2147483632] bg-black/55 flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+  (click)="toggleMatchForm()">
+
+  <!-- Overlay backdrop blur -->
+  <!-- <div
+    class="absolute inset-0 backdrop-blur-xl"
+    [ngStyle]="{
+      'background': 'radial-gradient(ellipse at center, transparent 0%, ' + themeService.Backgroundcards + '80 100%)'
+    }"
+  ></div> -->
+
+  <!-- Modal Container -->
+  <div (click)="$event.stopPropagation()"
+    class="relative w-full max-h-[95vh] overflow-hidden rounded-3xl flex flex-col xl:flex-row xl:max-w-6xl animate-modal-in shadow-2xl"
+    [ngStyle]="{
+      'background':themeService.Backgroundcards1
+    }">
+
+    <!-- ===================================================== -->
+    <!-- LEFT VISUAL (DESKTOP ONLY) -->
+    <!-- ===================================================== -->
+    <!-- <div class="hidden xl:flex w-[42%] relative overflow-hidden">
+
+      <!-- Background Image with overlay --
+      <img
+        src="assets/ImageMatch.png"
+        class="absolute inset-0 w-full h-full object-cover"
+        alt=""
+      />
+
+      <!-- Gradient overlay for depth --
+      <div
+        class="absolute inset-0"
+        [ngStyle]="{
+          'background': 'linear-gradient(180deg, ' + themeService.Backgroundcards + '00 0%, ' + themeService.Backgroundcards + '60 50%, ' + themeService.Backgroundcards + '90 100%)'
+        }"
+      ></div>
+
+      <!-- Glassmorphism accent line --
+      <div
+        class="absolute right-0 top-0 bottom-0 w-[1px]"
+        [ngStyle]="{
+          'background': 'linear-gradient(180deg, transparent 0%, ' + themeService.primary + '60 30%, ' + themeService.primary + '40 70%, transparent 100%)'
+        }"
+      ></div>
+
+      <div
+        class="relative z-10 p-10 flex flex-col justify-between h-full"
+        [ngStyle]="{ 'color': themeService.Textprincipal }"
+      >
+
+        <!-- Icon Card --
+        <div
+          class="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-lg"
+          [ngStyle]="{
+            'background': 'linear-gradient(135deg, ' + themeService.GlassBackground + ' 0%, ' + themeService.GlassBackground + 'CC 100%)',
+            'border': '1px solid ' + themeService.GlassBorder + '60',
+            'box-shadow': '0 8px 32px -8px ' + themeService.primary + '30, inset 0 1px 0 ' + themeService.GlassBorder + '40'
+          }"
+        >
+          <i
+            class="fa-solid fa-futbol text-3xl transition-transform duration-300 hover:rotate-12"
+            [ngStyle]="{ 'color': themeService.primary }"
+          ></i>
+        </div>
+
+        <!-- Content --
+        <div class="mt-10 space-y-4">
+          <h2 class="text-4xl font-black tracking-tight leading-tight">
+            Créer un match
+          </h2>
+          <p
+            class="text-base leading-relaxed max-w-[280px]"
+            [ngStyle]="{ 'color': themeService.Textsecondaire }"
+          >
+            Organisez vos rencontres sportives facilement et suivez vos équipes en temps réel.
+          </p>
+
+          <!-- Decorative dots --
+          <div class="flex gap-2 pt-4">
+            <div class="w-2 h-2 rounded-full" [ngStyle]="{ 'background': themeService.primary }"></div>
+            <div class="w-2 h-2 rounded-full" [ngStyle]="{ 'background': themeService.primary }"></div>
+            <div class="w-2 h-2 rounded-full" [ngStyle]="{ 'background': themeService.primary }"></div>
+          </div>
+        </div>
+
+      </div>
+    </div> -->
+
+    <!-- ===================================================== -->
+    <!-- RIGHT FORM -->
+    <!-- ===================================================== -->
+    <div class="flex-1 flex flex-col max-h-[95vh] min-h-0">
+
+      <!-- HEADER -->
+      <div class="flex items-center justify-between px-4 sm:px-8 py-5 border-b flex-shrink-0"
+        [ngStyle]="{ 'border-color': themeService.Textsecondaire + '15' }">
+
+        <div class="flex items-center gap-3 sm:gap-4">
+
+          <!-- Icon -->
+          <div
+            class="w-10 sm:w-12 h-10 sm:h-12 rounded-xl flex items-center justify-center text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            [ngStyle]="{
+              'background': 'linear-gradient(135deg, ' + themeService.primary + ' 0%, ' + themeService.primary + 'DD 100%)',
+              'box-shadow': '0 4px 20px -4px ' + themeService.primary + '50'
+            }">
+            <i class="fa-solid fa-futbol text-sm sm:text-xl"></i>
+          </div>
+
+          <!-- Title -->
+          <div>
+            <h2 id="modal-title" class="font-black text-lg sm:text-xl tracking-tight"
+              [ngStyle]="{ 'color': themeService.Textprincipal }">
+              Nouveau Match
+            </h2>
+
+            <p class="text-xs sm:text-sm mt-0.5" [ngStyle]="{ 'color': themeService.Textsecondaire }">
+              Configuration du match
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Close Button -->
+        <button (click)="toggleMatchForm()" (mouseenter)="hoverClose = true" (mouseleave)="hoverClose = false"
+          class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+          [ngStyle]="{
+            'background': hoverClose ? themeService.primary : themeService.Backgroundcards1,
+            'border': '1px solid ' + themeService.Textsecondaire + '20'
+          }" aria-label="Fermer le modal">
+          <i class="fa-solid fa-xmark transition-colors duration-200" [ngStyle]="{
+              'color': hoverClose ? '#FFFFFF' : themeService.Textsecondaire
+            }"></i>
+        </button>
+
+      </div>
+
+      <!-- ===================================================== -->
+      <!-- STEPS PROGRESS -->
+      <!-- ===================================================== -->
+      <div class="px-4 sm:px-8 pt-5 pb-3 flex items-center justify-center gap-2 sm:gap-4 border-b flex-shrink-0"
+        [ngStyle]="{ 'border-color': themeService.Textsecondaire + '10' }">
+
+        <!-- STEP 1 -->
+        <div class="flex items-center gap-2 sm:gap-3">
+
+          <div
+            class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-black transition-all duration-300"
+            [ngStyle]="{
+            'background': currentStep === 1
+              ? 'linear-gradient(135deg, ' + themeService.primary + ' 0%, ' + themeService.primary + 'DD 100%)'
+              : currentStep > 1
+                ? 'linear-gradient(135deg, ' + themeService.primary + '80 0%, ' + themeService.primary + '60 100%)'
+                : themeService.Backgroundcards1,
+            'color': currentStep === 1 || currentStep > 1 ? '#fff' : themeService.Textsecondaire,
+            'border': currentStep > 1
+              ? '2px solid ' + themeService.primary
+              : '2px solid ' + themeService.Textsecondaire + '20',
+            'box-shadow': currentStep === 1
+              ? '0 4px 16px -4px ' + themeService.primary + '50'
+              : 'none'
+          }">
+            <i *ngIf="currentStep > 1" class="fa-solid fa-check text-xs"></i>
+            <span *ngIf="currentStep <= 1">1</span>
+          </div>
+
+          <div class="hidden sm:block">
+            <p class="text-xs font-black uppercase tracking-wider transition-colors duration-300" [ngStyle]="{
+              'color': currentStep === 1
+                ? themeService.primary
+                : themeService.Textsecondaire
+            }">
+              Étape 1
+            </p>
+
+            <p class="text-[11px] transition-colors duration-300" [ngStyle]="{ 'color': themeService.Textsecondaire }">
+              Date & Lieu
+            </p>
+          </div>
+
+        </div>
+
+        <!-- CONNECTOR 1 -->
+        <div class="w-8 sm:w-16 h-[2px] rounded-full relative overflow-hidden">
+          <div class="absolute inset-0 transition-all duration-500 ease-out" [ngStyle]="{
+            'background': currentStep >= 2
+              ? 'linear-gradient(90deg, ' + themeService.primary + ' 0%, ' + themeService.primary + ' 100%)'
+              : themeService.Textsecondaire + '20',
+            'width': currentStep >= 2 ? '100%' : '0%'
+          }"></div>
+
+          <div class="absolute inset-0" [ngStyle]="{
+            'background': themeService.Textprincipal
+          }"></div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="flex items-center gap-2 sm:gap-3">
+
+          <div
+            class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-black transition-all duration-300"
+            [ngStyle]="{
+            'background': currentStep === 2
+              ? 'linear-gradient(135deg, ' + themeService.primary + ' 0%, ' + themeService.primary + 'DD 100%)'
+              : currentStep > 2
+                ? 'linear-gradient(135deg, ' + themeService.primary + '80 0%, ' + themeService.primary + '60 100%)'
+                : themeService.Backgroundcards1,
+            'color': currentStep === 2 || currentStep > 2 ? '#fff' : themeService.Textsecondaire,
+            'border': currentStep > 2
+              ? '2px solid ' + themeService.primary
+              : '2px solid ' + themeService.Textsecondaire + '20',
+            'box-shadow': currentStep === 2
+              ? '0 4px 16px -4px ' + themeService.primary + '50'
+              : 'none'
+          }">
+            <i *ngIf="currentStep > 2" class="fa-solid fa-check text-xs"></i>
+            <span *ngIf="currentStep <= 2">2</span>
+          </div>
+
+          <div class="hidden sm:block">
+            <p class="text-xs font-black uppercase tracking-wider transition-colors duration-300" [ngStyle]="{
+              'color': currentStep === 2
+                ? themeService.primary
+                : themeService.Textsecondaire
+            }">
+              Étape 2
+            </p>
+
+            <p class="text-[11px] transition-colors duration-300" [ngStyle]="{ 'color': themeService.Textsecondaire }">
+              Type & Catégorie
+            </p>
+          </div>
+
+        </div>
+
+        <!-- CONNECTOR 2 -->
+        <div class="w-8 sm:w-16 h-[2px] rounded-full relative overflow-hidden">
+          <div class="absolute inset-0 transition-all duration-500 ease-out" [ngStyle]="{
+            'background': currentStep >= 3
+              ? 'linear-gradient(90deg, ' + themeService.primary + ' 0%, ' + themeService.primary + ' 100%)'
+              : themeService.Textsecondaire + '20',
+            'width': currentStep >= 3 ? '100%' : '0%'
+          }"></div>
+
+          <div class="absolute inset-0" [ngStyle]="{
+            'background': themeService.Textprincipal
+          }"></div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="flex items-center gap-2 sm:gap-3">
+
+          <div
+            class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-black transition-all duration-300"
+            [ngStyle]="{
+            'background': currentStep === 3
+              ? 'linear-gradient(135deg, ' + themeService.primary + ' 0%, ' + themeService.primary + 'DD 100%)'
+              : themeService.Backgroundcards1,
+            'color': currentStep === 3 ? '#fff' : themeService.Textsecondaire,
+            'border': currentStep === 3
+              ? '2px solid ' + themeService.primary
+              : '2px solid ' + themeService.Textsecondaire + '20',
+            'box-shadow': currentStep === 3
+              ? '0 4px 16px -4px ' + themeService.primary + '50'
+              : 'none'
+          }">
+            3
+          </div>
+
+          <div class="hidden sm:block">
+            <p class="text-xs font-black uppercase tracking-wider transition-colors duration-300" [ngStyle]="{
+              'color': currentStep === 3
+                ? themeService.primary
+                : themeService.Textsecondaire
+            }">
+              Étape 3
+            </p>
+
+            <p class="text-[11px] transition-colors duration-300" [ngStyle]="{ 'color': themeService.Textsecondaire }">
+              Match
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ===================================================== -->
+      <!-- FORM -->
+      <!-- ===================================================== -->
+      <form [formGroup]="matchForm" (ngSubmit)="creerMatch()" class="flex-1 overflow-y-auto min-h-0">
+
+        <div class="p-4 sm:p-8 space-y-6">
+
+          <!-- ================= STEP 1 ================= -->
+          <div *ngIf="currentStep === 1" class="space-y-6 animate-step-in">
+
+            <!-- Section Title -->
+            <div class="space-y-1">
+              <h3 class="text-sm font-bold uppercase tracking-wider"
+                [ngStyle]="{ 'color': themeService.Textprincipal }">
+                Informations générales
+              </h3>
+              <p class="text-xs" [ngStyle]="{ 'color': themeService.Textsecondaire }">
+                Définissez la date, l'heure et le lieu de votre rencontre
+              </p>
+            </div>
+
+            <!-- DATE / HEURE -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+              <!-- Date -->
+              <div class="space-y-2">
+
+                <label class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider ml-1">
+
+                  <!-- ICON BG -->
+                  <div class="w-5 h-5 rounded-md flex items-center justify-center" [ngStyle]="{
+                    'background': themeService.BgNon,
+                    'border': '1px solid ' + themeService.BorderNon
+                  }">
+                    <i class="fa-regular fa-calendar-days text-[10px]"
+                      [ngStyle]="{'color': themeService.Textprincipal}"></i>
+                  </div>
+
+                  <!-- TEXT -->
+                  <span [ngStyle]="{ 'color': themeService.Textsecondaire }">
+                    Date du match
+                  </span>
+
+                </label>
+
+                <div class="relative group">
+                  <i [ngStyle]="{'color': themeService.Textprincipal}"
+                    class="fa-regular fa-calendar absolute left-4 top-1/2 -translate-y-1/2 text-sm pointer-events-none transition-colors duration-200 z-10"></i>
+
+                  <input type="date" formControlName="date"
+                    class="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-medium outline-none transition-all duration-200 focus:ring-2 custom-date-input"
+                    [ngClass]="{
+                      'focus:ring-2': true,
+                      'dark-date': themeService.isDarkMode
+                    }" [ngStyle]="{
+                      'background': themeService.Backgroundcards1,
+                      'color': themeService.Textprincipal,
+                      'border': '1px solid ' + themeService.Textsecondaire + '15',
+                      'box-shadow': 'inset 0 2px 4px ' + themeService.Backgroundcards + '20',
+                      '--tw-ring-color': themeService.primary + '40'
+                    }" />
+                </div>
+              </div>
+
+              <!-- Heure -->
+              <div class="space-y-2">
+
+                <label class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider ml-1">
+
+                  <!-- ICON BG -->
+                  <div class="w-5 h-5 rounded-md flex items-center justify-center" [ngStyle]="{
+                    'background': themeService.BgNon,
+                    'border': '1px solid ' + themeService.BorderNon
+                  }">
+                    <i class="fa-regular fa-clock text-[10px]" [ngStyle]="{'color': themeService.Textprincipal}"></i>
+                  </div>
+
+                  <!-- TEXT -->
+                  <span [ngStyle]="{ 'color': themeService.Textsecondaire }">
+                    Heure
+                  </span>
+
+                </label>
+
+                <div class="relative group">
+                  <i class="fa-regular fa-clock absolute left-4 top-1/2 -translate-y-1/2 text-sm pointer-events-none transition-colors duration-200"
+                    [ngStyle]="{ 'color': themeService.Textprincipal}"></i>
+                  <input type="time" formControlName="heure"
+                    class="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-medium outline-none transition-all duration-200 custom-time-input"
+                    [ngStyle]="{
+                      'background': themeService.Backgroundcards1,
+                      'color': themeService.Textprincipal,
+                      'border': '1px solid ' + themeService.Textsecondaire + '15',
+                      'box-shadow': 'inset 0 2px 4px ' + themeService.Backgroundcards + '20',
+                      '--tw-ring-color': themeService.primary + '40'
+                    }" [class.dark-time]="themeService.isDarkMode" />
+                </div>
+              </div>
+
+            </div>
+
+            <!-- LIEU -->
+            <div class="space-y-2">
+
+              <label class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider ml-1">
+
+                <!-- ICON BG -->
+                <div class="w-5 h-5 rounded-md flex items-center justify-center" [ngStyle]="{
+                  'background': themeService.BgNon,
+                  'border': '1px solid ' + themeService.BorderNon
+                }">
+                  <i class="fa-solid fa-location-dot text-[10px]" [ngStyle]="{'color': themeService.Textprincipal}"></i>
+                </div>
+
+                <!-- TEXT -->
+                <span [ngStyle]="{ 'color': themeService.Textsecondaire }">
+                  Lieux
+                </span>
+
+              </label>
+              <div class="relative group">
+                <i class="fa-solid fa-location-dot absolute left-4 top-1/2 -translate-y-1/2 text-sm pointer-events-none transition-colors duration-200"
+                  [ngStyle]="{ 'color': themeService.Textprincipal}"></i>
+                <input type="text" formControlName="lieu" placeholder="Ex: Stade Municipal, Terrain 3..."
+                  class="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm font-medium outline-none transition-all duration-200 placeholder:font-normal"
+                  [ngStyle]="{
+                    'background': themeService.Backgroundcards1,
+                    'color': themeService.Textprincipal,
+                    'border': '1px solid ' + themeService.Textsecondaire + '15',
+                    'box-shadow': 'inset 0 2px 4px ' + themeService.Backgroundcards + '20',
+                    '--tw-ring-color': themeService.primary + '40'
+                  }" />
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-end pt-4">
+              <button type="button" (click)="currentStep = 2"
+                class="px-8 py-3.5 rounded-xl text-white font-bold text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg flex items-center gap-2 group"
+                [ngStyle]="{
+                  'background': 'linear-gradient(135deg, ' + themeService.primary + ' 0%, ' + themeService.primary + 'DD 100%)',
+                  'box-shadow': '0 4px 20px -4px ' + themeService.primary + '50'
+                }">
+                Continuer
+                <i
+                  class="fa-solid fa-arrow-right text-xs transition-transform duration-200 group-hover:translate-x-1"></i>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- ================= STEP 2 ================= -->
+          <div *ngIf="currentStep === 2" class="space-y-6 animate-step-in">
+
+            <!-- Section Title -->
+            <div class="space-y-1">
+              <h3 class="text-sm font-bold uppercase tracking-wider"
+                [ngStyle]="{ 'color': themeService.Textprincipal }">
+                Configuration du Type & Catégorie
+              </h3>
+              <p class="text-xs" [ngStyle]="{ 'color': themeService.Textsecondaire }">
+                Sélectionnez le type de match et la catégorie
+              </p>
+            </div>
+
+            <!-- TYPE -->
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider ml-1">
+
+                <!-- ICON BG -->
+                <div class="w-5 h-5 rounded-md flex items-center justify-center" [ngStyle]="{
+                  'background': themeService.BgNon,
+                  'border': '1px solid ' + themeService.BorderNon
+                }">
+                  <i class="fa-regular fa-futbol text-[10px]" [ngStyle]="{'color': themeService.Textprincipal}"></i>
+                </div>
+
+                <!-- TEXT -->
+                <span [ngStyle]="{ 'color': themeService.Textsecondaire }">
+                  Type de match
+                </span>
+
+              </label>
+              <div class="relative">
+                <select formControlName="typeMatch"
+                  class="w-full p-4 rounded-xl text-sm font-medium outline-none transition-all duration-200 appearance-none cursor-pointer"
+                  [ngStyle]="{
+                    'background': themeService.Backgroundcards1,
+                    'color': themeService.Textprincipal,
+                    'border': '1px solid ' + themeService.Textsecondaire + '15',
+                    'box-shadow': 'inset 0 2px 4px ' + themeService.Backgroundcards + '20',
+                    '--tw-ring-color': themeService.primary + '40'
+                  }">
+                  <option>Amical</option>
+                  <option>Championnat</option>
+                  <option>Tournoi</option>
+                </select>
+                <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-xs pointer-events-none"
+                  [ngStyle]="{ 'color': themeService.Textsecondaire }"></i>
+              </div>
+            </div>
+
+            <!-- CAT -->
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider ml-1">
+
+                <!-- ICON BG -->
+                <div class="w-5 h-5 rounded-md flex items-center justify-center" [ngStyle]="{
+                  'background': themeService.BgNon,
+                  'border': '1px solid ' + themeService.BorderNon
+                }">
+                  <i class="fa-solid fa-list text-[10px]" [ngStyle]="{'color': themeService.Textprincipal}"></i>
+                </div>
+
+                <!-- TEXT -->
+                <span [ngStyle]="{ 'color': themeService.Textsecondaire }">
+                  Catégorie
+                </span>
+
+              </label>
+              <div class="relative">
+                <select formControlName="categorie"
+                  class="w-full p-4 rounded-xl text-sm font-medium outline-none transition-all duration-200 appearance-none cursor-pointer"
+                  [ngStyle]="{
+                    'background': themeService.Backgroundcards1,
+                    'color': themeService.Textprincipal,
+                    'border': '1px solid ' + themeService.Textsecondaire + '15',
+                    'box-shadow': 'inset 0 2px 4px ' + themeService.Backgroundcards + '20',
+                    '--tw-ring-color': themeService.primary + '40'
+                  }">
+                  <option *ngFor="let cat of ['U7','U9','U11','U13','Senior']">
+                    {{ cat }}
+                  </option>
+                </select>
+                <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-xs pointer-events-none"
+                  [ngStyle]="{ 'color': themeService.Textsecondaire }"></i>
+              </div>
+            </div>
+
+
+            <!-- ACTIONS -->
+            <div class="flex gap-3 pt-4">
+
+              <button type="button" (click)="currentStep = 1"
+                class="flex-1 p-4 rounded-xl font-bold text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group"
+                [ngStyle]="{
+                  'background': themeService.Backgroundcards1,
+                  'color': themeService.Textprincipal,
+                  'border': '1px solid ' + themeService.Textsecondaire + '15'
+                }">
+                <i
+                  class="fa-solid fa-arrow-left text-xs transition-transform duration-200 group-hover:-translate-x-1"></i>
+                Retour
+              </button>
+
+              <button type="button" (click)="currentStep = 3"
+                class="px-8 py-3.5 rounded-xl text-white font-bold text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg flex items-center gap-2 group"
+                [ngStyle]="{
+                  'background': 'linear-gradient(135deg, ' + themeService.primary + ' 0%, ' + themeService.primary + 'DD 100%)',
+                  'box-shadow': '0 4px 20px -4px ' + themeService.primary + '50'
+                }">
+                Continuer
+                <i
+                  class="fa-solid fa-arrow-right text-xs transition-transform duration-200 group-hover:translate-x-1"></i>
+              </button>
+            </div>
+
+
+
+          </div>
+
+          <!-- ================= STEP 3 ================= -->
+          <div *ngIf="currentStep === 3" class="space-y-6 animate-step-in">
+
+            <!-- Section Title -->
+            <div class="space-y-1">
+              <h3 class="text-sm font-bold uppercase tracking-wider"
+                [ngStyle]="{ 'color': themeService.Textprincipal }">
+                Configuration de la rencontre
+              </h3>
+              <p class="text-xs" [ngStyle]="{ 'color': themeService.Textsecondaire }">
+                Sélectionnez les deux equies pour la rencontre
+              </p>
+            </div>
+
+
+            <!-- ===================================================== -->
+            <!-- EQUIPES INLINE -->
+            <!-- ===================================================== -->
+            <div class="flex flex-row items-center justify-center gap-3 sm:gap-6 p-4 sm:p-6 rounded-2xl" [ngStyle]="{
+              'background': 'linear-gradient(145deg, ' + themeService.Backgroundcards1 + '80 0%, ' + themeService.Backgroundcards1 + '40 100%)',
+              'border': '1px solid ' + themeService.GlassBorder + '25',
+              'box-shadow': 'inset 0 1px 0 ' + themeService.GlassBorder + '20'
+            }">
+
+
+
+              <!-- DOM -->
+              <div class="flex flex-col items-center w-1/3 space-y-2">
+
+                <label class="text-[10px] font-bold uppercase tracking-wider"
+                  [ngStyle]="{ 'color': themeService.Textsecondaire }">
+                  Domicile
+                </label>
+
+                <div class="relative w-full">
+                  <select formControlName="equipeDom"
+                    class="w-full p-3 rounded-xl text-xs font-bold outline-none transition-all duration-200 appearance-none cursor-pointer"
+                    [ngStyle]="{
+                    'background': themeService.Backgroundcards,
+                    'color': themeService.Textprincipal,
+                    'border': '1px solid ' + themeService.Textsecondaire + '15',
+                    '--tw-ring-color': themeService.primary + '40'
+                  }">
+                    <option value="">Sélectionner...</option>
+                    <option *ngFor="let eq of equipes" [value]="eq._id">
+                      {{ eq.nom }}
+                    </option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] pointer-events-none"
+                    [ngStyle]="{ 'color': themeService.Textsecondaire }"></i>
+                </div>
+
+              </div>
+
+              <!-- VS -->
+              <div
+                class="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:scale-110 hover:rotate-12"
+                [ngStyle]="{
+                'background': 'linear-gradient(135deg, ' + themeService.primary + ' 0%, ' + themeService.primary + 'DD 100%)',
+                'box-shadow': '0 4px 20px -4px ' + themeService.primary + '60'
+              }">
+                <span class="text-white font-black text-xs sm:text-sm">VS</span>
+              </div>
+
+              <!-- EXT -->
+              <div class="flex flex-col items-center w-1/3 space-y-2">
+
+                <label class="text-[10px] font-bold uppercase tracking-wider"
+                  [ngStyle]="{ 'color': themeService.Textsecondaire }">
+                  Extérieur
+                </label>
+
+                <div class="relative w-full">
+                  <select formControlName="equipeExt"
+                    class="w-full p-3 rounded-xl text-xs font-bold outline-none transition-all duration-200 appearance-none cursor-pointer"
+                    [ngStyle]="{
+                    'background': themeService.Backgroundcards,
+                    'color': themeService.Textprincipal,
+                    'border': '1px solid ' + themeService.Textsecondaire + '15',
+                    '--tw-ring-color': themeService.primary + '40'
+                  }">
+                    <option value="">Sélectionner...</option>
+                    <option *ngFor="let eq of equipes" [value]="eq._id">
+                      {{ eq.nom }}
+                    </option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] pointer-events-none"
+                    [ngStyle]="{ 'color': themeService.Textsecondaire }"></i>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="flex gap-3 pt-4">
+
+              <button
+                type="button"
+                (click)="currentStep = 2"
+                class="flex-1 p-4 rounded-xl font-bold text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group"
+                [ngStyle]="{
+                  'background': themeService.Backgroundcards1,
+                  'color': themeService.Textprincipal,
+                  'border': '1px solid ' + themeService.Textsecondaire + '15'
+                }"
+              >
+                <i class="fa-solid fa-arrow-left text-xs transition-transform duration-200 group-hover:-translate-x-1"></i>
+                Retour
+              </button>
+
+              <button
+                type="submit"
+                class="flex-[2] p-4 rounded-xl text-white font-bold text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg flex items-center justify-center gap-2 group"
+                [ngStyle]="{
+                  'background': 'linear-gradient(135deg, ' + themeService.primary + ' 0%, ' + themeService.primary + 'DD 100%)',
+                  'box-shadow': '0 4px 20px -4px ' + themeService.primary + '50'
+                }"
+              >
+                <i class="fa-solid fa-plus text-xs"></i>
+                Créer le match
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ============================= -->
+<!-- TOAST NOTIFICATION -->
+<!-- ============================= -->
+<div
+  *ngIf="showNotification"
+  class="fixed top-20 right-4 z-[12000] animate-slide-from-right">
+
+  <div class="relative flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl
+              backdrop-blur-md bg-emerald-500/95 border border-emerald-400/30
+              min-w-[300px] max-w-[400px] overflow-hidden">
+
+    <!-- ICON -->
+    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+      <i class="fa-solid fa-circle-check text-white text-xl animate-icon-pop"></i>
+    </div>
+
+    <!-- TEXT -->
+    <div class="flex-1 min-w-0">
+      <p class="text-white font-semibold text-sm">Succès</p>
+      <p class="text-white/90 text-sm truncate">
+        {{ notificationMessage }}
+      </p>
+    </div>
+
+    <!-- CLOSE -->
+    <button 
+      (click)="closeNotification()"
+      class="flex-shrink-0 w-7 h-7 rounded-full hover:bg-white/20
+             flex items-center justify-center transition group focus:outline-none">
+      <i class="fa-solid fa-xmark text-white/70 group-hover:text-white text-sm"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- ANIMATIONS -->
+<!-- ===================================================== -->
+<style>
+  .custom-date-input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+  }
+
+
+  @keyframes modal-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .animate-modal-in {
+    animation: modal-in 0.3s ease-out;
+  }
+
+  @keyframes modalIn {
+    from {
+      transform: translateY(-120%);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes modalOut {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    to {
+      transform: translateY(120%);
+      opacity: 0;
+    }
+  }
+
+  .animate-modal-in {
+    animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .animate-modal-out {
+    animation: modalOut 0.28s ease-in forwards;
+  }
+
+
+
+
+
+  /* Icône mode clair */
+  .custom-time-input::-webkit-calendar-picker-indicator {
+    filter: invert(0);
+    opacity: 0.7;
+    cursor: pointer;
+  }
+
+  /* Icône mode sombre */
+  .dark-time::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 1;
+  }
+
+  /* Icône calendrier mode clair */
+  .custom-date-input::-webkit-calendar-picker-indicator {
+    filter: invert(0);
+    opacity: 0.7;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  /* Icône calendrier mode sombre */
+  .dark-date::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 1;
+  }
+
+  /* Hover */
+  .custom-date-input::-webkit-calendar-picker-indicator:hover {
+    transform: scale(1.08);
+  }
+</style>

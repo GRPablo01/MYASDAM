@@ -14,6 +14,9 @@ import { Utilisateur } from '../page/public/utilisateur/utilisateur';
 import { Contenue } from '../page/public/contenue/contenue';
 import { Communiquer } from '../page/public/communiquer/communiquer';
 import { Messagerie } from '../page/public/messagerie/messagerie';
+import { Classement } from '../page/public/classement/classement';
+import { Login } from '../composant/auth/login/login';
+import { Logs } from '../page/public/logs/logs';
 
 
 
@@ -39,6 +42,8 @@ export const routes: Routes = [
     { path: 'cont', component: Contenue},
     { path: 'commun', component: Communiquer},
     { path: 'message', component: Messagerie},
+    { path: 'class', component: Classement},
+    { path: 'logs', component: Logs},
     
 
 ];

@@ -19,14 +19,12 @@
 
            [ngClass]="{
              'scale-105': hoveredIndex === i || item.active,
-             'ring-2 ring-offset-2': item.active
            }"
 
            [ngStyle]="{
              'color': (hoveredIndex === i || item.active) ? themeService.primary : themeService.Textprincipal,
              'background-color': (hoveredIndex === i || item.active) ? themeService.primarySoft : 'transparent',
-             'ring-color': item.active ? themeService.primary : 'transparent',
-             'ring-offset-color': themeService.Backgroundprincipal
+            
            }">
 
           <!-- Effet hover uniforme -->
@@ -203,7 +201,7 @@
 </nav>
 
 <!-- navigation-mobile.component.html -->
-<nav class="min-[382px]:flex max-[1243px]:flex min-[1243px]:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[2147483630]">
+<nav class="min-[382px]:flex max-[1243px]:flex min-[1243px]:hidden fixed bottom-6 left-0 right-0 mx-auto w-fit z-[50]">
   <div [ngStyle]="{
     'background': themeService.GlassBackground,
     'border': '2px solid ' + themeService.GlassBorder,

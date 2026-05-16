@@ -154,19 +154,36 @@ export class User implements OnInit {
 
   get filteredUsers(): IUser[] {
     if (!this.users) return [];
-
+  
+    const role = (u: IUser) => u.role?.toLowerCase() || '';
+  
     switch (this.selectedFilter) {
+  
+      // SUPERADMIN : tout voir
+      case 'superadmin':
+        return this.users.filter(u => {
+          const role = u.role?.toLowerCase();
+          return ['joueur', 'inviter', 'entraineur', 'admin'].includes(role);
+        });
+  
+      // ADMIN : joueurs + entraineurs + invités
       case 'admin':
-        return this.users.filter(u => u.role?.toLowerCase() === 'admin');
-
+        return this.users.filter(u =>
+          ['joueur', 'inviter', 'entraineur'].includes(role(u))
+        );
+  
+      // ENTRAINEUR : joueurs + invités
       case 'entraineur':
-        return this.users.filter(u => u.role?.toLowerCase() === 'entraineur');
-
+        return this.users.filter(u =>
+          ['joueur', 'inviter'].includes(role(u))
+        );
+  
+      // USER : joueurs + invités uniquement (si tu veux limiter)
       case 'user':
         return this.users.filter(u =>
-          ['user', 'joueur', 'inviter'].includes(u.role?.toLowerCase())
+          ['joueur', 'inviter'].includes(role(u))
         );
-
+  
       default:
         return this.users;
     }
@@ -189,17 +206,34 @@ export class User implements OnInit {
   // ROLE
   // =======================
   getRoleColor(user: IUser): string {
-    switch (user.role) {
-      case 'admin': return '#dc2626';
-      case 'entraineur': return '#2563eb';
-      default: return '#16a34a';
+    switch (user.role?.toLowerCase()) {
+  
+      case 'superadmin':
+        return '#7c3aed'; // violet
+  
+      case 'admin':
+        return '#dc2626'; // rouge
+  
+      case 'entraineur':
+        return '#2563eb'; // bleu
+  
+      case 'joueur':
+      case 'user':
+        return '#16a34a'; // vert
+  
+      case 'inviter':
+        return '#f59e0b'; // orange
+  
+      default:
+        return '#6b7280'; // gris
     }
   }
 
   getRoleLabel(role: string): string {
     switch (role) {
       case 'admin': return 'Admin';
-      case 'entraineur': return 'Coach';
+      case 'superadmin': return 'Super Admin';
+      case 'entraineur': return 'Entraineur';
       default: return 'Joueur';
     }
   }

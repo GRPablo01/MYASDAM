@@ -77,6 +77,7 @@ const userRoutes = require('./Backend/Routes/user.Routes');
 const convocationRoutes = require('./Backend/Routes/convocation.routes');
 const messageRoutes = require('./Backend/Routes/message.Routes');
 const contactRoutes = require('./Backend/Routes/contact.Routes');
+const logRoutes = require('./Backend/Routes/log.Routes');
 
 // ==============================
 // 🧭 Routes API
@@ -93,6 +94,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/convocation', convocationRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/logs', logRoutes);
 
 // ==============================
 // 🏠 Routes de test

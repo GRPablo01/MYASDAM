@@ -1,9 +1,19 @@
 // nav.component.ts
-import { Component, OnInit, HostListener } from '@angular/core';
+
+import {
+  Component,
+  OnInit,
+  HostListener,
+  ElementRef,
+  inject
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+
 import { ThemeService } from '../../../../Backend/Services/theme.service';
-import { Icon } from "../../priver/icon/icon";
+import { Icon } from '../../priver/icon/icon';
 
 interface NavItem {
   label: string;
@@ -24,447 +34,593 @@ interface NavItem {
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [CommonModule, RouterLink, Icon],
+  imports: [
+    CommonModule,
+    RouterLink,
+    Icon
+  ],
   templateUrl: './nav.html',
   styleUrls: ['./nav.css']
 })
+
 export class Nav implements OnInit {
 
-  // Rôle de l'utilisateur, par défaut 'invite'
-  role: string = 'invite';
-  hoveredIndex: number = -1;
-  hoveredChild: NavItem | null = null;
+  // =========================================================
+  // INJECTIONS
+  // =========================================================
 
-  activeMenus = { level1: -1, level2: -1, level3: -1 };
-  
-
-  // Menu dynamique
-  menu: NavItem[] = [];
-
-  // Index du menu ouvert (pour sous-menus)
-  openMenuIndex: number | null = null;
-
-  // Recherche
-  searchVisible: boolean = false;
-  searchQuery: string = '';
-  isDarkMode: string = '';
+  private elementRef = inject(ElementRef);
 
   constructor(
     public themeService: ThemeService,
     private router: Router
   ) { }
 
-  ngOnInit(): void {
-    // 🔹 Récupération du rôle depuis le localStorage
-    const userStr = localStorage.getItem('utilisateur');
-    if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        this.role = user.role || 'invite';
-      } catch (error) {
-        console.error('Erreur parsing localStorage utilisateur :', error);
-        this.role = 'invite';
-      }
-    }
+  // =========================================================
+  // STATES
+  // =========================================================
 
-    // 🔹 Génération du menu
+  role: string = 'invite';
+
+  hoveredIndex: number = -1;
+  hoveredChild: NavItem | null = null;
+
+  openMenuIndex: number | null = null;
+
+  activeMenus = {
+    level1: -1,
+    level2: -1,
+    level3: -1
+  };
+
+  searchVisible: boolean = false;
+  searchQuery: string = '';
+  isDarkMode: string = '';
+
+  // =========================================================
+  // MENU
+  // =========================================================
+
+  menu: NavItem[] = [];
+
+  // =========================================================
+  // INIT
+  // =========================================================
+
+  ngOnInit(): void {
+
+    this.loadUserRole();
+
     this.generateMenu();
+
+    this.listenRouterChanges();
   }
 
-  // 🔹 Génération dynamique du menu avec enfants selon le rôle MyAsdam
+  // =========================================================
+  // USER ROLE
+  // =========================================================
+
+  private loadUserRole(): void {
+
+    const userStr = localStorage.getItem('utilisateur');
+
+    if (!userStr) {
+      this.role = 'invite';
+      return;
+    }
+
+    try {
+
+      const user = JSON.parse(userStr);
+
+      this.role = user?.role || 'invite';
+
+    } catch (error) {
+
+      console.error(
+        '[NAV] Erreur parsing utilisateur:',
+        error
+      );
+
+      this.role = 'invite';
+    }
+  }
+
+  // =========================================================
+  // ROUTER LISTENER
+  // =========================================================
+
+  private listenRouterChanges(): void {
+
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd)
+      )
+      .subscribe(() => {
+
+        this.closeAllMenus();
+
+        this.openMenuIndex = null;
+
+        this.searchVisible = false;
+
+        this.updateActiveLinks();
+      });
+  }
+
+  // =========================================================
+  // MENU GENERATOR
+  // =========================================================
+
   generateMenu(): void {
-    // Définition des menus par rôle pour MyAsdam (Club de Foot + Convocations)
+
     const roleMenu: { [key: string]: NavItem[] } = {
 
-      // ============================================
-      // SUPERADMIN - Gestion complète du club
-      // Navigation principale avec 4 sections
-      // ============================================
+      // =====================================================
+      // SUPERADMIN
+      // =====================================================
+
       superadmin: [
-        // Gestion
+
         {
           label: 'Gestion',
           icon: 'fas fa-users-cog',
           link: '/gestion',
-          description: 'Administration centrale : membres, contenu sportif et communication',
+          description: 'Administration centrale',
           children: [
             {
               label: 'Utilisateurs',
               icon: 'fas fa-user-shield',
               link: '/user',
-              description: 'Gestion des rôles, permissions et accès utilisateurs',
+              description: 'Gestion utilisateurs'
             },
             {
               label: 'Contenu Sportif',
               icon: 'fas fa-futbol',
               link: '/cont',
-              description: 'Matchs, calendriers, résultats et événements sportifs',
+              description: 'Gestion sportive'
             },
             {
               label: 'Communication',
               icon: 'fas fa-bullhorn',
               link: '/commun',
-              description: 'Messages, Communiquer',
+              description: 'Communication'
             }
           ]
-
         },
 
-        // Messagerie
         {
           label: 'Messagerie',
           icon: 'fas fa-envelope',
           link: '/message',
-          description: 'Emails internes, discussions et support utilisateurs',
+          description: 'Messagerie interne'
         },
 
-        // Classement
         {
           label: 'Classement',
           icon: 'fas fa-chart-line',
-          link: '/statistiques',
-          description: 'Analyse de performance et rapports d\'activité',
-        },
-
-        // Convocation
-        {
-          label: 'Convocation',
-          icon: 'fas fa-clipboard-list',
-          link: '/convoque',
-          description: 'Organisation des séances et rencontres',
-          children: [
-            {
-              label: 'Séances',
-              icon: 'fas fa-dumbbell',
-              link: '/seances',
-              description: 'Programmation des séances et présences',
-            },
-            {
-              label: 'Rencontres',
-              icon: 'fas fa-trophy',
-              link: '/rencontres',
-              description: 'Gestion des matchs et tournois',
-            }
-          ]
-        },
+          link: '/class',
+          description: 'Statistiques'
+        }
       ],
 
-      // ============================================
-      // ADMIN - Gestion opérationnelle
-      // ============================================
+      // =====================================================
+      // ADMIN
+      // =====================================================
+
       admin: [
-        // Gestion
+
         {
           label: 'Gestion',
           icon: 'fas fa-users-cog',
           link: '/gestion',
-          description: 'Administration centrale : membres, contenu sportif et communication',
+          description: 'Administration',
           children: [
             {
               label: 'Utilisateurs',
               icon: 'fas fa-user-shield',
-              link: '/user',
-              description: 'Gestion des rôles, permissions et accès utilisateurs',
+              link: '/user'
             },
             {
               label: 'Contenu Sportif',
               icon: 'fas fa-futbol',
-              link: '/cont',
-              description: 'Matchs, calendriers, résultats et événements sportifs',
+              link: '/cont'
             },
             {
               label: 'Communication',
               icon: 'fas fa-bullhorn',
-              link: '/commun',
-              description: 'Messages, Communiquer',
+              link: '/commun'
             }
           ]
-
         },
 
-        // Messagerie
         {
           label: 'Messagerie',
           icon: 'fas fa-envelope',
-          link: '/message',
-          description: 'Emails internes, discussions et support utilisateurs',
+          link: '/message'
         },
 
-        // Classement
         {
           label: 'Classement',
           icon: 'fas fa-chart-line',
-          link: '/statistiques',
-          description: 'Analyse de performance et rapports d\'activité',
+          link: '/statistiques'
         },
 
-        // Convocation
         {
           label: 'Convocation',
           icon: 'fas fa-clipboard-list',
           link: '/planning',
-          description: 'Organisation des séances et rencontres',
           children: [
             {
               label: 'Séances',
               icon: 'fas fa-dumbbell',
-              link: '/seances',
-              description: 'Programmation des séances et présences',
+              link: '/seances'
             },
             {
               label: 'Rencontres',
               icon: 'fas fa-trophy',
-              link: '/rencontres',
-              description: 'Gestion des matchs et tournois',
+              link: '/rencontres'
             }
           ]
-        },
+        }
       ],
 
-      // ============================================
-      // ENTRAINEUR - Focus équipe et convocations
-      // ============================================
+      // =====================================================
+      // ENTRAINEUR
+      // =====================================================
+
       entraineur: [
+
         {
           label: 'Actualités',
           icon: 'fas fa-newspaper',
-          link: '/actus',
-          description: 'Infos du club'
+          link: '/actus'
         },
+
         {
           label: 'Équipe',
           icon: 'fas fa-users',
           link: '/equipe',
-          description: 'Gestion de l\'équipe',
           children: [
             {
               label: 'Joueurs',
               icon: 'fas fa-user',
-              link: '/joueurs',
-              description: 'Liste des joueurs'
+              link: '/joueurs'
             },
             {
-              label: 'Effectif disponible',
+              label: 'Disponibles',
               icon: 'fas fa-clipboard-list',
-              link: '/disponibles',
-              description: 'Joueurs disponibles ce week-end'
+              link: '/disponibles'
             },
             {
-              label: 'Statistiques joueurs',
+              label: 'Statistiques',
               icon: 'fas fa-chart-bar',
-              link: '/stats',
-              description: 'Performance individuelle'
+              link: '/stats'
             }
           ]
         },
-        // Convocation
+
         {
           label: 'Convocation',
           icon: 'fas fa-clipboard-list',
           link: '/planning',
-          description: 'Organisation des séances et rencontres',
           children: [
             {
               label: 'Séances',
               icon: 'fas fa-dumbbell',
-              link: '/seances',
-              description: 'Programmation des séances et présences',
+              link: '/seances'
             },
             {
               label: 'Rencontres',
               icon: 'fas fa-trophy',
-              link: '/rencontres',
-              description: 'Gestion des matchs et tournois',
+              link: '/rencontres'
             }
           ]
         },
+
         {
           label: 'Calendrier',
           icon: 'fas fa-calendar-alt',
-          link: '/calendrier',
-          description: 'Planning',
-        },
-        
+          link: '/calendrier'
+        }
       ],
 
-      // ============================================
-      // JOUEUR - Espace personnel
-      // ============================================
+      // =====================================================
+      // JOUEUR
+      // =====================================================
+
       joueur: [
+
         {
           label: 'Actualités',
           icon: 'fas fa-newspaper',
-          link: '/actus',
-          description: 'Infos du club'
+          link: '/actus'
         },
+
         {
           label: 'Équipe',
           icon: 'fas fa-users',
           link: '/equipe',
-          description: 'Mon équipe et coéquipiers',
           children: [
             {
               label: 'Joueurs',
               icon: 'fas fa-user',
-              link: '/joueurs',
-              description: 'Liste des coéquipiers'
+              link: '/joueurs'
             },
             {
-              label: 'Effectif disponible',
+              label: 'Disponibles',
               icon: 'fas fa-clipboard-list',
-              link: 'disponibles',
-              description: 'Joueurs disponibles ce week-end'
+              link: '/disponibles'
             },
             {
               label: 'Mes statistiques',
               icon: 'fas fa-chart-bar',
-              link: '/mes-stats',
-              description: 'Mes performances individuelles'
+              link: '/mes-stats'
             }
           ]
         },
+
         {
           label: 'Mes convocations',
           icon: 'fas fa-clipboard-list',
-          link: '/convocations',
-          description: 'Mes séances et matchs',
-          children: [
-            {
-              label: 'Séances',
-              icon: 'fas fa-dumbbell',
-              link: '/seances',
-              description: 'Mes séances d\'entraînement'
-            },
-            {
-              label: 'Rencontres',
-              icon: 'fas fa-trophy',
-              link: '/rencontres',
-              description: 'Mes matchs et tournois'
-            }
-          ]
+          link: '/convocations'
         },
+
         {
           label: 'Calendrier',
           icon: 'fas fa-calendar-alt',
-          link: '/calendrier',
-          description: 'Mon planning'
-        },
+          link: '/calendrier'
+        }
       ],
 
-      // ============================================
-      // INVITE - Vue publique limitée
-      // ============================================
+      // =====================================================
+      // INVITE
+      // =====================================================
+
       invite: [
+
         {
           label: 'Actualités',
           icon: 'fas fa-newspaper',
-          link: '/actus',
-          description: 'News du club'
+          link: '/actus'
         },
+
         {
           label: 'Matchs',
           icon: 'fas fa-futbol',
-          link: '/match',
-          description: 'Calendrier des matchs',
+          link: '/match'
         },
+
         {
           label: 'Contact',
           icon: 'fas fa-envelope',
-          link: '/contact',
-          description: 'Nous contacter'
-        },
+          link: '/contact'
+        }
       ]
     };
 
-    // 🔹 Menu final selon rôle (fallback sur invite si rôle inconnu)
     this.menu = roleMenu[this.role] || roleMenu['invite'];
 
-    // console.log(`[MyAsdam] Menu généré pour le rôle: ${this.role} (${this.menu.length} items)`);
+    this.updateActiveLinks();
   }
 
-  // 🔹 Toggle sous-menu au clic
-  toggleMenu(index: number) {
-    this.openMenuIndex = this.openMenuIndex === index ? null : index;
+  // =========================================================
+  // ACTIVE LINKS
+  // =========================================================
+
+  updateActiveLinks(): void {
+
+    const currentUrl = this.router.url;
+
+    this.menu.forEach(item => {
+
+      item.active = item.link === currentUrl;
+
+      item.children?.forEach(child => {
+        child.active = child.link === currentUrl;
+      });
+    });
   }
-  // 🔹 Ouvrir un sous-menu au hover (pour desktop)
+
+  // =========================================================
+  // MENU TOGGLE
+  // =========================================================
+
+  toggleMenu(index: number): void {
+
+    this.openMenuIndex =
+      this.openMenuIndex === index
+        ? null
+        : index;
+  }
+
+  // =========================================================
+  // HOVER DESKTOP ONLY
+  // =========================================================
+
   onMouseEnter(index: number): void {
-    if (window.innerWidth > 768) {
-      this.hoveredIndex = index;
-    }
+
+    if (window.innerWidth <= 1024) return;
+
+    this.hoveredIndex = index;
   }
 
-  // 🔹 Fermer le hover
   onMouseLeave(): void {
+
     this.hoveredIndex = -1;
+
     this.hoveredChild = null;
   }
 
-  // 🔹 Fermer les menus si on clique en dehors
-  @HostListener('document:click', ['$event.target'])
-  clickOutside(target: EventTarget | null): void {
-    if (!(target instanceof HTMLElement)) return;
+  // =========================================================
+  // CLICK OUTSIDE
+  // =========================================================
 
-    const navEl = document.querySelector('nav');
-    if (navEl && !navEl.contains(target)) {
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: MouseEvent): void {
+
+    const target = event.target as HTMLElement;
+
+    if (!target) return;
+
+    const navElement =
+      this.elementRef.nativeElement;
+
+    if (!navElement.contains(target)) {
+
+      this.closeAllMenus();
+
       this.openMenuIndex = null;
+
       this.searchVisible = false;
     }
   }
 
-  // 🔹 Fonction pour afficher/masquer la barre de recherche
+  // =========================================================
+  // SEARCH
+  // =========================================================
+
   toggleSearch(): void {
+
     this.searchVisible = !this.searchVisible;
+
     if (this.searchVisible) {
-      // Focus sur l'input après l'affichage
-      setTimeout(() => {
-        const searchInput = document.getElementById('nav-search');
-        if (searchInput) searchInput.focus();
-      }, 100);
+
+      requestAnimationFrame(() => {
+
+        const searchInput =
+          document.getElementById('nav-search');
+
+        searchInput?.focus();
+      });
     }
   }
 
-  // 🔹 Recherche dans le menu
   onSearch(query: string): void {
+
     this.searchQuery = query.toLowerCase();
-    // Implémenter la logique de filtrage si nécessaire
-    console.log(`[MyAsdam] Recherche: ${query}`);
+
+    console.log(
+      '[MyAsdam] Recherche:',
+      query
+    );
   }
 
-  // 🔹 Navigation vers un lien
-  navigate(link: string | undefined): void {
-    if (link) {
-      this.router.navigate([link]);
-      this.openMenuIndex = null; // Fermer le menu après navigation
-    }
+  // =========================================================
+  // NAVIGATION
+  // =========================================================
+
+  navigate(link?: string): void {
+
+    if (!link) return;
+
+    this.router.navigate([link]);
+
+    this.closeAllMenus();
+
+    this.openMenuIndex = null;
   }
 
-  isAnyMenuOpen(): boolean { return this.activeMenus.level1 !== -1 || this.activeMenus.level2 !== -1 || this.activeMenus.level3 !== -1; }
-  closeAllMenus(): void { this.activeMenus = { level1: -1, level2: -1, level3: -1 }; }
+  // =========================================================
+  // MENU HELPERS
+  // =========================================================
+
+  isAnyMenuOpen(): boolean {
+
+    return (
+      this.activeMenus.level1 !== -1 ||
+      this.activeMenus.level2 !== -1 ||
+      this.activeMenus.level3 !== -1
+    );
+  }
+
+  closeAllMenus(): void {
+
+    this.activeMenus = {
+      level1: -1,
+      level2: -1,
+      level3: -1
+    };
+
+    this.hoveredIndex = -1;
+
+    this.hoveredChild = null;
+  }
+
+  // =========================================================
+  // LEVEL TOGGLES
+  // =========================================================
 
   toggleLevel1(i: number, event: Event): void {
+
     event.preventDefault();
-    this.activeMenus.level1 = this.activeMenus.level1 === i ? -1 : i;
+
+    event.stopPropagation();
+
+    this.activeMenus.level1 =
+      this.activeMenus.level1 === i
+        ? -1
+        : i;
   }
 
   toggleLevel2(i: number, event: Event): void {
+
     event.preventDefault();
-    this.activeMenus.level2 = this.activeMenus.level2 === i ? -1 : i;
+
+    event.stopPropagation();
+
+    this.activeMenus.level2 =
+      this.activeMenus.level2 === i
+        ? -1
+        : i;
   }
 
   toggleLevel3(i: number, event: Event): void {
+
     event.preventDefault();
-    this.activeMenus.level3 = this.activeMenus.level3 === i ? -1 : i;
+
+    event.stopPropagation();
+
+    this.activeMenus.level3 =
+      this.activeMenus.level3 === i
+        ? -1
+        : i;
   }
 
-  onMouseEnterLevel1(i: number): void { this.hoveredIndex = i; }
+  // =========================================================
+  // MENU EVENTS
+  // =========================================================
+
+  onMouseEnterLevel1(i: number): void {
+
+    if (window.innerWidth <= 1024) return;
+
+    this.hoveredIndex = i;
+  }
+
   onMenuEnter(): void { }
-  onMenuLeave(): void { this.activeMenus.level1 = -1; this.activeMenus.level2 = -1; this.activeMenus.level3 = -1; this.hoveredIndex = -1; }
 
+  onMenuLeave(): void {
 
-  onMenuClick(item: any, i: number, event: Event) {
-    if (item.children) {
-      event.preventDefault();
-      this.toggleMenu(i);
-    }
+    this.closeAllMenus();
+  }
+
+  // =========================================================
+  // MENU CLICK
+  // =========================================================
+
+  onMenuClick(
+    item: NavItem,
+    i: number,
+    event: Event
+  ): void {
+
+    if (!item.children?.length) return;
+
+    event.preventDefault();
+
+    event.stopPropagation();
+
+    this.toggleMenu(i);
   }
 }

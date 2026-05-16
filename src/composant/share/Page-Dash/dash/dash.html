@@ -1,0 +1,171 @@
+<section [ngStyle]="{
+    'color': themeService.Textprincipal
+  }" class="h-auto mt-20 flex flex-col">
+
+  <!-- ================= NAVIGATION DESKTOP ================= -->
+  <div class="items-center justify-center mx-auto hidden md:flex">
+
+    <nav [ngStyle]="{
+      'background': themeService.GlassBackground,
+      'border': '2px solid ' + themeService.GlassBorder,
+      'backdrop-filter': 'blur(22px) saturate(180%)',
+      '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+      'box-shadow': '0 10px 30px rgba(0,0,0,0.08)',
+      'color': themeService.Textprincipal
+    }"
+      class="w-full flex justify-center py-5 backdrop-blur-md transition-all duration-300 z-10 max-w-[1200px] rounded-3xl">
+
+      <div class="flex flex-wrap justify-center gap-3 md:gap-4 w-full px-4">
+
+        <button *ngFor="let item of currentNavItems" (click)="setView(item.id)" (mouseenter)="hoveredItem = item.id"
+          (mouseleave)="hoveredItem = null"
+          class="relative px-5 py-2.5 rounded-2xl flex items-center gap-2 text-sm font-semibold transition-all duration-300"
+          [ngStyle]="{
+          'background': isActive(item.id)
+            ? themeService.primary
+            : (hoveredItem === item.id
+                ? themeService.primarySoft
+                : themeService.Backgroundcards2),
+
+          'color': isActive(item.id)
+            ? '#FFFFFF'
+            : (hoveredItem === item.id
+                ? themeService.primary
+                : themeService.Textprincipal),
+
+          'border': hoveredItem === item.id || isActive(item.id)
+            ? themeService.Borderfocus
+            : themeService.Bordernormal,
+
+          'box-shadow': hoveredItem === item.id
+            ? '0 6px 20px rgba(0,0,0,0.15)'
+            : 'none',
+
+          'transform': hoveredItem === item.id
+            ? 'translateY(-2px)'
+            : 'translateY(0)'
+        }">
+
+          <i [class]="item.icon" class="transition-all duration-300" [ngStyle]="{
+            'color': isActive(item.id)
+              ? '#FFFFFF'
+              : (hoveredItem === item.id
+                  ? themeService.Iconhover
+                  : themeService.Iconnormal)
+          }"></i>
+
+          <span>{{ item.label }}</span>
+
+        </button>
+
+      </div>
+
+    </nav>
+
+  </div>
+
+  <!-- ================= NAVIGATION MOBILE / TABLETTE ================= -->
+  <div class="md:hidden w-full flex justify-center">
+
+    <nav [ngStyle]="{
+      'background': themeService.GlassBackground,
+      'border': '2px solid ' + themeService.GlassBorder,
+      'backdrop-filter': 'blur(22px) saturate(180%)',
+      '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+      'box-shadow': '0 10px 30px rgba(0,0,0,0.08)',
+      'color': themeService.Textprincipal
+    }" class="w-full max-w-[420px] rounded-3xl p-3 transition-all duration-300">
+
+      <!-- ================= NAV PAGINÉE ================= -->
+      <div class="flex items-center justify-between gap-2">
+
+        <!-- LEFT -->
+        <button (click)="prevPage()" class="p-2 rounded-xl transition-all duration-300" [ngStyle]="{
+          'background': themeService.Backgroundcards2,
+          'color': themeService.Textprincipal
+        }">
+          ◀
+        </button>
+
+        <!-- ITEMS -->
+        <div class="flex gap-2 justify-center flex-1">
+
+          <button *ngFor="let item of paginatedNavItems" (click)="setView(item.id)"
+            class="px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-1"
+            [ngStyle]="{
+            'background': isActive(item.id)
+              ? themeService.primary
+              : themeService.Backgroundcards2,
+
+            'color': isActive(item.id)
+              ? '#fff'
+              : themeService.Textprincipal,
+
+            'box-shadow': isActive(item.id)
+              ? '0 6px 18px rgba(0,0,0,0.15)'
+              : 'none'
+          }">
+
+            <i [class]="item.icon"></i>
+
+          </button>
+
+        </div>
+
+        <!-- RIGHT -->
+        <button (click)="nextPage()" class="p-2 rounded-xl transition-all duration-300" [ngStyle]="{
+          'background': themeService.Backgroundcards2,
+          'color': themeService.Textprincipal
+        }">
+          ▶
+        </button>
+
+      </div>
+
+      <!-- ================= DOTS ================= -->
+      <div class="flex justify-center gap-1 mt-3">
+
+        <span *ngFor="let p of totalPagesArray; let i = index" class="w-2 h-2 rounded-full transition-all duration-300"
+          [ngStyle]="{
+          'background': currentPage === i
+            ? themeService.primary
+            : themeService.Bordernormal
+        }"></span>
+
+      </div>
+
+    </nav>
+
+  </div>
+
+
+  <!-- ================= CONTENU ================= -->
+  <div class="flex-1 w-full">
+
+    <div *ngIf="currentView === 'Centre de Commande'">
+      <app-commande></app-commande>
+    </div>
+
+    <!-- <div *ngIf="currentView === 'planning'">
+      <app-section-date2></app-section-date2>
+    </div>
+
+    <div *ngIf="currentView === 'match'">
+      <h2 class="text-3xl font-bold mb-6">Matchs</h2>
+    </div>
+
+    <div *ngIf="currentView === 'equipe'">
+      <h2 class="text-3xl font-bold mb-6">Équipe</h2>
+    </div>
+
+    <div *ngIf="currentView === 'convocations'">
+      <h2 class="text-3xl font-bold mb-6">Convocation</h2>
+    </div>
+
+    <div *ngIf="currentView === 'profil'">
+      <app-info></app-info>
+    </div> -->
+
+  </div>
+
+</section>

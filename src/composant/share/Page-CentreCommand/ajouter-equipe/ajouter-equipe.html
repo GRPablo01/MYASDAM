@@ -1,0 +1,511 @@
+<!-- ============================================ -->
+<!-- SECTION AJOUTER EQUIPE PREMIUM UI/UX -->
+<!-- DESKTOP + MOBILE SEPARÉS -->
+<!-- ============================================ -->
+
+<section class="relative w-full py-5 px-5 sm:py-10 sm:px-10 overflow-hidden">
+
+  <!-- ===================================================== -->
+  <!-- DESKTOP / LAPTOP -->
+  <!-- ===================================================== -->
+
+  <div class="relative z-10 hidden lg:flex justify-center">
+
+    <section
+      class="relative w-80 h-96 rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 hover:scale-105">
+      <!-- IMAGE -->
+      <img src="assets/ImageAjouterEquipe.png"
+        class="absolute inset-0 w-full h-full object-cover transition-transform duration-700" />
+
+      <!-- ICON -->
+      <div [ngStyle]="{
+        'background': themeService.GlassBackground,
+        'border': '2px solid ' + themeService.GlassBorder,
+        'backdrop-filter': 'blur(22px) saturate(180%)',
+        '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+        'box-shadow': '0 10px 30px rgba(0,0,0,0.08)',
+        'color':themeService.Textprincipal
+      }" class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full ">
+        <i [ngStyle]="{'color':themeService.primary}" class="fa-solid fa-user-plus"></i>
+      </div>
+
+      <!-- TEXT CENTER -->
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="rounded-xl px-5 py-4 text-center max-w-[80%] backdrop-blur-md" [ngStyle]="{
+            'background': themeService.GlassBackground,
+            'border': '2px solid ' + themeService.GlassBorder,
+            'color': themeService.Textprincipal
+          }">
+          <h3 class="text-lg font-bold mb-1">Ajouter une équipe</h3>
+          <p class="text-sm">Créez et gérez vos équipes facilement</p>
+        </div>
+      </div>
+
+      <!-- BUTTON -->
+      <div (click)="toggleForm()" class="absolute bottom-4 left-1/2 -translate-x-1/2 w-[85%]">
+        <button
+          class="w-full px-5 py-3 rounded-2xl font-medium flex items-center justify-center transition-all hover:scale-105"
+          [ngStyle]="{
+            'background': themeService.primary,
+            'color': '#fff'
+          }">
+          <i class="fa-solid fa-plus mr-2"></i>
+          Ajouter Équipe
+        </button>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- MOBILE / TABLET (VERSION HORIZONTALE) -->
+  <!-- ===================================================== -->
+
+  <div class="relative z-10 flex lg:hidden">
+
+    <section [ngStyle]="{
+      'background': themeService.GlassBackground,
+      'border': '2px solid ' + themeService.GlassBorder,
+      'backdrop-filter': 'blur(22px) saturate(180%)',
+      '-webkit-backdrop-filter': 'blur(22px) saturate(180%)',
+      'box-shadow': '0 10px 30px rgba(0,0,0,0.08)',
+      'color':themeService.Textprincipal
+    }" class="relative w-full h-40 rounded-2xl overflow-hidden shadow-xl flex items-center gap-4 p-3">
+
+      <!-- IMAGE -->
+      <div class="w-32 h-full rounded-xl overflow-hidden flex-shrink-0">
+        <img src="assets/ImageAjouterEquipe.png" class="w-full h-full object-cover" />
+      </div>
+
+      <!-- CONTENT -->
+      <div class="flex-1">
+
+        <h3 class="text-base font-bold" [ngStyle]="{
+          'color': themeService.Textprincipal
+        }">
+          Ajouter une équipe
+        </h3>
+
+        <p class="text-xs mt-1" [ngStyle]="{
+          'color': themeService.Textsecondaire
+        }">
+          Créez et gérez vos équipes facilement
+        </p>
+
+        <!-- BUTTON -->
+        <button (click)="toggleForm()" class="mt-3 w-full py-2 rounded-xl text-sm font-medium" [ngStyle]="{
+            'background': themeService.primary,
+            'color': '#fff'
+          }">
+          <i class="fa-solid fa-plus mr-2"></i>
+          Ajouter
+        </button>
+
+      </div>
+
+      <!-- ICON -->
+      <div
+        class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-white text-sm">
+        <i class="fa-solid fa-user-plus"></i>
+      </div>
+
+    </section>
+
+  </div>
+
+</section>
+
+<!-- ============================================
+MODAL AJOUT ÉQUIPE - PREMIUM UI/UX (REFONTE)
+============================================= -->
+<div *ngIf="showForm"
+  role="dialog"
+  aria-modal="true"
+  class="fixed inset-0 z-[2147483632] bg-black/55 flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+  (click)="toggleForm()">
+
+  <!-- MODAL -->
+  <div (click)="$event.stopPropagation()"
+    class="relative w-full max-h-[95vh] overflow-hidden rounded-3xl flex flex-col xl:flex-row xl:max-w-6xl animate-modal-in shadow-2xl"
+    [ngStyle]="{
+      'background': themeService.Backgroundcards1
+    }">
+    
+    <!-- ============================================
+    RIGHT FORM
+    ============================================= -->
+    <div class="flex-1 flex flex-col max-h-[95vh] min-h-0">
+
+      <!-- HEADER -->
+      <div class="flex items-center justify-between px-4 sm:px-8 py-5 border-b flex-shrink-0"
+        [ngStyle]="{ 'border-color': themeService.Textsecondaire + '15' }">
+
+        <div class="flex items-center gap-3 sm:gap-4">
+
+          <!-- ICON -->
+          <div class="w-10 sm:w-12 h-10 sm:h-12 rounded-xl flex items-center justify-center text-white"
+            [ngStyle]="{
+              'background': 'linear-gradient(135deg,' + themeService.primary + ',' + themeService.primary + 'DD)',
+              'box-shadow': '0 4px 20px -4px ' + themeService.primary + '50'
+            }">
+            <i class="fa-solid fa-users text-sm sm:text-xl"></i>
+          </div>
+
+          <!-- TITLE -->
+          <div>
+            <h2 class="font-black text-lg sm:text-xl"
+              [ngStyle]="{ 'color': themeService.Textprincipal }">
+              Nouvelle Équipe
+            </h2>
+            <p class="text-xs sm:text-sm"
+              [ngStyle]="{ 'color': themeService.Textsecondaire }">
+              Création et configuration de l'équipe
+            </p>
+          </div>
+
+        </div>
+
+        <!-- CLOSE -->
+        <button (click)="toggleForm()"
+          class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+          [ngStyle]="{
+            'background': themeService.Backgroundcards1,
+            'border': '1px solid ' + themeService.Textsecondaire + '20'
+          }">
+          <i class="fa-solid fa-xmark"
+            [ngStyle]="{ 'color': themeService.Textsecondaire }"></i>
+        </button>
+
+      </div>
+
+      <!-- FORM -->
+      <form [formGroup]="equipeForm"
+        (ngSubmit)="ajouterEquipe()"
+        class="flex-1 overflow-y-auto">
+
+        <div class="p-4 sm:p-8 space-y-6">
+
+          <!-- SECTION -->
+          <div class="space-y-1">
+            <h3 class="text-sm font-black uppercase tracking-wider"
+              [ngStyle]="{ 'color': themeService.Textprincipal }">
+              Informations générales
+            </h3>
+            <p class="text-xs"
+              [ngStyle]="{ 'color': themeService.Textsecondaire }">
+              Remplissez les informations de votre équipe
+            </p>
+          </div>
+
+          <!-- NOM -->
+          <div class="space-y-2">
+            <label class="text-xs font-semibold uppercase"
+              [ngStyle]="{ 'color': themeService.Textsecondaire }">
+              Nom de l'équipe
+            </label>
+
+            <input type="text"
+              formControlName="nom"
+              placeholder="Ex: Les Dragons"
+              class="w-full p-4 rounded-xl outline-none transition-all"
+              [ngStyle]="{
+                'background': themeService.Backgroundcards1,
+                'border': '1px solid ' + themeService.Textsecondaire + '15',
+                'color': themeService.Textprincipal
+              }" />
+          </div>
+
+          <!-- SAISON -->
+          <div class="space-y-2">
+            <label class="text-xs font-semibold uppercase"
+              [ngStyle]="{ 'color': themeService.Textsecondaire }">
+              Saison
+            </label>
+
+            <input type="text"
+              formControlName="saison"
+              placeholder="2025 - 2026"
+              class="w-full p-4 rounded-xl outline-none transition-all"
+              [ngStyle]="{
+                'background': themeService.Backgroundcards1,
+                'border': '1px solid ' + themeService.Textsecondaire + '15',
+                'color': themeService.Textprincipal
+              }" />
+          </div>
+
+          <!-- UPLOAD LOGO -->
+          <div class="space-y-2">
+
+            <label class="text-xs font-semibold uppercase"
+              [ngStyle]="{ 'color': themeService.Textsecondaire }">
+              Logo équipe
+            </label>
+
+            <div class="relative border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer"
+              (dragover)="$event.preventDefault(); isDragging = true"
+              (dragleave)="isDragging = false"
+              (drop)="onFileDrop($event)"
+              [ngStyle]="{
+                'background': themeService.Backgroundcards1,
+                'border-color': isDragging ? themeService.primary : themeService.Textsecondaire + '25'
+              }">
+
+              <input type="file"
+                accept="image/png"
+                (change)="onFileChange($event)"
+                class="absolute inset-0 opacity-0 cursor-pointer" />
+
+              <ng-container *ngIf="logoPreview; else upload">
+                <img [src]="logoPreview" class="w-28 h-28 mx-auto rounded-xl object-cover" />
+                <p class="mt-2 font-bold">{{ selectedFileName }}</p>
+              </ng-container>
+
+              <ng-template #upload>
+                <i class="fa-solid fa-cloud-arrow-up text-3xl"
+                  [ngStyle]="{ 'color': themeService.primary }"></i>
+                <p class="mt-2 text-sm">Glissez ou cliquez pour importer</p>
+              </ng-template>
+
+            </div>
+
+            <p *ngIf="uploadError"
+              class="text-xs text-red-500 font-bold">
+              {{ uploadError }}
+            </p>
+
+          </div>
+
+          <!-- ACTIONS -->
+          <div class="flex gap-3 pt-4 border-t"
+            [ngStyle]="{ 'border-color': themeService.Textsecondaire + '15' }">
+
+            <button type="button"
+              (click)="toggleForm()"
+              class="flex-1 p-4 rounded-xl font-bold transition"
+              [ngStyle]="{
+                'background': themeService.Backgroundcards1,
+                'color': themeService.Textprincipal
+              }">
+              Annuler
+            </button>
+
+            <button type="submit"
+              [disabled]="equipeForm.invalid"
+              class="flex-[1.4] p-4 rounded-xl font-black text-white transition hover:scale-[1.02]"
+              [ngStyle]="{
+                'background': 'linear-gradient(135deg,' + themeService.primary + ',' + themeService.primary + 'DD)'
+              }">
+              Créer l'équipe
+            </button>
+
+          </div>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- =========================================================
+ANIMATIONS MODAL (AJOUT À METTRE DANS CSS GLOBAL OU COMPONENT)
+========================================================= -->
+
+<style>
+@keyframes modalIn {
+  from {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes modalOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+}
+
+.animate-modal-in {
+  animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-modal-out {
+  animation: modalOut 0.28s ease-in forwards;
+}
+</style>
+
+<!-- =========================================================
+ANIMATIONS
+========================================================= -->
+<style>
+
+  /* BACKDROP ENTRÉE */
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* BACKDROP SORTIE */
+@keyframes backdropOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* MODAL ENTRÉE (haut → centre avec rebond) */
+@keyframes modalIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-70vh);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(15px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* MODAL SORTIE (bas → haut) */
+@keyframes modalOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-70vh);
+  }
+}
+
+.animate-backdrop-in {
+  animation: backdropIn 0.25s ease;
+}
+
+.animate-backdrop-out {
+  animation: backdropOut 0.35s ease forwards;
+}
+
+.animate-modal-in {
+  animation: modalIn 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-modal-out {
+  animation: modalOut 0.4s ease forwards;
+}
+
+</style>
+
+<!-- ============================= -->
+<!-- TOAST NOTIFICATION -->
+<!-- ============================= -->
+<div
+  *ngIf="showNotification"
+  class="fixed top-20 right-4 z-[12000] animate-slide-from-right">
+
+  <div class="relative flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl
+              backdrop-blur-md bg-emerald-500/95 border border-emerald-400/30
+              min-w-[300px] max-w-[400px] overflow-hidden">
+
+    <!-- ICON -->
+    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+      <i class="fa-solid fa-circle-check text-white text-xl animate-icon-pop"></i>
+    </div>
+
+    <!-- TEXT -->
+    <div class="flex-1 min-w-0">
+      <p class="text-white font-semibold text-sm">Succès</p>
+      <p class="text-white/90 text-sm truncate">
+        {{ notificationMessage }}
+      </p>
+    </div>
+
+    <!-- CLOSE -->
+    <button 
+      (click)="closeNotification()"
+      class="flex-shrink-0 w-7 h-7 rounded-full hover:bg-white/20
+             flex items-center justify-center transition group focus:outline-none">
+      <i class="fa-solid fa-xmark text-white/70 group-hover:text-white text-sm"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Styles d'animation personnalisés -->
+<style>
+  @keyframes modal-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .animate-modal-in {
+    animation: modal-in 0.3s ease-out forwards;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out forwards;
+  }
+
+  /* Scrollbar personnalisée pour le formulaire */
+  form::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  form::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+  }
+
+  form::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-color, rgba(0, 0, 0, 0.2));
+    border-radius: 4px;
+  }
+
+  form::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-color-hover, rgba(0, 0, 0, 0.3));
+  }
+
+  /* Focus visible pour accessibilité */
+  input:focus-visible {
+    outline: none;
+    ring: 2px;
+    ring-offset: 2px;
+  }
+
+  /* Hover states améliorés */
+  .group:hover input {
+    border-color: var(--input-hover-border, rgba(0, 0, 0, 0.3));
+  }
+</style>
