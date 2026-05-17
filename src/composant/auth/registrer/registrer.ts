@@ -214,114 +214,250 @@ export class Registrer implements OnInit {
     this.themeservice.toggleTheme();
   }
 
-  /* ======================================================
-      SUBMIT
-  ====================================================== */
+  // =========================
+// LOG URL
+// =========================
+private logUrl = 'http://localhost:3000/api/logs';
 
-  onSubmit(): void {
+/* ======================================================
+    USER CONNECTÉ
+====================================================== */
 
-    this.message = null;
-    this.messageType = null;
+getCurrentUser(): any {
 
-    if (this.registerForm.invalid) {
+  const user = localStorage.getItem('utilisateur');
+
+  return user
+    ? JSON.parse(user)
+    : {
+        prenom: 'Inconnu',
+        nom: '',
+        role: 'unknown'
+      };
+}
+
+/* ======================================================
+    SUBMIT + LOG
+====================================================== */
+
+onSubmit(): void {
+
+  // console.log('🚀 onSubmit déclenché');
+
+  this.message = null;
+  this.messageType = null;
+
+  // =========================
+  // VALIDATION FORMULAIRE
+  // =========================
+  if (this.registerForm.invalid) {
+
+    // console.log('❌ Formulaire invalide', this.registerForm.value);
+
+    this.messageType = 'error';
+    this.message = 'Veuillez remplir correctement les champs';
+    return;
+  }
+
+  // console.log('✅ Formulaire valide', this.registerForm.value);
+
+  const role = this.registerForm.value.role;
+  const codeAcces = this.registerForm.value.codeAcces;
+  const equipe = this.registerForm.value.equipe;
+
+  // console.log('ℹ️ Rôle sélectionné :', role);
+
+  // =========================
+  // VALIDATION CODE ACCÈS
+  // =========================
+  if (role !== 'invité') {
+
+    // console.log('🔐 Vérification code accès...');
+
+    if (!codeAcces) {
+      // console.log('❌ Code accès manquant');
       this.messageType = 'error';
-      this.message = 'Veuillez remplir correctement les champs';
+      this.message = 'Code accès obligatoire';
       return;
     }
 
-    const role = this.registerForm.value.role;
-    const codeAcces = this.registerForm.value.codeAcces;
-    const equipe = this.registerForm.value.equipe;
-
-    if (role !== 'invité') {
-      if (!codeAcces) {
-        this.messageType = 'error';
-        this.message = 'Code accès obligatoire';
-        return;
-      }
-
-      if (!this.isCodeValid()) {
-        this.messageType = 'error';
-        this.message = 'Code accès incorrect';
-        return;
-      }
-    }
-
-    if ((role === 'joueur' || role === 'entraineur') && !equipe) {
+    if (!this.isCodeValid()) {
+      // console.log('❌ Code accès invalide');
       this.messageType = 'error';
-      this.message = 'Equipe obligatoire';
+      this.message = 'Code accès incorrect';
       return;
     }
 
-    if (role === 'admin') {
-      this.registerForm.get('equipe')?.setValue('ALL');
-    }
+    // console.log('✅ Code accès valide');
+  }
 
-    if (role === 'invité') {
-      this.registerForm.patchValue({
-        equipe: '',
-        codeAcces: ''
-      });
-    }
+  // =========================
+  // VALIDATION ÉQUIPE
+  // =========================
+  if ((role === 'joueur' || role === 'entraineur') && !equipe) {
 
-    this.isSubmitting = true;
+    console.log('❌ Équipe obligatoire pour ce rôle');
 
-    const formData = { ...this.registerForm.value };
+    this.messageType = 'error';
+    this.message = 'Equipe obligatoire';
+    return;
+  }
 
-    this.http.post<any>(
-      'http://localhost:3000/api/auth/register',
-      formData
-    ).subscribe({
+  // console.log('✅ Validation équipe OK');
 
-      next: (res) => {
+  // =========================
+  // ADMIN
+  // =========================
+  if (role === 'admin') {
+    // console.log('🛠️ Admin détecté → équipe forcée ALL');
+    this.registerForm.get('equipe')?.setValue('ALL');
+  }
 
-        this.isSubmitting = false;
+  // =========================
+  // INVITÉ
+  // =========================
+  if (role === 'invité') {
+    // console.log('👤 Invité détecté → reset champs équipe/code');
 
-        if (!res?.user) {
-          this.messageType = 'error';
-          this.message = 'Erreur serveur';
-          return;
-        }
-
-        this.messageType = 'success';
-        this.message = 'Inscription réussie 🎉';
-
-        localStorage.setItem(
-          'utilisateur',
-          JSON.stringify(res.user)
-        );
-
-        localStorage.setItem(
-          'theme',
-          res.user.theme || 'light'
-        );
-
-        this.registerForm.reset({
-          role: 'joueur',
-          theme: 'light',
-          status: 'présent'
-        });
-
-        this.currentStep = 1;
-
-        setTimeout(() => {
-          this.router.navigate(['/accueil']);
-        }, 1500);
-      },
-
-      error: (err) => {
-
-        this.isSubmitting = false;
-        this.messageType = 'error';
-
-        if (err.status === 409) {
-          this.message = 'Email déjà utilisé';
-        } else if (err.status === 0) {
-          this.message = 'Serveur inaccessible';
-        } else {
-          this.message = err.error?.message || 'Erreur inscription';
-        }
-      }
+    this.registerForm.patchValue({
+      equipe: '',
+      codeAcces: ''
     });
   }
+
+  this.isSubmitting = true;
+
+  const formData = { ...this.registerForm.value };
+
+  // console.log('📦 Données envoyées au backend :', formData);
+
+  // =========================
+  // REGISTER
+  // =========================
+  this.http.post<any>(
+    'http://localhost:3000/api/auth/register',
+    formData
+  ).subscribe({
+
+    next: (res) => {
+
+      // console.log('📩 Réponse backend reçue :', res);
+
+      this.isSubmitting = false;
+
+      // =========================
+      // 🔥 FIX IMPORTANT ICI
+      // =========================
+      const userId = res.userId || res.user?._id || res.user?.id;
+
+      if (!userId) {
+        // console.log('❌ Aucun userId dans la réponse');
+
+        this.messageType = 'error';
+        this.message = 'Erreur serveur : userId manquant';
+        return;
+      }
+
+      // console.log('🎉 Inscription réussie userId :', userId);
+
+      // =========================
+      // USER LOCAL STORAGE SAFE
+      // =========================
+      const user = {
+        _id: userId,
+        nom: formData.nom,
+        prenom: formData.prenom,
+        email: formData.email,
+        role: formData.role,
+        equipe: formData.equipe
+      };
+
+      localStorage.setItem('utilisateur', JSON.stringify(user));
+      localStorage.setItem('theme', 'light');
+
+      // console.log('💾 User sauvegardé en localStorage');
+
+      // =========================
+      // SUCCESS MESSAGE
+      // =========================
+      this.messageType = 'success';
+      this.message = 'Inscription réussie 🎉';
+
+      // =========================
+      // LOG
+      // =========================
+      const currentUser = this.getCurrentUser();
+
+      const logData = {
+        user: `${currentUser.prenom || 'Inconnu'} ${currentUser.nom || ''}`,
+        role: currentUser.role || formData.role || 'unknown',
+        action: 'REGISTER_USER',
+        description: `${formData.prenom} ${formData.nom} s'est inscrit avec le rôle ${formData.role}`,
+        type: 'CREATE',
+        field: 'user',
+        newValue: {
+          prenom: formData.prenom,
+          nom: formData.nom,
+          email: formData.email,
+          role: formData.role,
+          equipe: formData.equipe
+        },
+        date: new Date()
+      };
+
+      // console.log('📝 Log envoyé :', logData);
+
+      this.http.post(this.logUrl, logData).subscribe({
+        next: () => console.log('✅ Log inscription créé'),
+        error: (err) => console.error('❌ Erreur log inscription', err)
+      });
+
+      // =========================
+      // RESET FORM
+      // =========================
+      this.registerForm.reset({
+        role: 'joueur',
+        theme: 'light',
+        status: 'présent'
+      });
+
+      this.currentStep = 1;
+
+      // console.log('🔄 Formulaire reset + step 1');
+
+      // =========================
+      // REDIRECTION
+      // =========================
+      setTimeout(() => {
+
+        // console.log('➡️ Redirection vers /accueil');
+
+        this.router.navigate(['/accueil']);
+
+      }, 1500);
+    },
+
+    error: (err) => {
+
+      this.isSubmitting = false;
+
+      console.error('❌ Erreur backend inscription :', err);
+
+      this.messageType = 'error';
+
+      if (err.status === 409) {
+        this.message = 'Email déjà utilisé';
+        // console.log('⚠️ Email déjà utilisé');
+
+      } else if (err.status === 0) {
+        this.message = 'Serveur inaccessible';
+        // console.log('⚠️ Serveur inaccessible');
+
+      } else {
+        this.message = err.error?.message || 'Erreur inscription';
+        // console.log('⚠️ Erreur inconnue');
+      }
+    }
+  });
+}
 }

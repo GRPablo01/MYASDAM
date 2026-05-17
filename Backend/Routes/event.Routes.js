@@ -3,7 +3,7 @@ const router = express.Router();
 const eventController = require('../Controller/eventController');
 
 // CREATE
-router.post('/create', eventController.createEvent);
+router.post('/', eventController.createEvent);
 
 // READ
 router.get('/', eventController.getEvents);

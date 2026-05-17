@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 import { Match, MatchService } from '../../../../../Backend/Services/match.service';
+import { EquipeService, Equipe } from '../../../../../Backend/Services/equipe.service';
+
 import { Icon } from "../../../priver/icon/icon";
 import { ThemeService } from '../../../../../Backend/Services/theme.service';
 
@@ -16,39 +19,64 @@ import { ThemeService } from '../../../../../Backend/Services/theme.service';
 export class GestionMatch implements OnInit {
 
   matchs: Match[] = [];
+  equipes: Equipe[] = [];
+
+  equipesCache: { [key: string]: Equipe } = {};
+
   loading = false;
+  isLoading = false;
   error = '';
 
-  showNotification: boolean = false;
-  notificationMessage: string = '';
+  showNotification = false;
+  notificationMessage = '';
 
   showEditMatchModal = false;
   showDeleteMatchModal = false;
 
   selectedMatch: any = {};
 
+  baseUrl = 'http://localhost:3000/uploads/';
+
+  currentPage = 1;
+  itemsPerPage = 8;
+
   constructor(
     private matchService: MatchService,
+    private equipeService: EquipeService,
+    private http: HttpClient,
     public themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
-    this.loadMatchs();
-
+    this.loadData();
     this.updateItemsPerPage();
-
-    window.addEventListener('resize', () => {
-      this.updateItemsPerPage();
-    });
   }
 
   // ======================
-  // LOAD MATCHS
+  // LOAD DATA
   // ======================
-  loadMatchs(): void {
+  loadData(): void {
     this.loading = true;
-    this.error = '';
 
+    this.equipeService.getEquipes().subscribe({
+      next: (equipes) => {
+        this.equipes = equipes;
+
+        this.equipesCache = {};
+        equipes.forEach(e => {
+          if (e._id) this.equipesCache[e._id] = e;
+        });
+
+        this.loadMatchs();
+      },
+      error: () => {
+        this.error = 'Erreur chargement équipes';
+        this.loading = false;
+      }
+    });
+  }
+
+  loadMatchs(): void {
     this.matchService.getMatchs().subscribe({
       next: (data) => {
         this.matchs = data;
@@ -62,21 +90,79 @@ export class GestionMatch implements OnInit {
   }
 
   // ======================
-  // UTILITIES
+  // HELPERS
   // ======================
-  getMinute(match: Match): string {
-    return this.matchService.formaterMinute(match);
+  getEquipe(id?: string) {
+    return id ? this.equipesCache[id] : undefined;
   }
 
-  isLive(match: Match): boolean {
-    return this.matchService.isMatchLive(match);
+  getDomEquipe(m: Match) {
+    return this.getEquipe(m.equipeDom)?.nom || 'Dom';
+  }
+
+  getExtEquipe(m: Match) {
+    return this.getEquipe(m.equipeExt)?.nom || 'Ext';
+  }
+
+  getEquipeLogo(id?: string) {
+    return this.equipeService.normalizeLogo(this.getEquipe(id)?.logo);
   }
 
   // ======================
-  // EDIT MATCH
+  // MATCH UPDATE
   // ======================
-  openEditMatch(match: Match) {
-    this.selectedMatch = { ...match };
+  saveMatch(): void {
+    if (!this.selectedMatch?._id) return;
+
+    this.isLoading = true;
+
+    this.matchService.updateMatch(this.selectedMatch._id, this.selectedMatch)
+      .subscribe({
+        next: (updated) => {
+          this.matchs = this.matchs.map(m =>
+            m._id === updated._id ? updated : m
+          );
+
+          this.showToast('Match modifié ✔️');
+          this.showEditMatchModal = false;
+        },
+        error: (err) => console.error(err),
+        complete: () => this.isLoading = false
+      });
+  }
+
+  // ======================
+  // DELETE
+  // ======================
+  confirmDeleteMatch(): void {
+    const id = this.selectedMatch?._id;
+    if (!id) return;
+
+    this.matchService.deleteMatch(id).subscribe({
+      next: () => {
+        this.matchs = this.matchs.filter(m => m._id !== id);
+        this.showToast('Match supprimé 🗑️');
+        this.closeDeleteMatch();
+      }
+    });
+  }
+
+  getEquipeName(id: string | undefined): string {
+
+    if (!id) {
+      return 'Équipe inconnue';
+    }
+  
+    const equipe = this.equipes.find(e => e._id === id);
+  
+    return equipe ? equipe.nom : 'Équipe inconnue';
+  }
+
+  // ======================
+  // MODALS
+  // ======================
+  openEditMatch(m: Match) {
+    this.selectedMatch = { ...m };
     this.showEditMatchModal = true;
   }
 
@@ -84,24 +170,8 @@ export class GestionMatch implements OnInit {
     this.showEditMatchModal = false;
   }
 
-  showToast(message: string): void {
-    this.notificationMessage = message;
-    this.showNotification = true;
-  
-    setTimeout(() => {
-      this.showNotification = false;
-    }, 3000);
-  }
-  
-  closeNotification(): void {
-    this.showNotification = false;
-  }
-
-  // ======================
-  // DELETE MATCH
-  // ======================
-  openDeleteMatch(match: Match) {
-    this.selectedMatch = match;
+  openDeleteMatch(m: Match) {
+    this.selectedMatch = m;
     this.showDeleteMatchModal = true;
   }
 
@@ -109,180 +179,45 @@ export class GestionMatch implements OnInit {
     this.showDeleteMatchModal = false;
   }
 
-  confirmDeleteMatch() {
-    if (!this.selectedMatch?._id) return;
-  
-    this.matchService.deleteMatch(this.selectedMatch._id)
-      .subscribe({
-        next: () => {
-  
-          this.matchs = this.matchs.filter(m => m._id !== this.selectedMatch._id);
-          this.closeDeleteMatch();
-  
-          // ✅ TOAST SUCCESS
-          this.showToast('Match supprimé avec succès !');
-  
-        },
-        error: (err) => {
-          console.error('Erreur suppression match', err);
-        }
-      });
+  // ======================
+  // TOAST
+  // ======================
+  showToast(msg: string) {
+    this.notificationMessage = msg;
+    this.showNotification = true;
+
+    setTimeout(() => this.showNotification = false, 3000);
   }
 
-  saveMatch() {
-    if (!this.selectedMatch?._id) return;
-  
-    this.matchService.updateMatch(this.selectedMatch._id, this.selectedMatch)
-      .subscribe({
-        next: (updated) => {
-  
-          const index = this.matchs.findIndex(m => m._id === updated._id);
-  
-          if (index !== -1) {
-            this.matchs[index] = updated;
-          }
-  
-          this.showEditMatchModal = false;
-  
-          // ✅ TOAST SUCCESS
-          this.showToast('Match modifié avec succès !');
-  
-        },
-        error: (err) => {
-          console.error('Erreur update match', err);
-        }
-      });
+  closeNotification() {
+    this.showNotification = false;
   }
-
 
   // ======================
-  // UI ACTIONS
+  // PAGINATION
   // ======================
-  voirDetailsMatch(match: Match) {
-    console.log(match);
+  @HostListener('window:resize')
+  updateItemsPerPage() {
+    const w = window.innerWidth;
+    if (w >= 1280) this.itemsPerPage = 8;
+    else if (w >= 1024) this.itemsPerPage = 6;
+    else this.itemsPerPage = 4;
   }
 
-  refreshMatchs() {
-    this.loadMatchs();
+  get matchsPagines() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.matchs.slice(start, start + this.itemsPerPage);
   }
 
-  // =====================================================
-// PAGINATION RESPONSIVE
-// =====================================================
-
-currentPage = 1;
-
-itemsPerPage = 8;
-
-
-
-// =====================================================
-// RESPONSIVE ITEMS
-// =====================================================
-
-updateItemsPerPage(): void {
-
-  const width = window.innerWidth;
-
-  // DESKTOP XL = 4 x 2
-  if (width >= 1280) {
-
-    this.itemsPerPage = 8;
-
+  get totalPages() {
+    return Math.ceil(this.matchs.length / this.itemsPerPage);
   }
 
-  // LAPTOP = 3 x 2
-  else if (width >= 1024) {
-
-    this.itemsPerPage = 6;
-
+  nextPage() {
+    if (this.currentPage < this.totalPages) this.currentPage++;
   }
 
-  // TABLETTE = 2 x 2
-  else if (width >= 768) {
-
-    this.itemsPerPage = 4;
-
+  prevPage() {
+    if (this.currentPage > 1) this.currentPage--;
   }
-
-  // MOBILE = 1 x 4
-  else {
-
-    this.itemsPerPage = 4;
-
-  }
-
-}
-
-// =====================================================
-// MATCHS PAGINÉS
-// =====================================================
-
-get matchsPagines() {
-
-  const start = (this.currentPage - 1) * this.itemsPerPage;
-
-  return this.matchs.slice(
-    start,
-    start + this.itemsPerPage
-  );
-
-}
-
-// =====================================================
-// TOTAL PAGES
-// =====================================================
-
-get totalPages(): number {
-
-  return Math.ceil(
-    this.matchs.length / this.itemsPerPage
-  );
-
-}
-
-// =====================================================
-// NEXT
-// =====================================================
-
-nextPage(): void {
-
-  if (this.currentPage < this.totalPages) {
-
-    this.currentPage++;
-
-    this.scrollTop();
-
-  }
-
-}
-
-// =====================================================
-// PREV
-// =====================================================
-
-prevPage(): void {
-
-  if (this.currentPage > 1) {
-
-    this.currentPage--;
-
-    this.scrollTop();
-
-  }
-
-}
-
-// =====================================================
-// SCROLL TOP
-// =====================================================
-
-scrollTop(): void {
-
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-
-}
 }

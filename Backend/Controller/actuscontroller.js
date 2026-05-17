@@ -84,65 +84,46 @@ exports.getActuByKey = async (req, res) => {
 };
 
 // ==============================
-// ✏️ Modifier une actu
+// ✏️ UPDATE ACTU
 // ==============================
-exports.updateActu = async (req, res) => {
-  try {
-    const { key } = req.params;
-    const { titre, auteur, saison, description } = req.body;
+exports.updateActu = async (id, updateData) => {
 
-    const actu = await Actus.findOne({ key });
+  const updated = await Actus.findByIdAndUpdate(
+    id,
+    updateData,
+    { new: true }
+  );
 
-    if (!actu) {
-      return res.status(404).json({ message: 'Actu non trouvée' });
-    }
-
-    actu.titre = titre ?? actu.titre;
-    actu.auteur = auteur ?? actu.auteur;
-    actu.saison = saison ?? actu.saison;
-    actu.description = description ?? actu.description;
-
-    if (req.file) {
-      actu.image = req.file.filename;
-    }
-
-    await actu.save();
-
-    res.json({
-      message: 'Actu modifiée avec succès',
-      data: actu
-    });
-
-  } catch (error) {
-    console.error('Erreur modification actu :', error);
-    res.status(500).json({
-      message: 'Erreur serveur',
-      error: error.message
-    });
+  if (!updated) {
+    throw new Error('Actu non trouvée');
   }
+
+  return updated;
 };
 
 
 // ==============================
-// 🗑️ Supprimer une actu
+// 🗑️ DELETE ACTU (CONTROLLER)
 // ==============================
 exports.deleteActu = async (req, res) => {
+
   try {
-    const { key } = req.params;
 
-    const actu = await Actus.findOneAndDelete({ key });
+    const id = req.params.id;
 
-    if (!actu) {
+    const deleted = await Actus.findByIdAndDelete(id);
+
+    if (!deleted) {
       return res.status(404).json({ message: 'Actu non trouvée' });
     }
 
-    res.json({ message: 'Actu supprimée avec succès' });
+    return res.status(200).json({
+      message: 'Actu supprimée',
+      data: deleted
+    });
 
   } catch (error) {
-    console.error('Erreur suppression actu :', error);
-    res.status(500).json({
-      message: 'Erreur serveur',
-      error: error.message
-    });
+    console.error('DELETE ACTU ERROR:', error);
+    return res.status(500).json({ message: 'Erreur serveur' });
   }
 };

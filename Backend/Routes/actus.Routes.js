@@ -26,8 +26,31 @@ const upload = multer({ storage });
 router.post('/', upload.single('image'), actusController.creerActus);
 router.get('/', actusController.getActus);
 
-router.put('/:key', upload.single('image'), actusController.updateActu);
+router.put('/:id', upload.single('image'), async (req, res) => {
+  try {
 
-router.delete('/:key', actusController.deleteActu);
+    const id = req.params.id;
+
+    const updateData = {
+      titre: req.body.titre,
+      auteur: req.body.auteur,
+      description: req.body.description,
+      ...(req.file && { image: req.file.filename })
+    };
+
+    const updated = await actusController.updateActu(id, updateData);
+
+    res.json({
+      message: 'Actu modifiée avec succès',
+      data: updated
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+router.delete('/:id', actusController.deleteActu);
 
 module.exports = router;

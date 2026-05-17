@@ -224,6 +224,16 @@ export class AjouterEquipe implements OnInit {
   // =========================
   // AJOUT EQUIPE
   // =========================
+  private logUrl = 'http://localhost:3000/api/logs';
+
+  getCurrentUser(): any {
+    const user = localStorage.getItem('utilisateur');
+    return user ? JSON.parse(user) : {
+      prenom: 'Inconnu',
+      nom: '',
+      role: 'unknown'
+    };
+  }
   ajouterEquipe(): void {
 
     if (this.equipeForm.invalid) {
@@ -244,7 +254,6 @@ export class AjouterEquipe implements OnInit {
     }
 
     const formData = new FormData();
-
     formData.append('nom', this.equipeForm.get('nom')?.value);
     formData.append('saison', this.equipeForm.get('saison')?.value);
     formData.append('logo', file);
@@ -253,9 +262,33 @@ export class AjouterEquipe implements OnInit {
       .subscribe({
 
         next: (res: any) => {
-          this.showToast(res.message || 'Équipe ajoutée avec succès');
 
+          this.showToast(res.message || 'Équipe ajoutée avec succès');
           this.resetForm();
+
+          // =========================
+          // 🔥 AJOUT DU LOG ICI
+          // =========================
+          const currentUser = this.getCurrentUser();
+
+          const logData = {
+            user: `${currentUser.prenom || 'Inconnu'} ${currentUser.nom || ''}`,
+            role: currentUser.role || 'unknown',
+            action: 'CREATE_EQUIPE',
+            description: `${currentUser.role || 'Utilisateur'} a créé l'équipe`,
+            type: 'CREATE',
+            field: 'equipe',
+            newValue: {
+              nom: this.equipeForm.get('nom')?.value,
+              saison: this.equipeForm.get('saison')?.value
+            },
+            date: new Date()
+          };
+
+          this.http.post(this.logUrl, logData).subscribe({
+            next: () => console.log('✅ Log créé'),
+            error: (err) => console.error('❌ Erreur log', err)
+          });
 
           setTimeout(() => {
             this.toggleForm();

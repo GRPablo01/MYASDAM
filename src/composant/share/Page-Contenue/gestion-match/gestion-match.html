@@ -12,32 +12,32 @@
         'background': themeService.Backgroundprincipal + 'EE'
       }">
 
-      <div class="flex flex-col items-center gap-5">
+    <div class="flex flex-col items-center gap-5">
 
-          <div class="relative">
+      <div class="relative">
 
-              <div class="w-16 h-16 rounded-full border-4 animate-spin" [ngStyle]="{
+        <div class="w-16 h-16 rounded-full border-4 animate-spin" [ngStyle]="{
                     'border-color': themeService.GlassBorder,
                     'border-top-color': themeService.eventPrimary
                   }">
-              </div>
+        </div>
 
-              <div class="absolute inset-0 rounded-full blur-xl opacity-50" [ngStyle]="{
+        <div class="absolute inset-0 rounded-full blur-xl opacity-50" [ngStyle]="{
                     'background': themeService.eventPrimary
                   }">
-              </div>
+        </div>
 
-          </div>
+      </div>
 
-          <p class="font-semibold tracking-wide" [ngStyle]="{
+      <p class="font-semibold tracking-wide" [ngStyle]="{
                 'color': themeService.Textsecondaire
               }">
 
-              Chargement des matchs...
+        Chargement des matchs...
 
-          </p>
+      </p>
 
-      </div>
+    </div>
 
   </div>
 
@@ -46,30 +46,31 @@
   <!-- ===================================================== -->
   <div *ngIf="!loading && matchs?.length" class="hidden lg:grid grid-cols-3 xl:grid-cols-4 gap-7">
 
-      <article *ngFor="let m of matchs"
-          class="group relative overflow-hidden rounded-[2rem] min-h-[430px] border transition-all duration-500 hover:-translate-y-3 cursor-pointer isolate"
-          [ngStyle]="{
+    <article *ngFor="let m of matchs"
+      class="group relative overflow-hidden rounded-[2rem] min-h-[430px] border transition-all duration-500 hover:-translate-y-3 cursor-pointer isolate"
+      [ngStyle]="{
             'background': themeService.Backgroundcards,
             'border': '1px solid ' + themeService.GlassBorder,
             'box-shadow': themeService.GlassShadow
           }">
 
-          <!-- BG IMAGE -->
-          <div class="absolute inset-0">
+      <!-- BG IMAGE -->
+      <div class="absolute inset-0">
 
-              <img src="assets/ImageMatch.png"
-                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out">
+        <img src="assets/ImageMatch.png"
+          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out">
 
-              <div class="absolute inset-0" [ngStyle]="{
+        <div class="absolute inset-0" [ngStyle]="{
                     'background': 'linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.55), rgba(0,0,0,0.15))'
                   }">
-              </div>
+        </div>
 
-          </div>
+      </div>
 
-          <!-- DATE -->
-          <div class="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold backdrop-blur-xl border"
-          [ngStyle]="{
+      <!-- DATE -->
+      <div
+        class="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold backdrop-blur-xl border"
+        [ngStyle]="{
             'background': themeService.GlassBackground,
             'border': '2px solid ' + themeService.GlassBorder,
             'backdrop-filter': 'blur(22px) saturate(180%)',
@@ -78,18 +79,19 @@
             'color':themeService.Textprincipal
           }">
 
-              <i class="fa-regular fa-calendar" [ngStyle]="{
+        <i class="fa-regular fa-calendar" [ngStyle]="{
                     'color': themeService.eventPrimary
                   }">
-              </i>
+        </i>
 
-              {{ m.date }}
+        {{ m.date }}
 
-          </div>
+      </div>
 
-          <!-- STATUS -->
-          <div class="absolute top-4 right-4 z-20 px-3 py-2 rounded-full text-[11px] font-black tracking-wide shadow-lg flex items-center gap-1.5"
-          [ngStyle]="{
+      <!-- STATUS -->
+      <div
+        class="absolute top-4 right-4 z-20 px-3 py-2 rounded-full text-[11px] font-black tracking-wide shadow-lg flex items-center gap-1.5"
+        [ngStyle]="{
             'background': themeService.GlassBackground,
             'border': '2px solid ' + themeService.GlassBorder,
             'backdrop-filter': 'blur(22px) saturate(180%)',
@@ -98,200 +100,202 @@
             'color':themeService.Textprincipal
           }">
 
-              <i [ngStyle]="{
+        <i [ngStyle]="{
                 'color': themeService.eventPrimary
               }" class="fa-solid fa-bolt"></i>
-              MATCH
+        MATCH
 
-          </div>
+      </div>
 
-          <!-- CONTENT -->
-          <div class="relative z-10 h-full flex flex-col justify-between p-6">
+      <!-- CONTENT -->
+      <div class="relative z-10 h-full flex flex-col justify-between p-6">
 
-              <!-- TEAMS -->
-              <div class="flex-1 flex flex-col justify-center">
+        <!-- TEAMS -->
+        <div class="flex-1 flex flex-col justify-center">
 
-                  <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center justify-between gap-4">
 
-                      <!-- HOME -->
-                      <div class="flex-1 text-center">
+            <!-- HOME -->
+            <div class="flex-1 text-center">
 
-                          <div class="relative inline-block">
+              <div class="relative inline-block">
 
-                              <div class="absolute inset-0 rounded-full blur-xl opacity-50" [ngStyle]="{
+                <div class="absolute inset-0 rounded-full blur-xl opacity-50" [ngStyle]="{
                                     'background': themeService.convocationPrimary
                                   }">
-                              </div>
+                </div>
 
-                              <img [src]="m.logoDom"
-                                  class="relative w-20 h-20 rounded-full bg-white p-2 shadow-2xl group-hover:scale-110 transition-transform duration-300">
+                <img [src]="m.logoDom"
+                  class="relative w-20 h-20 rounded-full bg-white p-2 shadow-2xl group-hover:scale-110 transition-transform duration-300">
 
-                              <div class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full border-2 border-black flex items-center justify-center"
-                                  [ngStyle]="{
+                <div
+                  class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full border-2 border-black flex items-center justify-center"
+                  [ngStyle]="{
                                     'background': themeService.convocationPrimary
                                   }">
 
-                                  <i class="fa-solid fa-house text-[10px] text-white"></i>
+                  <i class="fa-solid fa-house text-[10px] text-white"></i>
 
-                              </div>
+                </div>
 
-                          </div>
+              </div>
 
-                          <h2 class="font-black text-sm mt-4 line-clamp-2 leading-tight" [ngStyle]="{
+              <h2 class="font-black text-sm mt-4 line-clamp-2 leading-tight" [ngStyle]="{
                                 'color': '#fff'
                               }">
 
-                              {{ m.equipeDom }}
+                {{ getDomEquipe(m) }}
 
-                          </h2>
+              </h2>
 
-                      </div>
+            </div>
 
-                      <!-- VS -->
-                      <div class="flex flex-col items-center gap-2">
+            <!-- VS -->
+            <div class="flex flex-col items-center gap-2">
 
-                          <span class="text-md font-black tracking-[4px]" [ngStyle]="{
+              <span class="text-md font-black tracking-[4px]" [ngStyle]="{
                                 'color': themeService.primary
                               }">
 
-                              VS
+                VS
 
-                          </span>
+              </span>
 
-                          <div class="w-12 h-12 rounded-full backdrop-blur-md border flex items-center justify-center"
-                              [ngStyle]="{
+              <div class="w-12 h-12 rounded-full backdrop-blur-md border flex items-center justify-center" [ngStyle]="{
                                 'background': themeService.GlassBackground,
                                 'border': '1px solid ' + themeService.GlassBorder
                               }">
 
-                              <i class="fa-solid fa-bolt" [ngStyle]="{
+                <i class="fa-solid fa-bolt" [ngStyle]="{
                                     'color': themeService.dashboardPrimary
                                   }">
-                              </i>
-
-                          </div>
-
-                      </div>
-
-                      <!-- AWAY -->
-                      <div class="flex-1 text-center">
-
-                          <div class="relative inline-block">
-
-                              <div class="absolute inset-0 rounded-full blur-xl opacity-50" [ngStyle]="{
-                                    'background': themeService.teamPrimary
-                                  }">
-                              </div>
-
-                              <img [src]="m.logoExt"
-                                  class="relative w-20 h-20 rounded-full bg-white p-2 shadow-2xl group-hover:scale-110 transition-transform duration-300">
-
-                              <div class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full border-2 border-black flex items-center justify-center"
-                                  [ngStyle]="{
-                                    'background': themeService.teamPrimary
-                                  }">
-
-                                  <i class="fa-solid fa-plane text-[10px] text-white"></i>
-
-                              </div>
-
-                          </div>
-
-                          <h2 class="font-black text-sm mt-4 line-clamp-2 leading-tight text-white">
-
-                              {{ m.equipeExt }}
-
-                          </h2>
-
-                      </div>
-
-                  </div>
+                </i>
 
               </div>
 
-              <!-- FOOTER -->
-              <div class="space-y-4">
+            </div>
 
-                <!-- HEURE DÉBUT ET FIN -->
-                <div class="flex items-center justify-center gap-2 text-xs" [ngStyle]="{
+            <!-- AWAY -->
+            <div class="flex-1 text-center">
+
+              <div class="relative inline-block">
+
+                <div class="absolute inset-0 rounded-full blur-xl opacity-50" [ngStyle]="{
+                                    'background': themeService.teamPrimary
+                                  }">
+                </div>
+
+                <img [src]="m.logoExt"
+                  class="relative w-20 h-20 rounded-full bg-white p-2 shadow-2xl group-hover:scale-110 transition-transform duration-300">
+
+                <div
+                  class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full border-2 border-black flex items-center justify-center"
+                  [ngStyle]="{
+                                    'background': themeService.teamPrimary
+                                  }">
+
+                  <i class="fa-solid fa-plane text-[10px] text-white"></i>
+
+                </div>
+
+              </div>
+
+              <h2 class="font-black text-sm mt-4 line-clamp-2 leading-tight text-white">
+
+                {{ getExtEquipe(m) }}
+
+              </h2>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="space-y-4">
+
+          <!-- HEURE DÉBUT ET FIN -->
+          <div class="flex items-center justify-center gap-2 text-xs" [ngStyle]="{
                     'color': 'rgba(255,255,255,0.65)'
                     }">
 
-                        <i class="fa-regular fa-clock text-cyan-400"></i>
+            <i class="fa-regular fa-clock text-cyan-400"></i>
 
-                        <span>
-                            {{ m.heure || '--:--' }}
-                        </span>
+            <span>
+              {{ m.heure || '--:--' }}
+            </span>
 
-                    </div>
+          </div>
 
-                  <!-- LOCATION -->
-                  <div class="flex items-center justify-center gap-2 text-xs" [ngStyle]="{
+          <!-- LOCATION -->
+          <div class="flex items-center justify-center gap-2 text-xs" [ngStyle]="{
                         'color': 'rgba(255,255,255,0.65)'
                       }">
 
-                      <i class="fa-solid fa-location-dot" [ngStyle]="{
+            <i class="fa-solid fa-location-dot" [ngStyle]="{
                             'color': themeService.primaryHover
                           }">
-                      </i>
+            </i>
 
-                      <span class="truncate">
-                          {{ m.lieu }}
-                      </span>
+            <span class="truncate">
+              {{ m.lieu }}
+            </span>
 
-                  </div>
+          </div>
 
-                  <!-- DIVIDER -->
-                  <div class="w-full h-px" [ngStyle]="{
+          <!-- DIVIDER -->
+          <div class="w-full h-px" [ngStyle]="{
                         'background': 'linear-gradient(to right, transparent, rgba(255,255,255,0.18), transparent)'
                       }">
-                  </div>
+          </div>
 
-                  <!-- ACTIONS -->
-                  <div class="flex gap-3">
+          <!-- ACTIONS -->
+          <div class="flex gap-3">
 
-                      <!-- EDIT -->
-                      <button (click)="openEditMatch(m); $event.stopPropagation()"
-                          class="flex-1 py-3 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.02] active:scale-95"
-                          [ngStyle]="{
+            <!-- EDIT -->
+            <button (click)="openEditMatch(m); $event.stopPropagation()"
+              class="flex-1 py-3 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.02] active:scale-95"
+              [ngStyle]="{
                             'background': 'linear-gradient(to right,' + themeService.secondaryHover + ',' + themeService.secondaryHover + ')',
                             'color':'#FFFFFF'
                           }">
 
-                          <i class="fa-solid fa-pen-to-square"></i>
+              <i class="fa-solid fa-pen-to-square"></i>
 
-                          Modifier
+              Modifier
 
-                      </button>
+            </button>
 
-                      <!-- DELETE -->
-                      <button (click)="openDeleteMatch(m); $event.stopPropagation()"
-                          class="flex-1 py-3 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.02] active:scale-95"
-                          [ngStyle]="{
+            <!-- DELETE -->
+            <button (click)="openDeleteMatch(m); $event.stopPropagation()"
+              class="flex-1 py-3 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.02] active:scale-95"
+              [ngStyle]="{
                             'background': 'linear-gradient(to right,' + themeService.primary + ',' + themeService.primaryHover + ')',
                             'color': '#fff'
                           }">
 
-                          <i class="fa-solid fa-trash-can"></i>
+              <i class="fa-solid fa-trash-can"></i>
 
-                          Supprimer
+              Supprimer
 
-                      </button>
-
-                  </div>
-
-              </div>
+            </button>
 
           </div>
 
-          <!-- HOVER BAR -->
-          <div class="absolute bottom-0 left-0 right-0 h-1 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
-              [ngStyle]="{
+        </div>
+
+      </div>
+
+      <!-- HOVER BAR -->
+      <div
+        class="absolute bottom-0 left-0 right-0 h-1 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
+        [ngStyle]="{
                 'background': 'linear-gradient(to right,' + themeService.teamPrimary + ',' + themeService.eventPrimary + ',' + themeService.dashboardPrimary + ')'
               }">
-          </div>
+      </div>
 
-      </article>
+    </article>
 
   </div>
 
@@ -300,153 +304,156 @@
   <!-- ===================================================== -->
   <div *ngIf="!loading && matchs?.length" class="flex lg:hidden flex-col gap-5">
 
-      <div *ngFor="let m of matchs"
-          class="group relative overflow-hidden rounded-[2rem] h-56 border transition-all duration-300 active:scale-[0.98]"
-          [ngStyle]="{
+    <div *ngFor="let m of matchs"
+      class="group relative overflow-hidden rounded-[2rem] h-56 border transition-all duration-300 active:scale-[0.98]"
+      [ngStyle]="{
             'background': themeService.Backgroundcards,
             'border': '1px solid ' + themeService.GlassBorder
           }">
 
-          <!-- BG -->
-          <img src="assets/ImageMatch.png"
-              class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+      <!-- BG -->
+      <img src="assets/ImageMatch.png"
+        class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
 
-          <div class="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/45">
-          </div>
+      <div class="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/45">
+      </div>
 
-          <!-- DATE -->
-          <div class="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold backdrop-blur-xl border"
-              [ngStyle]="{
+      <!-- DATE -->
+      <div
+        class="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold backdrop-blur-xl border"
+        [ngStyle]="{
                 'background': themeService.GlassBackground,
                 'border': '1px solid ' + themeService.GlassBorder,
                 'color': '#fff'
               }">
 
-              <i class="fa-regular fa-calendar" [ngStyle]="{
+        <i class="fa-regular fa-calendar" [ngStyle]="{
                     'color': themeService.eventPrimary
                   }">
-              </i>
+        </i>
 
-              {{ m.date }}
+        {{ m.date }}
 
-          </div>
+      </div>
 
-          <!-- CONTENT -->
-          <div class="relative z-10 h-full flex items-center justify-between px-4 py-4">
+      <!-- CONTENT -->
+      <div class="relative z-10 h-full flex items-center justify-between px-4 py-4">
 
-              <!-- LEFT -->
-              <div class="flex-1 min-w-0 pr-4">
+        <!-- LEFT -->
+        <div class="flex-1 min-w-0 pr-4">
 
-                  <!-- LOGOS -->
-                  <div class="flex items-center gap-3 mb-3">
+          <!-- LOGOS -->
+          <div class="flex items-center gap-3 mb-3">
 
-                      <!-- DOM -->
-                      <div class="relative">
+            <!-- DOM -->
+            <div class="relative">
 
-                          <img [src]="m.logoDom" class="w-12 h-12 rounded-full bg-white p-1 shadow-lg">
+              <img [src]="m.logoDom" class="w-12 h-12 rounded-full bg-white p-1 shadow-lg">
 
-                          <div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border border-black flex items-center justify-center"
-                              [ngStyle]="{
+              <div
+                class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border border-black flex items-center justify-center"
+                [ngStyle]="{
                                 'background': themeService.convocationPrimary
                               }">
 
-                              <i class="fa-solid fa-house text-[6px] text-white"></i>
+                <i class="fa-solid fa-house text-[6px] text-white"></i>
 
-                          </div>
+              </div>
 
-                      </div>
+            </div>
 
-                      <!-- VS -->
-                      <div class="flex flex-col items-center">
+            <!-- VS -->
+            <div class="flex flex-col items-center">
 
-                          <span class="text-[8px] font-black tracking-[3px] text-white/30">
-                              VS
-                          </span>
+              <span class="text-[8px] font-black tracking-[3px] text-white/30">
+                VS
+              </span>
 
-                          <i class="fa-solid fa-bolt" [ngStyle]="{
+              <i class="fa-solid fa-bolt" [ngStyle]="{
                                 'color': themeService.dashboardPrimary
                               }">
-                          </i>
+              </i>
 
-                      </div>
+            </div>
 
-                      <!-- EXT -->
-                      <div class="relative">
+            <!-- EXT -->
+            <div class="relative">
 
-                          <img [src]="m.logoExt" class="w-12 h-12 rounded-full bg-white p-1 shadow-lg">
+              <img [src]="m.logoExt" class="w-12 h-12 rounded-full bg-white p-1 shadow-lg">
 
-                          <div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border border-black flex items-center justify-center"
-                              [ngStyle]="{
+              <div
+                class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border border-black flex items-center justify-center"
+                [ngStyle]="{
                                 'background': themeService.teamPrimary
                               }">
 
-                              <i class="fa-solid fa-plane text-[6px] text-white"></i>
-
-                          </div>
-
-                      </div>
-
-                  </div>
-
-                  <!-- NAMES -->
-                  <p class="text-white font-black text-sm truncate">
-                      {{ m.equipeDom }}
-                  </p>
-
-                  <p class="text-white/40 text-xs my-1">
-                      contre
-                  </p>
-
-                  <p class="text-white font-black text-sm truncate">
-                      {{ m.equipeExt }}
-                  </p>
-
-                  <!-- LOCATION -->
-                  <div class="flex items-center gap-1.5 mt-3 text-[11px] text-white/55">
-
-                      <i class="fa-solid fa-location-dot" [ngStyle]="{
-                            'color': themeService.primaryHover
-                          }">
-                      </i>
-
-                      <span class="truncate">
-                          {{ m.lieu }}
-                      </span>
-
-                  </div>
+                <i class="fa-solid fa-plane text-[6px] text-white"></i>
 
               </div>
 
-              <!-- ACTIONS -->
-              <div class="flex flex-col gap-3">
-
-                  <!-- EDIT -->
-                  <button (click)="openEditMatch(m); $event.stopPropagation()"
-                      class="w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 active:scale-90"
-                      [ngStyle]="{
-                        'background': 'linear-gradient(to bottom right,' + themeService.teamPrimary + ',' + themeService.teamPrimaryHover + ')'
-                      }">
-
-                      <i class="fa-solid fa-pen-to-square text-white text-sm"></i>
-
-                  </button>
-
-                  <!-- DELETE -->
-                  <button (click)="openDeleteMatch(m); $event.stopPropagation()"
-                      class="w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 active:scale-90"
-                      [ngStyle]="{
-                        'background': 'linear-gradient(to bottom right,' + themeService.primary + ',' + themeService.primaryHover + ')'
-                      }">
-
-                      <i class="fa-solid fa-trash-can text-white text-sm"></i>
-
-                  </button>
-
-              </div>
+            </div>
 
           </div>
 
+          <!-- NAMES -->
+          <p class="text-white font-black text-sm truncate">
+            {{ getDomEquipe(m) }}
+          </p>
+
+          <p class="text-white/40 text-xs my-1">
+            contre
+          </p>
+
+          <p class="text-white font-black text-sm truncate">
+            {{ getExtEquipe(m) }}
+          </p>
+
+          <!-- LOCATION -->
+          <div class="flex items-center gap-1.5 mt-3 text-[11px] text-white/55">
+
+            <i class="fa-solid fa-location-dot" [ngStyle]="{
+                            'color': themeService.primaryHover
+                          }">
+            </i>
+
+            <span class="truncate">
+              {{ m.lieu }}
+            </span>
+
+          </div>
+
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="flex flex-col gap-3">
+
+          <!-- EDIT -->
+          <button (click)="openEditMatch(m); $event.stopPropagation()"
+            class="w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 active:scale-90"
+            [ngStyle]="{
+                        'background': 'linear-gradient(to bottom right,' + themeService.teamPrimary + ',' + themeService.teamPrimaryHover + ')'
+                      }">
+
+            <i class="fa-solid fa-pen-to-square text-white text-sm"></i>
+
+          </button>
+
+          <!-- DELETE -->
+          <button (click)="openDeleteMatch(m); $event.stopPropagation()"
+            class="w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 active:scale-90"
+            [ngStyle]="{
+                        'background': 'linear-gradient(to bottom right,' + themeService.primary + ',' + themeService.primaryHover + ')'
+                      }">
+
+            <i class="fa-solid fa-trash-can text-white text-sm"></i>
+
+          </button>
+
+        </div>
+
       </div>
+
+    </div>
 
   </div>
 
@@ -454,62 +461,55 @@
   <!-- PAGINATION -->
   <!-- ===================================================== -->
 
-  <div *ngIf="!loading && totalPages > 1"
-    class="flex items-center justify-center gap-4 mt-10 mb-4">
-    
-        <!-- PREV -->
-        <button
-        (click)="prevPage()"
-        [disabled]="currentPage === 1"
-        class="group px-5 h-12 rounded-2xl flex items-center gap-3 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
-        [ngStyle]="{
+  <div *ngIf="!loading && totalPages > 1" class="flex items-center justify-center gap-4 mt-10 mb-4">
+
+    <!-- PREV -->
+    <button (click)="prevPage()" [disabled]="currentPage === 1"
+      class="group px-5 h-12 rounded-2xl flex items-center gap-3 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+      [ngStyle]="{
           'background': themeService.GlassBackground,
           'border': '1px solid ' + themeService.GlassBorder,
           'color': themeService.Textprincipal,
           'backdrop-filter': 'blur(20px)'
         }">
-    
-            <i class="fa-solid fa-chevron-left"></i>
-    
-            <span class="hidden sm:block font-bold">
-                Précédent
-            </span>
-    
-        </button>
-    
-        <!-- PAGE -->
-        <div
-        class="min-w-[70px] h-12 px-5 rounded-2xl flex items-center justify-center font-black text-sm"
-        [ngStyle]="{
+
+      <i class="fa-solid fa-chevron-left"></i>
+
+      <span class="hidden sm:block font-bold">
+        Précédent
+      </span>
+
+    </button>
+
+    <!-- PAGE -->
+    <div class="min-w-[70px] h-12 px-5 rounded-2xl flex items-center justify-center font-black text-sm" [ngStyle]="{
           'background': 'linear-gradient(to right,' + themeService.primary + ',' + themeService.primaryHover + ')',
           'color': '#fff',
           'box-shadow': '0 10px 25px rgba(0,0,0,0.25)'
         }">
-    
-            {{ currentPage }} / {{ totalPages }}
-    
-        </div>
-    
-        <!-- NEXT -->
-        <button
-        (click)="nextPage()"
-        [disabled]="currentPage === totalPages"
-        class="group px-5 h-12 rounded-2xl flex items-center gap-3 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
-        [ngStyle]="{
+
+      {{ currentPage }} / {{ totalPages }}
+
+    </div>
+
+    <!-- NEXT -->
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+      class="group px-5 h-12 rounded-2xl flex items-center gap-3 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+      [ngStyle]="{
           'background': themeService.GlassBackground,
           'border': '1px solid ' + themeService.GlassBorder,
           'color': themeService.Textprincipal,
           'backdrop-filter': 'blur(20px)'
         }">
-    
-            <span class="hidden sm:block font-bold">
-                Suivant
-            </span>
-    
-            <i class="fa-solid fa-chevron-right"></i>
-    
-        </button>
-    
+
+      <span class="hidden sm:block font-bold">
+        Suivant
+      </span>
+
+      <i class="fa-solid fa-chevron-right"></i>
+
+    </button>
+
   </div>
 
   <!-- ===================================================== -->
@@ -517,223 +517,282 @@
   <!-- ===================================================== -->
   <div *ngIf="!loading && matchs?.length === 0" class="flex flex-col items-center justify-center text-center mt-24">
 
-      <div class="relative mb-8">
+    <div class="relative mb-8">
 
-          <div class="absolute inset-0 rounded-full blur-3xl opacity-40" [ngStyle]="{
+      <div class="absolute inset-0 rounded-full blur-3xl opacity-40" [ngStyle]="{
                 'background': themeService.eventPrimary
               }">
-          </div>
+      </div>
 
-          <div class="relative z-10 w-32 h-32 rounded-full flex items-center justify-center border backdrop-blur-xl"
-              [ngStyle]="{
+      <div class="relative z-10 w-32 h-32 rounded-full flex items-center justify-center border backdrop-blur-xl"
+        [ngStyle]="{
                 'background': themeService.GlassBackground,
                 'border': '1px solid ' + themeService.GlassBorder
               }">
 
-              <i class="fa-solid fa-trophy text-5xl" [ngStyle]="{
+        <i class="fa-solid fa-trophy text-5xl" [ngStyle]="{
                     'color': themeService.Textsecondaire
                   }">
-              </i>
-
-          </div>
+        </i>
 
       </div>
 
-      <h2 class="text-3xl font-black" [ngStyle]="{
+    </div>
+
+    <h2 class="text-3xl font-black" [ngStyle]="{
             'color': themeService.Textprincipal
           }">
 
-          Aucun match disponible
+      Aucun match disponible
 
-      </h2>
+    </h2>
 
-      <p class="mt-3 max-w-md" [ngStyle]="{
+    <p class="mt-3 max-w-md" [ngStyle]="{
             'color': themeService.Textsecondaire
           }">
 
-          Les matchs apparaîtront ici dès qu'ils seront programmés.
+      Les matchs apparaîtront ici dès qu'ils seront programmés.
 
-      </p>
+    </p>
 
   </div>
 
 </section>
 
 
-
 <!-- ===================================================== -->
 <!-- MODAL EDIT MATCH -->
 <!-- ===================================================== -->
 <div *ngIf="showEditMatchModal"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
-    (click)="closeEditMatch()">
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
+  (click)="closeEditMatch()">
 
-    <div (click)="$event.stopPropagation()"
-        class="w-full max-w-4xl rounded-[2rem] overflow-hidden shadow-2xl flex flex-col md:flex-row border"
-        [ngStyle]="{
+  <div (click)="$event.stopPropagation()"
+    class="w-full max-w-4xl rounded-[2rem] overflow-hidden shadow-2xl flex flex-col md:flex-row border" [ngStyle]="{
           'background': themeService.Backgroundcards,
           'border': '1px solid ' + themeService.GlassBorder,
           'color': themeService.Textprincipal
         }">
 
-        <!-- LEFT IMAGE -->
-        <div class="hidden md:block md:w-1/3 relative min-h-[500px]">
+    <!-- LEFT IMAGE -->
+    <div class="hidden md:block md:w-1/3 relative min-h-[500px]">
 
-            <img [src]="themeService.ThemeImage || 'assets/LOGO.png'"
-                class="absolute inset-0 w-full h-full object-cover">
+      <img [src]="themeService.ThemeImage || 'assets/LOGO.png'" class="absolute inset-0 w-full h-full object-cover">
 
-            <div class="absolute inset-0 bg-black/60"></div>
+      <div class="absolute inset-0 bg-black/60"></div>
 
-        </div>
+    </div>
 
-        <!-- RIGHT CONTENT -->
-        <div class="w-full md:w-2/3 p-6 space-y-5">
+    <!-- RIGHT CONTENT -->
+    <div class="w-full md:w-2/3 p-6 space-y-5">
 
-            <!-- HEADER -->
-            <div class="flex justify-between items-center">
+      <!-- HEADER -->
+      <div class="flex justify-between items-center">
 
-                <h2 class="text-2xl font-black">
-                    Modifier Match
-                </h2>
+        <h2 class="text-2xl font-black">
+          Modifier Match
+        </h2>
 
-                <button (click)="closeEditMatch()"
-                    class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300"
-                    [ngStyle]="{
+        <button (click)="closeEditMatch()"
+          class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300" [ngStyle]="{
                       'background': themeService.Backgroundcards2
                     }">
 
-                    <i class="fa-solid fa-xmark"></i>
+          <i class="fa-solid fa-xmark"></i>
 
-                </button>
+        </button>
 
-            </div>
+      </div>
 
-            <!-- ÉQUIPES -->
-            <div class="flex flex-col md:flex-row gap-4">
+      <!-- ÉQUIPES -->
+      <div class="space-y-4">
 
-                <!-- DOMICILE -->
-                <div class="flex-1 space-y-1">
+        <!-- MESSAGE -->
+        <div class="p-4 rounded-2xl flex items-start gap-3" [ngStyle]="{
+      'background': themeService.Backgroundcards2,
+      'border': '1px solid ' + themeService.GlassBorder,
+      'color': themeService.Textprincipal
+    }">
 
-                    <h3 class="text-sm font-bold uppercase tracking-wider"
-                        [ngStyle]="{
-                          'color': themeService.Textsecondaire
-                        }">
+          <i class="fa-solid fa-triangle-exclamation text-yellow-400 mt-1"></i>
 
-                        Équipe domicile
+          <div>
 
-                    </h3>
+            <h3 class="font-bold text-sm uppercase tracking-wider mb-1">
 
-                    <input [(ngModel)]="selectedMatch.equipeDom"
-                        placeholder="Équipe domicile"
-                        class="w-full p-4 rounded-2xl outline-none transition-all duration-300"
-                        [ngStyle]="{
-                          'background': themeService.Backgroundcards2,
-                          'border': '1px solid ' + themeService.GlassBorder,
-                          'color': themeService.Textprincipal
-                        }">
+              Modification des équipes désactivée
 
-                </div>
+            </h3>
 
-                <!-- EXTÉRIEUR -->
-                <div class="flex-1 space-y-1">
+            <p class="text-sm opacity-80 leading-relaxed">
 
-                    <h3 class="text-sm font-bold uppercase tracking-wider"
-                        [ngStyle]="{
-                          'color': themeService.Textsecondaire
-                        }">
+              Pour le moment, les équipes ne peuvent pas être modifiées
+              afin d’éviter des problèmes de synchronisation avec les logos
+              et les images des équipes.
 
-                        Équipe extérieur
+            </p>
 
-                    </h3>
-
-                    <input [(ngModel)]="selectedMatch.equipeExt"
-                        placeholder="Équipe extérieur"
-                        class="w-full p-4 rounded-2xl outline-none transition-all duration-300"
-                        [ngStyle]="{
-                          'background': themeService.Backgroundcards2,
-                          'border': '1px solid ' + themeService.GlassBorder,
-                          'color': themeService.Textprincipal
-                        }">
-
-                </div>
-
-            </div>
-
-            <!-- LIEU -->
-            <div class="space-y-1">
-
-                <h3 class="text-sm font-bold uppercase tracking-wider"
-                    [ngStyle]="{
-                      'color': themeService.Textsecondaire
-                    }">
-
-                    Lieu
-
-                </h3>
-
-                <input [(ngModel)]="selectedMatch.lieu"
-                    placeholder="Lieu du match"
-                    class="w-full p-4 rounded-2xl outline-none transition-all duration-300"
-                    [ngStyle]="{
-                      'background': themeService.Backgroundcards2,
-                      'border': '1px solid ' + themeService.GlassBorder,
-                      'color': themeService.Textprincipal
-                    }">
-
-            </div>
-
-            <!-- DATE -->
-            <div class="space-y-1">
-
-                <h3 class="text-sm font-bold uppercase tracking-wider"
-                    [ngStyle]="{
-                      'color': themeService.Textsecondaire
-                    }">
-
-                    Date & Heure
-
-                </h3>
-
-                <input type="datetime-local"
-                    [(ngModel)]="selectedMatch.date"
-                    class="w-full p-4 rounded-2xl outline-none transition-all duration-300"
-                    [ngStyle]="{
-                      'background': themeService.Backgroundcards2,
-                      'border': '1px solid ' + themeService.GlassBorder,
-                      'color': themeService.Textprincipal
-                    }">
-
-            </div>
-
-            <!-- ACTIONS -->
-            <div class="flex gap-3 pt-2">
-
-                <button (click)="closeEditMatch()"
-                    class="flex-1 py-3 rounded-2xl font-bold transition-all duration-300"
-                    [ngStyle]="{
-                      'background': themeService.Backgroundcards2,
-                      'color': themeService.Textprincipal
-                    }">
-
-                    Annuler
-
-                </button>
-
-                <button (click)="saveMatch()"
-                    class="flex-1 py-3 rounded-2xl text-white font-black transition-all duration-300 hover:scale-[1.02]"
-                    [ngStyle]="{
-                      'background': 'linear-gradient(to right,' + themeService.primary + ',' + themeService.primary + ')'
-                    }">
-
-                    Enregistrer
-
-                </button>
-
-            </div>
+          </div>
 
         </div>
 
+        <!-- APERÇU DES ÉQUIPES -->
+        <div class="flex flex-col md:flex-row gap-4">
+
+          <!-- DOMICILE -->
+          <div class="flex-1 space-y-1">
+
+            <h3 class="text-sm font-bold uppercase tracking-wider" [ngStyle]="{ 'color': themeService.Textsecondaire }">
+
+              Équipe domicile
+
+            </h3>
+
+            <div class="w-full p-4 rounded-2xl flex items-center gap-3" [ngStyle]="{
+          'background': themeService.Backgroundcards2,
+          'border': '1px solid ' + themeService.GlassBorder,
+          'color': themeService.Textprincipal
+        }">
+
+              <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0" [ngStyle]="{
+            'background': themeService.Backgroundcards
+          }">
+
+                <img [src]="selectedMatch.logoDom || 'assets/LOGO.png'" class="w-full h-full object-cover">
+
+              </div>
+
+              <div>
+
+                <p class="text-xs opacity-60">
+                  Domicile
+                </p>
+
+                <p class="font-bold">
+
+                  {{ getEquipeName(selectedMatch.equipeDom) }}
+
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- EXTÉRIEUR -->
+          <div class="flex-1 space-y-1">
+
+            <h3 class="text-sm font-bold uppercase tracking-wider" [ngStyle]="{ 'color': themeService.Textsecondaire }">
+
+              Équipe extérieur
+
+            </h3>
+
+            <div class="w-full p-4 rounded-2xl flex items-center gap-3" [ngStyle]="{
+          'background': themeService.Backgroundcards2,
+          'border': '1px solid ' + themeService.GlassBorder,
+          'color': themeService.Textprincipal
+        }">
+
+              <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0" [ngStyle]="{
+            'background': themeService.Backgroundcards
+          }">
+
+                <img [src]="selectedMatch.logoExt || 'assets/LOGO.png'" class="w-full h-full object-cover">
+
+              </div>
+
+              <div>
+
+                <p class="text-xs opacity-60">
+                  Extérieur
+                </p>
+
+                <p class="font-bold">
+
+                  {{ getEquipeName(selectedMatch.equipeExt) }}
+
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- LIEU -->
+      <div class="space-y-1">
+
+        <h3 class="text-sm font-bold uppercase tracking-wider" [ngStyle]="{
+                      'color': themeService.Textsecondaire
+                    }">
+
+          Lieu
+
+        </h3>
+
+        <input [(ngModel)]="selectedMatch.lieu" placeholder="Lieu du match"
+          class="w-full p-4 rounded-2xl outline-none transition-all duration-300" [ngStyle]="{
+                      'background': themeService.Backgroundcards2,
+                      'border': '1px solid ' + themeService.GlassBorder,
+                      'color': themeService.Textprincipal
+                    }">
+
+      </div>
+
+      <!-- DATE -->
+      <div class="space-y-1">
+
+        <h3 class="text-sm font-bold uppercase tracking-wider" [ngStyle]="{
+                      'color': themeService.Textsecondaire
+                    }">
+
+          Date & Heure
+
+        </h3>
+
+        <input type="datetime-local" [(ngModel)]="selectedMatch.date"
+          class="w-full p-4 rounded-2xl outline-none transition-all duration-300" [ngStyle]="{
+                      'background': themeService.Backgroundcards2,
+                      'border': '1px solid ' + themeService.GlassBorder,
+                      'color': themeService.Textprincipal
+                    }">
+
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="flex gap-3 pt-2">
+
+        <button (click)="closeEditMatch()" class="flex-1 py-3 rounded-2xl font-bold transition-all duration-300"
+          [ngStyle]="{
+                      'background': themeService.Backgroundcards2,
+                      'color': themeService.Textprincipal
+                    }">
+
+          Annuler
+
+        </button>
+
+        <button (click)="saveMatch()"
+          class="flex-1 py-3 rounded-2xl text-white font-black transition-all duration-300 hover:scale-[1.02]"
+          [ngStyle]="{
+                      'background': 'linear-gradient(to right,' + themeService.primary + ',' + themeService.primary + ')'
+                    }">
+
+          Enregistrer
+
+        </button>
+
+      </div>
+
     </div>
+
+  </div>
 
 </div>
 
@@ -741,109 +800,100 @@
 <!-- MODAL DELETE MATCH -->
 <!-- ===================================================== -->
 <div *ngIf="showDeleteMatchModal"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
-    (click)="closeDeleteMatch()">
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
+  (click)="closeDeleteMatch()">
 
-    <div (click)="$event.stopPropagation()"
-        class="w-full max-w-xl rounded-[2rem] overflow-hidden shadow-2xl border p-6"
-        [ngStyle]="{
+  <div (click)="$event.stopPropagation()" class="w-full max-w-xl rounded-[2rem] overflow-hidden shadow-2xl border p-6"
+    [ngStyle]="{
           'background': themeService.Backgroundcards,
           'border': '1px solid ' + themeService.GlassBorder,
           'color': themeService.Textprincipal
         }">
 
-        <!-- ICON -->
-        <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center"
-            [ngStyle]="{
+    <!-- ICON -->
+    <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center" [ngStyle]="{
               'background': themeService.BgNon,
               'border': '1px solid ' + themeService.BorderNon
             }">
 
-            <i class="fa-solid fa-trash-can text-3xl"
-                [ngStyle]="{
+      <i class="fa-solid fa-trash-can text-3xl" [ngStyle]="{
                   'color': themeService.BgNonText
                 }">
-            </i>
+      </i>
 
-        </div>
+    </div>
 
-        <!-- TITLE -->
-        <div class="text-center mt-5">
+    <!-- TITLE -->
+    <div class="text-center mt-5">
 
-            <h2 class="text-2xl font-black">
-                Supprimer ce match ?
-            </h2>
+      <h2 class="text-2xl font-black">
+        Supprimer ce match ?
+      </h2>
 
-            <p class="mt-2"
-                [ngStyle]="{
+      <p class="mt-2" [ngStyle]="{
                   'color': themeService.Textsecondaire
                 }">
 
-                Cette action est irréversible.
+        Cette action est irréversible.
 
-            </p>
+      </p>
 
-        </div>
+    </div>
 
-        <!-- MATCH CARD -->
-        <div class="rounded-2xl p-4 mt-6"
-            [ngStyle]="{
+    <!-- MATCH CARD -->
+    <div class="rounded-2xl p-4 mt-6" [ngStyle]="{
               'background': themeService.Backgroundcards2,
               'border': '1px solid ' + themeService.GlassBorder
             }">
 
-            <p class="font-bold text-lg">
+      <p class="font-bold text-lg">
 
-                {{ selectedMatch?.equipeDom }}
-                VS
-                {{ selectedMatch?.equipeExt }}
+        {{ selectedMatch?.equipeDom }}
+        VS
+        {{ selectedMatch?.equipeExt }}
 
-            </p>
+      </p>
 
-            <p class="text-xs mt-1"
-                [ngStyle]="{
+      <p class="text-xs mt-1" [ngStyle]="{
                   'color': themeService.Textsecondaire
                 }">
 
-                {{ selectedMatch?.date }}
+        {{ selectedMatch?.date }}
 
-            </p>
+      </p>
 
-        </div>
+    </div>
 
-        <!-- ACTIONS -->
-        <div class="flex gap-3 mt-6">
+    <!-- ACTIONS -->
+    <div class="flex gap-3 mt-6">
 
-            <button (click)="closeDeleteMatch()"
-                class="flex-1 py-3 rounded-2xl font-bold transition-all duration-300"
-                [ngStyle]="{
+      <button (click)="closeDeleteMatch()" class="flex-1 py-3 rounded-2xl font-bold transition-all duration-300"
+        [ngStyle]="{
                   'background': themeService.Backgroundcards2,
                   'color': themeService.Textprincipal
                 }">
 
-                Annuler
+        Annuler
 
-            </button>
+      </button>
 
-            <button (click)="confirmDeleteMatch()"
-                class="flex-1 py-3 rounded-2xl text-white font-black transition-all duration-300 hover:scale-[1.02] bg-gradient-to-r from-red-600 to-red-500">
+      <button (click)="confirmDeleteMatch()"
+        class="flex-1 py-3 rounded-2xl text-white font-black transition-all duration-300 hover:scale-[1.02] bg-gradient-to-r from-red-600 to-red-500">
 
-                Supprimer
+        Supprimer
 
-            </button>
-
-        </div>
+      </button>
 
     </div>
+
+  </div>
 
 </div>
 
 <!-- ============================= -->
 <!-- TOAST NOTIFICATION -->
 <!-- ============================= -->
-<div
-  *ngIf="showNotification"
-  class="fixed top-20 right-4 z-[12000] animate-slide-from-right">
+<div *ngIf="showNotification" class="fixed top-20 right-4 z-[12000] animate-slide-from-right">
 
   <div class="relative flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl
               backdrop-blur-md bg-emerald-500/95 border border-emerald-400/30
@@ -863,8 +913,7 @@
     </div>
 
     <!-- CLOSE -->
-    <button 
-      (click)="closeNotification()"
+    <button (click)="closeNotification()"
       class="flex-shrink-0 w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center transition">
       <i class="fa-solid fa-xmark text-white/70 text-sm"></i>
     </button>

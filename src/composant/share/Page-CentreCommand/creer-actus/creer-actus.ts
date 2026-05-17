@@ -26,6 +26,12 @@ export class CreerActus implements OnInit {
   showForm = false;
   actusForm!: FormGroup;
 
+  // =========================
+  // NOTIFICATION
+  // =========================
+  showNotification = false;
+  notificationMessage = '';
+
   isMobile = window.innerWidth <= 970;
   hoverCard: boolean = false;
 
@@ -74,6 +80,22 @@ export class CreerActus implements OnInit {
     }
   }
 
+  // =========================
+  // TOAST
+  // =========================
+  showToast(message: string): void {
+    this.notificationMessage = message;
+    this.showNotification = true;
+
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 4000);
+  }
+
+  closeNotification(): void {
+    this.showNotification = false;
+  }
+
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (!file) return;
@@ -89,29 +111,95 @@ export class CreerActus implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  ajouterActus(): void {
-    if (this.actusForm.invalid || !this.selectedFile) return;
+ // =========================
+// LOG URL
+// =========================
+private logUrl = 'http://localhost:3000/api/logs';
 
-    const formData = new FormData();
+// =========================
+// USER CONNECTÉ
+// =========================
+getCurrentUser(): any {
+  const user = localStorage.getItem('utilisateur');
 
-    const auteurNomComplet = this.currentUser
-      ? `${this.currentUser.prenom || ''} ${this.currentUser.nom || ''}`.trim()
-      : '';
+  return user ? JSON.parse(user) : {
+    prenom: 'Inconnu',
+    nom: '',
+    role: 'unknown'
+  };
+}
 
-    formData.append('titre', this.actusForm.value.titre);
-    formData.append('description', this.actusForm.value.description);
-    formData.append('auteur', auteurNomComplet);
-    formData.append('saison', this.actusForm.value.saison);
-    formData.append('image', this.selectedFile);
+// ======================================
+// CREATE ACTUS + LOG + TOAST
+// ======================================
+ajouterActus(): void {
 
-    this.http.post<any>('http://localhost:3000/api/actus', formData).subscribe({
-      next: res => {
-        this.message = res.message;
+  if (this.actusForm.invalid || !this.selectedFile) return;
+
+  const formData = new FormData();
+
+  const auteurNomComplet = this.currentUser
+    ? `${this.currentUser.prenom || ''} ${this.currentUser.nom || ''}`.trim()
+    : '';
+
+  formData.append('titre', this.actusForm.value.titre);
+  formData.append('description', this.actusForm.value.description);
+  formData.append('auteur', auteurNomComplet);
+  formData.append('saison', this.actusForm.value.saison);
+  formData.append('image', this.selectedFile);
+
+  this.http.post<any>('http://localhost:3000/api/actus', formData)
+    .subscribe({
+
+      next: (res: any) => {
+
+        // =========================
+        // TOAST SUCCESS
+        // =========================
+        this.notificationMessage = res.message || 'Actu créée avec succès !';
+        this.showNotification = true;
+
+        setTimeout(() => {
+          this.showNotification = false;
+        }, 3000);
+
         setTimeout(() => this.toggleForm(), 2000);
+
+        // =========================
+        // LOG ACTUS CREATE
+        // =========================
+        const currentUser = this.getCurrentUser();
+
+        const logData = {
+          user: `${currentUser.prenom || 'Inconnu'} ${currentUser.nom || ''}`,
+          role: currentUser.role || 'unknown',
+          action: 'CREATE_ACTUS',
+          description: `${currentUser.role || 'Utilisateur'} a créé une actu`,
+          type: 'CREATE',
+          field: 'actu',
+          newValue: {
+            titre: this.actusForm.value.titre,
+            description: this.actusForm.value.description,
+            auteur: auteurNomComplet,
+            saison: this.actusForm.value.saison
+          },
+          date: new Date()
+        };
+
+        this.http.post(this.logUrl, logData).subscribe({
+          next: () => console.log('✅ Log actus créé'),
+          error: (err) => console.error('❌ Erreur log actus', err)
+        });
       },
+
       error: () => {
-        this.message = 'Erreur création actus';
+        this.notificationMessage = 'Erreur création actus';
+        this.showNotification = true;
+
+        setTimeout(() => {
+          this.showNotification = false;
+        }, 3000);
       }
     });
-  }
+}
 }

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, interval, BehaviorSubject, map } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
+import { Observable, BehaviorSubject, map, switchMap } from 'rxjs';
 
 export interface Match {
   _id?: string;
@@ -44,10 +43,18 @@ export interface Match {
 export class MatchService {
 
   private apiUrl = 'http://localhost:3000/api/matchs';
+  private logUrl = 'http://localhost:3000/api/logs';
 
   private matchsEnCours$ = new BehaviorSubject<Match[]>([]);
 
   constructor(private http: HttpClient) {}
+
+  // =========================
+  // USER CONNECTÉ
+  // =========================
+  private getCurrentUser() {
+    return JSON.parse(localStorage.getItem('utilisateur') || '{}');
+  }
 
   // ======================
   // GET ALL MATCHS
@@ -64,63 +71,117 @@ export class MatchService {
   }
 
   // ======================
-  // CREATE MATCH
+  // CREATE MATCH + LOG
   // ======================
-  createMatch(match: Match): Observable<Match> {
-    return this.http.post<Match>(this.apiUrl, match);
+  createMatch(match: Match): Observable<any> {
+    return this.http.post<Match>(this.apiUrl, match).pipe(
+      switchMap((createdMatch) => {
+
+        const user = this.getCurrentUser();
+
+        const logData = {
+          user: `${user.prenom || 'Inconnu'} ${user.nom || ''}`,
+          role: user.role || 'unknown',
+          action: 'CREATE_MATCH',
+          description: `${user.role || 'Utilisateur'} a créé un match`,
+          type: 'CREATE',
+          field: 'match',
+          newValue: createdMatch,
+          date: new Date()
+        };
+
+        return this.http.post(this.logUrl, logData).pipe(
+          map(() => createdMatch)
+        );
+      })
+    );
   }
 
   // ======================
-  // UPDATE MATCH (MODIFIER)
+  // UPDATE MATCH + LOG
   // ======================
-  updateMatch(id: string, match: Partial<Match>): Observable<Match> {
-    return this.http.put<Match>(`${this.apiUrl}/${id}`, match);
+  updateMatch(id: string, match: Partial<Match>): Observable<any> {
+    return this.http.put<Match>(`${this.apiUrl}/${id}`, match).pipe(
+      switchMap((updatedMatch) => {
+
+        const user = this.getCurrentUser();
+
+        const logData = {
+          user: `${user.prenom || 'Inconnu'} ${user.nom || ''}`,
+          role: user.role || 'unknown',
+          action: 'UPDATE_MATCH',
+          description: `${user.role || 'Utilisateur'} a modifié un match`,
+          type: 'UPDATE',
+          field: 'match',
+          newValue: updatedMatch,
+          date: new Date()
+        };
+
+        return this.http.post(this.logUrl, logData).pipe(
+          map(() => updatedMatch)
+        );
+      })
+    );
   }
 
   // ======================
-  // DELETE MATCH (SUPPRIMER)
+  // DELETE MATCH + LOG
   // ======================
   deleteMatch(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+
+    return this.http.get<Match>(`${this.apiUrl}/${id}`).pipe(
+      switchMap((match) => {
+
+        return this.http.delete(`${this.apiUrl}/${id}`).pipe(
+          switchMap((deleted) => {
+
+            const user = this.getCurrentUser();
+
+            const logData = {
+              user: `${user.prenom || 'Inconnu'} ${user.nom || ''}`,
+              role: user.role || 'unknown',
+              action: 'DELETE_MATCH',
+              description: `${user.role || 'Utilisateur'} a supprimé un match`,
+              type: 'DELETE',
+              field: 'match',
+              oldValue: match,
+              date: new Date()
+            };
+
+            return this.http.post(this.logUrl, logData).pipe(
+              map(() => deleted)
+            );
+          })
+        );
+      })
+    );
   }
 
   // ======================
-  // DEMARRER MATCH
+  // AUTRES ACTIONS (inchangées)
   // ======================
   demarrerMatch(id: string): Observable<Match> {
     return this.http.post<Match>(`${this.apiUrl}/demarrer/${id}`, {});
   }
 
-  // ======================
-  // MINUTE
-  // ======================
   updateMinute(id: string, data: any): Observable<Match> {
     return this.http.patch<Match>(`${this.apiUrl}/minute/${id}`, data);
   }
 
-  // ======================
-  // MI-TEMPS
-  // ======================
   miTemps(id: string): Observable<Match> {
     return this.http.post<Match>(`${this.apiUrl}/mitemps/${id}`, {});
   }
 
-  // ======================
-  // REPRISE
-  // ======================
   repriseSecondePeriode(id: string): Observable<Match> {
     return this.http.post<Match>(`${this.apiUrl}/reprise/${id}`, {});
   }
 
-  // ======================
-  // TERMINER MATCH
-  // ======================
   terminerMatch(id: string): Observable<Match> {
     return this.http.post<Match>(`${this.apiUrl}/terminer/${id}`, {});
   }
 
   // ======================
-  // FORMAT MINUTE
+  // UTILS
   // ======================
   formaterMinute(match: Match): string {
     if (!match || match.statut !== 'En cours') return '';
@@ -141,21 +202,27 @@ export class MatchService {
     return `${minute}'`;
   }
 
-  // ======================
-  // LIVE CHECK
-  // ======================
   isMatchLive(match: Match): boolean {
     return match.statut === 'En cours' && match.periode !== 'TER';
   }
 
-  // ======================
-  // PROGRESSION
-  // ======================
   getProgressionMatch(match: Match): number {
     if (!match.minute) return 0;
     if (match.periode === 'TER') return 100;
     if (match.periode === 'MI-TPS') return 50;
 
     return Math.min(Math.round((match.minute / 90) * 100), 100);
+  }
+
+  private baseUrl = 'http://localhost:3000/uploads/';
+
+  normalizeLogo(logo?: string): string {
+    if (!logo) return 'assets/default-team.png';
+
+    const clean = logo.replace(/^\/+/, '');
+
+    if (clean.startsWith('http')) return clean;
+
+    return this.baseUrl + clean;
   }
 }

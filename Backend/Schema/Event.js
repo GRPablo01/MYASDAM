@@ -21,7 +21,7 @@ const EventSchema = new mongoose.Schema({
     required: true 
   },
 
-  statut: { type: String, enum: ['À venir', 'En cours', 'Terminé'], default: 'À Venir' },
+  statut: { type: String, enum: ['À venir', 'En cours', 'Terminé'], default: 'À venir' },
 
   createdBy: { type: String, required: true },
 

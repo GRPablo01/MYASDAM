@@ -341,6 +341,41 @@
   </div>
 </div>
 
+
+<!-- ============================= -->
+<!-- TOAST NOTIFICATION -->
+<!-- ============================= -->
+<div
+  *ngIf="showNotification"
+  class="fixed top-20 right-4 z-[12000] animate-slide-from-right">
+
+  <div class="relative flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl
+              backdrop-blur-md bg-emerald-500/95 border border-emerald-400/30
+              min-w-[300px] max-w-[400px] overflow-hidden">
+
+    <!-- ICON -->
+    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+      <i class="fa-solid fa-circle-check text-white text-xl animate-icon-pop"></i>
+    </div>
+
+    <!-- TEXT -->
+    <div class="flex-1 min-w-0">
+      <p class="text-white font-semibold text-sm">Succès</p>
+      <p class="text-white/90 text-sm truncate">
+        {{ notificationMessage }}
+      </p>
+    </div>
+
+    <!-- CLOSE -->
+    <button 
+      (click)="closeNotification()"
+      class="flex-shrink-0 w-7 h-7 rounded-full hover:bg-white/20
+             flex items-center justify-center transition group focus:outline-none">
+      <i class="fa-solid fa-xmark text-white/70 group-hover:text-white text-sm"></i>
+    </button>
+  </div>
+</div>
+
 <!-- Styles d'animation personnalisés -->
 <style>
   @keyframes modal-in {

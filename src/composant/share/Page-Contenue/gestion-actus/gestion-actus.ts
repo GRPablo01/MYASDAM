@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ActusService, Actu } from '../../../../../Backend/Services/actus.service';
 import { ThemeService } from '../../../../../Backend/Services/theme.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-gestion-actus',
@@ -19,13 +20,20 @@ export class GestionActus implements OnInit {
   // =========================
   actus: Actu[] = [];
 
+  // =======================
+  // LOG API
+  // =======================
+  logUrl = 'http://localhost:3000/api/logs';
+
   // =========================
   // UI STATE
   // =========================
   loading = false;
   error = '';
-  showNotification: boolean = false;
-  notificationMessage: string = '';
+  isLoading = false;
+
+  showNotification = false;
+  notificationMessage = '';
 
   // =========================
   // MODAL
@@ -35,14 +43,17 @@ export class GestionActus implements OnInit {
 
   selectedEvent: any = {
     _id: '',
+    key: '',
     titre: '',
     description: '',
-    auteur: ''
+    auteur: '',
+    image: ''
   };
 
   constructor(
     private actusService: ActusService,
-    public themeService: ThemeService
+    public themeService: ThemeService,
+    private http: HttpClient,
   ) {}
 
   ngOnInit(): void {
@@ -58,37 +69,29 @@ export class GestionActus implements OnInit {
     this.error = '';
 
     this.actusService.getAllActus().subscribe({
-
       next: (data) => {
-
         this.actus = data;
         this.loading = false;
-
       },
-
       error: (err) => {
-
         console.error(err);
-
         this.error = 'Erreur lors du chargement des actualités';
-
         this.loading = false;
-
       }
-
     });
 
   }
 
   // =========================
-  // VIEW
+  // OPEN EDIT
   // =========================
   voirActu(actu: Actu): void {
 
     this.modalMode = 'edit';
 
     this.selectedEvent = {
-      ...actu
+      ...actu,
+      imageFile: null
     };
 
     this.modalOpen = true;
@@ -96,7 +99,7 @@ export class GestionActus implements OnInit {
   }
 
   // =========================
-  // DELETE MODAL
+  // OPEN DELETE
   // =========================
   supprimerActu(id: string): void {
 
@@ -118,72 +121,168 @@ export class GestionActus implements OnInit {
   // CLOSE MODAL
   // =========================
   closeModal(): void {
-
     this.modalOpen = false;
-
   }
 
+  // =========================
+  // TOAST
+  // =========================
   showToast(message: string): void {
     this.notificationMessage = message;
     this.showNotification = true;
-  
-    // auto hide
+
     setTimeout(() => {
       this.showNotification = false;
     }, 3000);
   }
-  
+
   closeNotification(): void {
     this.showNotification = false;
   }
 
   // =========================
-  // SAVE (MODIFICATION)
+  // HANDLE IMAGE
   // =========================
-  save(): void {
+  onFileSelected(event: any): void {
+    const file = event.target.files?.[0];
+    if (file) {
+      this.selectedEvent.imageFile = file;
+    }
+  }
+// =======================
+// USER CONNECTÉ
+// =======================
+getCurrentUser(): any {
+  const user = localStorage.getItem('utilisateur');
 
-    console.log('SAVE ACTU:', this.selectedEvent);
-  
-    this.actusService.updateActu(this.selectedEvent.key, this.selectedEvent)
-      .subscribe({
-        next: (res) => {
-          console.log('Actu modifiée:', res);
-  
-          this.loadActus();
-          this.modalOpen = false;
-  
-          // ✅ TOAST SUCCESS
-          this.showToast('Actualité modifiée avec succès !');
-        },
-        error: (err) => {
-          console.error('Erreur update:', err);
-        }
-      });
-  
+  return user ? JSON.parse(user) : {
+    prenom: 'Inconnu',
+    nom: '',
+    role: 'unknown'
+  };
+}
+
+// =========================
+// SAVE (UPDATE ACTU)
+// =========================
+save(): void {
+
+  console.log('🚀 START UPDATE ACTU');
+
+  if (!this.selectedEvent) return;
+
+  const formData = new FormData();
+
+  formData.append('titre', this.selectedEvent.titre || '');
+  formData.append('auteur', this.selectedEvent.auteur || '');
+  formData.append('description', this.selectedEvent.description || '');
+
+  if (this.selectedEvent.imageFile) {
+    formData.append('image', this.selectedEvent.imageFile);
   }
 
-  // =========================
-  // CONFIRM DELETE
-  // =========================
-  confirmDelete(): void {
+  const id = this.selectedEvent._id;
 
-    console.log('DELETE ACTU:', this.selectedEvent.key);
+  console.log('ID UPDATE UTILISÉ:', id);
 
-    this.actusService.deleteActu(this.selectedEvent.key)
-      .subscribe({
-        next: (res) => {
-          console.log('Actu supprimée:', res);
-
-          this.loadActus();
-          this.modalOpen = false;
-
-          // ✅ TOAST SUCCESS
-          this.showToast('Actualité supprimée avec succès !');
-        },
-        error: (err) => {
-          console.error('Erreur delete:', err);
-        }
-      });
-
+  if (!id) {
+    console.error('❌ ID manquant pour update');
+    return;
   }
+
+  this.isLoading = true;
+
+  this.actusService.updateActu(id, formData)
+    .subscribe({
+
+      next: (res: any) => {
+
+        console.log('✅ ACTU UPDATED', res);
+
+        // mise à jour locale si tu as un tableau
+        this.actus = this.actus.map(a =>
+          a._id === res._id ? res : a
+        );
+
+        this.showToast('Actualité modifiée avec succès ✔️');
+
+        const user = this.getCurrentUser();
+
+        const logData = {
+          user: `${user.prenom} ${user.nom}`,
+          role: user.role,
+          action: 'UPDATE_ACTU',
+          description: `${user.role} a modifié une actualité`,
+          type: 'UPDATE',
+          field: 'actu',
+          oldValue: this.selectedEvent,
+          newValue: {
+            titre: this.selectedEvent.titre,
+            auteur: this.selectedEvent.auteur,
+            description: this.selectedEvent.description
+          },
+          date: new Date()
+        };
+
+        this.http.post(this.logUrl, logData).subscribe();
+
+        this.modalOpen = false;
+        this.loadActus();
+      },
+
+      error: (err) => console.error('❌ UPDATE ACTU ERROR', err),
+
+      complete: () => this.isLoading = false
+    });
+}
+
+
+// =========================
+// CONFIRM DELETE ACTU
+// =========================
+confirmDelete(): void {
+
+  console.log('🚀 START DELETE ACTU');
+
+  const id = this.selectedEvent?._id;
+
+  console.log('ID DELETE UTILISÉ:', id);
+
+  if (!id) {
+    console.error('❌ ID manquant pour delete');
+    return;
+  }
+
+  this.actusService.deleteActu(id)
+    .subscribe({
+
+      next: () => {
+
+        console.log('✅ ACTU DELETED');
+
+        this.actus = this.actus.filter(a => a._id !== id);
+
+        this.showToast('Actualité supprimée 🗑️');
+
+        const user = this.getCurrentUser();
+
+        const logData = {
+          user: `${user.prenom} ${user.nom}`,
+          role: user.role,
+          action: 'DELETE_ACTU',
+          description: `${user.role} a supprimé une actualité`,
+          type: 'DELETE',
+          field: 'actu',
+          oldValue: this.selectedEvent,
+          date: new Date()
+        };
+
+        this.http.post(this.logUrl, logData).subscribe();
+
+        this.modalOpen = false;
+      },
+
+      error: (err) => console.error('❌ DELETE ACTU ERROR', err)
+    });
+}
 }

@@ -17,8 +17,6 @@ export class CreerMatch implements OnInit {
   matchForm!: FormGroup;
   message: string | null = null;
 
-  
-
   showMatchForm = false;
   equipes: Equipe[] = [];
 
@@ -30,13 +28,11 @@ export class CreerMatch implements OnInit {
   currentStep = 1;
   hoverClose = false;
 
-  // =========================
-  // NOTIFICATION
-  // =========================
   showNotification = false;
   notificationMessage = '';
 
   backendUrl = 'http://localhost:3000';
+  private logUrl = 'http://localhost:3000/api/logs';
 
   isLoggedIn = false;
   theme: 'clair' | 'sombre' = 'sombre';
@@ -59,7 +55,6 @@ export class CreerMatch implements OnInit {
       lieu: ['', Validators.required],
       categorie: ['', Validators.required],
 
-      // ⚠️ IMPORTANT: ici on stocke les IDs, pas les noms
       equipeDom: ['', Validators.required],
       equipeExt: ['', Validators.required],
 
@@ -75,22 +70,22 @@ export class CreerMatch implements OnInit {
 
     this.loadUserTheme();
 
-    // ==========================
+    // =========================
     // LOAD EQUIPES
-    // ==========================
+    // =========================
     this.equipeService.getEquipes().subscribe({
-      next: data => {
+      next: (data) => {
         this.equipes = data || [];
-        console.log("✅ équipes :", this.equipes);
+        console.log('✅ équipes chargées :', this.equipes);
       },
-      error: err => {
-        console.error("❌ erreur équipes :", err);
+      error: (err) => {
+        console.error('❌ erreur équipes :', err);
       }
     });
 
-    // ==========================
-    // LIEU -> DOMICILE / EXTERIEUR
-    // ==========================
+    // =========================
+    // LOCALISATION MATCH
+    // =========================
     this.matchForm.get('lieu')?.valueChanges.subscribe((lieu: string) => {
 
       if (!lieu) return;
@@ -108,37 +103,21 @@ export class CreerMatch implements OnInit {
       }, { emitEvent: false });
     });
 
-    // ==========================
-    // EQUIPES LISTENERS
-    // ==========================
-    this.matchForm.get('equipeDom')?.valueChanges.subscribe((id) => {
+    // =========================
+    // LOGOS AUTOMATIQUES
+    // =========================
+    this.matchForm.get('equipeDom')?.valueChanges.subscribe(id => {
       this.updateLogo('dom', id);
     });
 
-    this.matchForm.get('equipeExt')?.valueChanges.subscribe((id) => {
+    this.matchForm.get('equipeExt')?.valueChanges.subscribe(id => {
       this.updateLogo('ext', id);
     });
   }
 
-
   // =========================
-  // TOAST
-  // =========================
-  showToast(message: string): void {
-    this.notificationMessage = message;
-    this.showNotification = true;
-
-    setTimeout(() => {
-      this.showNotification = false;
-    }, 4000);
-  }
-
-  closeNotification(): void {
-    this.showNotification = false;
-  }
-  // ======================================
   // THEME
-  // ======================================
+  // =========================
   private loadUserTheme(): void {
 
     const userData = localStorage.getItem('utilisateur');
@@ -151,39 +130,36 @@ export class CreerMatch implements OnInit {
 
     try {
       const user = JSON.parse(userData);
-
       this.isLoggedIn = true;
       this.theme = user.theme === 'clair' ? 'clair' : 'sombre';
-
     } catch (e) {
-      console.error(e);
+      console.error('❌ theme error', e);
       this.theme = 'sombre';
     }
   }
 
-  // ======================================
+  // =========================
   // NORMALISATION
-  // ======================================
+  // =========================
   normaliserTexte(texte: string): string {
-    return texte
+    return (texte || '')
       .toLowerCase()
       .trim()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '');
   }
 
-  // ======================================
-  // LOGO (CORRIGÉ)
-  // ======================================
+  // =========================
+  // LOGO UPDATE
+  // =========================
   updateLogo(type: 'dom' | 'ext', equipeId: string) {
 
     if (!equipeId) return;
 
-    // 🔥 CORRECTION IMPORTANTE : on utilise _id et pas nom
     const equipe = this.equipes.find(e => e._id === equipeId);
 
     if (!equipe) {
-      console.warn("⚠️ équipe non trouvée :", equipeId);
+      console.warn('⚠️ équipe introuvable :', equipeId);
       return;
     }
 
@@ -191,55 +167,111 @@ export class CreerMatch implements OnInit {
       ? `${this.backendUrl}/${equipe.logo.replace(/^\/?uploads\//, 'uploads/')}`
       : '';
 
-    if (type === 'dom') {
-      this.matchForm.patchValue({ logoDom: logoUrl }, { emitEvent: false });
-    } else {
-      this.matchForm.patchValue({ logoExt: logoUrl }, { emitEvent: false });
-    }
+    this.matchForm.patchValue(
+      type === 'dom' ? { logoDom: logoUrl } : { logoExt: logoUrl },
+      { emitEvent: false }
+    );
   }
 
-  // ======================================
+  // =========================
   // UI
-  // ======================================
+  // =========================
   toggleMatchForm() {
     this.showMatchForm = !this.showMatchForm;
   }
 
-  // ======================================
+  showToast(message: string): void {
+    this.notificationMessage = message;
+    this.showNotification = true;
+
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 4000);
+  }
+
+  closeNotification(): void {
+    this.showNotification = false;
+  }
+
+  // =========================
+  // USER
+  // =========================
+  getCurrentUser(): any {
+    const user = localStorage.getItem('utilisateur');
+
+    return user ? JSON.parse(user) : {
+      prenom: 'Inconnu',
+      nom: '',
+      role: 'unknown'
+    };
+  }
+
+  // =========================
   // CREATE MATCH
-  // ======================================
-  creerMatch() {
+  // =========================
+  creerMatch(): void {
+
+    console.log('🚀 START CREATE MATCH');
+    console.log('📦 FORM:', this.matchForm.value);
 
     if (this.matchForm.invalid) {
-      console.error("Form invalide");
+      console.error('❌ FORM INVALID');
       return;
     }
 
-    this.http.post(`${this.backendUrl}/api/matchs`, this.matchForm.value)
+    const payload = this.matchForm.value;
+    console.log('📤 PAYLOAD:', payload);
+
+    this.http.post(`${this.backendUrl}/api/matchs`, payload)
       .subscribe({
+
         next: (res: any) => {
+
+          console.log('✅ MATCH CREATED');
+          console.log('📥 RESPONSE:', res);
 
           this.notificationMessage = res.message || 'Match créé avec succès !';
           this.showNotification = true;
-        
-          // reset form
+
           this.matchForm.reset({
             typeMatch: 'Amical',
             localisationMatch: 'Exterieur'
           });
-        
+
           this.showMatchForm = false;
-        
-          // auto hide toast
+
+          // ================= LOG =================
+          const user = this.getCurrentUser();
+
+          const logData = {
+            user: `${user.prenom} ${user.nom}`,
+            role: user.role,
+            action: 'CREATE_MATCH',
+            description: `${user.role} a créé un match`,
+            type: 'CREATE',
+            field: 'match',
+            newValue: payload,
+            date: new Date()
+          };
+
+          console.log('📝 LOG:', logData);
+
+          this.http.post(this.logUrl, logData).subscribe({
+            next: () => console.log('✅ LOG OK'),
+            error: (err) => console.error('❌ LOG ERROR', err)
+          });
+
           setTimeout(() => {
             this.showNotification = false;
           }, 3000);
         },
 
         error: (err) => {
-          console.error(err);
+          console.error('❌ MATCH ERROR', err);
           this.message = 'Erreur création match';
         }
       });
+
+    console.log('⏳ REQUEST SENT');
   }
 }

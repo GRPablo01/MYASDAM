@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } 
 import { ConvocationService, Convocation } from '../../../../../Backend/Services/convocation.service';
 import { ThemeService } from '../../../../../Backend/Services/theme.service';
 import { AuthService } from '../../../../../Backend/Services/User/Auth.Service';
+import { HttpClient } from '@angular/common/http';
 
 
 /* =========================
@@ -73,6 +74,12 @@ export class Convocations implements OnInit {
   isMobile = window.innerWidth <= 970;
   hoverCard: boolean = false;
 
+  // =========================
+  // NOTIFICATION
+  // =========================
+  showNotification = false;
+  notificationMessage = '';
+
   /* =========================
      MODALS
   ========================== */
@@ -111,7 +118,8 @@ export class Convocations implements OnInit {
     private convocationService: ConvocationService,
     private fb: FormBuilder,
     private authService: AuthService,
-    public themeService: ThemeService
+    public themeService: ThemeService,
+    private http: HttpClient
   ) {}
 
   /* =========================
@@ -133,6 +141,23 @@ export class Convocations implements OnInit {
 
     this.loadConvocations();
     this.loadJoueursEquipe();
+  }
+
+
+  // =========================
+  // TOAST
+  // =========================
+  showToast(message: string): void {
+    this.notificationMessage = message;
+    this.showNotification = true;
+
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 4000);
+  }
+
+  closeNotification(): void {
+    this.showNotification = false;
   }
 
   /* =========================
@@ -204,12 +229,29 @@ export class Convocations implements OnInit {
     });
   }
 
-  /* =========================
-     FORM SUBMIT
-  ========================== */
+    // =========================
+  // LOG URL
+  // =========================
+  private logUrl = 'http://localhost:3000/api/logs';
 
+  // =========================
+  // USER CONNECTÉ
+  // =========================
+  getCurrentUser(): any {
+    const user = localStorage.getItem('utilisateur');
+
+    return user ? JSON.parse(user) : {
+      prenom: 'Inconnu',
+      nom: '',
+      role: 'unknown'
+    };
+  }
+
+  // =========================
+  // AJOUT CONVOCATION + LOG
+  // =========================
   ajouterConvocation(): void {
-    // console.log('🔹 Adding convocation...');
+
     if (this.convocationForm.invalid || this.joueursSelectionnes.length === 0) {
       console.warn('⚠️ Form invalid or no players selected');
       return;
@@ -221,18 +263,46 @@ export class Convocations implements OnInit {
       formation: this.selectedFormation,
       joueursDetails: this.joueursSelectionnes
     };
-    // console.log('📤 Convocation data to submit:', data);
 
     this.convocationService.createConvocation(data)
       .subscribe({
-        next: () => {
-          console.log('✅ Convocation created successfully');
+
+        next: (res: any) => {
+
+          console.log('✅ Convocation créée avec succès');
+
           this.message = 'Convocation créée avec succès !';
+
+          // =========================
+          // 🔥 AJOUT DU LOG ICI
+          // =========================
+          const currentUser = this.getCurrentUser();
+
+          const logData = {
+            user: `${currentUser.prenom || 'Inconnu'} ${currentUser.nom || ''}`,
+            role: currentUser.role || 'unknown',
+            action: 'CREATE_CONVOCATION',
+            description: `${currentUser.role || 'Utilisateur'} a créé une convocation`,
+            type: 'CREATE',
+            field: 'convocation',
+            newValue: {
+              ...data
+            },
+            date: new Date()
+          };
+
+          this.http.post(this.logUrl, logData).subscribe({
+            next: () => console.log('✅ Log créé'),
+            error: (err) => console.error('❌ Erreur log', err)
+          });
+
+          // reset / fermeture après création
           setTimeout(() => {
             this.toggleForm();
             this.loadConvocations();
           }, 1500);
         },
+
         error: err => {
           console.error('❌ Error creating convocation:', err);
           this.message = 'Erreur lors de la création';

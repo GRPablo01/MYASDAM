@@ -7,13 +7,14 @@
     <section class="w-full max-w-7xl mx-auto">
 
       <!-- ═════════ PAS DE MATCH À VENIR ═════════ -->
-      <div *ngIf="matchs.length === 0" class="relative rounded-3xl overflow-hidden transition-all p-8 sm:p-12 lg:p-16 flex flex-col items-center justify-center text-center gap-6"
+      <div *ngIf="matchs.length === 0"
+        class="relative rounded-3xl overflow-hidden transition-all p-8 sm:p-12 lg:p-16 flex flex-col items-center justify-center text-center gap-6"
         [ngStyle]="{
           'background': themeService.Backgroundcards,
           'border': '2px solid ' + themeService.primary,
           'min-height': '400px'
         }">
-    
+
         <!-- Icône / Illustration -->
         <div class="relative">
           <div class="absolute -inset-8 bg-red-600/10 blur-3xl rounded-full"></div>
@@ -22,7 +23,7 @@
             <i class="fa-solid fa-calendar-xmark text-white text-4xl sm:text-5xl"></i>
           </div>
         </div>
-    
+
         <!-- Titre -->
         <div>
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black uppercase italic tracking-widest leading-none mb-3">
@@ -37,14 +38,14 @@
             <div class="h-[1px] w-8 bg-gradient-to-l from-transparent to-red-500/50"></div>
           </div>
         </div>
-    
+
         <!-- Message -->
         <p class="text-sm sm:text-base opacity-60 max-w-md leading-relaxed"
           [ngStyle]="{'color': themeService.Textprincipal}">
           Aucun match n'est programmé pour le moment.<br>
           Reviens plus tard pour découvrir les prochaines rencontres.
         </p>
-    
+
         <!-- Decorative corners -->
         <div [ngStyle]="{'border-color': themeService.primary}"
           class="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 opacity-40"></div>
@@ -54,15 +55,13 @@
           class="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 opacity-40"></div>
         <div [ngStyle]="{'border-color': themeService.primary}"
           class="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 opacity-40"></div>
-    
+
       </div>
-    
+
       <!-- ═════════ CARROUSEL : UNE SEULE CARD À LA FOIS ═════════ -->
       <ng-container *ngIf="matchs.length > 0">
         <ng-container *ngFor="let match of matchs; let i = index">
-          <div *ngIf="i === currentIndex"
-            class="relative rounded-3xl overflow-hidden transition-all"
-            [ngStyle]="{
+          <div *ngIf="i === currentIndex" class="relative rounded-3xl overflow-hidden transition-all" [ngStyle]="{
               'background': themeService.GlassBackground,
               'border-color': themeService.GlassBorder,
               'box-shadow': '0 2px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.1) inset',
@@ -76,7 +75,8 @@
 
               <!-- LEFT -->
               <button (click)="prevMatch()"
-                class="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110" [ngStyle]="{
+                class="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                [ngStyle]="{
                   'background': themeService.GlassBackground,
                   'border-color': themeService.GlassBorder,
                   'box-shadow': '0 2px 6px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.1) inset',
@@ -145,9 +145,12 @@
 
                   </div>
 
-                  <span class="mt-2 font-bold uppercase text-sm sm:text-lg truncate max-w-[120px] sm:max-w-[160px] lg:max-w-[200px]" [title]="match.equipeDom">
-                    {{ match.equipeDom }}
+                  <span
+                    class="mt-2 font-bold uppercase text-sm sm:text-lg truncate max-w-[120px] sm:max-w-[160px] lg:max-w-[200px]"
+                    [title]="getDomEquipe(match)">
+                    {{ getDomEquipe(match) }}
                   </span>
+
 
                 </div>
 
@@ -181,9 +184,12 @@
 
                   </div>
 
-                  <span class="mt-2 font-bold uppercase text-sm sm:text-lg truncate max-w-[120px] sm:max-w-[160px] lg:max-w-[200px]" [title]="match.equipeExt">
-                    {{ match.equipeExt }}
+                  <span
+                    class="mt-2 font-bold uppercase text-sm sm:text-lg truncate max-w-[120px] sm:max-w-[160px] lg:max-w-[200px]"
+                    [title]="getExtEquipe(match)">
+                    {{ getExtEquipe(match) }}
                   </span>
+
 
                 </div>
 
@@ -207,7 +213,8 @@
                         <h2 [ngStyle]="{
                             '-webkit-text-stroke': '1.5px' + themeService.Textprincipal,
                             'color': 'transparent'
-                          }" class="text-xl sm:text-3xl font-bold uppercase leading-none tracking-tight truncate max-w-[120px] sm:max-w-[160px]">
+                          }"
+                          class="text-xl sm:text-3xl font-bold uppercase leading-none tracking-tight truncate max-w-[120px] sm:max-w-[160px]">
                           {{ (match.date | date:'EEEE':'':'fr') | uppercase }}
                         </h2>
                       </div>
@@ -223,7 +230,8 @@
                           class="text-4xl sm:text-6xl font-black leading-none tabular-nums">
                           {{ match.date | date:'dd' }}
                         </h3>
-                        <h4 class="text-sm sm:text-base uppercase tracking-[0.2em] font-semibold mt-1 truncate max-w-[100px] sm:max-w-[140px]">
+                        <h4
+                          class="text-sm sm:text-base uppercase tracking-[0.2em] font-semibold mt-1 truncate max-w-[100px] sm:max-w-[140px]">
                           {{ match.date | date:'MMMM':'':'fr' }}
                         </h4>
                       </div>
@@ -351,7 +359,8 @@
                           [ngStyle]="{'color': themeService.Textprincipal}">
                           Lieu
                         </p>
-                        <p class="font-bold text-sm truncate" [ngStyle]="{'color': themeService.Textprincipal}" [title]="match.lieu || 'Non défini'">
+                        <p class="font-bold text-sm truncate" [ngStyle]="{'color': themeService.Textprincipal}"
+                          [title]="match.lieu || 'Non défini'">
                           {{ match.lieu || 'Non défini' }}
                         </p>
                       </div>
@@ -379,7 +388,8 @@
                           [ngStyle]="{'color': themeService.Textprincipal}">
                           Type
                         </p>
-                        <p class="font-bold text-sm truncate" [ngStyle]="{'color': themeService.Textprincipal}" [title]="match.typeMatch || '---'">
+                        <p class="font-bold text-sm truncate" [ngStyle]="{'color': themeService.Textprincipal}"
+                          [title]="match.typeMatch || '---'">
                           {{ match.typeMatch || '---' }}
                         </p>
                       </div>
@@ -412,7 +422,8 @@
                           [ngStyle]="{'color': themeService.Textprincipal}">
                           Catégorie
                         </p>
-                        <p class="font-bold text-sm truncate" [ngStyle]="{'color': themeService.Textprincipal}" [title]="match.categorie || '---'">
+                        <p class="font-bold text-sm truncate" [ngStyle]="{'color': themeService.Textprincipal}"
+                          [title]="match.categorie || '---'">
                           {{ match.categorie || '---' }}
                         </p>
                       </div>
@@ -445,7 +456,8 @@
                           Statut
                         </p>
 
-                        <p class="font-bold text-sm truncate" [ngStyle]="{'color': themeService.Textprincipal}" [title]="match.statut || 'Inconnu'">
+                        <p class="font-bold text-sm truncate" [ngStyle]="{'color': themeService.Textprincipal}"
+                          [title]="match.statut || 'Inconnu'">
                           {{ match.statut || 'Inconnu' }}
                         </p>
                       </div>
@@ -459,7 +471,7 @@
           </div>
         </ng-container>
       </ng-container>
-    
+
     </section>
 
   </main>

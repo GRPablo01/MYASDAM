@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+
 import { AuthService } from '../../../../../Backend/Services/User/Auth.Service';
 import { ThemeService } from '../../../../../Backend/Services/theme.service';
-import { FormsModule } from '@angular/forms';
 
 interface IUser {
   _id: string;
@@ -65,13 +67,19 @@ export class User implements OnInit {
   isDropdownOpen = false;
 
   // =======================
-  // TOAST
+  // NOTIFICATIONS
   // =======================
   showNotification = false;
   notificationMessage = '';
 
+  // =======================
+  // LOG API
+  // =======================
+  logUrl = 'http://localhost:3000/api/logs';
+
   constructor(
     private authService: AuthService,
+    private http: HttpClient,
     public themeService: ThemeService
   ) { }
 
@@ -99,9 +107,9 @@ export class User implements OnInit {
   // LOAD USERS
   // =======================
   loadUsers(): void {
+
     this.loading = true;
 
-    // 🔹 Utilisateur connecté
     const currentUser = JSON.parse(localStorage.getItem('utilisateur') || '{}');
     const currentRole = currentUser?.role;
 
@@ -110,25 +118,17 @@ export class User implements OnInit {
 
         const allUsers = Array.isArray(data) ? data : data?.users || [];
 
-        // =========================
-        // 🔐 FILTRAGE PAR ROLE
-        // =========================
-
         if (currentRole === 'superadmin') {
-
-          // 👉 voit tout
           this.users = allUsers;
+        }
 
-        } else if (currentRole === 'admin') {
-
-          // 👉 voit tout sauf admin et superadmin
+        else if (currentRole === 'admin') {
           this.users = allUsers.filter((u: any) =>
             u.role !== 'admin' && u.role !== 'superadmin'
           );
+        }
 
-        } else {
-
-          // 👉 utilisateur classique : seulement lui-même
+        else {
           this.users = allUsers.filter((u: any) =>
             u._id === currentUser._id
           );
@@ -154,36 +154,31 @@ export class User implements OnInit {
 
   get filteredUsers(): IUser[] {
     if (!this.users) return [];
-  
+
     const role = (u: IUser) => u.role?.toLowerCase() || '';
-  
+
     switch (this.selectedFilter) {
-  
-      // SUPERADMIN : tout voir
+
       case 'superadmin':
-        return this.users.filter(u => {
-          const role = u.role?.toLowerCase();
-          return ['joueur', 'inviter', 'entraineur', 'admin'].includes(role);
-        });
-  
-      // ADMIN : joueurs + entraineurs + invités
+        return this.users.filter(u =>
+          ['joueur', 'inviter', 'entraineur', 'admin'].includes(role(u))
+        );
+
       case 'admin':
         return this.users.filter(u =>
           ['joueur', 'inviter', 'entraineur'].includes(role(u))
         );
-  
-      // ENTRAINEUR : joueurs + invités
+
       case 'entraineur':
         return this.users.filter(u =>
           ['joueur', 'inviter'].includes(role(u))
         );
-  
-      // USER : joueurs + invités uniquement (si tu veux limiter)
+
       case 'user':
         return this.users.filter(u =>
           ['joueur', 'inviter'].includes(role(u))
         );
-  
+
       default:
         return this.users;
     }
@@ -203,29 +198,18 @@ export class User implements OnInit {
   }
 
   // =======================
-  // ROLE
+  // ROLE COLOR
   // =======================
   getRoleColor(user: IUser): string {
     switch (user.role?.toLowerCase()) {
-  
-      case 'superadmin':
-        return '#7c3aed'; // violet
-  
-      case 'admin':
-        return '#dc2626'; // rouge
-  
-      case 'entraineur':
-        return '#2563eb'; // bleu
-  
+
+      case 'superadmin': return '#7c3aed';
+      case 'admin': return '#dc2626';
+      case 'entraineur': return '#2563eb';
       case 'joueur':
-      case 'user':
-        return '#16a34a'; // vert
-  
-      case 'inviter':
-        return '#f59e0b'; // orange
-  
-      default:
-        return '#6b7280'; // gris
+      case 'user': return '#16a34a';
+      case 'inviter': return '#f59e0b';
+      default: return '#6b7280';
     }
   }
 
@@ -245,7 +229,6 @@ export class User implements OnInit {
     this.selectedUser = user;
     this.modalMode = mode;
     this.showModal = true;
-
     this.editForm = { ...user };
   }
 
@@ -255,9 +238,25 @@ export class User implements OnInit {
   }
 
   // =======================
+  // USER CONNECTÉ
+  // =======================
+  getCurrentUser(): any {
+    const user = localStorage.getItem('utilisateur');
+
+    return user ? JSON.parse(user) : {
+      prenom: 'Inconnu',
+      nom: '',
+      role: 'unknown'
+    };
+  }
+
+  // =======================
   // UPDATE USER
   // =======================
   saveUser(): void {
+
+    console.log('🚀 START UPDATE USER');
+
     if (!this.selectedUser) return;
 
     const payload = {
@@ -271,7 +270,10 @@ export class User implements OnInit {
 
     this.authService.updateUser(this.selectedUser._id, payload)
       .subscribe({
+
         next: (res: any) => {
+
+          console.log('✅ USER UPDATED', res);
 
           this.users = this.users.map(u =>
             u._id === res._id ? res : u
@@ -279,11 +281,28 @@ export class User implements OnInit {
 
           this.showToast('Utilisateur modifié avec succès ✔️');
 
+          const user = this.getCurrentUser();
+
+          const logData = {
+            user: `${user.prenom} ${user.nom}`,
+            role: user.role,
+            action: 'UPDATE_USER',
+            description: `${user.role} a modifié un utilisateur`,
+            type: 'UPDATE',
+            field: 'user',
+            oldValue: this.selectedUser,
+            newValue: payload,
+            date: new Date()
+          };
+
+          this.http.post(this.logUrl, logData).subscribe();
+
           this.closeModal();
           this.loadUsers();
         },
 
-        error: () => { },
+        error: (err) => console.error('❌ UPDATE ERROR', err),
+
         complete: () => this.isLoading = false
       });
   }
@@ -292,73 +311,70 @@ export class User implements OnInit {
   // DELETE USER
   // =======================
   deleteUser(): void {
-    console.log('🟡 DELETE CLICKED');
 
-    if (!this.selectedUser?._id) {
-      console.log('🔴 No selected user or missing ID');
-      return;
-    }
+    if (!this.selectedUser?._id) return;
 
     const id = this.selectedUser._id;
 
     this.authService.deleteUser(id).subscribe({
-      next: (res) => {
+
+      next: () => {
+
         this.users = this.users.filter(u => u._id !== id);
 
-        this.showToast('Utilisateur supprimé avec succès 🗑️');
+        this.showToast('Utilisateur supprimé 🗑️');
+
+        const user = this.getCurrentUser();
+
+        const logData = {
+          user: `${user.prenom} ${user.nom}`,
+          role: user.role,
+          action: 'DELETE_USER',
+          description: `${user.role} a supprimé un utilisateur`,
+          type: 'DELETE',
+          field: 'user',
+          oldValue: this.selectedUser,
+          date: new Date()
+        };
+
+        this.http.post(this.logUrl, logData).subscribe();
+
         this.closeModal();
       },
 
-      error: (err) => {
-        console.error('🔴 DELETE ERROR:', err);
-      }
+      error: (err) => console.error('❌ DELETE ERROR', err)
     });
   }
 
-  // =====================================================
+  // =======================
   // PAGINATION
-  // =====================================================
+  // =======================
+  currentPage = 1;
+  itemsPerPage = 4;
 
-  currentPage: number = 1;
-  itemsPerPage: number = 4;
-
-  // USERS PAGINATED
   get paginatedUsers() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-
-    return this.filteredUsers.slice(start, end);
+    return this.filteredUsers.slice(start, start + this.itemsPerPage);
   }
 
-  // TOTAL PAGES
   get totalPages(): number {
     return Math.ceil(this.filteredUsers.length / this.itemsPerPage);
   }
 
-  // PAGE ARRAY
   get pages(): number[] {
-    return Array(this.totalPages)
-      .fill(0)
-      .map((_, i) => i + 1);
+    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
   }
 
-  // GO PAGE
   goToPage(page: number): void {
     this.currentPage = page;
   }
 
-  // NEXT
   nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
+    if (this.currentPage < this.totalPages) this.currentPage++;
   }
 
-  // PREVIOUS
   previousPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
+    if (this.currentPage > 1) this.currentPage--;
   }
 
   // =======================

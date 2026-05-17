@@ -84,7 +84,7 @@ export class GestionConvoque implements OnInit {
       return;
     }
   
-    this.convocationService.updateConvocationByKey(
+    this.convocationService.updateConvocation(
       this.selectedItem._id,
       this.selectedItem
     ).subscribe({
@@ -120,7 +120,7 @@ export class GestionConvoque implements OnInit {
       return;
     }
   
-    this.convocationService.deleteConvocationByKey(
+    this.convocationService.deleteConvocation(
       this.selectedItem._id
     ).subscribe({
       next: () => {

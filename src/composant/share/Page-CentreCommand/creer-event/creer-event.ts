@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ThemeService } from '../../../../../Backend/Services/theme.service';
 
+import { ThemeService } from '../../../../../Backend/Services/theme.service';
+import { EventService } from '../../../../../Backend/Services/Event.Service';
 
 @Component({
   selector: 'app-creer-event',
@@ -18,67 +19,49 @@ export class CreerEvent implements OnInit {
   eventForm!: FormGroup;
   message: string | null = null;
 
-  // ================================
-  // GESTION UTILISATEUR / THEME
-  // ================================
   isLoggedIn = false;
   theme: 'clair' | 'sombre' = 'clair';
   isMobile = window.innerWidth <= 970;
-  hoverCard: boolean = false;
   currentStep = 1;
 
-  // Step 1
   isTitreFocused = false;
   isDescFocused = false;
-  
-  // Step 2
   isDateFocused = false;
   isHeureDebutFocused = false;
   isHeureFinFocused = false;
   isLieuFocused = false;
-  
-  // Step 3 (nouveau)
   isCategorieFocused = false;
   isThemeFocused = false;
   isStatutFocused = false;
-  
 
-  // ================================
-  // DONNÉES SELECT
-  // ================================
   themes = ['Sport', 'Réunion', 'Formation', 'Autre'];
   categories = ['U6','U7','U8','U9','U10','U11','U12','U13','U14','U15','U16','U17','U18','U19'];
-  statuts = ['À Venir','En Cours','Terminé'];
+  statuts = ['À venir', 'En cours', 'Terminé'];
 
-  constructor(private fb: FormBuilder, private http: HttpClient,public themeService: ThemeService) {}
+  private logUrl = 'http://localhost:3000/api/logs';
+  private backendUrl = 'http://localhost:3000';
+
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    public themeService: ThemeService,
+    public eventService: EventService
+  ) {}
 
   ngOnInit(): void {
 
-    // ================================
-    // RECUPERATION UTILISATEUR
-    // ================================
     const storedUser = localStorage.getItem('utilisateur');
-  
+
     if (storedUser) {
       try {
         const user = JSON.parse(storedUser);
-  
-        if (user.theme === 'sombre' || user.theme === 'clair') {
-          this.theme = user.theme;
-        }
-  
+        this.theme = user.theme === 'sombre' ? 'sombre' : 'clair';
         this.isLoggedIn = true;
-  
-      } catch (error) {
-        console.error('Erreur parsing utilisateur localStorage', error);
+      } catch (e) {
+        console.error('Erreur user localStorage', e);
       }
-    } else {
-      this.isLoggedIn = false;
     }
-  
-    // ================================
-    // INITIALISATION FORMULAIRE
-    // ================================
+
     this.eventForm = this.fb.group({
       titre: ['', Validators.required],
       description: [''],
@@ -89,13 +72,14 @@ export class CreerEvent implements OnInit {
       theme: [''],
       categorie: ['', Validators.required],
       statut: ['À Venir'],
-      createdBy: ['', Validators.required]
+    
+      // 🔥 AJOUT ICI
+      createdBy: ['']   // ou null
     });
   }
-  
 
   // ================================
-  // AFFICHER / MASQUER FORMULAIRE
+  // TOGGLE FORM
   // ================================
   toggleEventForm() {
     this.showEventForm = !this.showEventForm;
@@ -103,36 +87,97 @@ export class CreerEvent implements OnInit {
   }
 
   // ================================
-  // CREATION EVENEMENT
+  // USER CONNECTÉ
+  // ================================
+  getCurrentUser(): any {
+    const user = localStorage.getItem('utilisateur');
+
+    return user ? JSON.parse(user) : {
+      prenom: 'Inconnu',
+      nom: '',
+      role: 'unknown',
+      _id: null
+    };
+  }
+
+  // ================================
+  // CREATE EVENT + LOG
   // ================================
   creerEvent() {
 
+    console.log('🚀 START creerEvent');
+
     if (this.eventForm.invalid) {
+      console.warn('⚠️ Formulaire invalide:', this.eventForm.value);
       this.message = 'Veuillez remplir les champs obligatoires !';
-      Object.keys(this.eventForm.controls).forEach(key => {
-        const controlErrors = this.eventForm.get(key)?.errors;
-        if (controlErrors) console.warn(`Erreur sur ${key} :`, controlErrors);
-      });
       return;
     }
 
-    const formData = { ...this.eventForm.value };
+    const currentUser = this.getCurrentUser();
 
-    if (formData.date) {
-      formData.date = new Date(formData.date).toISOString();
-    }
+    console.log('👤 USER:', currentUser);
 
-    this.http.post('http://localhost:3000/api/events/create', formData).subscribe({
-      next: (res: any) => {
-        this.message = res.message || 'Événement créé avec succès !';
-        this.eventForm.reset({ statut: 'À Venir' });
-        this.showEventForm = false;
-        setTimeout(() => this.message = null, 3000);
-      },
-      error: (err) => {
-        console.error('Erreur création événement :', err);
-        this.message = err?.error?.message || 'Erreur lors de la création de l’événement';
-      }
-    });
+    const createdBy =
+      `${currentUser.prenom || 'Inconnu'} ${currentUser.nom || ''}`.trim();
+
+    const eventData = {
+      ...this.eventForm.value,
+      statut: 'À venir',
+      createdBy
+    };
+
+    console.log('📤 EVENT DATA:', eventData);
+
+    this.http.post(`${this.backendUrl}/api/events`, eventData)
+      .subscribe({
+
+        next: (res: any) => {
+
+          console.log('✅ EVENT CREATED:', res);
+
+          this.message = 'Événement créé avec succès !';
+          this.showEventForm = false;
+
+          this.eventForm.reset({
+            statut: 'À venir'
+          });
+
+          this.currentStep = 1;
+
+          const logData = {
+            user: createdBy,
+            role: currentUser.role || 'unknown',
+            action: 'CREATE_EVENT',
+            description: `${currentUser.role || 'Utilisateur'} a créé un événement`,
+            type: 'CREATE',
+            field: 'event',
+            newValue: eventData,
+            date: new Date()
+          };
+
+          console.log('📊 LOG DATA:', logData);
+
+          this.http.post(this.logUrl, logData).subscribe({
+            next: () => console.log('✅ LOG OK'),
+            error: err => console.error('❌ LOG ERROR', err)
+          });
+
+          setTimeout(() => {
+            this.message = null;
+            console.log('⌛ Message supprimé');
+          }, 3000);
+        },
+
+        error: (err) => {
+          console.error('❌ ERROR CREATE EVENT:', err);
+          console.log('STATUS:', err.status);
+          console.log('BODY:', err.error);
+
+          this.message =
+            err?.error?.message ||
+            err?.error?.errors ||
+            'Erreur lors de la création';
+        }
+      });
   }
 }
