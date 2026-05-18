@@ -2,7 +2,7 @@ const Equipe = require('../Schema/Equipe');
 const fs = require('fs');
 
 // ==============================
-// 🔑 Génération aléatoire de clé
+// 🔑 génération clé
 // ==============================
 function randomSuffix(length = 5) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -19,111 +19,95 @@ function generateKey() {
   return `${numberPart}${suffix}`;
 }
 
-exports.equipeController = {
+// ==============================
+// ➕ Ajouter équipe
+// ==============================
+exports.ajouterEquipe = async (req, res) => {
+  try {
+    const { nom, saison } = req.body;
+    const logo = req.file ? req.file.path : null;
 
-  // ==============================
-  // ➕ Ajouter une équipe
-  // ==============================
-  ajouterEquipe: async (req, res) => {
-    try {
-      const { nom, saison } = req.body;
-      const logo = req.file ? req.file.path : null;
-
-      if (!nom || !logo || !saison) {
-        return res.status(400).json({
-          message: 'Tous les champs (nom, logo, saison) sont obligatoires.'
-        });
-      }
-
-      // 🔐 Génération d'une clé UNIQUE
-      let keyUnique;
-      let existe = true;
-
-      while (existe) {
-        keyUnique = generateKey();
-        const equipeExistante = await Equipe.findOne({ key: keyUnique });
-        if (!equipeExistante) {
-          existe = false;
-        }
-      }
-
-      const nouvelleEquipe = new Equipe({
-        nom,
-        logo,
-        saison,
-        key: keyUnique
-      });
-
-      await nouvelleEquipe.save();
-
-      res.status(201).json({
-        message: 'Équipe ajoutée avec succès !',
-        equipe: nouvelleEquipe
-      });
-
-    } catch (err) {
-      console.error('Erreur ajout équipe:', err);
-      res.status(500).json({
-        message: "Erreur lors de l'ajout de l'équipe",
-        error: err.message
+    if (!nom || !logo || !saison) {
+      return res.status(400).json({
+        message: 'Tous les champs sont obligatoires.'
       });
     }
-  },
 
-  // ==============================
-  // 📥 Récupérer les équipes
-  // ==============================
-  getEquipes: async (req, res) => {
-    try {
-      const saison = req.query.saison;
-      const query = saison ? { saison } : {};
+    let keyUnique;
+    let existe = true;
 
-      const equipes = await Equipe
-        .find(query)
-        .sort({ createdAt: -1 });
+    while (existe) {
+      keyUnique = generateKey();
+      const exist = await Equipe.findOne({ key: keyUnique });
+      if (!exist) existe = false;
+    }
 
-      res.json(equipes);
+    const equipe = new Equipe({
+      nom,
+      logo,
+      saison,
+      key: keyUnique
+    });
 
-    } catch (err) {
-      console.error('Erreur récupération équipes:', err);
-      res.status(500).json({
-        message: 'Erreur lors de la récupération des équipes',
-        error: err.message
+    await equipe.save();
+
+    res.status(201).json({
+      message: 'Équipe ajoutée',
+      equipe
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      message: 'Erreur ajout équipe',
+      error: err.message
+    });
+  }
+};
+
+// ==============================
+// 📥 GET équipes
+// ==============================
+exports.getEquipes = async (req, res) => {
+  try {
+    const saison = req.query.saison;
+    const query = saison ? { saison } : {};
+
+    const equipes = await Equipe.find(query).sort({ createdAt: -1 });
+
+    res.json(equipes);
+
+  } catch (err) {
+    res.status(500).json({
+      message: 'Erreur récupération équipes'
+    });
+  }
+};
+
+// ==============================
+// ❌ DELETE équipe
+// ==============================
+exports.deleteEquipe = async (req, res) => {
+  try {
+    const deleted = await Equipe.findByIdAndDelete(req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({
+        message: "Équipe non trouvée"
       });
     }
-  },
 
-  // ==============================
-  // ❌ Supprimer une équipe
-  // ==============================
-  supprimerEquipe: async (req, res) => {
-    try {
-      const { id } = req.params;
-
-      const equipeSupprimee = await Equipe.findByIdAndDelete(id);
-
-      if (!equipeSupprimee) {
-        return res.status(404).json({
-          message: 'Équipe non trouvée.'
-        });
-      }
-
-      // 🗑️ Supprimer le logo du serveur
-      if (equipeSupprimee.logo && fs.existsSync(equipeSupprimee.logo)) {
-        fs.unlinkSync(equipeSupprimee.logo);
-      }
-
-      res.json({
-        message: 'Équipe supprimée avec succès !',
-        equipe: equipeSupprimee
-      });
-
-    } catch (err) {
-      console.error('Erreur suppression équipe:', err);
-      res.status(500).json({
-        message: "Erreur lors de la suppression de l'équipe",
-        error: err.message
-      });
+    if (deleted.logo && fs.existsSync(deleted.logo)) {
+      fs.unlinkSync(deleted.logo);
     }
+
+    res.status(200).json({
+      message: "Équipe supprimée",
+      equipe: deleted
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      message: "Erreur serveur"
+    });
   }
 };

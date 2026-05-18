@@ -14,4 +14,7 @@ router.put('/:id', eventController.updateEvent);
 // DELETE
 router.delete('/:id', eventController.deleteEvent);
 
+// READ ONE
+router.get('/:id', eventController.getEventById);
+
 module.exports = router;

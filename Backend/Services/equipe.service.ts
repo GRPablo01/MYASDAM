@@ -148,58 +148,33 @@ export class EquipeService {
     );
   }
 
-  // =========================
-  // DELETE EQUIPE + LOG
-  // =========================
-  deleteEquipe(id: string): Observable<any> {
 
-    return this.http.get<any>(
-      `${this.apiUrl}/${id}`
-    ).pipe(
+  // ======================
+// DELETE EQUIPE + LOG
+// ======================
+deleteEquipe(id: string, oldEquipe: any): Observable<any> {
 
-      switchMap((equipe) => {
+  return this.http.delete(`${this.apiUrl}/${id}`).pipe(
 
-        return this.http.delete(
-          `${this.apiUrl}/${id}`
-        ).pipe(
+    switchMap((deleted: any) => {
 
-          switchMap((deletedEquipe) => {
+      const user = this.getCurrentUser();
 
-            const currentUser = this.getCurrentUser();
+      const logData = {
+        user: `${user.prenom || 'Inconnu'} ${user.nom || ''}`,
+        role: user.role || 'unknown',
+        action: 'DELETE_EQUIPE',
+        description: `${user.role || 'Utilisateur'} a supprimé une équipe`,
+        type: 'DELETE',
+        field: 'equipe',
+        oldValue: oldEquipe,
+        date: new Date()
+      };
 
-            const logData = {
-
-              user:
-                `${currentUser.prenom || 'Inconnu'} ` +
-                `${currentUser.nom || ''}`,
-
-              role: currentUser.role || 'unknown',
-
-              action: 'DELETE_EQUIPE',
-
-              description:
-                `${currentUser.role || 'Utilisateur'} a supprimé ` +
-                `l'équipe ${equipe.nom}`,
-
-              type: 'DELETE',
-
-              field: 'equipe',
-
-              oldValue: {
-                nom: equipe.nom,
-                ville: equipe.ville,
-                logo: equipe.logo
-              },
-
-              date: new Date()
-            };
-
-            return this.http.post(this.logUrl, logData).pipe(
-              map(() => deletedEquipe)
-            );
-          })
-        );
-      })
-    );
-  }
+      return this.http.post(this.logUrl, logData).pipe(
+        map(() => deleted)
+      );
+    })
+  );
+}
 }

@@ -90,16 +90,38 @@ export class GestionEquipe implements OnInit {
     this.closeModal();
   }
 
-  confirmDelete() {
-    console.log('DELETE équipe', this.selectedEquipe);
+  // ======================
+// DELETE EQUIPE + LOG
+// ======================
+confirmDelete(): void {
 
-    // 👉 exemple API delete
-    // this.equipeService.deleteEquipe(this.selectedEquipe._id).subscribe(...)
+  console.log('DELETE équipe', this.selectedEquipe);
 
-    this.equipes = this.equipes.filter(e => e._id !== this.selectedEquipe._id);
+  const equipe = this.selectedEquipe;
 
-    this.closeModal();
-  }
+  if (!equipe?._id) return;
+
+  this.equipeService.deleteEquipe(equipe._id, equipe).subscribe({
+
+    next: () => {
+
+      this.equipes = this.equipes.filter(
+        e => e._id !== equipe._id
+      );
+
+      this.showToast('Équipe supprimée 🗑️');
+
+      this.closeModal();
+    },
+
+    error: (err) => {
+
+      console.error(err);
+
+      this.showToast('Erreur suppression ❌');
+    }
+  });
+}
 
   // ================= ACTIONS =================
   voirEquipe(eq: any) {
