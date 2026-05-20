@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { Login } from '../../../composant/auth/login/login';
+import { Mobile } from "../../../composant/share/mobile/mobile";
 
 @Component({
   selector: 'app-connexion',
-  imports: [Login,CommonModule],
+  imports: [Login, CommonModule, Mobile],
   standalone:true,
   templateUrl: './connexion.html',
   styleUrl: './connexion.css',

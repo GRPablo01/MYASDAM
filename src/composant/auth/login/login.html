@@ -1,496 +1,594 @@
-<app-icon></app-icon>
+<!-- <app-teste></app-teste> -->
 
-<section class="relative w-full min-h-screen flex items-center justify-center overflow-hidden py-3 sm:py-4">
 
-  <!-- BLOC IMAGE -->
-  <div>
-    <!-- IMAGE DE FOND -->
-    <img src="assets/imagefonctionalite.jpg" alt="Image de fond"
-      class="absolute inset-0 w-full h-full object-cover blur-sm scale-110" />
+<!-- ============================================ -->
+<!-- PAGE CONNEXION MOBILE - 382px à 400px UNIQUEMENT -->
+<!-- ============================================ -->
+<section class="login-mobile-only relative w-full h-[100dvh] overflow-hidden flex flex-col"
+  [ngStyle]="{ 'background': themeService.Backgroundprincipal }">
 
-    <!-- OVERLAY (optionnel mais recommandé pour lisibilité) -->
-    <div [ngStyle]="{'background':themeservice.Backgroundprincipal + '15'}" class="absolute inset-0"></div>
-  </div>
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- EN-TÊTE IMAGE -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="relative w-full h-[38%] overflow-hidden">
 
-  <!-- CARD PRINCIPALE - Glassmorphism Sport Responsive -->
-  <div [ngStyle]="{'background': themeservice.Backgroundcards}"
-    class="relative z-10 w-full max-w-[420px] max-h-[calc(100vh-1.5rem)] sm:max-h-[calc(100vh-2rem)] rounded-[24px] sm:rounded-[28px] overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.6)] animate-fade-in-up backdrop-blur-xl mx-3 sm:mx-4 my-3 sm:my-4 border border-white/10 flex flex-col">
+    <img src="assets/imagefonctionalite.jpg" alt="Joueur de football"
+      class="absolute inset-0 w-full h-full object-cover" />
 
-    <!-- Bandeau sportif en haut -->
-    <div class="h-2 w-full shrink-0" [ngStyle]="{'background': 'linear-gradient(90deg, ' + themeservice.primary + ', ' + themeservice.secondary + ')'}"></div>
+    <!-- SUPERPOSITION -->
+    <div class="absolute inset-0" [ngStyle]="{
+        'background': 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 50%, ' + themeService.Backgroundprincipal + ' 100%)'
+      }"></div>
 
-    <button type="button" (click)="toggleTheme()"
-      class="absolute top-5 right-4 sm:top-6 sm:right-5 z-30 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group"
-      [ngStyle]="{'background': themeservice.Backgroundcards1}"
-      [attr.aria-label]="isDarkMode ? 'Passer en mode clair' : 'Passer en mode sombre'">
-      <div class="relative w-full h-full flex items-center justify-center overflow-hidden rounded-full">
-        <i class="fa-solid fa-sun text-lg absolute transition-all duration-500"
-          [ngClass]="isDarkMode ? 'rotate-0 scale-100 opacity-100' : '-rotate-90 scale-0 opacity-0'"
-          [ngStyle]="{'color': themeservice.Iconnormal}"></i>
-        <i class="fa-solid fa-moon text-lg absolute transition-all duration-500"
-          [ngClass]="!isDarkMode ? 'rotate-0 scale-100 opacity-100' : 'rotate-90 scale-0 opacity-0'"
-          [ngStyle]="{'color': themeservice.Iconnormal}"></i>
-      </div>
-    </button>
+    <!-- LOGO -->
+    <div class="absolute top-4 left-4 z-10 flex items-center gap-2">
 
-    <!-- CONTENU COMPACT ET RESPONSIVE - Scrollable si trop grand -->
-    <div class="relative z-10 p-4 sm:p-5 lg:p-6 overflow-y-auto">
-
-      <!-- HEADER : LOGO + TITRE -->
-      <div class="flex flex-col items-center gap-2 sm:gap-3 mb-3 sm:mb-4 animate-slide-down">
-
-        <!-- LOGO FOOTBALL -->
-        <div class="relative">
-          <div class="absolute inset-0 rounded-full blur-xl opacity-30"></div>
-          <div class="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden p-1.5">
-            <img src="assets/LOGO.png" alt="Logo Football" class="w-full h-full object-contain">
-          </div>
-        </div>
-
-        <!-- TITRE -->
-        <div class="text-center">
-          <h1 [ngStyle]="{'color': themeservice.Textprincipal}"
-            class="text-2xl sm:text-3xl font-black tracking-tight drop-shadow-lg uppercase italic">
-            ASDAM
-          </h1>
-          <div class="flex items-center justify-center gap-2 mt-1.5">
-            <div class="h-1 w-8 rounded-full" [ngStyle]="{'background': themeservice.primary}"></div>
-            <i class="fa-solid fa-futbol text-xs opacity-50" [ngStyle]="{'color': themeservice.primary}"></i>
-            <div class="h-1 w-8 rounded-full" [ngStyle]="{'background': themeservice.primary}"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SOUS-TITRE -->
-      <div class="text-center mb-3 sm:mb-4">
-        <h2 [ngStyle]="{'color': themeservice.Textprincipal}"
-          class="text-base sm:text-lg font-bold mb-1 drop-shadow-sm uppercase tracking-wide">
-          Connexion
-        </h2>
-        <p [ngStyle]="{'color': themeservice.Textsecondaire}" class="text-xs sm:text-sm leading-relaxed px-2 opacity-90">
-          Accédez à votre espace joueur et suivez vos matchs
-        </p>
-      </div>
-
-      <!-- MESSAGE DE NOTIFICATION -->
-      <div *ngIf="message"
-        class="mb-3 p-2.5 rounded-xl text-center text-xs sm:text-sm font-medium animate-slide-down backdrop-blur-sm flex items-center justify-center gap-2 border"
-        [ngStyle]="{
-          'background': messageType === 'success' ? themeservice.BgOui : themeservice.BgNon,
-          'color': messageType === 'success' ? themeservice.BgOuiText : themeservice.BgNonText,
-          'border-color': messageType === 'success' ? themeservice.BorderOui : themeservice.BorderNon
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center overflow-hidden" [ngStyle]="{
+          'background': themeService.Backgroundcards,
+          'box-shadow': themeService.GlassShadow,
+          'border': '1px solid ' + themeService.GlassBorder
         }">
-        <i class="fa-solid" [class.fa-check-circle]="messageType === 'success'"
-          [class.fa-exclamation-circle]="messageType === 'error'">
-        </i>
-        {{ message }}
+        <img class="w-6" src="assets/LOGO.png" alt="Logo ASDAM">
       </div>
 
-      <!-- FORMULAIRE COMPACT -->
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-2.5 sm:space-y-3">
+      <div class="leading-none">
+        <h1 class="text-sm font-black" [ngStyle]="{ 'color': themeService.Textprincipal }">
+          ASDAM
+        </h1>
 
-        <!-- ================= 
-          CHAMP EMAIL LABEL + INPUT
-        ================= -->
-        <div class="w-full space-y-1.5">
-
-          <!-- Label -->
-          <label for="email" class="block text-xs sm:text-sm font-bold ml-1 transition-all duration-300 uppercase tracking-wider"
-            [ngStyle]="{ 'color': themeservice.Textprincipal }">
-            <i class="fa-solid fa-envelope mr-1 text-[10px] opacity-70"></i> Adresse e-mail
-          </label>
-
-          <!-- Champ -->
-          <div class="relative group">
-
-            <!-- Icône -->
-            <div
-              class="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-sm"
-              [ngStyle]="{
-                'background': themeservice.primary,
-                'color': '#FFFFFF',
-                'border': '2px solid ' + themeservice.primary
-              }">
-              <i class="fa-solid fa-at text-xs"></i>
-            </div>
-
-            <!-- Input -->
-            <input id="email" type="email" formControlName="email" placeholder="Entrez votre e-mail"
-              autocomplete="email"
-              class="w-full h-11 sm:h-12 pl-13 pr-11 rounded-2xl text-sm sm:text-base font-medium transition-all duration-300 hover:shadow-md placeholder:opacity-60 focus:ring-2 focus:ring-offset-1"
-              [ngStyle]="{
-                'background': themeservice.Backgroundcards1,
-                'color': themeservice.Textprincipal,
-                'border': '2px solid ' + themeservice.primary
-              }" />
-
-            <!-- Validation -->
-            <div class="absolute right-3 top-1/2 -translate-y-1/2 transition-all duration-300" 
-              [ngClass]="loginForm.get('email')?.valid && loginForm.get('email')?.touched 
-                ? 'opacity-100 scale-100 rotate-0' 
-                : 'opacity-0 scale-50 rotate-90'">
-              <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shadow-md">
-                <i class="fa-solid fa-check text-white text-[10px]"></i>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-        <!-- ================= 
-          CHAMP MOT DE PASSE UI/UX AMÉLIORÉ
-        ================= -->
-        <div class="w-full space-y-1.5">
-
-          <!-- Label -->
-          <label for="password" class="block text-xs sm:text-sm font-bold ml-1 transition-all duration-300 uppercase tracking-wider"
-            [ngStyle]="{ 'color': themeservice.Textprincipal }">
-            <i class="fa-solid fa-lock mr-1 text-[10px] opacity-70"></i> Mot de passe
-          </label>
-
-          <!-- Champ -->
-          <div class="relative group">
-
-            <!-- Icône gauche -->
-            <div
-              class="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-sm"
-              [ngStyle]="{
-                'background': themeservice.primary,
-                'color': '#FFFFFF',
-                'border': '2px solid ' + themeservice.primary
-              }">
-              <i class="fa-solid fa-key text-xs"></i>
-            </div>
-
-            <!-- Input -->
-            <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
-              placeholder="Entrez votre mot de passe" autocomplete="current-password"
-              class="w-full h-11 sm:h-12 pl-13 pr-13 rounded-2xl text-sm sm:text-base font-medium transition-all duration-300 hover:shadow-md placeholder:opacity-60 focus:ring-2 focus:ring-offset-1"
-              [ngStyle]="{
-                'background': themeservice.Backgroundcards1,
-                'color': themeservice.Textprincipal,
-                'border': '2px solid ' + themeservice.primary
-              }" />
-
-            <!-- Bouton afficher / masquer -->
-            <button type="button" (click)="togglePassword()"
-              class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm"
-              [ngStyle]="{
-                'background': themeservice.primary,
-                'color': '#FFFFFF',
-                'border': '2px solid ' + themeservice.primary
-              }">
-              <i class="fa-solid text-xs transition-all duration-300" [class.fa-eye]="!showPassword"
-                [class.fa-eye-slash]="showPassword">
-              </i>
-            </button>
-
-          </div>
-
-        </div>
-
-        <!-- BOUTON CONNEXION -->
-        <button type="submit" [disabled]="loginForm.invalid || isLoading"
-          class="relative w-full h-11 sm:h-12 rounded-xl font-bold text-sm sm:text-base tracking-wide shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none overflow-hidden group mt-1.5 uppercase"
-          (mouseenter)="isHovered = true" (mouseleave)="isHovered = false" [ngStyle]="{
-            'background': themeservice.primary,
-            'color': '#FFFFFF'
-          }">
-
-          <!-- Effet de vague -->
-          <span
-            class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
-
-          <!-- Contenu -->
-          <span class="relative z-10 flex items-center justify-center gap-2">
-            <span *ngIf="!isLoading">Entrer sur le terrain</span>
-            <i *ngIf="isLoading" class="fa-solid fa-circle-notch fa-spin"></i>
-            <i *ngIf="!isLoading"
-              class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
-          </span>
-        </button>
-
-        <!-- SÉPARATEUR -->
-        <div class="relative my-2 sm:my-3">
-          <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t-2 border-opacity-30" [ngStyle]="{'border-color': themeservice.primary}"></div>
-          </div>
-          <div class="relative flex justify-center text-xs">
-            <span class="px-3 backdrop-blur-xl font-bold uppercase tracking-widest" [ngStyle]="{
-              'background': themeservice.Backgroundcards,
-              'color': themeservice.Textsecondaire
-            }">ou</span>
-          </div>
-        </div>
-
-        <!-- LIEN INSCRIPTION - Style bouton secondaire -->
-        <a routerLink="/inscription"
-          class="flex items-center justify-center gap-2 w-full py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 hover:scale-[1.02] active:scale-95 border-2 uppercase tracking-wide"
-          [ngStyle]="{
-            'border': '2px dashed ' + themeservice.primary,
-            'color': themeservice.Textprincipal
-          }">
-          <span>Rejoindre l'équipe</span>
-          <i class="fa-solid fa-user-plus"></i>
-        </a>
-
-        <!-- Footer sécurité -->
-        <div class="text-center mt-3 pt-2 border-t border-opacity-10"
-          [ngStyle]="{'border-color': isDarkMode ? 'white' : 'black'}">
-          <div class="flex items-center justify-center gap-2 mb-1">
-            <i class="fa-solid fa-shield-halved text-[10px]" [ngStyle]="{'color': themeservice.Textsecondaire}"></i>
-            <span class="text-[10px] sm:text-xs font-medium uppercase tracking-wider" [ngStyle]="{'color': themeservice.Textsecondaire}">
-              Connexion sécurisée SSL
-            </span>
-          </div>
-          <p class="text-[10px] font-medium" [ngStyle]="{'color': themeservice.Textsecondaire}">
-            © 2026 ASDAM Football. Tous droits réservés.
-          </p>
-        </div>
-
-      </form>
+        <span class="text-[9px] opacity-70" [ngStyle]="{ 'color': themeService.Textprincipal }">
+          Club de Football
+        </span>
+      </div>
 
     </div>
+
+    <!-- THÈME -->
+    <div class="absolute top-4 right-4 z-10">
+      <app-theme></app-theme>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- FORMULAIRE LOGIN AMÉLIORÉ -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <div class="flex-1 rounded-t-[28px] px-6 pt-6 pb-4 flex flex-col justify-between" [ngStyle]="{
+  'background': themeService.Backgroundcards,
+  'box-shadow': '0 -10px 30px rgba(0,0,0,0.08)'
+}">
+
+    <!-- TITRE -->
+    <div class="mb-4">
+      <h2 class="text-2xl font-black uppercase tracking-wide" [ngStyle]="{ 'color': themeService.Textprincipal }">
+        Connexion
+      </h2>
+
+      <div class="w-12 h-1 mt-2 rounded-full" [ngStyle]="{ 'background': themeService.primary }">
+      </div>
+    </div>
+
+    <!-- FORMULAIRE PREMIUM -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4 flex-1 flex flex-col justify-center">
+
+      <!-- ================= EMAIL ================= -->
+      <div class="space-y-1.5">
+
+        <label class="text-xs font-bold uppercase tracking-wider ml-1 transition-all duration-300"
+          [ngStyle]="{ 'color': themeService.Textprincipal }">
+          <i class="fa-solid fa-envelope mr-1 text-[10px] opacity-70"></i>
+          Adresse e-mail
+        </label>
+
+        <div class="relative group">
+
+          <!-- ICON -->
+          <div
+            class="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center shadow-sm transition-all duration-300"
+            [ngStyle]="{
+        'background': themeService.primary,
+        'color': '#fff'
+      }">
+            <i class="fa-solid fa-at text-xs"></i>
+          </div>
+
+          <!-- INPUT -->
+          <input type="email" formControlName="email" placeholder="Entrez votre e-mail" autocomplete="email"
+            class="w-full h-12 pl-13 pr-11 rounded-2xl text-sm font-medium transition-all duration-300 hover:shadow-md focus:ring-2 focus:ring-offset-1 outline-none"
+            [ngStyle]="{
+            'background': themeService.Backgroundcards1,
+            'color': themeService.Textprincipal,
+            'border': '2px solid ' + themeService.primary
+          }" />
+
+          <!-- VALIDATION CHECK -->
+          <div class="absolute right-3 top-1/2 -translate-y-1/2 transition-all duration-300" [ngClass]="loginForm.get('email')?.valid && loginForm.get('email')?.touched
+        ? 'opacity-100 scale-100'
+        : 'opacity-0 scale-50'">
+
+            <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shadow-md">
+              <i class="fa-solid fa-check text-white text-[10px]"></i>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ================= PASSWORD ================= -->
+      <div class="space-y-1.5">
+
+        <label class="text-xs font-bold uppercase tracking-wider ml-1"
+          [ngStyle]="{ 'color': themeService.Textprincipal }">
+          <i class="fa-solid fa-lock mr-1 text-[10px] opacity-70"></i>
+          Mot de passe
+        </label>
+
+        <div class="relative group">
+
+          <!-- ICON -->
+          <div
+            class="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center shadow-sm transition-all duration-300"
+            [ngStyle]="{
+        'background': themeService.primary,
+        'color': '#fff'
+      }">
+            <i class="fa-solid fa-key text-xs"></i>
+          </div>
+
+          <!-- INPUT -->
+          <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
+            placeholder="Entrez votre mot de passe" autocomplete="current-password"
+            class="w-full h-12 pl-13 pr-13 rounded-2xl text-sm font-medium transition-all duration-300 hover:shadow-md focus:ring-2 focus:ring-offset-1 outline-none"
+            [ngStyle]="{
+            'background': themeService.Backgroundcards1,
+            'color': themeService.Textprincipal,
+            'border': '2px solid ' + themeService.primary
+          }" />
+
+          <!-- TOGGLE PASSWORD -->
+          <button type="button" (click)="showPassword = !showPassword"
+            class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center shadow-sm transition-all duration-300 hover:scale-110 active:scale-95"
+            [ngStyle]="{
+              'background': themeService.primary,
+              'color': '#fff'
+            }">
+
+            <i class="fa-solid" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- MOT DE PASSE OUBLIÉ -->
+      <div class="text-right">
+        <a routerLink="/forgot-password" class="text-xs font-semibold transition hover:opacity-70"
+          [ngStyle]="{ 'color': themeService.primary }">
+          Mot de passe oublié ?
+        </a>
+      </div>
+
+      <!-- ================= BOUTON LOGIN ================= -->
+      <button type="submit" [disabled]="loginForm.invalid || isLoading"
+        class="relative w-full h-12 rounded-2xl font-bold text-sm uppercase tracking-wide shadow-lg overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed">
+
+        <div [ngStyle]="{
+    'background': themeService.primary,
+    'color': '#fff'
+    }" class="absolute inset-0"></div>
+
+        <!-- LOADING -->
+        <span *ngIf="isLoading" class="relative z-10 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-circle-notch fa-spin"></i>
+          Connexion...
+        </span>
+
+        <!-- NORMAL -->
+        <span *ngIf="!isLoading" class="relative z-10 flex text-white items-center justify-center gap-2">
+          Se connecter
+          <i class="fa-solid fa-arrow-right"></i>
+        </span>
+
+      </button>
+
+    </form>
+
+    <!-- FOOTER -->
+    <div class="text-center mt-3 pt-3 border-t border-opacity-10"
+      [ngStyle]="{ 'border-color': themeService.Textsecondaire }">
+
+      <span class="text-xs opacity-70" [ngStyle]="{ 'color': themeService.Textsecondaire }">
+        Vous n’avez pas de compte ?
+      </span>
+
+      <a routerLink="/inscription" class="text-xs font-bold ml-1" [ngStyle]="{ 'color': themeService.primary }">
+        S’inscrire
+      </a>
+
+    </div>
+
   </div>
 
 </section>
 
-<!-- STYLES CSS PERSONNALISÉS -->
+<!-- ============================================ -->
+<!-- PAGE CONNEXION DESKTOP - 400px à MAXpx UNIQUEMENT -->
+<!-- ============================================ -->
+<section class="login-desktop-only relative w-full h-[100dvh] overflow-hidden flex"
+  [ngStyle]="{ 'background': themeService.Backgroundprincipal }">
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- PANNEAU GAUCHE - IMAGE & IMAGE DE MARQUE -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="relative w-[45%] min-w-[400px] h-full overflow-hidden hidden md:block">
+
+    <!-- IMAGE DE FOND AVEC ANIMATION ZOOM SUBTILE -->
+    <img src="assets/imagefonctionalite.jpg" alt="Joueur de football"
+      class="absolute inset-0 w-full h-full object-cover transition-transform duration-[20s] ease-linear hover:scale-110" />
+
+    <!-- SUPERPOSITION GRADIENT AMÉLIORÉE -->
+    <div class="absolute inset-0" [ngStyle]="{
+        'background': 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.10) 30%, ' + themeService.Backgroundprincipal + ' 100%)'
+      }"></div>
+
+    <!-- PARTICULES / EFFET DE BRUME (optionnel, pure CSS) -->
+    <div class="absolute inset-0 opacity-30 pointer-events-none"
+      style="background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+             radial-gradient(circle at 80% 80%, rgba(255,255,255,0.05) 0%, transparent 50%);">
+    </div>
+
+    <!-- LOGO EN HAUT AVEC GLASSMORPHISM AMÉLIORÉ -->
+    <div class="absolute top-6 left-6 z-10 flex items-center gap-3 animate-fade-in-down">
+
+      <div class="w-11 h-11 rounded-2xl flex items-center justify-center overflow-hidden transition-all duration-300 hover:scale-110 hover:shadow-lg" [ngStyle]="{
+          'background': 'rgba(255,255,255,0.15)',
+          'backdrop-filter': 'blur(12px) saturate(180%)',
+          'border': '1px solid rgba(255,255,255,0.25)',
+          'box-shadow': '0 4px 30px rgba(0,0,0,0.1)'
+        }">
+        <img class="w-7" src="assets/LOGO.png" alt="Logo ASDAM">
+      </div>
+
+      <div class="leading-none">
+        <h1 class="text-lg font-black text-white drop-shadow-lg tracking-wide">
+          ASDAM
+        </h1>
+        <span class="text-[11px] text-white/80 font-medium tracking-wider uppercase">
+          Club de football
+        </span>
+      </div>
+
+    </div>
+
+    <!-- BOUTON RETOUR AVEC EFFET HOVER AMÉLIORÉ -->
+    <a href="#" class="absolute top-6 right-6 z-10 flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg group" [ngStyle]="{
+        'background': 'rgba(255,255,255,0.12)',
+        'backdrop-filter': 'blur(12px) saturate(180%)',
+        'border': '1px solid rgba(255,255,255,0.25)',
+        'box-shadow': '0 4px 30px rgba(0,0,0,0.1)'
+      }">
+      <span>Retour au site</span>
+      <i class="fa-solid fa-arrow-right text-[10px] transition-transform duration-300 group-hover:translate-x-1"></i>
+    </a>
+
+    <!-- TEXTE DU BAS AVEC ANIMATION D'ENTRÉE -->
+    <div class="absolute bottom-10 left-6 z-10 max-w-[80%]">
+      <h2 class="text-3xl font-medium text-white/95 leading-tight drop-shadow-2xl tracking-tight mb-2">
+        Capturer des moments,<br>
+        <span class="font-bold text-white">Créer des souvenirs</span>
+      </h2>
+      <p class="text-sm text-white/60 mb-6 font-light">
+        Rejoignez la communauté ASDAM et vivez le football autrement.
+      </p>
+
+      <!-- INDICATEURS SLIDER AMÉLIORÉS -->
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 rounded-full bg-white/30 transition-all duration-300 hover:bg-white/60 cursor-pointer"></div>
+        <div class="w-2 h-2 rounded-full bg-white/30 transition-all duration-300 hover:bg-white/60 cursor-pointer"></div>
+        <div class="w-8 h-2 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- PANNEAU DROIT - FORMULAIRE DE CONNEXION -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="flex-1 flex flex-col justify-center items-center px-8 lg:px-16 py-10 relative" [ngStyle]="{
+      'background': themeService.Backgroundprincipal
+    }">
+
+    <!-- BOUTON THÈME (mobile uniquement ou optionnel) -->
+    <div class="absolute top-6 right-6 md:hidden z-20">
+      <app-theme></app-theme>
+    </div>
+
+    <!-- CONTENU DU FORMULAIRE AVEC ANIMATION D'ENTRÉE -->
+    <div class="w-full max-w-[420px] animate-fade-in-up">
+
+      <!-- TITRE AVEC SÉPARATION VISUELLE -->
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-1 h-8 rounded-full" [ngStyle]="{ 'background': themeService.primary }"></div>
+          <h2 class="text-3xl font-bold tracking-tight" [ngStyle]="{ 'color': themeService.Textprincipal }">
+            Bon retour
+          </h2>
+        </div>
+        <p class="text-sm ml-4" [ngStyle]="{ 'color': themeService.Textsecondaire }">
+          Connectez-vous pour accéder à votre espace membre
+        </p>
+      </div>
+
+      <!-- ================= FORMULAIRE DE CONNEXION PREMIUM ================= -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+        <!-- ================= EMAIL ================= -->
+        <div class="relative group">
+          
+          <div class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl flex items-center justify-center shadow-md transition-all duration-300 group-focus-within:scale-110 group-focus-within:shadow-lg z-10"
+            [ngStyle]="{
+              'background': themeService.primary,
+              'color': '#fff'
+            }">
+            <i class="fa-solid fa-at text-xs"></i>
+          </div>
+
+          <input type="email" formControlName="email" placeholder="Adresse e-mail" autocomplete="email"
+            class="w-full h-14 pl-14 pr-4 rounded-2xl text-sm font-medium transition-all duration-300 outline-none relative z-0"
+            [ngClass]="{
+              'shadow-md hover:shadow-lg': true,
+              'focus:ring-2': true
+            }"
+            [ngStyle]="{
+              'background': themeService.Backgroundcards,
+              'color': themeService.Textprincipal,
+              'border': '2px solid ' + (loginForm.get('email')?.dirty && loginForm.get('email')?.invalid ? '#ef4444' : themeService.primary + '40'),
+              'box-shadow': loginForm.get('email')?.dirty && loginForm.get('email')?.invalid ? '0 0 0 4px rgba(239,68,68,0.1)' : 'none'
+            }" />
+
+          <!-- INDICATEUR DE VALIDATION -->
+          <div *ngIf="loginForm.get('email')?.valid && loginForm.get('email')?.dirty" 
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 animate-bounce-in">
+            <i class="fa-solid fa-check-circle"></i>
+          </div>
+        </div>
+
+        <!-- MESSAGE D'ERREUR EMAIL -->
+        <div *ngIf="loginForm.get('email')?.dirty && loginForm.get('email')?.invalid" 
+          class="-mt-4 ml-14 text-xs text-red-500 animate-shake">
+          <span *ngIf="loginForm.get('email')?.errors?.['required']">Email requis</span>
+          <span *ngIf="loginForm.get('email')?.errors?.['email']">Format d'email invalide</span>
+        </div>
+
+        <!-- ================= MOT DE PASSE ================= -->
+        <div class="relative group">
+          
+          <div class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl flex items-center justify-center shadow-md transition-all duration-300 group-focus-within:scale-110 group-focus-within:shadow-lg z-10"
+            [ngStyle]="{
+              'background': themeService.primary,
+              'color': '#fff'
+            }">
+            <i class="fa-solid fa-lock text-xs"></i>
+          </div>
+
+          <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
+            placeholder="Entrez votre mot de passe" autocomplete="current-password"
+            class="w-full h-14 pl-14 pr-14 rounded-2xl text-sm font-medium transition-all duration-300 outline-none relative z-0"
+            [ngClass]="{
+              'shadow-md hover:shadow-lg': true,
+              'focus:ring-2': true
+            }"
+            [ngStyle]="{
+              'background': themeService.Backgroundcards,
+              'color': themeService.Textprincipal,
+              'border': '2px solid ' + (loginForm.get('password')?.dirty && loginForm.get('password')?.invalid ? '#ef4444' : themeService.primary + '40')
+            }" />
+
+          <!-- TOGGLE PASSWORD AMÉLIORÉ -->
+          <button type="button" (click)="showPassword = !showPassword"
+            class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl flex items-center justify-center shadow-md transition-all duration-300 hover:scale-110 active:scale-95 z-10"
+            [ngStyle]="{
+              'background': themeService.primary,
+              'color': '#fff'
+            }">
+
+            <i class="fa-solid text-xs transition-all duration-200"
+              [class.fa-eye]="!showPassword"
+              [class.fa-eye-slash]="showPassword">
+            </i>
+
+          </button>
+        </div>
+
+        <!-- OPTIONS SOUS LE MOT DE PASSE -->
+        <div class="flex items-center justify-between -mt-2 px-1">
+
+          <a href="#" class="text-xs font-semibold hover:opacity-80 transition-all duration-200 relative group" [ngStyle]="{ 'color': themeService.primary }">
+            Mot de passe oublié ?
+            <span class="absolute bottom-0 left-0 w-0 h-[1px] transition-all duration-300 group-hover:w-full" [ngStyle]="{ 'background': themeService.primary }"></span>
+          </a>
+          
+        </div>
+
+        <!-- ================= BOUTON CONNEXION ================= -->
+        <button type="submit" [disabled]="loginForm.invalid || isLoading"
+          class="h-14 w-full rounded-2xl font-bold text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 relative overflow-hidden group"
+          [ngStyle]="{
+            'background': themeService.primary,
+            'box-shadow': '0 4px 20px ' + themeService.primary + '40'
+          }">
+
+          <!-- EFFET DE RIPPLE / SHINE -->
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+          </div>
+
+          <span *ngIf="!isLoading" class="relative z-10 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-right-to-bracket transition-transform duration-300 group-hover:translate-x-1"></i>
+            Se connecter
+          </span>
+
+          <span *ngIf="isLoading" class="relative z-10 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+            Connexion en cours...
+          </span>
+
+        </button>
+
+      </form>
+
+      <!-- ================= LIEN INSCRIPTION (STYLE LIEN, PAS BOUTON) ================= -->
+      <div class="mt-8 pt-6 relative">
+        <!-- Ligne décorative subtile -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-[2px] rounded-full opacity-40" [ngStyle]="{ 'background': themeService.primary }"></div>
+        
+        <div class="text-center">
+          <p class="text-sm font-medium mb-1" [ngStyle]="{ 'color': themeService.Textsecondaire }">
+            Vous n'avez pas encore de compte ?
+          </p>
+          
+          <!-- LIEN TEXTE AVEC SOULIGNEMENT ANIMÉ ET FLÈCHE -->
+          <a routerLink="/inscription" 
+            class="inline-flex items-center gap-2 text-sm font-bold transition-all duration-300 group relative"
+            [ngStyle]="{ 'color': themeService.primary }">
+            
+            <span class="relative">
+              Créer un compte
+              <!-- Soulignement animé -->
+              <span class="absolute bottom-0 left-0 w-0 h-[2px] rounded-full transition-all duration-300 group-hover:w-full" [ngStyle]="{ 'background': themeService.primary }"></span>
+            </span>
+            
+            <i class="fa-solid fa-arrow-right text-xs transition-all duration-300 group-hover:translate-x-1.5"></i>
+          </a>
+          
+          <p class="mt-2 text-xs font-medium" [ngStyle]="{ 'color': themeService.Textsecondaire + '70' }">
+            Rejoignez la communauté ASDAM en quelques clics
+          </p>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <p class="mt-8 text-center text-xs font-medium" [ngStyle]="{ 'color': themeService.Textsecondaire + '60' }">
+        En vous connectant, vous acceptez nos 
+        <a href="#" class="hover:underline" [ngStyle]="{ 'color': themeService.primary }">Conditions d'utilisation</a> 
+        et notre 
+        <a href="#" class="hover:underline" [ngStyle]="{ 'color': themeService.primary }">Politique de confidentialité</a>
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ============================================ -->
+<!-- STYLES ANIMATIONS (à ajouter dans global.scss ou styles.css) -->
+<!-- ============================================ -->
 <style>
-  /* Animations */
+  @keyframes fade-in-down {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   @keyframes fade-in-up {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(30px);
     }
-
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
 
-  @keyframes slide-down {
-    from {
+  @keyframes bounce-in {
+    0% {
       opacity: 0;
-      transform: translateY(-10px);
+      transform: scale(0.3);
     }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes subtle-zoom {
-
-    0%,
-    100% {
+    50% {
       transform: scale(1.05);
     }
-
-    50% {
-      transform: scale(1.1);
+    70% {
+      transform: scale(0.9);
     }
-  }
-
-  @keyframes float-slow {
-
-    0%,
     100% {
-      transform: translateY(0) translateX(0) rotate(0deg);
-      opacity: 0.15;
-    }
-
-    50% {
-      transform: translateY(-20px) translateX(10px) rotate(15deg);
-      opacity: 0.25;
-    }
-  }
-
-  @keyframes float-medium {
-
-    0%,
-    100% {
-      transform: translateY(0) translateX(0) rotate(0deg);
-      opacity: 0.1;
-    }
-
-    50% {
-      transform: translateY(-25px) translateX(-15px) rotate(-10deg);
-      opacity: 0.2;
-    }
-  }
-
-  @keyframes float-fast {
-
-    0%,
-    100% {
-      transform: translateY(0) translateX(0);
-      opacity: 0.2;
-    }
-
-    50% {
-      transform: translateY(-10px) translateX(5px);
-      opacity: 0.5;
-    }
-  }
-
-  @keyframes pulse-slow {
-
-    0%,
-    100% {
-      opacity: 0.3;
+      opacity: 1;
       transform: scale(1);
     }
-
-    50% {
-      opacity: 0.5;
-      transform: scale(1.05);
-    }
   }
 
-  /* Classes utilitaires */
-  .animate-fade-in-up {
-    animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  .animate-slide-down {
-    animation: slide-down 0.5s ease-out forwards;
-  }
-
-  .animate-subtle-zoom {
-    animation: subtle-zoom 25s ease-in-out infinite;
-  }
-
-  .animate-float-slow {
-    animation: float-slow 12s ease-in-out infinite;
-  }
-
-  .animate-float-medium {
-    animation: float-medium 8s ease-in-out infinite;
-  }
-
-  .animate-float-fast {
-    animation: float-fast 5s ease-in-out infinite;
-  }
-
-  .animate-pulse-slow {
-    animation: pulse-slow 4s ease-in-out infinite;
-  }
-
-  /* Glassmorphism */
-  .backdrop-blur-xl {
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-
-  /* Focus visible pour accessibilité */
-  button:focus-visible,
-  a:focus-visible,
-  input:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-  }
-
-  /* Animation de secousse pour erreurs */
   @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+    20%, 40%, 60%, 80% { transform: translateX(4px); }
+  }
 
-    0%,
-    100% {
-      transform: translateX(0);
+  .animate-fade-in-down {
+    animation: fade-in-down 0.8s ease-out forwards;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out 0.2s forwards;
+    opacity: 0;
+  }
+
+  .animate-bounce-in {
+    animation: bounce-in 0.5s ease-out forwards;
+  }
+
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  /* Amélioration du focus visible pour l'accessibilité */
+  input:focus-visible {
+    outline: none;
+    ring: 2px;
+    ring-offset: 2px;
+  }
+
+  /* Smooth scroll */
+  .login-desktop-only {
+    scroll-behavior: smooth;
+  }
+</style>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- RÈGLE RESPONSIVE (382px - 400px UNIQUEMENT) -->
+<!-- ═══════════════════════════════════════════ -->
+<style>
+  .login-mobile-only {
+    display: none;
+  }
+
+  @media screen and (min-width: 382px) and (max-width: 400px) {
+    .login-mobile-only {
+      display: flex;
     }
 
-    10%,
-    30%,
-    50%,
-    70%,
-    90% {
-      transform: translateX(-3px);
-    }
-
-    20%,
-    40%,
-    60%,
-    80% {
-      transform: translateX(3px);
+    body {
+      overflow: hidden;
     }
   }
 
-  .shake {
-    animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+  .login-desktop-only {
+    display: none;
   }
 
-  /* Scrollbar stylisée pour la card */
-  .overflow-y-auto::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  .overflow-y-auto::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .overflow-y-auto::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-  }
-
-  .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.4);
-  }
-
-  /* Très petits écrans */
-  @media (max-width: 360px) {
-    .max-w-\[420px\] {
-      max-width: 100%;
+  @media screen and (min-width: 400px){
+    .login-desktop-only {
+      display: flex;
     }
 
-    .p-4 {
-      padding: 0.75rem;
-    }
-
-    .text-2xl {
-      font-size: 1.5rem;
-    }
-  }
-
-  /* Hauteur d'écran réduite */
-  @media (max-height: 700px) and (orientation: landscape) {
-    section {
-      min-height: auto;
-      padding-top: 0.5rem;
-      padding-bottom: 0.5rem;
-    }
-  }
-
-  /* Très petites hauteurs - réductions supplémentaires */
-  @media (max-height: 600px) {
-    .w-16 {
-      width: 3rem;
-      height: 3rem;
-    }
-    
-    .text-2xl {
-      font-size: 1.25rem;
-    }
-    
-    .space-y-1\.5 > * + * {
-      margin-top: 0.375rem;
-    }
-  }
-
-  /* Réduction des animations si demandé */
-  @media (prefers-reduced-motion: reduce) {
-
-    .animate-fade-in-up,
-    .animate-slide-down,
-    .animate-subtle-zoom,
-    .animate-float-slow,
-    .animate-float-medium,
-    .animate-float-fast,
-    .animate-pulse-slow {
-      animation: none;
+    body {
+      overflow: hidden;
     }
   }
 </style>

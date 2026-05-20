@@ -2,11 +2,12 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Theme } from "../theme/theme";
 import { ThemeService } from '../../../../Backend/Services/theme.service';
+import { Icon } from '../../priver/icon/icon';
 
 @Component({
   selector: 'app-mobile',
   standalone: true,
-  imports: [CommonModule, Theme],
+  imports: [CommonModule, Theme,Icon],
   templateUrl: './mobile.html',
   styleUrls: ['./mobile.css'],
 })

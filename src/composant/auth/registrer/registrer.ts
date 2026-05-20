@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { Icon } from '../../priver/icon/icon';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
+import { Theme } from '../../share/theme/theme';
 
 @Component({
   selector: 'app-registrer',
@@ -14,7 +15,8 @@ import { ThemeService } from '../../../../Backend/Services/theme.service';
     ReactiveFormsModule,
     HttpClientModule,
     RouterLink,
-    Icon
+    Icon,
+    Theme
   ],
   templateUrl: './registrer.html',
   styleUrls: ['./registrer.css']
@@ -25,6 +27,7 @@ export class Registrer implements OnInit {
 
   showPassword = false;
   isSubmitting = false;
+  isLoading = false;
 
   currentStep = 1;
 
@@ -53,7 +56,7 @@ export class Registrer implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    public themeservice: ThemeService
+    public themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
@@ -211,7 +214,7 @@ export class Registrer implements OnInit {
   ====================================================== */
 
   toggleTheme(): void {
-    this.themeservice.toggleTheme();
+    this.themeService.toggleTheme();
   }
 
   // =========================

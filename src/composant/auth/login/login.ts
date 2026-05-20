@@ -4,29 +4,38 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  FormsModule
 } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { Icon } from '../../priver/icon/icon';
 import { ThemeService } from '../../../../Backend/Services/theme.service';
+import { Teste } from '../../teste/teste';
+import { Theme } from '../../share/theme/theme';
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     RouterLink,
-    Icon
-  ],
+    Icon,
+    Teste,
+    Theme
+],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
 export class Login implements OnInit {
 
   loginForm!: FormGroup;
+  email = '';
+  password = '';
 
   showPassword = false;
   isHovered = false;
@@ -39,7 +48,7 @@ export class Login implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    public themeservice: ThemeService
+    public themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
@@ -156,11 +165,11 @@ export class Login implements OnInit {
   // THEME GLOBAL SERVICE
   // ==========================
   toggleTheme(): void {
-    this.themeservice.toggleTheme();
+    this.themeService.toggleTheme();
   }
 
   get isDarkMode(): boolean {
-    return this.themeservice.isDarkMode;
+    return this.themeService.isDarkMode;
   }
 
   // ==========================
